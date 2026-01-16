@@ -142,6 +142,7 @@ export default function Feed() {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const fileRef = useRef(null);
+  const [failedImages, setFailedImages] = useState(new Set());
 
   // comments drawer
   const [openPostId, setOpenPostId] = useState("");
@@ -441,17 +442,28 @@ export default function Feed() {
                   {post.media && post.media.type === "image" ? (
                     (() => {
                       const mediaUrl = absUrl(post.media.url);
+                      const hasFailed = failedImages.has(mediaUrl);
+                      
                       return (
                         <div className="mb-4 rounded-xl overflow-hidden border border-white/5 bg-black/20">
-                          <img
-                            src={mediaUrl}
-                            alt="Post"
-                            className="w-full max-h-[520px] object-contain"
-                            onError={() => {
-                              // eslint-disable-next-line no-console
-                              console.warn(`[Feed] image failed to load: ${mediaUrl}`);
-                            }}
-                          />
+                          {hasFailed ? (
+                            <div className="w-full h-64 flex items-center justify-center bg-gradient-to-br from-white/5 to-white/2">
+                              <div className="text-center">
+                                <ImageIcon className="w-12 h-12 text-white/30 mx-auto mb-2" />
+                                <p className="text-sm text-white/40">Image unavailable</p>
+                              </div>
+                            </div>
+                          ) : (
+                            <img
+                              src={mediaUrl}
+                              alt="Post"
+                              className="w-full max-h-[520px] object-contain"
+                              onError={() => {
+                                console.warn(`[Feed] image failed to load: ${mediaUrl}`);
+                                setFailedImages(prev => new Set([...prev, mediaUrl]));
+                              }}
+                            />
+                          )}
                         </div>
                       );
                     })()

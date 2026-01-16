@@ -45,7 +45,7 @@ function makeAbsolute(url) {
   const s = String(url).trim();
   if (!s) return "";
   if (s.startsWith("http://") || s.startsWith("https://")) return s;
-  const API_BASE = "http://localhost:5000";
+  const API_BASE = "https://moondala-backend.onrender.com";
   if (s.startsWith("/")) return `${API_BASE}${s}`;
   if (s.startsWith("uploads/")) return `${API_BASE}/${s}`;
   return `${API_BASE}/${s}`;

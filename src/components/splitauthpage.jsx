@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:5000";
+const API_BASE = import.meta?.env?.VITE_API_BASE || "https://moondala-backend.onrender.com";
 
 export default function SplitAuthPage() {
   const navigate = useNavigate();

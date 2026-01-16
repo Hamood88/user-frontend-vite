@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:5000";
+const API_BASE = import.meta?.env?.VITE_API_BASE || "https://moondala-backend.onrender.com";
 
 export default function Earnings() {
   const [data, setData] = useState({ total: 0, earnings: [], count: 0 });
