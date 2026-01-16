@@ -1,13 +1,11 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "env": {
-    "VITE_API_BASE": "@vite_api_base"
-  },
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html",
+      "status": 200
     }
   ]
 }
