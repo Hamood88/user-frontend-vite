@@ -71,7 +71,7 @@ export function AuthPanel({ type, mode, isActive, onFocus, icon: Icon, title, hi
     <div
       onClick={onFocus}
       className={[
-        "flex-1 p-6 lg:p-8 transition-all cursor-pointer outline-none",
+        "w-full p-6 md:p-8 transition-all cursor-pointer outline-none",
         "relative",
         isActive
           ? "bg-white/[0.03]"
@@ -110,7 +110,7 @@ export function AuthPanel({ type, mode, isActive, onFocus, icon: Icon, title, hi
         />
       </div>
 
-      <div className="relative mx-auto lg:max-w-md w-full">
+      <div className="relative w-full max-w-md mx-auto">
         {/* Panel Header */}
         <div
           className={[

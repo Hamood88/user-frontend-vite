@@ -64,11 +64,11 @@ export default function SplitAuthPage() {
       </div>
 
       {/* Split Panels */}
-      <div className="relative z-10 w-full pb-10">
-        <div className="rounded-2xl overflow-hidden ring-1 ring-white/10 bg-white/[0.03] backdrop-blur">
-          <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen md:min-h-96">
-            {/* User Panel */}
-            <div>
+      <div className="relative z-10 w-full px-0">
+        <div className="mx-auto rounded-2xl overflow-hidden ring-1 ring-white/10 bg-white/[0.03] backdrop-blur">
+          <div className="flex flex-col md:flex-row w-full">
+            {/* User Panel - 50% width on desktop */}
+            <div className="w-full md:w-1/2">
               <AuthPanel
                 type="user"
                 mode={mode}
@@ -81,10 +81,10 @@ export default function SplitAuthPage() {
             </div>
 
             {/* Divider */}
-            <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/15 to-transparent" />
+            <div className="hidden md:block w-px bg-gradient-to-b from-transparent via-white/15 to-transparent"></div>
 
-            {/* Shop Panel */}
-            <div>
+            {/* Shop Panel - 50% width on desktop */}
+            <div className="w-full md:w-1/2">
               <AuthPanel
                 type="shop"
                 mode={mode}
