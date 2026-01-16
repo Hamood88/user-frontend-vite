@@ -88,7 +88,9 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    -webkit-font-smoothing: antialiased;
     font-family: var(--font-body);
     min-height: 100vh;
   }
@@ -100,7 +102,8 @@
   h5,
   h6 {
     font-family: var(--font-display);
-    @apply tracking-tight font-semibold;
+    letter-spacing: -0.025em;
+    font-weight: 600;
   }
 }
 
@@ -111,8 +114,9 @@
 @layer components {
   /* premium card */
   .feed-card {
-    /* ✅ removed border-border */
-    @apply bg-card border rounded-xl;
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
   }
 
@@ -122,7 +126,15 @@
 
   /* primary action (violet gradient + glow) */
   .btn-primary {
-    @apply rounded-lg px-6 py-2 text-sm font-bold text-primary-foreground transition;
+    border-radius: calc(var(--radius) - 0.25rem);
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: hsl(var(--primary-foreground));
+    transition-property: all;
     background: linear-gradient(135deg, #7c3aed, #5b21b6);
     box-shadow: 0 0 22px rgba(124, 58, 237, 0.45);
   }
@@ -141,19 +153,38 @@
 
   /* secondary actions */
   .btn-secondary {
-    /* ✅ removed border-border */
-    @apply rounded-lg border bg-secondary px-4 py-2 text-sm font-bold text-secondary-foreground transition;
+    border-radius: calc(var(--radius) - 0.25rem);
+    border: 1px solid hsl(var(--border));
+    background-color: hsl(var(--secondary));
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: hsl(var(--secondary-foreground));
+    transition-property: all;
     backdrop-filter: blur(6px);
   }
 
   .btn-secondary:hover {
-    @apply bg-accent text-accent-foreground;
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
   }
 
   /* inputs/textarea */
   .input-dark {
-    /* ✅ removed border-border */
-    @apply w-full rounded-lg border bg-background p-3 text-foreground placeholder:text-muted-foreground transition;
+    width: 100%;
+    border-radius: calc(var(--radius) - 0.25rem);
+    border: 1px solid hsl(var(--border));
+    background-color: hsl(var(--background));
+    padding: 0.75rem;
+    color: hsl(var(--foreground));
+    transition-property: all;
+  }
+
+  .input-dark::placeholder {
+    color: hsl(var(--muted-foreground));
   }
 
   .input-dark:focus {
