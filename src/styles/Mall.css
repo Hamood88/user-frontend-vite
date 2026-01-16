@@ -1,0 +1,167 @@
+/* user-frontend/src/styles/Mall.css */
+
+/* Page background to match sidebar theme */
+.mall-page {
+  min-height: 100vh;
+  padding: 18px;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+/* dark gradient panel */
+.mall-surface {
+  background: radial-gradient(
+      1200px 800px at 20% 0%,
+      rgba(59, 130, 246, 0.16),
+      transparent 55%
+    ),
+    radial-gradient(
+      1000px 700px at 85% 10%,
+      rgba(34, 197, 94, 0.10),
+      transparent 55%
+    ),
+    linear-gradient(180deg, #0b1224 0%, #070b16 100%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+/* Header */
+.mall-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.mall-title {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.mall-sub {
+  opacity: 0.78;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+/* buttons */
+.mall-btn {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.mall-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* alert / note */
+.mall-error {
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  font-weight: 800;
+}
+
+.mall-note {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  opacity: 0.88;
+  font-weight: 800;
+}
+
+/* cards */
+.mall-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.mall-card {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  transition: transform 120ms ease, border-color 120ms ease;
+}
+
+.mall-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.mall-img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+
+.mall-noimg {
+  height: 170px;
+  display: grid;
+  place-items: center;
+  opacity: 0.75;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mall-body {
+  padding: 12px;
+}
+
+.mall-card-title {
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.mall-meta {
+  opacity: 0.75;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.mall-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.mall-price {
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.mall-badge {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  font-weight: 900;
+  font-size: 11px;
+}
+
+.mall-open {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.18);
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}

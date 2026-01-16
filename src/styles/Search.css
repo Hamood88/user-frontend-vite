@@ -1,0 +1,158 @@
+/* user-frontend/src/styles/Search.css */
+
+/* =========================
+   SEARCH – DARK THEME
+   ========================= */
+
+.search-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-card {
+  background: linear-gradient(180deg, #0f1a33, #0b1426);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.search-title {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+/* controls */
+.search-controls {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.search-input,
+.search-select {
+  height: 48px;
+  border-radius: 14px;
+  padding: 0 16px;
+  font-size: 15px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ✅ FIX #1: dropdown menu colors (native select) */
+.search-select {
+  width: 180px;
+  cursor: pointer;
+
+  /* helps on some browsers */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* the dropdown list itself */
+.search-select option {
+  background: #0b1220; /* dark */
+  color: #ffffff;
+}
+
+/* Firefox uses optgroup/option differently sometimes */
+.search-select optgroup {
+  background: #0b1220;
+  color: #ffffff;
+}
+
+/* results */
+.search-results {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.search-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #111c34, #0c1529);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.search-item:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, #15224a, #0f1a33);
+  border-color: rgba(120, 160, 255, 0.35);
+}
+
+.search-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.10);
+  flex-shrink: 0;
+}
+
+.search-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.search-meta {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+/* ✅ FIX #2: ensure strong contrast */
+.search-name {
+  font-size: 16px;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.search-sub {
+  margin-top: 3px;
+  font-size: 13px;
+  color: rgba(234, 240, 255, 0.78); /* brighter than before */
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* states */
+.search-status {
+  margin-top: 12px;
+  color: rgba(234, 240, 255, 0.75);
+}
+
+.search-error {
+  margin-top: 12px;
+  color: #ff8a8a;
+}
+
+/* small screens */
+@media (max-width: 700px) {
+  .search-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-select {
+    width: 100%;
+  }
+}

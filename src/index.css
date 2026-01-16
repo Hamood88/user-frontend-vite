@@ -1,0 +1,155 @@
+/* user-frontend-vite/src/index.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --font-body: 'Inter', sans-serif;
+  --font-display: 'Inter', sans-serif;
+
+  /* ✅ Moondala Luxury Dark Palette */
+  --background: 222 47% 11%;        /* #0F172A */
+  --foreground: 210 40% 98%;        /* near-white */
+
+  --card: 222 47% 15%;              /* #1E293B */
+  --card-foreground: 210 40% 98%;
+
+  --popover: 222 47% 15%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 262 83% 58%;           /* violet */
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 215 28% 17%;         /* dark slate */
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 215 28% 17%;
+  --muted-foreground: 215 20% 70%;
+
+  --accent: 199 89% 48%;            /* cyan accent */
+  --accent-foreground: 222 47% 11%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 215 28% 25%;            /* slate border */
+  --input: 215 28% 25%;
+  --ring: 199 89% 48%;              /* cyan ring */
+
+  --radius: 0.75rem;
+  
+  /* Layout sizing */
+  --container: 1100px; /* max content width */
+  --topbar-h: 60px; /* topbar height */
+  --mdSidebarW: 260px; /* default sidebar width */
+  --mdSidebarCollapsedW: 84px; /* collapsed sidebar width */
+}
+
+/* Light theme */
+[data-theme="light"],
+[data-theme="light"] body {
+  color-scheme: light;
+  --background: 0 0% 98%;           /* light gray */
+  --foreground: 222 47% 11%;        /* dark text */
+
+  --card: 0 0% 100%;                /* white */
+  --card-foreground: 222 47% 11%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+
+  --primary: 262 83% 58%;           /* violet (same) */
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 215 28% 75%;         /* light slate */
+  --secondary-foreground: 222 47% 11%;
+
+  --muted: 215 28% 80%;
+  --muted-foreground: 215 20% 40%;
+
+  --accent: 199 89% 48%;            /* cyan (same) */
+  --accent-foreground: 222 47% 11%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 215 28% 88%;            /* light border */
+  --input: 215 28% 90%;
+  --ring: 199 89% 48%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    @apply tracking-tight font-semibold;
+  }
+}
+
+/* =========================
+   Luxury UI Utilities
+   ========================= */
+
+@layer components {
+  /* premium card */
+  .feed-card {
+    @apply bg-card border border-border rounded-xl;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  .feed-card:hover {
+    box-shadow: 0 16px 52px rgba(0, 0, 0, 0.58);
+  }
+
+  /* primary action (violet gradient + glow) */
+  .btn-primary {
+    @apply rounded-lg px-6 py-2 text-sm font-bold text-primary-foreground transition;
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+    box-shadow: 0 0 22px rgba(124, 58, 237, 0.45);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 34px rgba(124, 58, 237, 0.65);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  /* secondary actions */
+  .btn-secondary {
+    @apply rounded-lg border border-border bg-secondary px-4 py-2 text-sm font-bold text-secondary-foreground transition;
+    backdrop-filter: blur(6px);
+  }
+
+  .btn-secondary:hover {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /* inputs/textarea */
+  .input-dark {
+    @apply w-full rounded-lg border border-border bg-background p-3 text-foreground placeholder:text-muted-foreground transition;
+  }
+
+  .input-dark:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px hsl(var(--ring));
+  }
+}

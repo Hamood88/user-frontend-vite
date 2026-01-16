@@ -1,0 +1,271 @@
+/* user-frontend-vite/src/styles/shopFeedPublic.css */
+
+/* page */
+.sfp-page {
+  min-height: 100vh;
+  padding: 16px;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(1200px 700px at 20% 0%, rgba(59, 130, 246, 0.18), transparent 55%),
+    radial-gradient(1000px 600px at 85% 10%, rgba(34, 197, 94, 0.12), transparent 55%),
+    linear-gradient(180deg, #0b1224 0%, #070b16 100%);
+}
+
+.sfp-surface {
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(15, 23, 42, 0.55);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.sfp-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sfp-h1 {
+  font-size: 26px;
+  font-weight: 950;
+  margin-top: 10px;
+}
+
+.sfp-sub {
+  opacity: 0.8;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* buttons */
+.sfp-btn {
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.sfp-btn-ghost {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sfp-btn-primary {
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.18);
+}
+
+.sfp-err {
+  margin-top: 12px;
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  padding: 10px;
+  border-radius: 12px;
+  font-weight: 900;
+}
+
+.sfp-note {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  opacity: 0.9;
+  font-weight: 800;
+}
+
+/* posts */
+.sfp-list {
+  margin-top: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.sfp-card {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+}
+
+.sfp-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sfp-name {
+  font-weight: 950;
+}
+
+.sfp-meta {
+  opacity: 0.75;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.sfp-text {
+  margin-top: 10px;
+  opacity: 0.92;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.sfp-mediaWrap {
+  margin-top: 10px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.sfp-media {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  max-height: 520px;
+}
+
+/* =========================================================
+   ✅ MARQUEE (MOVING LEFT + HOVER PAUSE) — SAME BEHAVIOR
+   ========================================================= */
+
+.sfp-marquee-wrap {
+  margin-top: 14px;
+  border-radius: 18px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sfp-marquee-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.sfp-marquee-title {
+  font-size: 16px;
+  font-weight: 950;
+}
+
+.sfp-marquee-sub {
+  opacity: 0.75;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.sfp-marquee-viewport {
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.20);
+}
+
+/* track: duplicate list scrolls forever */
+.sfp-marquee-track {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  width: max-content;
+  animation: sfp-marquee-left 28s linear infinite;
+}
+
+/* pause on hover */
+.sfp-marquee-viewport:hover .sfp-marquee-track {
+  animation-play-state: paused;
+}
+
+/* animation */
+@keyframes sfp-marquee-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* card */
+.sfp-marquee-card {
+  width: 170px;
+  min-width: 170px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sfp-marquee-imgwrap {
+  width: 100%;
+  height: 120px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.sfp-marquee-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sfp-marquee-ph {
+  width: 100%;
+  height: 100%;
+}
+
+.sfp-marquee-name {
+  margin-top: 8px;
+  font-weight: 950;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sfp-marquee-bottom {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+
+.sfp-price {
+  opacity: 0.9;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.sfp-miniBtn {
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255,  255, 255, 0.06);
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* responsive: slightly smaller cards on mobile */
+@media (max-width: 520px) {
+  .sfp-marquee-card {
+    width: 150px;
+    min-width: 150px;
+  }
+  .sfp-marquee-imgwrap {
+    height: 110px;
+  }
+}

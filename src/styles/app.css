@@ -1,0 +1,50 @@
+/* user-frontend/src/styles/app.css */
+*{ box-sizing:border-box; }
+html, body { height:100%; }
+body{
+  margin:0;
+  color: var(--text);
+  background: var(--bg0);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+a{ color:inherit; text-decoration:none; }
+
+.app-shell{
+  position:relative;
+  min-height:100vh;
+  width:100%;
+  overflow-x:hidden;
+}
+
+.app-bg{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  background:
+    radial-gradient(1200px 700px at 20% 10%, rgba(37,99,235,0.25), transparent 60%),
+    radial-gradient(900px 600px at 80% 20%, rgba(147,51,234,0.18), transparent 60%),
+    linear-gradient(135deg, var(--bg0), var(--bg1), var(--bg2));
+}
+
+.app-main{
+  position:relative;
+  z-index:1;
+  min-height:100vh;
+  padding: 22px 22px 40px;
+}
+
+.app-container{
+  width:100%;
+  max-width: var(--container);
+  margin:0 auto;
+}
+
+/* nice default surfaces you can reuse */
+.surface{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}

@@ -1,0 +1,157 @@
+/* user-frontend/src/styles/theme.css */
+
+/* =========
+   Theme vars
+   ========= */
+:root{
+  --bg0:#020617;
+  --bg1:#0b1220;
+  --bg2:#101b2e;
+
+  --panel: rgba(255,255,255,0.06);
+  --panel2: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.12);
+  --border2: rgba(255,255,255,0.08);
+
+  --text:#e5e7eb;
+  --muted: rgba(229,231,235,0.72);
+
+  --blue: rgba(59,130,246,0.20);
+  --purple: rgba(147,51,234,0.18);
+  --green: rgba(34,197,94,0.18);
+  --red: rgba(239,68,68,0.18);
+
+  --shadow: 0 20px 60px rgba(0,0,0,0.35);
+  --radius: 16px;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --bg0: #f9fafb;
+  --bg1: #f3f4f6;
+  --bg2: #e5e7eb;
+
+  --panel: rgba(0,0,0,0.04);
+  --panel2: rgba(0,0,0,0.02);
+  --border: rgba(0,0,0,0.10);
+  --border2: rgba(0,0,0,0.06);
+
+  --text: #1f2937;
+  --muted: rgba(31,41,55,0.60);
+
+  --blue: rgba(59,130,246,0.12);
+  --purple: rgba(147,51,234,0.10);
+  --green: rgba(34,197,94,0.10);
+  --red: rgba(239,68,68,0.10);
+
+  --shadow: 0 10px 30px rgba(0,0,0,0.10);
+  --radius: 16px;
+}
+
+/* =========
+   Base
+   ========= */
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 700px at 20% 10%, var(--blue), transparent 60%),
+    radial-gradient(900px 600px at 80% 20%, var(--purple), transparent 60%),
+    linear-gradient(135deg, var(--bg0), var(--bg1), var(--bg2));
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+/* Scrollbar (nice on dark) */
+::-webkit-scrollbar{ width: 10px; height:10px; }
+::-webkit-scrollbar-thumb{
+  background: rgba(255,255,255,0.14);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track{ background: rgba(0,0,0,0.25); }
+
+/* =========
+   Reusable UI
+   ========= */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.cardPad { padding: 16px; }
+
+.cardTitle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.muted { color: var(--muted); }
+
+.hr {
+  border: none;
+  border-top: 1px solid var(--border2);
+  margin: 14px 0;
+}
+
+/* Buttons */
+.btn{
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.btn:hover{ background: rgba(255,255,255,0.10); }
+
+.btnPrimary{
+  border: 1px solid rgba(59,130,246,0.55);
+  background: rgba(59,130,246,0.18);
+}
+.btnPrimary:hover{ background: rgba(59,130,246,0.26); }
+
+.btnDanger{
+  border: 1px solid rgba(239,68,68,0.55);
+  background: rgba(239,68,68,0.16);
+}
+.btnDanger:hover{ background: rgba(239,68,68,0.24); }
+
+/* Inputs */
+.input{
+  width:100%;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(2,6,23,0.35);
+  color: var(--text);
+  padding: 12px;
+  border-radius: 12px;
+  outline: none;
+}
+.input:focus{
+  border-color: rgba(59,130,246,0.55);
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.16);
+}
+
+/* Tables / rows-like cards */
+.rowCard{
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 12px;
+}
