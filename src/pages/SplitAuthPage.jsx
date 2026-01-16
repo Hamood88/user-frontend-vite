@@ -66,7 +66,7 @@ export default function SplitAuthPage() {
       {/* Split Panels */}
       <div className="relative z-10 max-w-7xl mx-auto w-full px-4 pb-10">
         <div className="rounded-2xl overflow-hidden ring-1 ring-white/10 bg-white/[0.03] backdrop-blur">
-          <div className="flex flex-col lg:flex-row">
+          <div className="flex flex-col md:flex-row">
             <AuthPanel
               type="user"
               mode={mode}
@@ -78,8 +78,8 @@ export default function SplitAuthPage() {
             />
 
             {/* Divider */}
-            <div className="hidden lg:block w-px bg-gradient-to-b from-transparent via-white/15 to-transparent" />
-            <div className="lg:hidden h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+            <div className="hidden md:block w-px bg-gradient-to-b from-transparent via-white/15 to-transparent" />
+            <div className="md:hidden h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
             <AuthPanel
               type="shop"
