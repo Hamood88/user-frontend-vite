@@ -7,7 +7,7 @@ import { request, logoutUser, API_BASE } from "../api.jsx";
    ========================= */
 function normalizeBase(u) {
   const s = String(u || "").trim();
-  if (!s) return "http://localhost:5000";
+  if (!s) return "https://moondala-backend.onrender.com";
   return s.endsWith("/") ? s.slice(0, -1) : s;
 }
 

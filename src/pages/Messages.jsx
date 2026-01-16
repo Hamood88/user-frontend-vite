@@ -28,8 +28,8 @@ function absUrl(u) {
   const s = String(u);
   if (s.startsWith("http://") || s.startsWith("https://")) return s;
 
-  // API_BASE is base (ex: http://localhost:5000)
-  const base = String(API_BASE || "http://localhost:5000").replace(/\/+$/, "");
+  // API_BASE is base (ex: https://moondala-backend.onrender.com)
+  const base = String(API_BASE || "https://moondala-backend.onrender.com").replace(/\/+$/, "");
 
   if (s.startsWith("/")) return base + s;
   return base + "/" + s;
@@ -1116,7 +1116,7 @@ export default function Messages() {
                       }}>
                         {m?.sender?.avatarUrl ? (
                           <img
-                            src={m.sender.avatarUrl.startsWith('http') ? m.sender.avatarUrl : `http://localhost:5000${m.sender.avatarUrl}`}
+                            src={m.sender.avatarUrl.startsWith('http') ? m.sender.avatarUrl : `${absUrl(m.sender.avatarUrl)}`}
                             alt={m?.sender?.firstName || "User"}
                             style={{
                               width: "100%",
