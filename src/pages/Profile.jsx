@@ -168,7 +168,7 @@ export default function Profile() {
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={uploading || loading}
-              className="h-20 w-20 overflow-hidden rounded-2xl border border-border bg-secondary"
+className="h-20 w-20 overflow-hidden rounded-2xl border bg-secondary"
             >
               {avatarSrc ? (
                 <img src={avatarSrc} alt="avatar" className="h-full w-full object-cover" />
@@ -252,7 +252,7 @@ export default function Profile() {
 function Field({ label, value }) {
   const v = String(value || "").trim() || "—";
   return (
-    <div className="rounded-xl border border-border bg-secondary p-4">
+<div className="rounded-xl border bg-secondary p-4">
       <div className="text-xs font-extrabold text-muted-foreground">{label}</div>
       <div className="mt-1 text-sm font-bold">{v}</div>
     </div>
