@@ -110,7 +110,7 @@ export function AuthPanel({ type, mode, isActive, onFocus, icon: Icon, title, hi
         />
       </div>
 
-      <div className="relative max-w-md mx-auto">
+      <div className="relative mx-auto lg:max-w-md w-full">
         {/* Panel Header */}
         <div
           className={[
