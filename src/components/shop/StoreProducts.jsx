@@ -9,7 +9,7 @@ const StoreProducts = () => {
     const fetchProducts = async () => {
       try {
         const token = localStorage.getItem("storeToken");
-        const res = await axios.get("http://localhost:5000/api/store/my-products", {
+        const res = await axios.get("https://moondala-backend.onrender.com/api/store/my-products", {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProducts(res.data);

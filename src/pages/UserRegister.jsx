@@ -18,7 +18,7 @@ const UserRegister = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/register', form);
+      await axios.post('https://moondala-backend.onrender.com/api/register', form);
       alert('Registration successful! You can now login.');
       window.location.href = '/login';
     } catch (err) {

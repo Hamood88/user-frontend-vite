@@ -12,7 +12,7 @@ function fullImg(u) {
   const x = s(u);
   if (!x) return "";
   if (x.startsWith("http://") || x.startsWith("https://")) return x;
-  const base = s(API_BASE || "http://localhost:5000").replace(/\/$/, "");
+  const base = s(API_BASE || "https://moondala-backend.onrender.com").replace(/\/$/, "");
   return `${base}${x.startsWith("/") ? "" : "/"}${x}`;
 }
 

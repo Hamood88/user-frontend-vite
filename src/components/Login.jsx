@@ -8,7 +8,7 @@ const API_BASE =
   import.meta?.env?.VITE_API_BASE ||
   import.meta?.env?.VITE_API_URL ||
   import.meta?.env?.VITE_BACKEND_URL ||
-  "http://localhost:5000";
+  "https://moondala-backend.onrender.com";
 
 export default function Login() {
   const navigate = useNavigate();

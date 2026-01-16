@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import axios from "axios";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "https://moondala-backend.onrender.com";
 const REGISTER_URL = `${API_BASE}/api/auth/register`;
 
 function calcAgeFromDob(dob) {

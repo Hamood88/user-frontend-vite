@@ -11,7 +11,7 @@ const StoreLogin = () => {
   const handleLogin = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/store/login", { email, password });
+      const res = await axios.post("https://moondala-backend.onrender.com/api/store/login", { email, password });
       localStorage.setItem("storeToken", res.data.token);
       localStorage.setItem("storeOwnerId", res.data.storeOwner._id);
       navigate("/store/dashboard");

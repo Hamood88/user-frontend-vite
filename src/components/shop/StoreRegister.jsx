@@ -23,7 +23,7 @@ const StoreRegister = () => {
     setError('');
     setSuccess('');
     try {
-      await axios.post('http://localhost:5000/api/shop/register', {
+      await axios.post('https://moondala-backend.onrender.com/api/shop/register', {
         ...form,
         invitedByUserRef: inviterRef,
       });

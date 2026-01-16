@@ -17,7 +17,7 @@ function absUrl(u) {
   if (!s) return "";
   if (s.startsWith("http://") || s.startsWith("https://")) return s;
 
-  const base = String(API_BASE || "http://localhost:5000").trim();
+  const base = String(API_BASE || "https://moondala-backend.onrender.com").trim();
   const b = base.endsWith("/") ? base.slice(0, -1) : base;
   return s.startsWith("/") ? `${b}${s}` : `${b}/${s}`;
 }

@@ -13,7 +13,7 @@ const LikeButton = ({ postId, initialLikes, onToggle }) => {
   const toggleLike = async () => {
     const token = localStorage.getItem('token');
     const res = await axios.patch(
-      `http://localhost:5000/api/posts/${postId}/like`,
+      `https://moondala-backend.onrender.com/api/posts/${postId}/like`,
       {},
       { headers: { Authorization: `Bearer ${token}` } }
     );

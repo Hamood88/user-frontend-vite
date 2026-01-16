@@ -36,7 +36,7 @@ const AddProduct = () => {
     if (video) form.append("video", video);
 
     try {
-      await axios.post("http://localhost:5000/api/store/add-product", form, {
+      await axios.post("https://moondala-backend.onrender.com/api/store/add-product", form, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,

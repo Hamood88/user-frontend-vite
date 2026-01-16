@@ -131,7 +131,7 @@ function toAbsUrl(u) {
   if (!s) return "";
   if (s.startsWith("http://") || s.startsWith("https://")) return s;
 
-  const base = String(API_BASE || "http://localhost:5000").trim();
+  const base = String(API_BASE || "https://moondala-backend.onrender.com").trim();
   const b = base.endsWith("/") ? base.slice(0, -1) : base;
 
   if (s.startsWith("/")) return `${b}${s}`;

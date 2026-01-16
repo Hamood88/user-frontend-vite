@@ -5,7 +5,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 const API_BASE =
   process.env.REACT_APP_API_URL ||
   process.env.REACT_APP_BACKEND_URL ||
-  "http://localhost:5000";
+  "https://moondala-backend.onrender.com";
 
 export default function AdminUserView() {
   const { id } = useParams();

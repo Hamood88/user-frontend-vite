@@ -38,7 +38,7 @@ const UserAuth = ({ inviterRef }) => {
     setError('');
     setSuccess('');
     try {
-      const res = await axios.post('http://localhost:5000/api/login', {
+      const res = await axios.post('https://moondala-backend.onrender.com/api/login', {
         email: form.email,
         password: form.password,
       });
@@ -55,7 +55,7 @@ const UserAuth = ({ inviterRef }) => {
     setError('');
     setSuccess('');
     try {
-      await axios.post('http://localhost:5000/api/register', {
+      await axios.post('https://moondala-backend.onrender.com/api/register', {
         ...form,
         invitedBy: inviterRef,
       });
@@ -134,7 +134,7 @@ const ShopAuth = ({ inviterRef }) => {
     setError('');
     setSuccess('');
     try {
-      const res = await axios.post('http://localhost:5000/api/shop/login', {
+      const res = await axios.post('https://moondala-backend.onrender.com/api/shop/login', {
         email: form.email,
         password: form.password,
       });
@@ -151,7 +151,7 @@ const ShopAuth = ({ inviterRef }) => {
     setError('');
     setSuccess('');
     try {
-      await axios.post('http://localhost:5000/api/shop/register', {
+      await axios.post('https://moondala-backend.onrender.com/api/shop/register', {
         ...form,
         invitedByUserRef: inviterRef,
       });
