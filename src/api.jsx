@@ -7,7 +7,7 @@
    - Uses ONLY userToken (no shop/admin collision)
    ========================================================= */
 
-const DEFAULT_BASE = "http://localhost:5000";
+const DEFAULT_BASE = "https://moondala-backend.onrender.com";
 
 /* =========================================
    ✅ API BASE (Vite-safe)
