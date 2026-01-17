@@ -5,8 +5,6 @@ import { apiPost, setUserSession } from "../api";
 import { Button, Input, Alert, Label, Select, Checkbox } from "../components/ui";
 import { countries } from "../utils/countries";
 
-console.log("[UserAuthForm] Module loaded");
-
 // Validation utilities from Figma
 const generateReferralCode = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -41,48 +39,26 @@ const validateEmail = (email) => {
 };
 
 const SPORTS = [
-  "Football",
-  "Basketball",
-  "Tennis",
-  "Cricket",
-  "Volleyball",
-  "Baseball",
-  "Golf",
-  "Swimming",
-  "Track & Field",
-  "Gymnastics",
-  "Running",
-  "Other"
+  "Football", "Basketball", "Tennis", "Cricket", "Volleyball", "Baseball",
+  "Golf", "Swimming", "Track & Field", "Gymnastics", "Running", "Other"
 ];
 
 const INTERESTS = [
-  "Fashion",
-  "Electronics",
-  "Sports",
-  "Beauty",
-  "Home & Garden",
-  "Books",
-  "Toys",
-  "Health",
-  "Automotive",
-  "Food & Beverage"
+  "Fashion", "Electronics", "Sports", "Beauty", "Home & Garden",
+  "Books", "Toys", "Health", "Automotive", "Food & Beverage"
 ];
 
 export function UserAuthForm({ mode }) {
-  console.log("[UserAuthForm] Rendering with mode:", mode);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   
-  // Basic fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  
-  // Extended fields
   const [phone, setPhone] = useState("");
   const [gender, setGender] = useState("");
   const [dobDay, setDobDay] = useState("");
@@ -118,7 +94,7 @@ export function UserAuthForm({ mode }) {
         setSuccess(true);
         setUserSession({ token: data.token, user: data.user });
         setTimeout(() => navigate("/dashboard"), 500);
-      } else {
+      } else if (mode === "signup") {
         // Validate required fields
         if (!firstName.trim() || !lastName.trim() || !email.trim() || !password) {
           throw new Error("Please fill in all required fields");
@@ -174,10 +150,8 @@ export function UserAuthForm({ mode }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-h-[600px] overflow-y-auto pr-2">
-      {/* Success message */}
       {success && <Alert type="success" message="Success! Redirecting..." />}
 
-      {/* Error message */}
       {error && (
         <div className="flex items-start gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
           <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
@@ -185,10 +159,8 @@ export function UserAuthForm({ mode }) {
         </div>
       )}
 
-      {/* LOGIN MODE */}
       {mode === "login" ? (
         <>
-          {/* Email */}
           <div>
             <Label htmlFor="email" className="mb-2 block">Email *</Label>
             <Input
@@ -202,7 +174,6 @@ export function UserAuthForm({ mode }) {
             />
           </div>
 
-          {/* Password */}
           <div>
             <Label htmlFor="password" className="mb-2 block">Password *</Label>
             <Input
@@ -216,7 +187,6 @@ export function UserAuthForm({ mode }) {
             />
           </div>
 
-          {/* Remember & Forgot */}
           <div className="flex justify-between items-center text-sm">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" className="w-4 h-4 rounded border-gray-700 bg-gray-900/40" />
@@ -227,7 +197,6 @@ export function UserAuthForm({ mode }) {
         </>
       ) : (
         <>
-          {/* REGISTER MODE - Basic Fields */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label htmlFor="firstName" className="mb-2 block text-xs">First Name *</Label>
@@ -255,7 +224,6 @@ export function UserAuthForm({ mode }) {
             </div>
           </div>
 
-          {/* Email */}
           <div>
             <Label htmlFor="email" className="mb-2 block text-xs">Email *</Label>
             <Input
@@ -269,11 +237,9 @@ export function UserAuthForm({ mode }) {
             />
           </div>
 
-          {/* Password - with strength indicator */}
           <div>
             <Label htmlFor="password" className="mb-2 block text-xs">
-              Password * 
-              <span className="text-gray-500 text-xs ml-1">(8+ chars, uppercase, lowercase, number)</span>
+              Password * <span className="text-gray-500 text-xs ml-1">(8+ chars, uppercase, lowercase, number)</span>
             </Label>
             <Input
               id="password"
@@ -286,7 +252,6 @@ export function UserAuthForm({ mode }) {
             />
           </div>
 
-          {/* Referral Code - Auto-generated */}
           <div>
             <Label htmlFor="referralCode" className="mb-2 block text-xs">Your Referral Code</Label>
             <Input
@@ -300,7 +265,6 @@ export function UserAuthForm({ mode }) {
             <p className="text-xs text-gray-500 mt-1">Share this code to earn rewards when friends join</p>
           </div>
 
-          {/* Inviter Code */}
           <div>
             <Label htmlFor="inviterCode" className="mb-2 block text-xs">Invited By Code (Optional)</Label>
             <Input
@@ -313,7 +277,6 @@ export function UserAuthForm({ mode }) {
             />
           </div>
 
-          {/* Phone */}
           <div>
             <Label htmlFor="phone" className="mb-2 block text-xs">Phone Number</Label>
             <Input
@@ -326,7 +289,6 @@ export function UserAuthForm({ mode }) {
             />
           </div>
 
-          {/* Gender */}
           <div>
             <Label htmlFor="gender" className="mb-2 block text-xs">Gender</Label>
             <Select
@@ -342,7 +304,6 @@ export function UserAuthForm({ mode }) {
             />
           </div>
 
-          {/* Date of Birth */}
           <div>
             <Label className="mb-2 block text-xs">Date of Birth</Label>
             <div className="grid grid-cols-3 gap-2">
@@ -386,7 +347,6 @@ export function UserAuthForm({ mode }) {
             </div>
           </div>
 
-          {/* Country */}
           <div>
             <Label htmlFor="country" className="mb-2 block text-xs">Country</Label>
             <Select
@@ -399,7 +359,6 @@ export function UserAuthForm({ mode }) {
             />
           </div>
 
-          {/* Favorite Sport */}
           <div>
             <Label htmlFor="sport" className="mb-2 block text-xs">Favorite Sport</Label>
             <Select
@@ -411,7 +370,6 @@ export function UserAuthForm({ mode }) {
             />
           </div>
 
-          {/* Interests */}
           <div>
             <Label className="mb-2 block text-xs">Interests</Label>
             <div className="grid grid-cols-2 gap-2">
@@ -429,7 +387,6 @@ export function UserAuthForm({ mode }) {
         </>
       )}
 
-      {/* Submit button */}
       <Button 
         type="submit" 
         variant="default" 

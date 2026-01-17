@@ -50,9 +50,9 @@ export default function SplitAuthPage() {
             {/* Mode toggle */}
             <div className="flex gap-3 mb-8">
               <button
-                onClick={() => setMode("register")}
+                onClick={() => setMode("signup")}
                 className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
-                  mode === "register"
+                  mode === "signup"
                     ? "bg-white/10 text-white border border-white/20"
                     : "bg-transparent text-gray-400 hover:text-gray-300"
                 }`}
@@ -113,9 +113,9 @@ export default function SplitAuthPage() {
             {/* Mode toggle */}
             <div className="flex gap-3 mb-8">
               <button
-                onClick={() => setMode("register")}
+                onClick={() => setMode("signup")}
                 className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
-                  mode === "register"
+                  mode === "signup"
                     ? "bg-white/10 text-white border border-white/20"
                     : "bg-transparent text-gray-400 hover:text-gray-300"
                 }`}

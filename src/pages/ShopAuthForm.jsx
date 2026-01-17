@@ -60,7 +60,7 @@ export function ShopAuthForm({ mode }) {
       {error && <Alert type="error" message={error} />}
 
       {/* Shop name field (register only) */}
-      {mode === "register" && (
+      {mode === "signup" && (
         <div>
           <Label htmlFor="shopName" className="mb-2 block">Shop Name *</Label>
           <Input
