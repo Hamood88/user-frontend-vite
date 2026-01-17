@@ -1,6 +1,8 @@
 import { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "../components/Input";
 import { Loader2, AlertCircle, Upload, X } from "lucide-react";
+import { apiPost, setUserSession } from "../api";
 
 function readInviterFromUrl() {
   try {
@@ -19,6 +21,7 @@ function readInviterFromUrl() {
 }
 
 export function ShopAuthForm({ mode }) {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -81,46 +84,15 @@ export function ShopAuthForm({ mode }) {
       if (mode === "login") {
         if (!shopEmail.trim() || !password) throw new Error("Please enter your email and password");
 
-        const loginEndpoints = [
-          "/api/shop/auth/login",
-          "/api/shops/auth/login",
-          "/api/shop/login",
-          "/api/shops/login",
-        ];
-
         const payload = { email: shopEmail.trim().toLowerCase(), password };
-
-        let response = null;
-        for (const endpoint of loginEndpoints) {
-          try {
-            response = await fetch(endpoint, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload),
-            });
-            if (response.ok) break;
-          } catch {
-            // try next
-          }
-        }
-
-        if (!response || !response.ok) throw new Error("Invalid credentials");
-
-        const data = await response.json();
-        localStorage.setItem("shopToken", data.token);
-        localStorage.setItem("shop", JSON.stringify(data.shop));
-        alert("Shop login successful! Redirecting...");
+        const data = await apiPost("/shop/auth/login", payload);
+        setUserSession({ token: data.token, shop: data.shop }, "shop");
+        setError(null);
+        navigate("/shop/dashboard");
       } else {
         if (!shopName.trim() || !shopEmail.trim() || !password) {
           throw new Error("Please fill in Shop Name, Email, and Password");
         }
-
-        const registerEndpoints = [
-          "/api/shop/auth/register",
-          "/api/shops/auth/register",
-          "/api/shop/register",
-          "/api/shops/register",
-        ];
 
         const payload = {
           shopName: shopName.trim(),
@@ -140,32 +112,10 @@ export function ShopAuthForm({ mode }) {
 
         if (logoUrl) payload.logoUrl = logoUrl;
 
-        let response = null;
-        for (const endpoint of registerEndpoints) {
-          try {
-            response = await fetch(endpoint, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload),
-            });
-            if (response.ok) break;
-          } catch {
-            // try next
-          }
-        }
-
-        if (!response || !response.ok) {
-          const errorData = await response?.json().catch(() => ({}));
-          throw new Error(errorData?.message || "Registration failed");
-        }
-
-        const data = await response.json();
-        if (data.token) {
-          localStorage.setItem("shopToken", data.token);
-          localStorage.setItem("shop", JSON.stringify(data.shop));
-        }
-
-        alert("Shop registration successful! Welcome to Moondala!");
+        const data = await apiPost("/shop/auth/register", payload);
+        setUserSession({ token: data.token, shop: data.shop }, "shop");
+        setError(null);
+        navigate("/shop/dashboard");
       }
     } catch (err) {
       setError(err.message || "An error occurred. Please try again.");

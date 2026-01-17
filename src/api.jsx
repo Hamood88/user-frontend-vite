@@ -97,10 +97,15 @@ export function clearToken() {
   } catch {}
 }
 
-export function setUserSession({ token, user }) {
+export function setUserSession({ token, user, shop }, role = "user") {
   try {
-    if (token) setToken(token);
-    if (user) localStorage.setItem(USER_OBJ_KEY, JSON.stringify(user));
+    if (role === "shop") {
+      if (token) localStorage.setItem("shopToken", token);
+      if (shop) localStorage.setItem("shop", JSON.stringify(shop));
+    } else {
+      if (token) setToken(token);
+      if (user) localStorage.setItem("user", JSON.stringify(user));
+    }
   } catch {}
 }
 

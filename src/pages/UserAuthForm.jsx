@@ -1,9 +1,11 @@
 import { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "../components/Input";
 import { ChipsMultiSelect } from "../components/ChipsMultiSelect";
 import { DOBWithAge } from "../components/DOBWithAge";
 import { ReferralField } from "../components/ReferralField";
 import { Loader2, AlertCircle } from "lucide-react";
+import { apiPost, setUserSession } from "../api";
 
 function readInviterFromUrl() {
   try {
@@ -22,6 +24,7 @@ function readInviterFromUrl() {
 }
 
 export function UserAuthForm({ mode }) {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -86,18 +89,10 @@ export function UserAuthForm({ mode }) {
       if (mode === "login") {
         const payload = { email: email.trim(), password };
 
-        const response = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) throw new Error("Invalid credentials");
-
-        const data = await response.json();
-        localStorage.setItem("userToken", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        alert("Login successful! Redirecting...");
+        const data = await apiPost("/auth/login", payload);
+        setUserSession({ token: data.token, user: data.user });
+        setError(null);
+        navigate("/dashboard");
       } else {
         if (!firstName.trim() || !lastName.trim() || !email.trim() || !password) {
           throw new Error("Please fill in all required fields");
@@ -132,24 +127,10 @@ export function UserAuthForm({ mode }) {
         if (favoriteSport) payload.favoriteSport = favoriteSport;
         if (interests.length > 0) payload.interests = interests;
 
-        const response = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || "Registration failed");
-        }
-
-        const data = await response.json();
-        if (data.token) {
-          localStorage.setItem("userToken", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
-        }
-
-        alert("Registration successful! Welcome to Moondala!");
+        const data = await apiPost("/auth/register", payload);
+        setUserSession({ token: data.token, user: data.user });
+        setError(null);
+        navigate("/dashboard");
       }
     } catch (err) {
       setError(err.message || "An error occurred. Please try again.");
