@@ -59,6 +59,7 @@ class ErrorBoundary extends React.Component {
     this.state = { hasError: false, message: "", stack: "" };
   }
 
+
   static getDerivedStateFromError(err) {
     return {
       hasError: true,
@@ -67,9 +68,15 @@ class ErrorBoundary extends React.Component {
     };
   }
 
-  componentDidCatch(err) {
-    // eslint-disable-next-line no-console
+  componentDidCatch(err, info) {
+    // Enhanced error logging
     console.error("[App ErrorBoundary]", err);
+    if (info) {
+      console.error("[App ErrorBoundary] componentStack:", info.componentStack);
+    }
+    if (err && err.stack) {
+      console.error("[App ErrorBoundary] stack:", err.stack);
+    }
   }
 
   render() {

@@ -2,9 +2,11 @@ import { useState } from "react";
 import UserAuthForm from "./UserAuthForm";
 import ShopAuthForm from "./ShopAuthForm";
 
+
 export default function SplitAuthPage() {
   const [mode, setMode] = useState("login");
   const [side, setSide] = useState("user");
+  console.log("[SplitAuthPage] Rendered", { mode, side });
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white">
