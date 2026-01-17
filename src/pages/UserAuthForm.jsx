@@ -67,7 +67,6 @@ export function UserAuthForm({ mode }) {
   const [country, setCountry] = useState("");
   const [favoriteSport, setFavoriteSport] = useState("");
   const [interests, setInterests] = useState([]);
-  const [referralCode, setReferralCode] = useState(generateReferralCode());
   const [inviterCode, setInviterCode] = useState(searchParams.get("inviter") || "");
 
   const handleInterestChange = (interest) => {
@@ -155,7 +154,6 @@ export function UserAuthForm({ mode }) {
           country: country,
           favoriteSport: favoriteSport,
           interests: interests,
-          referralCode: referralCode || generateReferralCode(),
         };
 
         if (inviterCode.trim()) registerData.invitedByCode = inviterCode.trim().toUpperCase();
@@ -277,32 +275,7 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label htmlFor="referralCode" className="mb-2 block text-xs">Your Referral Code</Label>
-            <Input
-              id="referralCode"
-              type="text"
-              placeholder="Your code"
-              value={referralCode}
-              disabled
-              className="opacity-60"
-            />
-            <p className="text-xs text-gray-500 mt-1">Share this code to earn rewards when friends join</p>
-          </div>
-
-          <div>
-            <Label htmlFor="inviterCode" className="mb-2 block text-xs">Invited By Code (Optional)</Label>
-            <Input
-              id="inviterCode"
-              type="text"
-              placeholder="Enter inviter code"
-              value={inviterCode}
-              onChange={(e) => setInviterCode(e.target.value)}
-              disabled={!!searchParams.get("inviter")}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="phone" className="mb-2 block text-xs">Phone Number</Label>
+            <Label htmlFor="phone" className="mb-2 block text-xs">Phone Number *</Label>
             <Input
               id="phone"
               icon={Phone}
@@ -395,7 +368,7 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label className="mb-2 block text-xs">Interests</Label>
+            <Label className="mb-2 block text-xs">Interests *</Label>
             <div className="grid grid-cols-2 gap-2">
               {INTERESTS.map(interest => (
                 <Checkbox
@@ -407,6 +380,18 @@ export function UserAuthForm({ mode }) {
                 />
               ))}
             </div>
+          </div>
+
+          <div>
+            <Label htmlFor="inviterCode" className="mb-2 block text-xs">Invited By Code (Optional)</Label>
+            <Input
+              id="inviterCode"
+              type="text"
+              placeholder="Enter inviter code if you have one"
+              value={inviterCode}
+              onChange={(e) => setInviterCode(e.target.value)}
+              disabled={!!searchParams.get("inviter")}
+            />
           </div>
         </>
       )}
