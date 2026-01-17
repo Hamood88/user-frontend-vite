@@ -108,13 +108,40 @@ export function UserAuthForm({ mode }) {
           throw new Error("Password must be at least 8 characters with uppercase, lowercase, and numbers");
         }
 
-        // Validate age if provided
-        if (dobDay && dobMonth && dobYear) {
-          const dateStr = `${dobYear}-${String(dobMonth).padStart(2, '0')}-${String(dobDay).padStart(2, '0')}`;
-          const age = calculateAge(dateStr);
-          if (age < 10) {
-            throw new Error("You must be at least 10 years old to register");
-          }
+        // Validate phone (required)
+        if (!phone.trim()) {
+          throw new Error("Phone number is required");
+        }
+
+        // Validate gender (required)
+        if (!gender) {
+          throw new Error("Gender is required");
+        }
+
+        // Validate DOB (required)
+        if (!dobDay || !dobMonth || !dobYear) {
+          throw new Error("Date of birth is required");
+        }
+        
+        const dateStr = `${dobYear}-${String(dobMonth).padStart(2, '0')}-${String(dobDay).padStart(2, '0')}`;
+        const age = calculateAge(dateStr);
+        if (age < 10) {
+          throw new Error("You must be at least 10 years old to register");
+        }
+
+        // Validate country (required)
+        if (!country) {
+          throw new Error("Country is required");
+        }
+
+        // Validate sport (required)
+        if (!favoriteSport) {
+          throw new Error("Favorite sport is required");
+        }
+
+        // Validate interests (required - at least 1)
+        if (interests.length < 1) {
+          throw new Error("Please select at least 1 interest");
         }
 
         const registerData = {
@@ -122,18 +149,15 @@ export function UserAuthForm({ mode }) {
           lastName: lastName.trim(),
           email: email.trim(),
           password,
+          phoneNumber: phone.trim(),
+          gender: gender.toLowerCase(), // Convert M/F/Other to male/female/other
+          dateOfBirth: dateStr, // Format: YYYY-MM-DD
+          country: country,
+          favoriteSport: favoriteSport,
+          interests: interests,
           referralCode: referralCode || generateReferralCode(),
         };
 
-        // Add optional fields if provided
-        if (phone.trim()) registerData.phoneNumber = phone.trim();
-        if (gender) registerData.gender = gender.toLowerCase();
-        if (dobDay && dobMonth && dobYear) {
-          registerData.dateOfBirth = `${dobYear}-${String(dobMonth).padStart(2, '0')}-${String(dobDay).padStart(2, '0')}`;
-        }
-        if (country) registerData.country = country;
-        if (favoriteSport) registerData.favoriteSport = favoriteSport;
-        if (interests.length > 0) registerData.interests = interests;
         if (inviterCode.trim()) registerData.invitedByCode = inviterCode.trim().toUpperCase();
 
         const data = await apiPost("/auth/register", registerData);
@@ -290,15 +314,15 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label htmlFor="gender" className="mb-2 block text-xs">Gender</Label>
+            <Label htmlFor="gender" className="mb-2 block text-xs">Gender *</Label>
             <Select
               id="gender"
               value={gender}
               onChange={(e) => setGender(e.target.value)}
               options={[
-                { value: "M", label: "Male" },
-                { value: "F", label: "Female" },
-                { value: "Other", label: "Other" },
+                { value: "male", label: "Male" },
+                { value: "female", label: "Female" },
+                { value: "other", label: "Other" },
               ]}
               placeholder="Select gender"
             />
