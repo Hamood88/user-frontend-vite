@@ -3,10 +3,23 @@ import UserAuthForm from "./UserAuthForm";
 import ShopAuthForm from "./ShopAuthForm";
 
 
+
 export default function SplitAuthPage() {
   const [mode, setMode] = useState("login");
   const [side, setSide] = useState("user");
+  const [formError, setFormError] = useState(null);
   console.log("[SplitAuthPage] Rendered", { mode, side });
+
+  let formContent = null;
+  try {
+    formContent = side === "user"
+      ? <UserAuthForm mode={mode} />
+      : <ShopAuthForm mode={mode} />;
+  } catch (err) {
+    setFormError(err);
+    console.error("[SplitAuthPage] Error rendering form:", err);
+    formContent = <div className="text-red-400">Error rendering form: {String(err)}</div>;
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white">
@@ -43,11 +56,10 @@ export default function SplitAuthPage() {
         </button>
       </div>
       <div className="w-full max-w-md bg-gray-900/80 rounded-2xl shadow-xl p-8">
-        {side === "user" ? (
-          <UserAuthForm mode={mode} />
-        ) : (
-          <ShopAuthForm mode={mode} />
+        {formError && (
+          <div className="text-red-400 mb-4">Error rendering form: {String(formError)}</div>
         )}
+        {formContent}
       </div>
     </div>
   );
