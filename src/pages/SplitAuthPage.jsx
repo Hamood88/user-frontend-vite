@@ -1,95 +1,70 @@
 import { useState } from "react";
-import { User, Store, Heart, Package, Users, ShoppingBag, TrendingUp, Users2, Globe } from "lucide-react";
+import { Users, Store, Heart, Package, Users as UsersIcon, ShoppingBag, TrendingUp, Users2, Mail, Lock } from "lucide-react";
 import UserAuthForm from "./UserAuthForm";
 import ShopAuthForm from "./ShopAuthForm";
 import { Badge } from "../components/ui";
 
 export default function SplitAuthPage() {
   const [mode, setMode] = useState("login");
-  const [side, setSide] = useState("user");
-  console.log("[SplitAuthPage] Rendered", { mode, side });
+  console.log("[SplitAuthPage] Rendered", { mode });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white overflow-hidden">
-      {/* Background elements */}
+    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-slate-950 to-slate-900 text-white overflow-hidden">
+      {/* Background gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 right-1/3 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-amber-600/20 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: "1s" }}></div>
+        <div className="absolute top-1/2 -right-1/4 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl opacity-40"></div>
+        <div className="absolute bottom-0 -left-1/4 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl opacity-40"></div>
       </div>
 
-      <div className="relative z-10 min-h-screen grid md:grid-cols-2 gap-8 p-8 max-w-7xl mx-auto">
+      <div className="relative z-10 min-h-screen grid md:grid-cols-2 gap-12 p-8 max-w-7xl mx-auto">
         {/* LEFT: BUYER SECTION */}
         <div className="flex flex-col justify-between">
           {/* Header */}
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500/30 to-cyan-600/30 flex items-center justify-center border border-cyan-500/30">
-                <User className="w-6 h-6 text-cyan-400" />
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-12 h-12 rounded-lg bg-yellow-600/20 border border-yellow-600/40 flex items-center justify-center">
+                <Users className="w-6 h-6 text-yellow-400" />
               </div>
-              <h1 className="text-3xl font-bold">Join as Buyer</h1>
+              <h1 className="text-4xl font-bold text-white">Join as Buyer</h1>
             </div>
 
-            {/* Features */}
-            <div className="flex flex-wrap gap-3 mb-8">
-              <Badge className="text-cyan-300 ring-cyan-500/30">
-                <Heart className="w-3.5 h-3.5" />
-                Earn rewards
+            {/* Feature pills */}
+            <div className="flex flex-wrap gap-3 mb-12">
+              <Badge>
+                <Heart className="w-4 h-4 text-purple-400" />
+                <span>Earn rewards</span>
               </Badge>
-              <Badge className="text-cyan-300 ring-cyan-500/30">
-                <Package className="w-3.5 h-3.5" />
-                Discover products
+              <Badge>
+                <Package className="w-4 h-4 text-purple-400" />
+                <span>Discover products</span>
               </Badge>
-              <Badge className="text-cyan-300 ring-cyan-500/30">
-                <Users className="w-3.5 h-3.5" />
-                Build network
+              <Badge>
+                <UsersIcon className="w-4 h-4 text-purple-400" />
+                <span>Build network</span>
               </Badge>
             </div>
-          </div>
-
-          {/* Mode toggle for mobile/tablet */}
-          <div className="md:hidden mb-6 flex gap-3">
-            <button
-              onClick={() => setMode("register")}
-              className={`flex-1 py-2 rounded-lg font-semibold transition-all ${
-                mode === "register"
-                  ? "bg-white/10 text-white ring-1 ring-white/20"
-                  : "bg-white/5 text-white/60 hover:bg-white/10"
-              }`}
-            >
-              Sign Up
-            </button>
-            <button
-              onClick={() => setMode("login")}
-              className={`flex-1 py-2 rounded-lg font-semibold transition-all ${
-                mode === "login"
-                  ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white"
-                  : "bg-white/5 text-white/60 hover:bg-white/10"
-              }`}
-            >
-              Log In
-            </button>
           </div>
 
           {/* Form Container */}
-          <div className="bg-gradient-to-br from-slate-900/60 to-slate-900/40 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-            {/* Mode toggle - Desktop */}
-            <div className="hidden md:flex gap-2 mb-6">
+          <div className="bg-gradient-to-br from-purple-950/60 to-slate-900/60 backdrop-blur-xl rounded-2xl border border-purple-700/30 p-8">
+            {/* Mode toggle */}
+            <div className="flex gap-3 mb-8">
               <button
                 onClick={() => setMode("register")}
-                className={`flex-1 py-2.5 rounded-lg font-semibold transition-all ${
+                className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
                   mode === "register"
-                    ? "bg-white/10 text-white ring-1 ring-white/20"
-                    : "bg-white/5 text-white/60 hover:bg-white/10"
+                    ? "bg-white/10 text-white border border-white/20"
+                    : "bg-transparent text-gray-400 hover:text-gray-300"
                 }`}
               >
                 Sign Up
               </button>
               <button
                 onClick={() => setMode("login")}
-                className={`flex-1 py-2.5 rounded-lg font-semibold transition-all ${
+                className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
                   mode === "login"
-                    ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white"
-                    : "bg-white/5 text-white/60 hover:bg-white/10"
+                    ? "bg-gradient-to-r from-yellow-400 via-yellow-300 to-purple-500 text-white"
+                    : "bg-transparent text-gray-400 hover:text-gray-300"
                 }`}
               >
                 Log In
@@ -99,8 +74,8 @@ export default function SplitAuthPage() {
             <UserAuthForm mode={mode} />
 
             {/* Footer */}
-            <p className="text-xs text-gray-500 mt-4 text-center">
-              By continuing you agree to <span className="text-white font-semibold">Terms</span> & <span className="text-white font-semibold">Privacy</span>
+            <p className="text-xs text-gray-500 mt-6 text-center">
+              By continuing you agree to <span className="text-white font-semibold">Terms & Privacy</span>
             </p>
           </div>
         </div>
@@ -109,70 +84,50 @@ export default function SplitAuthPage() {
         <div className="flex flex-col justify-between">
           {/* Header */}
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500/30 to-amber-600/30 flex items-center justify-center border border-amber-500/30">
-                <Store className="w-6 h-6 text-amber-400" />
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-12 h-12 rounded-lg bg-yellow-600/20 border border-yellow-600/40 flex items-center justify-center">
+                <Store className="w-6 h-6 text-yellow-400" />
               </div>
-              <h1 className="text-3xl font-bold">Join as Seller</h1>
+              <h1 className="text-4xl font-bold text-white">Join as Seller</h1>
             </div>
 
-            {/* Features */}
-            <div className="flex flex-wrap gap-3 mb-8">
-              <Badge className="text-amber-300 ring-amber-500/30">
-                <ShoppingBag className="w-3.5 h-3.5" />
-                Launch mall
+            {/* Feature pills */}
+            <div className="flex flex-wrap gap-3 mb-12">
+              <Badge>
+                <ShoppingBag className="w-4 h-4 text-yellow-400" />
+                <span>Launch mall</span>
               </Badge>
-              <Badge className="text-amber-300 ring-amber-500/30">
-                <TrendingUp className="w-3.5 h-3.5" />
-                Track earnings
+              <Badge>
+                <TrendingUp className="w-4 h-4 text-yellow-400" />
+                <span>Track earnings</span>
               </Badge>
-              <Badge className="text-amber-300 ring-amber-500/30">
-                <Users2 className="w-3.5 h-3.5" />
-                Reach buyers
+              <Badge>
+                <Users2 className="w-4 h-4 text-yellow-400" />
+                <span>Reach buyers</span>
               </Badge>
             </div>
-          </div>
-
-          {/* Mode toggle for mobile/tablet */}
-          <div className="md:hidden mb-6 flex gap-3">
-            <button
-              onClick={() => setMode("register")}
-              className={`flex-1 py-2 rounded-lg font-semibold transition-all ${
-                mode === "register"
-                  ? "bg-white/10 text-white ring-1 ring-white/20"
-                  : "bg-white/5 text-white/60 hover:bg-white/10"
-              }`}
-            >
-              Sign Up
-            </button>
-            <button
-              onClick={() => setMode("login")}
-              className={`flex-1 py-2 rounded-lg font-semibold transition-all bg-gradient-to-r from-amber-400 to-amber-500 text-black font-bold ${
-                mode === "login" ? "" : ""
-              }`}
-            >
-              Log In
-            </button>
           </div>
 
           {/* Form Container */}
-          <div className="bg-gradient-to-br from-slate-900/60 to-slate-900/40 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-            {/* Mode toggle - Desktop */}
-            <div className="hidden md:flex gap-2 mb-6">
+          <div className="bg-gradient-to-br from-purple-950/60 to-slate-900/60 backdrop-blur-xl rounded-2xl border border-purple-700/30 p-8">
+            {/* Mode toggle */}
+            <div className="flex gap-3 mb-8">
               <button
                 onClick={() => setMode("register")}
-                className={`flex-1 py-2.5 rounded-lg font-semibold transition-all ${
+                className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
                   mode === "register"
-                    ? "bg-white/10 text-white ring-1 ring-white/20"
-                    : "bg-white/5 text-white/60 hover:bg-white/10"
+                    ? "bg-white/10 text-white border border-white/20"
+                    : "bg-transparent text-gray-400 hover:text-gray-300"
                 }`}
               >
                 Sign Up
               </button>
               <button
                 onClick={() => setMode("login")}
-                className={`flex-1 py-2.5 rounded-lg font-semibold transition-all bg-gradient-to-r from-amber-400 to-amber-500 text-black font-bold hover:from-amber-300 hover:to-amber-400 ${
-                  mode === "login" ? "" : ""
+                className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
+                  mode === "login"
+                    ? "bg-gradient-to-r from-yellow-400 via-yellow-300 to-purple-500 text-white"
+                    : "bg-transparent text-gray-400 hover:text-gray-300"
                 }`}
               >
                 Log In
@@ -182,8 +137,8 @@ export default function SplitAuthPage() {
             <ShopAuthForm mode={mode} />
 
             {/* Footer */}
-            <p className="text-xs text-gray-500 mt-4 text-center">
-              By continuing you agree to <span className="text-white font-semibold">Terms</span> & <span className="text-white font-semibold">Privacy</span>
+            <p className="text-xs text-gray-500 mt-6 text-center">
+              By continuing you agree to <span className="text-white font-semibold">Terms & Privacy</span>
             </p>
           </div>
         </div>

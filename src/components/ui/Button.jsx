@@ -6,8 +6,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-cyan-500 to-cyan-600 text-white hover:from-cyan-400 hover:to-cyan-500 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30",
-        shop: "bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-400 hover:to-amber-500 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30",
+        default: "bg-gradient-to-r from-yellow-400 via-yellow-300 to-purple-500 text-white hover:from-yellow-300 hover:via-yellow-200 hover:to-purple-600 shadow-lg shadow-yellow-500/20",
+        shop: "bg-gradient-to-r from-yellow-400 via-yellow-300 to-purple-500 text-white hover:from-yellow-300 hover:via-yellow-200 hover:to-purple-600 shadow-lg shadow-yellow-500/20",
         secondary: "bg-white/10 text-white hover:bg-white/20 ring-1 ring-white/20 hover:ring-white/30",
         ghost: "hover:bg-white/10 text-white",
       },

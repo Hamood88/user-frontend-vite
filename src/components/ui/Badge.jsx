@@ -2,14 +2,16 @@ import { cn } from "../../lib/utils"
 
 export function Badge({ children, className, ...props }) {
   return (
-    <span
+    <div
       className={cn(
-        "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ring-1 ring-white/20 bg-white/5 hover:bg-white/10 transition-colors",
+        "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium",
+        "border border-purple-500/40 text-gray-300 bg-gray-900/30",
+        "transition-all hover:bg-gray-800/50 hover:border-purple-500/60",
         className
       )}
       {...props}
     >
       {children}
-    </span>
+    </div>
   )
 }

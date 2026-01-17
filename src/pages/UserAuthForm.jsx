@@ -59,74 +59,85 @@ export function UserAuthForm({ mode }) {
       {mode === "register" && (
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label>First Name</Label>
+            <Label htmlFor="firstName" className="mb-2 block">First Name *</Label>
             <Input
+              id="firstName"
+              icon={User}
               type="text"
+              placeholder="John"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
-              placeholder="John"
-              icon={User}
             />
           </div>
           <div>
-            <Label>Last Name</Label>
+            <Label htmlFor="lastName" className="mb-2 block">Last Name *</Label>
             <Input
+              id="lastName"
+              icon={User}
               type="text"
+              placeholder="Doe"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               required
-              placeholder="Doe"
-              icon={User}
             />
           </div>
         </div>
       )}
 
-      {/* Email field */}
+      {/* Email */}
       <div>
-        <Label>Email Address</Label>
+        <Label htmlFor="email" className="mb-2 block">Email *</Label>
         <Input
+          id="email"
+          icon={Mail}
           type="email"
+          placeholder="you@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          placeholder="your@email.com"
-          icon={Mail}
         />
       </div>
 
-      {/* Password field */}
+      {/* Password */}
       <div>
-        <Label>Password</Label>
+        <Label htmlFor="password" className="mb-2 block">Password *</Label>
         <Input
+          id="password"
+          icon={Lock}
           type="password"
+          placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          placeholder="••••••••"
-          icon={Lock}
         />
       </div>
 
+      {/* Remember & Forgot */}
+      {mode === "login" && (
+        <div className="flex justify-between items-center text-sm">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" className="w-4 h-4 rounded border-gray-700 bg-gray-900/40" />
+            <span className="text-gray-400">Remember me</span>
+          </label>
+          <a href="#" className="text-teal-400 hover:text-teal-300 transition-colors">Forgot password?</a>
+        </div>
+      )}
+
       {/* Submit button */}
-      <Button
-        type="submit"
-        disabled={isLoading || success}
-        variant="default"
-        className="w-full mt-2"
+      <Button 
+        type="submit" 
+        variant="default" 
+        className="w-full mt-6"
+        disabled={isLoading}
       >
         {isLoading ? (
           <>
-            <Loader2 className="w-5 h-5 animate-spin" />
-            Processing...
+            <Loader2 className="w-4 h-4 animate-spin" />
+            {mode === "login" ? "Signing in..." : "Creating account..."}
           </>
-        ) : success ? (
-          "Success!"
-        ) : mode === "login" ? (
-          "Sign In"
         ) : (
-          "Create Account"
+          mode === "login" ? "Log In" : "Sign Up"
         )}
       </Button>
     </form>

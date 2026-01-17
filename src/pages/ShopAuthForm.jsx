@@ -62,65 +62,72 @@ export function ShopAuthForm({ mode }) {
       {/* Shop name field (register only) */}
       {mode === "register" && (
         <div>
-          <Label>Shop Name</Label>
+          <Label htmlFor="shopName" className="mb-2 block">Shop Name *</Label>
           <Input
+            id="shopName"
+            icon={Store}
             type="text"
+            placeholder="My Awesome Shop"
             value={shopName}
             onChange={(e) => setShopName(e.target.value)}
             required
-            placeholder="My Awesome Shop"
-            icon={Store}
-            iconColor="text-amber-400/40"
           />
         </div>
       )}
 
-      {/* Email field */}
+      {/* Email */}
       <div>
-        <Label>Email Address</Label>
+        <Label htmlFor="shopEmail" className="mb-2 block">Email *</Label>
         <Input
+          id="shopEmail"
+          icon={Mail}
           type="email"
+          placeholder="shop@example.com"
           value={shopEmail}
           onChange={(e) => setShopEmail(e.target.value)}
           required
-          placeholder="shop@example.com"
-          icon={Mail}
-          iconColor="text-amber-400/40"
         />
       </div>
 
-      {/* Password field */}
+      {/* Password */}
       <div>
-        <Label>Password</Label>
+        <Label htmlFor="password" className="mb-2 block">Password *</Label>
         <Input
+          id="password"
+          icon={Lock}
           type="password"
+          placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          placeholder="••••••••"
-          icon={Lock}
-          iconColor="text-amber-400/40"
         />
       </div>
 
+      {/* Remember & Forgot */}
+      {mode === "login" && (
+        <div className="flex justify-between items-center text-sm">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" className="w-4 h-4 rounded border-gray-700 bg-gray-900/40" />
+            <span className="text-gray-400">Remember me</span>
+          </label>
+          <a href="#" className="text-yellow-400 hover:text-yellow-300 transition-colors">Forgot password?</a>
+        </div>
+      )}
+
       {/* Submit button */}
-      <Button
-        type="submit"
-        disabled={isLoading || success}
-        variant="shop"
-        className="w-full mt-2"
+      <Button 
+        type="submit" 
+        variant="shop" 
+        className="w-full mt-6"
+        disabled={isLoading}
       >
         {isLoading ? (
           <>
-            <Loader2 className="w-5 h-5 animate-spin" />
-            Processing...
+            <Loader2 className="w-4 h-4 animate-spin" />
+            {mode === "login" ? "Signing in..." : "Creating shop..."}
           </>
-        ) : success ? (
-          "Success!"
-        ) : mode === "login" ? (
-          "Sign In to Shop"
         ) : (
-          "Register Shop"
+          mode === "login" ? "Log In" : "Sign Up"
         )}
       </Button>
     </form>
