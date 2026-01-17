@@ -133,11 +133,6 @@ export function UserAuthForm({ mode }) {
           throw new Error("Country is required");
         }
 
-        // Validate sport (required)
-        if (!favoriteSport) {
-          throw new Error("Favorite sport is required");
-        }
-
         // Validate interests (required - at least 1)
         if (interests.length < 1) {
           throw new Error("Please select at least 1 interest");
@@ -152,10 +147,10 @@ export function UserAuthForm({ mode }) {
           gender: gender.toLowerCase(), // Convert M/F/Other to male/female/other
           dateOfBirth: dateStr, // Format: YYYY-MM-DD
           country: country,
-          favoriteSport: favoriteSport,
           interests: interests,
         };
 
+        if (favoriteSport) registerData.favoriteSport = favoriteSport;
         if (inviterCode.trim()) registerData.invitedByCode = inviterCode.trim().toUpperCase();
 
         const data = await apiPost("/auth/register", registerData);
