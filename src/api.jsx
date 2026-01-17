@@ -9,6 +9,27 @@
 
 const DEFAULT_BASE = "https://moondala-backend.onrender.com";
 
+// If running in the browser on the production domain, prefer the
+// official API subdomain so the site works even if Vite env vars
+// were not set during deployment. This helps quick fixes when
+// the frontend is deployed but envs were missed.
+function detectProdApiBaseFallback() {
+  try {
+    if (typeof window === "undefined") return null;
+    const host = (window.location && window.location.hostname) || "";
+    if (!host) return null;
+    // If frontend hosted at moondala.one or www.moondala.one
+    // Prefer the currently deployed backend host (Render) which is reachable
+    // even when `api.moondala.one` DNS is not configured yet.
+    if (host === "moondala.one" || host === "www.moondala.one") {
+      return "https://moondala-backend.onrender.com";
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 /* =========================================
    ✅ API BASE (Vite-safe)
    ========================================= */
@@ -32,6 +53,7 @@ export const API_BASE = normalizeBase(
     readEnv("VITE_BACKEND_URL") ||
     readEnv("REACT_APP_API_URL") ||
     readEnv("REACT_APP_BACKEND_URL") ||
+    detectProdApiBaseFallback() ||
     DEFAULT_BASE
 );
 

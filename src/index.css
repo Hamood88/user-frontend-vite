@@ -111,6 +111,12 @@
    Luxury UI Utilities
    ========================= */
 
+/* Emergency debug: re-enable pointer events on interactive controls
+  If the app is unresponsive after a recent design change, a global
+  overlay or CSS rule may be blocking clicks. This rule forces inputs
+  and buttons to accept pointer events while you debug. Remove once
+  root cause is found. */
+
 @layer components {
   /* premium card */
   .feed-card {

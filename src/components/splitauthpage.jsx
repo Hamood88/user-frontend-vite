@@ -1,8 +1,6 @@
 import React, { useMemo, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const API_BASE = import.meta?.env?.VITE_API_BASE || "https://moondala-backend.onrender.com";
+import { apiPost, setUserSession } from "../api";
 
 export default function SplitAuthPage() {
   const navigate = useNavigate();
@@ -177,12 +175,13 @@ export default function SplitAuthPage() {
     try {
       // -------- LOGIN --------
       if (userMode === "login") {
-        const res = await axios.post(`${API_BASE}/api/auth/login`, {
+        const data = await apiPost("/auth/login", {
           email: userForm.email,
           password: userForm.password,
         });
 
-        saveAuthToLocalStorage(res);
+        // persist session using shared helper
+        setUserSession({ token: data.token, user: data.user });
 
         setUserMsg("✅ User login success!");
         navigate("/feed");
@@ -247,9 +246,9 @@ export default function SplitAuthPage() {
         interests: userForm.interests,
       };
 
-      const res = await axios.post(`${API_BASE}/api/auth/register`, payload);
+      const data = await apiPost("/auth/register", payload);
 
-      saveAuthToLocalStorage(res);
+      setUserSession({ token: data.token, user: data.user });
 
       setUserMsg("✅ User registered successfully!");
       navigate("/feed");
