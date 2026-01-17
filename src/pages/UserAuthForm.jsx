@@ -1,38 +1,44 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2, Mail, Lock, User, Phone, Globe } from "lucide-react";
+import { Loader2, Mail, Lock, User, Phone, Globe, AlertCircle } from "lucide-react";
 import { apiPost, setUserSession } from "../api";
 import { Button, Input, Alert, Label, Select, Checkbox } from "../components/ui";
+import { countries } from "../utils/countries";
 
 console.log("[UserAuthForm] Module loaded");
 
-// Country list (195+ countries)
-const COUNTRIES = [
-  { value: "US", label: "United States" },
-  { value: "GB", label: "United Kingdom" },
-  { value: "CA", label: "Canada" },
-  { value: "AU", label: "Australia" },
-  { value: "AE", label: "United Arab Emirates" },
-  { value: "SA", label: "Saudi Arabia" },
-  { value: "IN", label: "India" },
-  { value: "PK", label: "Pakistan" },
-  { value: "BD", label: "Bangladesh" },
-  { value: "NG", label: "Nigeria" },
-  { value: "ZA", label: "South Africa" },
-  { value: "EG", label: "Egypt" },
-  { value: "FR", label: "France" },
-  { value: "DE", label: "Germany" },
-  { value: "IT", label: "Italy" },
-  { value: "ES", label: "Spain" },
-  { value: "NL", label: "Netherlands" },
-  { value: "SE", label: "Sweden" },
-  { value: "CH", label: "Switzerland" },
-  { value: "SG", label: "Singapore" },
-  { value: "JP", label: "Japan" },
-  { value: "CN", label: "China" },
-  { value: "BR", label: "Brazil" },
-  { value: "MX", label: "Mexico" },
-].sort((a, b) => a.label.localeCompare(b.label));
+// Validation utilities from Figma
+const generateReferralCode = () => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for (let i = 0; i < 8; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+};
+
+const calculateAge = (dateString) => {
+  const today = new Date();
+  const birthDate = new Date(dateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
+
+const validatePassword = (password) => {
+  const minLength = password.length >= 8;
+  const hasUpper = /[A-Z]/.test(password);
+  const hasLower = /[a-z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  return minLength && hasUpper && hasLower && hasNumber;
+};
+
+const validateEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
 
 const SPORTS = [
   "Football",
@@ -45,22 +51,21 @@ const SPORTS = [
   "Swimming",
   "Track & Field",
   "Gymnastics",
+  "Running",
   "Other"
 ];
 
 const INTERESTS = [
-  "Music",
-  "Art",
-  "Technology",
   "Fashion",
-  "Travel",
-  "Food",
-  "Gaming",
-  "Fitness",
-  "Reading",
-  "Photography",
-  "Movies",
-  "Business"
+  "Electronics",
+  "Sports",
+  "Beauty",
+  "Home & Garden",
+  "Books",
+  "Toys",
+  "Health",
+  "Automotive",
+  "Food & Beverage"
 ];
 
 export function UserAuthForm({ mode }) {
@@ -86,6 +91,7 @@ export function UserAuthForm({ mode }) {
   const [country, setCountry] = useState("");
   const [favoriteSport, setFavoriteSport] = useState("");
   const [interests, setInterests] = useState([]);
+  const [referralCode, setReferralCode] = useState(generateReferralCode());
   const [inviterCode, setInviterCode] = useState(searchParams.get("inviter") || "");
 
   const handleInterestChange = (interest) => {
@@ -104,6 +110,10 @@ export function UserAuthForm({ mode }) {
 
     try {
       if (mode === "login") {
+        if (!validateEmail(email)) {
+          throw new Error("Please enter a valid email address");
+        }
+        
         const data = await apiPost("/auth/login", { email: email.trim(), password });
         setSuccess(true);
         setUserSession({ token: data.token, user: data.user });
@@ -114,23 +124,41 @@ export function UserAuthForm({ mode }) {
           throw new Error("Please fill in all required fields");
         }
 
+        if (!validateEmail(email)) {
+          throw new Error("Please enter a valid email address");
+        }
+
+        if (!validatePassword(password)) {
+          throw new Error("Password must be at least 8 characters with uppercase, lowercase, and numbers");
+        }
+
+        // Validate age if provided
+        if (dobDay && dobMonth && dobYear) {
+          const dateStr = `${dobYear}-${String(dobMonth).padStart(2, '0')}-${String(dobDay).padStart(2, '0')}`;
+          const age = calculateAge(dateStr);
+          if (age < 10) {
+            throw new Error("You must be at least 10 years old to register");
+          }
+        }
+
         const registerData = {
           firstName: firstName.trim(),
           lastName: lastName.trim(),
           email: email.trim(),
           password,
+          referralCode: referralCode || generateReferralCode(),
         };
 
         // Add optional fields if provided
-        if (phone.trim()) registerData.phone = phone.trim();
-        if (gender) registerData.gender = gender;
+        if (phone.trim()) registerData.phoneNumber = phone.trim();
+        if (gender) registerData.gender = gender.toLowerCase();
         if (dobDay && dobMonth && dobYear) {
-          registerData.dateOfBirth = `${dobYear}-${dobMonth.padStart(2, '0')}-${dobDay.padStart(2, '0')}`;
+          registerData.dateOfBirth = `${dobYear}-${String(dobMonth).padStart(2, '0')}-${String(dobDay).padStart(2, '0')}`;
         }
         if (country) registerData.country = country;
         if (favoriteSport) registerData.favoriteSport = favoriteSport;
         if (interests.length > 0) registerData.interests = interests;
-        if (inviterCode.trim()) registerData.inviterCode = inviterCode.trim();
+        if (inviterCode.trim()) registerData.invitedByCode = inviterCode.trim().toUpperCase();
 
         const data = await apiPost("/auth/register", registerData);
         setSuccess(true);
@@ -150,7 +178,12 @@ export function UserAuthForm({ mode }) {
       {success && <Alert type="success" message="Success! Redirecting..." />}
 
       {/* Error message */}
-      {error && <Alert type="error" message={error} />}
+      {error && (
+        <div className="flex items-start gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-red-300">{error}</p>
+        </div>
+      )}
 
       {/* LOGIN MODE */}
       {mode === "login" ? (
@@ -236,9 +269,12 @@ export function UserAuthForm({ mode }) {
             />
           </div>
 
-          {/* Password */}
+          {/* Password - with strength indicator */}
           <div>
-            <Label htmlFor="password" className="mb-2 block text-xs">Password *</Label>
+            <Label htmlFor="password" className="mb-2 block text-xs">
+              Password * 
+              <span className="text-gray-500 text-xs ml-1">(8+ chars, uppercase, lowercase, number)</span>
+            </Label>
             <Input
               id="password"
               icon={Lock}
@@ -247,6 +283,33 @@ export function UserAuthForm({ mode }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+            />
+          </div>
+
+          {/* Referral Code - Auto-generated */}
+          <div>
+            <Label htmlFor="referralCode" className="mb-2 block text-xs">Your Referral Code</Label>
+            <Input
+              id="referralCode"
+              type="text"
+              placeholder="Your code"
+              value={referralCode}
+              disabled
+              className="opacity-60"
+            />
+            <p className="text-xs text-gray-500 mt-1">Share this code to earn rewards when friends join</p>
+          </div>
+
+          {/* Inviter Code */}
+          <div>
+            <Label htmlFor="inviterCode" className="mb-2 block text-xs">Invited By Code (Optional)</Label>
+            <Input
+              id="inviterCode"
+              type="text"
+              placeholder="Enter inviter code"
+              value={inviterCode}
+              onChange={(e) => setInviterCode(e.target.value)}
+              disabled={!!searchParams.get("inviter")}
             />
           </div>
 
@@ -331,7 +394,7 @@ export function UserAuthForm({ mode }) {
               icon={Globe}
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              options={COUNTRIES}
+              options={countries.map(c => ({ value: c, label: c }))}
               placeholder="Select country"
             />
           </div>
@@ -362,19 +425,6 @@ export function UserAuthForm({ mode }) {
                 />
               ))}
             </div>
-          </div>
-
-          {/* Inviter Code */}
-          <div>
-            <Label htmlFor="inviterCode" className="mb-2 block text-xs">Inviter Code (if any)</Label>
-            <Input
-              id="inviterCode"
-              type="text"
-              placeholder="Enter inviter code"
-              value={inviterCode}
-              onChange={(e) => setInviterCode(e.target.value)}
-              disabled={!!searchParams.get("inviter")}
-            />
           </div>
         </>
       )}
