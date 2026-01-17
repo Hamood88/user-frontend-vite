@@ -225,6 +225,30 @@ export function buildUrl(path) {
   return `${API_ROOT}${p}`;
 }
 
+/**
+ * ✅ Convert old localhost URLs to production
+ * Fixes images/uploads that were stored with localhost:5000 URLs
+ */
+export function fixImageUrl(url) {
+  if (!url) return url;
+  const s = String(url || "").trim();
+  
+  // Replace localhost URLs with production API base
+  if (s.includes("localhost:5000")) {
+    return s.replace(/http:\/\/localhost:5000/g, API_BASE);
+  }
+  if (s.includes("127.0.0.1:5000")) {
+    return s.replace(/http:\/\/127\.0\.0\.1:5000/g, API_BASE);
+  }
+  
+  // If relative path, ensure it has API_BASE
+  if (s.startsWith("/uploads/") && !s.startsWith("http")) {
+    return `${API_BASE}${s}`;
+  }
+  
+  return s;
+}
+
 /* ================================
    ✅ CORE REQUEST
    ================================ */

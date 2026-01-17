@@ -21,6 +21,7 @@ import {
   pickId,
   getUserSession,
   apiPost,
+  fixImageUrl,
 } from "../api.jsx";
 
 import "../styles/feedModern.css";
@@ -58,7 +59,7 @@ function userName(u) {
 }
 
 function avatarUrl(u) {
-  return absUrl(u?.avatarUrl || u?.avatar || u?.photoUrl || "");
+  return fixImageUrl(absUrl(u?.avatarUrl || u?.avatar || u?.photoUrl || ""));
 }
 
 function normalizePost(p) {
@@ -285,16 +286,7 @@ export default function Feed() {
     );
 
     try {
-      const res = await fetch(`/api/posts/${pid}/comments/${cid}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("userToken") || localStorage.getItem("token") || ""}`,
-        },
-      });
-      if (!res.ok) {
-        throw new Error("Delete failed");
-      }
+      await apiDelete(`/posts/${pid}/comments/${cid}`);
       // Already updated optimistically
     } catch (e) {
       // Revert: reload the post
@@ -441,7 +433,7 @@ export default function Feed() {
 
                   {post.media && post.media.type === "image" ? (
                     (() => {
-                      const mediaUrl = absUrl(post.media.url);
+                      const mediaUrl = fixImageUrl(absUrl(post.media.url));
                       const hasFailed = failedImages.has(mediaUrl);
                       
                       return (
@@ -472,7 +464,7 @@ export default function Feed() {
                   {post.media && post.media.type === "video" ? (
                     <div className="mb-4 rounded-xl overflow-hidden border border-white/5 bg-black/20">
                       <video
-                        src={absUrl(post.media.url)}
+                        src={fixImageUrl(absUrl(post.media.url))}
                         controls
                         className="w-full max-h-[520px]"
                       />
