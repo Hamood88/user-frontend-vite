@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState, useCallback } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   API_BASE,
+  fixImageUrl,
   getMyFriends,
   getMyOrders,
   getUserConversations,
@@ -24,14 +25,8 @@ function useQuery() {
 }
 
 function absUrl(u) {
-  if (!u) return "";
-  const s = String(u);
-  if (s.startsWith("http://") || s.startsWith("https://")) return s;
-
-  // API_BASE is base (ex: https://moondala-backend.onrender.com)
-  const base = String(API_BASE || "https://moondala-backend.onrender.com").replace(/\/+$/, "");
-
-  if (s.startsWith("/")) return base + s;
+  return fixImageUrl(u);
+}
   return base + "/" + s;
 }
 
