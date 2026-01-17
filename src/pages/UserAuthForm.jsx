@@ -302,7 +302,7 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label className="mb-2 block text-xs">Date of Birth</Label>
+            <Label className="mb-2 block text-xs">Date of Birth *</Label>
             <div className="grid grid-cols-3 gap-2">
               <Select
                 value={dobDay}
@@ -345,7 +345,7 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label htmlFor="country" className="mb-2 block text-xs">Country</Label>
+            <Label htmlFor="country" className="mb-2 block text-xs">Country *</Label>
             <Select
               id="country"
               icon={Globe}
