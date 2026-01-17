@@ -32,7 +32,7 @@ export default function SplitAuthPage() {
               <div className="w-12 h-12 rounded-lg bg-yellow-600/20 border border-yellow-600/40 flex items-center justify-center">
                 <Users className="w-6 h-6 text-yellow-400" />
               </div>
-              <h1 className="text-4xl font-bold text-white">Buyer</h1>
+              <h1 className="text-4xl font-bold text-white">User</h1>
             </div>
 
             {/* Feature pills */}
@@ -95,7 +95,7 @@ export default function SplitAuthPage() {
               <div className="w-12 h-12 rounded-lg bg-yellow-600/20 border border-yellow-600/40 flex items-center justify-center">
                 <Store className="w-6 h-6 text-yellow-400" />
               </div>
-              <h1 className="text-4xl font-bold text-white">Seller</h1>
+              <h1 className="text-4xl font-bold text-white">Shop</h1>
             </div>
 
             {/* Feature pills */}
