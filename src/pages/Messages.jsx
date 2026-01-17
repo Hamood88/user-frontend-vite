@@ -27,8 +27,6 @@ function useQuery() {
 function absUrl(u) {
   return fixImageUrl(u);
 }
-  return base + "/" + s;
-}
 
 function isImage(m) {
   const s = String(m || "").toLowerCase();
