@@ -126,3 +126,46 @@ VITE_API_BASE=http://localhost:5000
 Your user-frontend-vite app is fully tested and ready to launch with zero breaking issues.
 
 **Launch with confidence!** 🚀
+
+---
+
+# Moondala Vite Frontend: Quick Launch & Debug Cheat Sheet
+
+## Common Debugging Tips
+
+- **Check localStorage:**
+  - Open DevTools → Application tab → localStorage
+  - Keys: `userToken`, `user`
+- **API Requests:**
+  - Use Network tab to inspect requests
+  - Ensure `Authorization: Bearer <userToken>` is present
+- **Environment Variables:**
+  - `.env` file: `VITE_API_BASE` or `REACT_APP_API_BASE`
+  - Use `import.meta.env.VITE_API_BASE` in code
+- **Hot Reload Issues:**
+  - If changes don’t show, restart Vite: `npm run dev`
+- **Component Import Errors:**
+  - Check import paths and file extensions (`.jsx` for React components)
+- **Mobile Testing:**
+  - Use browser device toolbar (Ctrl+Shift+M in Chrome)
+  - Ensure buttons and inputs are easily tappable
+
+## Useful Commands
+
+```bash
+npm install        # Install dependencies
+npm run dev        # Start Vite dev server (http://localhost:5173)
+npm run build      # Production build (outputs to dist/)
+```
+
+## Common Issues & Fixes
+
+- **CORS errors:**
+  - Check backend CORS allowlist in `backend/app.js`
+- **Token not saving:**
+  - Use `getToken()` from `src/api.js` to verify
+- **Form not submitting:**
+  - Ensure `onSubmit` handler is attached and prevents default
+
+---
+For full architecture, see `backend/.github/copilot-instructions.md`

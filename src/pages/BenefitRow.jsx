@@ -43,4 +43,4 @@ export function BenefitRow({ icon: Icon, title, description, isActive, variant =
   );
 }
 
-export default BenefitRow;
+// Deleted: Figma-derived BenefitRow component

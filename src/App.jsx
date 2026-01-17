@@ -33,6 +33,7 @@ import ShopMallPublic from "./pages/ShopMallPublic";
 /* ✅ LAYOUT / GUARDS */
 import AppLayout from "./components/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import LandingPage from "./components/LandingPage";
 
 /* =========================
    helpers
