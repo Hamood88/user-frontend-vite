@@ -16,7 +16,14 @@ export default function SplitAuthPage() {
         <div className="absolute bottom-0 -left-1/4 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl opacity-40"></div>
       </div>
 
-      <div className="relative z-10 min-h-screen grid md:grid-cols-2 gap-12 p-8 max-w-7xl mx-auto">
+      <div className="relative z-10 min-h-screen flex flex-col p-8">
+        {/* Top title */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 to-purple-500 bg-clip-text text-transparent mb-2">Users - Shops</h1>
+          <p className="text-gray-400">Choose your role and get started</p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-12 max-w-7xl mx-auto w-full">
         {/* LEFT: BUYER SECTION */}
         <div className="flex flex-col justify-between">
           {/* Header */}
@@ -25,7 +32,7 @@ export default function SplitAuthPage() {
               <div className="w-12 h-12 rounded-lg bg-yellow-600/20 border border-yellow-600/40 flex items-center justify-center">
                 <Users className="w-6 h-6 text-yellow-400" />
               </div>
-              <h1 className="text-4xl font-bold text-white">Join as Buyer</h1>
+              <h1 className="text-4xl font-bold text-white">Buyer</h1>
             </div>
 
             {/* Feature pills */}
@@ -88,7 +95,7 @@ export default function SplitAuthPage() {
               <div className="w-12 h-12 rounded-lg bg-yellow-600/20 border border-yellow-600/40 flex items-center justify-center">
                 <Store className="w-6 h-6 text-yellow-400" />
               </div>
-              <h1 className="text-4xl font-bold text-white">Join as Seller</h1>
+              <h1 className="text-4xl font-bold text-white">Seller</h1>
             </div>
 
             {/* Feature pills */}
@@ -141,6 +148,7 @@ export default function SplitAuthPage() {
               By continuing you agree to <span className="text-white font-semibold">Terms & Privacy</span>
             </p>
           </div>
+        </div>
         </div>
       </div>
     </div>
