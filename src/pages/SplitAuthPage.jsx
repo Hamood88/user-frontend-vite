@@ -1,173 +1,190 @@
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { User, Store, Heart, Package, Users, ShoppingBag, TrendingUp, Users2, Globe } from "lucide-react";
 import UserAuthForm from "./UserAuthForm";
 import ShopAuthForm from "./ShopAuthForm";
+import { Badge } from "../components/ui";
 
 export default function SplitAuthPage() {
   const [mode, setMode] = useState("login");
   const [side, setSide] = useState("user");
-  const [formError, setFormError] = useState(null);
   console.log("[SplitAuthPage] Rendered", { mode, side });
 
-  let formContent = null;
-  try {
-    formContent = side === "user"
-      ? <UserAuthForm mode={mode} />
-      : <ShopAuthForm mode={mode} />;
-  } catch (err) {
-    setFormError(err);
-    console.error("[SplitAuthPage] Error rendering form:", err);
-    formContent = <div className="text-red-400">Error rendering form: {String(err)}</div>;
-  }
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white overflow-hidden relative">
-      {/* Animated background elements */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white overflow-hidden">
+      {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl opacity-30 animate-pulse"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-cyan-600/20 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: "1s" }}></div>
+        <div className="absolute top-1/3 right-1/3 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+        <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-amber-600/20 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: "1s" }}></div>
       </div>
 
-      {/* Main container */}
-      <div className="relative z-10 w-full max-w-2xl px-4">
-        <div className="grid md:grid-cols-2 gap-8 items-stretch">
-          {/* Left side - Info & Branding */}
-          <div className="hidden md:flex flex-col justify-between py-8">
-            <div>
-              <div className="mb-12">
-                <div className="inline-block">
-                  <div className="text-5xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent mb-2">
-                    Moondala
-                  </div>
-                  <p className="text-lg text-gray-400 font-light tracking-wide">Social Commerce • Shared Profits</p>
-                </div>
+      <div className="relative z-10 min-h-screen grid md:grid-cols-2 gap-8 p-8 max-w-7xl mx-auto">
+        {/* LEFT: BUYER SECTION */}
+        <div className="flex flex-col justify-between">
+          {/* Header */}
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500/30 to-cyan-600/30 flex items-center justify-center border border-cyan-500/30">
+                <User className="w-6 h-6 text-cyan-400" />
               </div>
-
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-cyan-600/20 flex items-center justify-center flex-shrink-0 border border-cyan-500/30">
-                    <span className="text-cyan-400 font-bold">✓</span>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">Sell & Earn</h3>
-                    <p className="text-gray-400 text-sm">Create your shop and start earning immediately</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center flex-shrink-0 border border-purple-500/30">
-                    <span className="text-purple-400 font-bold">✓</span>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">Shared Profits</h3>
-                    <p className="text-gray-400 text-sm">Earn rewards when you refer friends to our platform</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-fuchsia-500/20 to-fuchsia-600/20 flex items-center justify-center flex-shrink-0 border border-fuchsia-500/30">
-                    <span className="text-fuchsia-400 font-bold">✓</span>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">Safe & Secure</h3>
-                    <p className="text-gray-400 text-sm">Your data is encrypted and protected end-to-end</p>
-                  </div>
-                </div>
-              </div>
+              <h1 className="text-3xl font-bold">Join as Buyer</h1>
             </div>
 
-            <div className="pt-8 border-t border-white/10">
-              <p className="text-sm text-gray-500">Join thousands of creators and sellers worldwide</p>
+            {/* Features */}
+            <div className="flex flex-wrap gap-3 mb-8">
+              <Badge className="text-cyan-300 ring-cyan-500/30">
+                <Heart className="w-3.5 h-3.5" />
+                Earn rewards
+              </Badge>
+              <Badge className="text-cyan-300 ring-cyan-500/30">
+                <Package className="w-3.5 h-3.5" />
+                Discover products
+              </Badge>
+              <Badge className="text-cyan-300 ring-cyan-500/30">
+                <Users className="w-3.5 h-3.5" />
+                Build network
+              </Badge>
             </div>
           </div>
 
-          {/* Right side - Auth Form */}
-          <div className="flex flex-col">
-            {/* Mode toggle */}
-            <div className="mb-8">
-              <div className="flex gap-3 bg-gray-800/30 backdrop-blur-md p-1.5 rounded-xl border border-white/10 w-fit">
-                <button
-                  onClick={() => setSide("user")}
-                  className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${
-                    side === "user"
-                      ? "bg-gradient-to-r from-cyan-500 to-cyan-600 text-white shadow-lg shadow-cyan-500/20"
-                      : "text-gray-400 hover:text-white"
-                  }`}
-                >
-                  User
-                </button>
-                <button
-                  onClick={() => setSide("shop")}
-                  className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${
-                    side === "shop"
-                      ? "bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/20"
-                      : "text-gray-400 hover:text-white"
-                  }`}
-                >
-                  Shop Owner
-                </button>
-              </div>
+          {/* Mode toggle for mobile/tablet */}
+          <div className="md:hidden mb-6 flex gap-3">
+            <button
+              onClick={() => setMode("register")}
+              className={`flex-1 py-2 rounded-lg font-semibold transition-all ${
+                mode === "register"
+                  ? "bg-white/10 text-white ring-1 ring-white/20"
+                  : "bg-white/5 text-white/60 hover:bg-white/10"
+              }`}
+            >
+              Sign Up
+            </button>
+            <button
+              onClick={() => setMode("login")}
+              className={`flex-1 py-2 rounded-lg font-semibold transition-all ${
+                mode === "login"
+                  ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white"
+                  : "bg-white/5 text-white/60 hover:bg-white/10"
+              }`}
+            >
+              Log In
+            </button>
+          </div>
+
+          {/* Form Container */}
+          <div className="bg-gradient-to-br from-slate-900/60 to-slate-900/40 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+            {/* Mode toggle - Desktop */}
+            <div className="hidden md:flex gap-2 mb-6">
+              <button
+                onClick={() => setMode("register")}
+                className={`flex-1 py-2.5 rounded-lg font-semibold transition-all ${
+                  mode === "register"
+                    ? "bg-white/10 text-white ring-1 ring-white/20"
+                    : "bg-white/5 text-white/60 hover:bg-white/10"
+                }`}
+              >
+                Sign Up
+              </button>
+              <button
+                onClick={() => setMode("login")}
+                className={`flex-1 py-2.5 rounded-lg font-semibold transition-all ${
+                  mode === "login"
+                    ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white"
+                    : "bg-white/5 text-white/60 hover:bg-white/10"
+                }`}
+              >
+                Log In
+              </button>
             </div>
 
-            {/* Form container */}
-            <div className="bg-gradient-to-br from-gray-900/50 to-gray-900/30 backdrop-blur-xl rounded-2xl border border-white/10 p-8 shadow-2xl">
-              {/* Header */}
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold text-white mb-2">
-                  {mode === "login" ? "Welcome Back" : `Join as ${side === "user" ? "User" : "Seller"}`}
-                </h2>
-                <p className="text-gray-400 text-sm">
-                  {mode === "login"
-                    ? "Sign in to your account and continue"
-                    : `Create your ${side === "user" ? "buyer" : "seller"} account to get started`}
-                </p>
-              </div>
+            <UserAuthForm mode={mode} />
 
-              {/* Form content */}
-              {formError && (
-                <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-                  <p className="text-red-300 text-sm">Error: {String(formError)}</p>
-                </div>
-              )}
-              {formContent}
+            {/* Footer */}
+            <p className="text-xs text-gray-500 mt-4 text-center">
+              By continuing you agree to <span className="text-white font-semibold">Terms</span> & <span className="text-white font-semibold">Privacy</span>
+            </p>
+          </div>
+        </div>
 
-              {/* Mode toggle */}
-              <div className="mt-8 pt-6 border-t border-white/10">
-                <p className="text-center text-gray-400 text-sm">
-                  {mode === "login" ? "Don't have an account? " : "Already have an account? "}
-                  <button
-                    onClick={() => setMode(mode === "login" ? "register" : "login")}
-                    className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text font-semibold hover:from-cyan-300 hover:to-purple-300 transition-all"
-                  >
-                    {mode === "login" ? "Create one" : "Sign in"}
-                  </button>
-                </p>
+        {/* RIGHT: SELLER SECTION */}
+        <div className="flex flex-col justify-between">
+          {/* Header */}
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500/30 to-amber-600/30 flex items-center justify-center border border-amber-500/30">
+                <Store className="w-6 h-6 text-amber-400" />
               </div>
-
-              {/* Switch user type hint */}
-              <div className="mt-6 p-4 rounded-lg bg-white/5 border border-white/10">
-                <p className="text-gray-400 text-xs">
-                  💡 {side === "user" ? "Are you a seller?" : "Looking to buy?"} Switch to{" "}
-                  <button
-                    onClick={() => setSide(side === "user" ? "shop" : "user")}
-                    className="text-cyan-400 hover:text-cyan-300 underline font-semibold"
-                  >
-                    {side === "user" ? "Shop Owner" : "User"}
-                  </button>{" "}
-                  mode above
-                </p>
-              </div>
+              <h1 className="text-3xl font-bold">Join as Seller</h1>
             </div>
 
-            {/* Mobile Moondala branding */}
-            <div className="md:hidden text-center mt-8">
-              <div className="inline-block">
-                <div className="text-3xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent mb-1">
-                  Moondala
-                </div>
-                <p className="text-sm text-gray-400">Social Commerce • Shared Profits</p>
-              </div>
+            {/* Features */}
+            <div className="flex flex-wrap gap-3 mb-8">
+              <Badge className="text-amber-300 ring-amber-500/30">
+                <ShoppingBag className="w-3.5 h-3.5" />
+                Launch mall
+              </Badge>
+              <Badge className="text-amber-300 ring-amber-500/30">
+                <TrendingUp className="w-3.5 h-3.5" />
+                Track earnings
+              </Badge>
+              <Badge className="text-amber-300 ring-amber-500/30">
+                <Users2 className="w-3.5 h-3.5" />
+                Reach buyers
+              </Badge>
             </div>
+          </div>
+
+          {/* Mode toggle for mobile/tablet */}
+          <div className="md:hidden mb-6 flex gap-3">
+            <button
+              onClick={() => setMode("register")}
+              className={`flex-1 py-2 rounded-lg font-semibold transition-all ${
+                mode === "register"
+                  ? "bg-white/10 text-white ring-1 ring-white/20"
+                  : "bg-white/5 text-white/60 hover:bg-white/10"
+              }`}
+            >
+              Sign Up
+            </button>
+            <button
+              onClick={() => setMode("login")}
+              className={`flex-1 py-2 rounded-lg font-semibold transition-all bg-gradient-to-r from-amber-400 to-amber-500 text-black font-bold ${
+                mode === "login" ? "" : ""
+              }`}
+            >
+              Log In
+            </button>
+          </div>
+
+          {/* Form Container */}
+          <div className="bg-gradient-to-br from-slate-900/60 to-slate-900/40 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+            {/* Mode toggle - Desktop */}
+            <div className="hidden md:flex gap-2 mb-6">
+              <button
+                onClick={() => setMode("register")}
+                className={`flex-1 py-2.5 rounded-lg font-semibold transition-all ${
+                  mode === "register"
+                    ? "bg-white/10 text-white ring-1 ring-white/20"
+                    : "bg-white/5 text-white/60 hover:bg-white/10"
+                }`}
+              >
+                Sign Up
+              </button>
+              <button
+                onClick={() => setMode("login")}
+                className={`flex-1 py-2.5 rounded-lg font-semibold transition-all bg-gradient-to-r from-amber-400 to-amber-500 text-black font-bold hover:from-amber-300 hover:to-amber-400 ${
+                  mode === "login" ? "" : ""
+                }`}
+              >
+                Log In
+              </button>
+            </div>
+
+            <ShopAuthForm mode={mode} />
+
+            {/* Footer */}
+            <p className="text-xs text-gray-500 mt-4 text-center">
+              By continuing you agree to <span className="text-white font-semibold">Terms</span> & <span className="text-white font-semibold">Privacy</span>
+            </p>
           </div>
         </div>
       </div>
