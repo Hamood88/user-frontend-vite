@@ -94,8 +94,18 @@ export function UserAuthForm({ mode }) {
         setError(null);
         navigate("/dashboard");
       } else {
+        // ✅ REGISTRATION - validate all required fields
         if (!firstName.trim() || !lastName.trim() || !email.trim() || !password) {
-          throw new Error("Please fill in all required fields");
+          throw new Error("Please fill in first name, last name, email, and password");
+        }
+        if (!phoneNumber.trim()) {
+          throw new Error("Phone number is required");
+        }
+        if (!gender) {
+          throw new Error("Gender is required");
+        }
+        if (!dateOfBirth) {
+          throw new Error("Date of birth is required");
         }
 
         const finalReferralCode =
@@ -117,13 +127,14 @@ export function UserAuthForm({ mode }) {
           email: email.trim(),
           password,
           referralCode: finalReferralCode,
+          // ✅ REQUIRED fields (validated above)
+          phoneNumber: phoneNumber.trim(),
+          gender: gender.toLowerCase(),
+          dateOfBirth: dateOfBirth,
         };
 
         if (invitedByCode.trim()) payload.invitedByCode = invitedByCode.trim().toUpperCase();
-        if (dateOfBirth) payload.dateOfBirth = dateOfBirth;
-        if (gender) payload.gender = gender.toLowerCase();
         if (country) payload.country = country;
-        if (phoneNumber.trim()) payload.phoneNumber = phoneNumber.trim();
         if (favoriteSport) payload.favoriteSport = favoriteSport;
         if (interests.length > 0) payload.interests = interests;
 
