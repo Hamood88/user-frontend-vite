@@ -4,6 +4,8 @@ import { Input } from "../components/Input";
 import { Loader2, AlertCircle, Upload, X } from "lucide-react";
 import { apiPost, setUserSession } from "../api";
 
+console.log("[ShopAuthForm] Module loaded");
+
 function readInviterFromUrl() {
   try {
     const sp = new URLSearchParams(window.location.search);
@@ -21,6 +23,7 @@ function readInviterFromUrl() {
 }
 
 export function ShopAuthForm({ mode }) {
+  console.log("[ShopAuthForm] Rendering with mode:", mode);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);

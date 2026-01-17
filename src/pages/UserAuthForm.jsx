@@ -7,6 +7,8 @@ import { ReferralField } from "../components/ReferralField";
 import { Loader2, AlertCircle } from "lucide-react";
 import { apiPost, setUserSession } from "../api";
 
+console.log("[UserAuthForm] Module loaded");
+
 function readInviterFromUrl() {
   try {
     const sp = new URLSearchParams(window.location.search);
@@ -24,6 +26,7 @@ function readInviterFromUrl() {
 }
 
 export function UserAuthForm({ mode }) {
+  console.log("[UserAuthForm] Rendering with mode:", mode);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
