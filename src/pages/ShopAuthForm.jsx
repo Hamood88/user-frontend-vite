@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, AlertCircle, Mail, Lock, Store, CheckCircle } from "lucide-react";
+import { Loader2, Mail, Lock, Store } from "lucide-react";
 import { apiPost, setUserSession } from "../api";
+import { Button, Input, Alert, Label } from "../components/ui";
 
 console.log("[ShopAuthForm] Module loaded");
 
@@ -53,76 +54,61 @@ export function ShopAuthForm({ mode }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Success message */}
-      {success && (
-        <div className="flex items-center gap-3 p-4 bg-green-500/10 ring-1 ring-green-400/30 rounded-xl animate-in fade-in">
-          <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-          <p className="text-sm text-green-300 font-medium">Success! Redirecting...</p>
-        </div>
-      )}
+      {success && <Alert type="success" message="Success! Redirecting..." />}
 
       {/* Error message */}
-      {error && (
-        <div className="flex items-start gap-3 p-4 bg-red-500/10 ring-1 ring-red-400/30 rounded-xl">
-          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-red-200">{error}</p>
-        </div>
-      )}
+      {error && <Alert type="error" message={error} />}
 
       {/* Shop name field (register only) */}
       {mode === "register" && (
         <div>
-          <label className="block text-xs font-semibold text-white/70 mb-2 uppercase tracking-wide">Shop Name</label>
-          <div className="relative">
-            <Store className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/40" />
-            <input
-              type="text"
-              value={shopName}
-              onChange={(e) => setShopName(e.target.value)}
-              required
-              placeholder="My Awesome Shop"
-              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white/[0.04] text-white placeholder-gray-500 ring-1 ring-white/15 focus:ring-2 focus:ring-amber-400/50 focus:bg-white/[0.06] transition-all outline-none"
-            />
-          </div>
+          <Label>Shop Name</Label>
+          <Input
+            type="text"
+            value={shopName}
+            onChange={(e) => setShopName(e.target.value)}
+            required
+            placeholder="My Awesome Shop"
+            icon={Store}
+            iconColor="text-amber-400/40"
+          />
         </div>
       )}
 
       {/* Email field */}
       <div>
-        <label className="block text-xs font-semibold text-white/70 mb-2 uppercase tracking-wide">Email Address</label>
-        <div className="relative">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/40" />
-          <input
-            type="email"
-            value={shopEmail}
-            onChange={(e) => setShopEmail(e.target.value)}
-            required
-            placeholder="shop@example.com"
-            className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white/[0.04] text-white placeholder-gray-500 ring-1 ring-white/15 focus:ring-2 focus:ring-amber-400/50 focus:bg-white/[0.06] transition-all outline-none"
-          />
-        </div>
+        <Label>Email Address</Label>
+        <Input
+          type="email"
+          value={shopEmail}
+          onChange={(e) => setShopEmail(e.target.value)}
+          required
+          placeholder="shop@example.com"
+          icon={Mail}
+          iconColor="text-amber-400/40"
+        />
       </div>
 
       {/* Password field */}
       <div>
-        <label className="block text-xs font-semibold text-white/70 mb-2 uppercase tracking-wide">Password</label>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/40" />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="••••••••"
-            className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white/[0.04] text-white placeholder-gray-500 ring-1 ring-white/15 focus:ring-2 focus:ring-amber-400/50 focus:bg-white/[0.06] transition-all outline-none"
-          />
-        </div>
+        <Label>Password</Label>
+        <Input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          placeholder="••••••••"
+          icon={Lock}
+          iconColor="text-amber-400/40"
+        />
       </div>
 
       {/* Submit button */}
-      <button
+      <Button
         type="submit"
         disabled={isLoading || success}
-        className="w-full mt-2 rounded-xl py-3 px-4 font-semibold transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:from-amber-600/50 disabled:to-amber-700/50 disabled:cursor-not-allowed text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 disabled:shadow-none"
+        variant="shop"
+        className="w-full mt-2"
       >
         {isLoading ? (
           <>
@@ -130,16 +116,13 @@ export function ShopAuthForm({ mode }) {
             Processing...
           </>
         ) : success ? (
-          <>
-            <CheckCircle className="w-5 h-5" />
-            Success!
-          </>
+          "Success!"
         ) : mode === "login" ? (
           "Sign In to Shop"
         ) : (
           "Register Shop"
         )}
-      </button>
+      </Button>
     </form>
   );
 }
