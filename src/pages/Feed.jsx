@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Heart,
@@ -134,6 +135,7 @@ async function createPostFlexible({ text, file } = {}) {
 }
 
 export default function Feed() {
+  const { userId } = useParams(); // Get userId from URL if viewing another user's feed
   const me = useMemo(() => getUserSession(), []);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -164,7 +166,16 @@ export default function Feed() {
     setLoading(true);
     setErr("");
     try {
-      const data = await getMyFeed(); // /api/posts/feed
+      let data;
+      
+      // If userId is in params, fetch that user's posts
+      if (userId) {
+        data = await apiPost(`/api/posts/user/${userId}`, {}, { auth: true });
+      } else {
+        // Otherwise fetch my feed
+        data = await getMyFeed(); // /api/posts/feed
+      }
+      
       const list = Array.isArray(data?.posts) ? data.posts : Array.isArray(data) ? data : [];
       const normalized = list.map(normalizePost);
       setPosts(normalized);
@@ -178,7 +189,7 @@ export default function Feed() {
 
   useEffect(() => {
     loadFeed();
-  }, []);
+  }, [userId]);
 
   async function onCreatePost() {
     const text = s(newPostText);
@@ -299,7 +310,8 @@ export default function Feed() {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Main Feed Column */}
       <div className="lg:col-span-2 space-y-6">
-        {/* Create Post Widget */}
+        {/* Create Post Widget - Only show if viewing own feed */}
+        {!userId && (
         <div className="glass-card rounded-2xl p-4">
           <div className="flex gap-4">
             <div className="md-avatarRingSm flex-shrink-0">
@@ -383,6 +395,7 @@ export default function Feed() {
 
           {err ? <div className="md-error mt-3">{err}</div> : null}
         </div>
+        )}
 
         {/* Posts Stream */}
         {loading ? (
