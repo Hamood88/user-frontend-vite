@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
-import { Share2, Copy, Facebook, Twitter, Mail, Zap, Gift, Users as UsersIcon } from "lucide-react";
+import { Share2, Copy, Facebook, Twitter, Mail, Zap, Gift, Users as UsersIcon, MessageCircle, Send, Smartphone } from "lucide-react";
 import { motion } from "framer-motion";
 import QRCode from "qrcode";
 import { useNavigate } from "react-router-dom";
@@ -90,13 +90,19 @@ export default function EarnMore() {
 
   const shareOnSocial = (platform) => {
     const message = activeTab === "users"
-      ? `Join me on Moondala! Use my referral code ${referralCode} to earn rewards 🎁`
-      : `Join my shop on Moondala! Use my referral code ${referralCode} 🏪`;
+      ? `Join me on Moondala! Use my referral code ${referralCode} to earn rewards 🎁\n${userReferralLink}`
+      : `Join my shop on Moondala! Use my referral code ${referralCode} 🏪\n${shopReferralLink}`;
+    
+    const link = activeTab === "users" ? userReferralLink : shopReferralLink;
     
     const urls = {
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${userReferralLink}&quote=${encodeURIComponent(message)}`,
-      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${userReferralLink}`,
-      email: `mailto:?subject=Join Moondala&body=${encodeURIComponent(message + " " + userReferralLink)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${link}&quote=${encodeURIComponent(message)}`,
+      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`,
+      whatsapp: `https://wa.me/?text=${encodeURIComponent(message)}`,
+      telegram: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(message)}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`,
+      email: `mailto:?subject=Join Moondala&body=${encodeURIComponent(message)}`,
+      sms: `sms:?body=${encodeURIComponent(message)}`,
     };
 
     if (urls[platform]) {
@@ -234,27 +240,70 @@ export default function EarnMore() {
               {/* Social Share */}
               <div className="bg-white/5 backdrop-blur rounded-lg p-6 border border-white/10">
                 <h3 className="text-lg font-semibold mb-4">Share on Social Media</h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <button
                     onClick={() => shareOnSocial("facebook")}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-2 rounded-lg transition-all flex flex-col items-center justify-center gap-2"
+                    title="Share on Facebook"
                   >
                     <Facebook className="w-5 h-5" />
-                    <span className="hidden sm:inline">Facebook</span>
+                    <span className="text-xs">Facebook</span>
                   </button>
                   <button
                     onClick={() => shareOnSocial("twitter")}
-                    className="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
+                    className="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-2 rounded-lg transition-all flex flex-col items-center justify-center gap-2"
+                    title="Share on Twitter"
                   >
                     <Twitter className="w-5 h-5" />
-                    <span className="hidden sm:inline">Twitter</span>
+                    <span className="text-xs">Twitter</span>
+                  </button>
+                  <button
+                    onClick={() => shareOnSocial("whatsapp")}
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-2 rounded-lg transition-all flex flex-col items-center justify-center gap-2"
+                    title="Share on WhatsApp"
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    <span className="text-xs">WhatsApp</span>
+                  </button>
+                  <button
+                    onClick={() => shareOnSocial("telegram")}
+                    className="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-3 px-2 rounded-lg transition-all flex flex-col items-center justify-center gap-2"
+                    title="Share on Telegram"
+                  >
+                    <Send className="w-5 h-5" />
+                    <span className="text-xs">Telegram</span>
+                  </button>
+                  <button
+                    onClick={() => shareOnSocial("linkedin")}
+                    className="bg-blue-800 hover:bg-blue-900 text-white font-semibold py-3 px-2 rounded-lg transition-all flex flex-col items-center justify-center gap-2"
+                    title="Share on LinkedIn"
+                  >
+                    <Gift className="w-5 h-5" />
+                    <span className="text-xs">LinkedIn</span>
                   </button>
                   <button
                     onClick={() => shareOnSocial("email")}
-                    className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
+                    className="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 px-2 rounded-lg transition-all flex flex-col items-center justify-center gap-2"
+                    title="Share via Email"
                   >
                     <Mail className="w-5 h-5" />
-                    <span className="hidden sm:inline">Email</span>
+                    <span className="text-xs">Email</span>
+                  </button>
+                  <button
+                    onClick={() => shareOnSocial("sms")}
+                    className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-2 rounded-lg transition-all flex flex-col items-center justify-center gap-2"
+                    title="Share via SMS/Text"
+                  >
+                    <Smartphone className="w-5 h-5" />
+                    <span className="text-xs">SMS</span>
+                  </button>
+                  <button
+                    onClick={() => copyToClipboard(userReferralLink)}
+                    className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-2 rounded-lg transition-all flex flex-col items-center justify-center gap-2"
+                    title="Copy Link"
+                  >
+                    <Copy className="w-5 h-5" />
+                    <span className="text-xs">Copy Link</span>
                   </button>
                 </div>
               </div>
@@ -336,27 +385,62 @@ export default function EarnMore() {
               {/* Social Share */}
               <div className="bg-white/5 backdrop-blur rounded-lg p-6 border border-white/10">
                 <h3 className="text-lg font-semibold mb-4">Share on Social Media</h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <button
                     onClick={() => shareOnSocial("facebook")}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all flex flex-col items-center gap-2"
                   >
                     <Facebook className="w-5 h-5" />
-                    <span className="hidden sm:inline">Facebook</span>
+                    <span className="text-xs">Facebook</span>
                   </button>
                   <button
                     onClick={() => shareOnSocial("twitter")}
-                    className="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
+                    className="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-4 rounded-lg transition-all flex flex-col items-center gap-2"
                   >
                     <Twitter className="w-5 h-5" />
-                    <span className="hidden sm:inline">Twitter</span>
+                    <span className="text-xs">Twitter</span>
+                  </button>
+                  <button
+                    onClick={() => shareOnSocial("whatsapp")}
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-all flex flex-col items-center gap-2"
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    <span className="text-xs">WhatsApp</span>
+                  </button>
+                  <button
+                    onClick={() => shareOnSocial("telegram")}
+                    className="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-3 px-4 rounded-lg transition-all flex flex-col items-center gap-2"
+                  >
+                    <Send className="w-5 h-5" />
+                    <span className="text-xs">Telegram</span>
+                  </button>
+                  <button
+                    onClick={() => shareOnSocial("linkedin")}
+                    className="bg-blue-800 hover:bg-blue-900 text-white font-semibold py-3 px-4 rounded-lg transition-all flex flex-col items-center gap-2"
+                  >
+                    <Gift className="w-5 h-5" />
+                    <span className="text-xs">LinkedIn</span>
                   </button>
                   <button
                     onClick={() => shareOnSocial("email")}
-                    className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
+                    className="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 px-4 rounded-lg transition-all flex flex-col items-center gap-2"
                   >
                     <Mail className="w-5 h-5" />
-                    <span className="hidden sm:inline">Email</span>
+                    <span className="text-xs">Email</span>
+                  </button>
+                  <button
+                    onClick={() => shareOnSocial("sms")}
+                    className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition-all flex flex-col items-center gap-2"
+                  >
+                    <Smartphone className="w-5 h-5" />
+                    <span className="text-xs">SMS</span>
+                  </button>
+                  <button
+                    onClick={() => copyToClipboard(shopReferralLink)}
+                    className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-4 rounded-lg transition-all flex flex-col items-center gap-2"
+                  >
+                    <Copy className="w-5 h-5" />
+                    <span className="text-xs">Copy Link</span>
                   </button>
                 </div>
               </div>
