@@ -1010,6 +1010,24 @@ export async function createProductReview(productId, body = {}) {
 }
 
 /* ================================
+   ✅ REFERRAL NETWORK
+   ================================ */
+export async function getReferralNetwork() {
+  try {
+    return await apiGet("/api/users/referral-network", { auth: true });
+  } catch (e) {
+    console.error("Failed to fetch referral network:", e);
+    // Return fallback data if endpoint fails
+    return {
+      total: 0,
+      totalEarned: 0,
+      levels: [],
+      ok: false,
+    };
+  }
+}
+
+/* ================================
    ✅ SMALL HELPERS
    ================================ */
 export function absUrl(u) {

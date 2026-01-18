@@ -160,6 +160,7 @@ export default function Sidebar({ collapsed = false, onToggle }) {
         <NavItem to="/orders" label="Orders" collapsed={collapsed} />
         <NavItem to="/mall" label="Mall" collapsed={collapsed} />
         <NavItem to="/cart" label="🛒 Cart" collapsed={collapsed} />
+        <NavItem to="/earn-more" label="💰 Earn More" collapsed={collapsed} />
         <NavItem to="/profile" label="Profile" collapsed={collapsed} />
         <NavItem to="/settings" label="Settings" collapsed={collapsed} />
       </nav>

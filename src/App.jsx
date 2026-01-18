@@ -25,6 +25,9 @@ import CheckoutPage from "./pages/CheckoutPage";
 import Cart from "./pages/Cart";
 import ProductDetailsUnified from "./pages/ProductDetailsUnified";
 import PublicShareRedirect from "./pages/PublicShareRedirect";
+import EarnMore from "./pages/EarnMore";
+import UserReferralSignup from "./pages/UserReferralSignup";
+import ShopReferralSignup from "./pages/ShopReferralSignup";
 
 /* ✅ PUBLIC SHOP PAGES */
 import ShopFeedPublic from "./pages/ShopFeedPublic";
@@ -221,6 +224,10 @@ export default function App() {
         {/* Public product share */}
         <Route path="/p/:shareId" element={<PublicShareRedirect />} />
 
+        {/* Referral signup routes */}
+        <Route path="/refer/user/:referralCode" element={<UserReferralSignup />} />
+        <Route path="/refer/shop/:referralCode" element={<ShopReferralSignup />} />
+
         {/* Public user redirect - go directly to their feed */}
         <Route path="/u/:userId" element={<UserFeedRedirect />} />
 
@@ -258,6 +265,8 @@ export default function App() {
             <Route path="/my-orders" element={<Navigate to="/orders" replace />} />
 
             <Route path="/cart" element={<Cart />} />
+            
+            <Route path="/earn-more" element={<EarnMore />} />
 
             <Route path="/settings" element={<Settings />} />
 
