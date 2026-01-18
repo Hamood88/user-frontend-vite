@@ -89,9 +89,11 @@ export default function EarnMore() {
   const shopReferralLink = `${window.location.origin}/refer/shop/${referralCode}`;
 
   const shareOnSocial = (platform) => {
+    const tagline = "Build Your Referral Tree & Earn Real Money - Get Paid Every Time Friends Shop! 🌳💰";
+    
     const message = activeTab === "users"
-      ? `Join me on Moondala! Use my referral code ${referralCode} to earn rewards 🎁\n${userReferralLink}`
-      : `Join my shop on Moondala! Use my referral code ${referralCode} 🏪\n${shopReferralLink}`;
+      ? `${tagline}\n\nJoin me on Moondala using code: ${referralCode}\n${userReferralLink}`
+      : `${tagline}\n\nJoin my shop on Moondala using code: ${referralCode}\n${shopReferralLink}`;
     
     const link = activeTab === "users" ? userReferralLink : shopReferralLink;
     
@@ -101,7 +103,7 @@ export default function EarnMore() {
       whatsapp: `https://wa.me/?text=${encodeURIComponent(message)}`,
       telegram: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(message)}`,
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`,
-      email: `mailto:?subject=Join Moondala&body=${encodeURIComponent(message)}`,
+      email: `mailto:?subject=${encodeURIComponent(tagline)}&body=${encodeURIComponent(message)}`,
       sms: `sms:?body=${encodeURIComponent(message)}`,
     };
 
