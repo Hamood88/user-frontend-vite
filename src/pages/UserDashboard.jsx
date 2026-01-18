@@ -143,6 +143,7 @@ export default function UserDashboard() {
   const [user, setUser] = useState(null);
   const [copied, setCopied] = useState(false);
   const [err, setErr] = useState("");
+  const [showAllTransactions, setShowAllTransactions] = useState(false);
 
   // network size fallback (if backend doesn't return levels yet)
   const [networkSize, setNetworkSize] = useState(0);
@@ -234,12 +235,14 @@ export default function UserDashboard() {
   const items = useMemo(() => {
     const arr = Array.isArray(earnings?.items) ? earnings.items : [];
     // newest first
-    return [...arr].sort((a, b) => {
+    const sorted = [...arr].sort((a, b) => {
       const ta = new Date(a?.createdAt || a?.date || 0).getTime();
       const tb = new Date(b?.createdAt || b?.date || 0).getTime();
       return tb - ta;
-    }).slice(0, 10);
-  }, [earnings]);
+    });
+    // Show only 3 by default, all if expanded
+    return showAllTransactions ? sorted.slice(0, 50) : sorted.slice(0, 3);
+  }, [earnings, showAllTransactions]);
 
   const copyCode = () => {
     if (!referralCode) return;
@@ -387,8 +390,12 @@ export default function UserDashboard() {
             <h2 className="text-xl font-display font-bold text-white">
               Recent Transactions
             </h2>
-            <button type="button" className="md-btn md-btn-ghost" disabled>
-              View All
+            <button
+              type="button"
+              onClick={() => setShowAllTransactions(!showAllTransactions)}
+              className="md-btn md-btn-ghost text-sm"
+            >
+              {showAllTransactions ? "Show Less" : "Show More"}
             </button>
           </div>
 
