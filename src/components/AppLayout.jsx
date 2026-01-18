@@ -57,8 +57,8 @@ export default function AppLayout() {
     { label: "Messages", icon: MessageSquare, to: "/messages" },
     { label: "Mall", icon: ShoppingBag, to: "/mall" },
     { label: "Orders", icon: ShoppingCart, to: "/orders" },
-    { label: "Settings", icon: Settings, to: "/settings" },
     { label: "Cart", icon: ShoppingCart, to: "/cart" },
+    { label: "Settings", icon: Settings, to: "/settings" },
   ];
 
   function logout() {

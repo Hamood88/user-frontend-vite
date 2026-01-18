@@ -1,11 +1,27 @@
-import React, { useState } from "react";
-import { API_BASE, getToken } from "../api.jsx";
+import React, { useState, useMemo } from "react";
+import { API_BASE, getToken, getUserSession, absUrl, fixImageUrl } from "../api.jsx";
+
+function s(v) {
+  return String(v || "").trim();
+}
+
+function userName(u) {
+  const dn = s(u?.displayName);
+  const fn = s(u?.firstName);
+  const ln = s(u?.lastName);
+  return dn || `${fn} ${ln}`.trim() || "User";
+}
+
+function avatarUrl(u) {
+  return fixImageUrl(absUrl(u?.avatarUrl || u?.avatar || u?.photoUrl || ""));
+}
 
 const CreatePost = ({ onPost }) => {
   const [text, setText] = useState("");
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
   const [posting, setPosting] = useState(false);
+  const user = useMemo(() => getUserSession(), []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,13 +69,31 @@ const CreatePost = ({ onPost }) => {
 
   return (
     <form onSubmit={handleSubmit} className="feed-card p-4">
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="What's on your mind?"
-        rows={3}
-        className="input-dark resize-none"
-      />
+      <div className="flex gap-3 items-start mb-4">
+        <div className="w-10 h-10 rounded-full bg-white/5 overflow-hidden border border-white/10 flex-shrink-0">
+          {avatarUrl(user) ? (
+            <img
+              src={avatarUrl(user)}
+              alt={userName(user)}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-purple-500 to-purple-900 flex items-center justify-center text-white font-bold">
+              {userName(user).charAt(0).toUpperCase()}
+            </div>
+          )}
+        </div>
+        <div className="flex-1">
+          <div className="text-sm font-bold text-foreground">{userName(user)}</div>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="What's happening in your universe?"
+            rows={3}
+            className="input-dark resize-none mt-2 w-full"
+          />
+        </div>
+      </div>
 
       <div className="mt-3 flex flex-wrap items-end gap-3">
         <label className="text-sm font-semibold text-foreground">
