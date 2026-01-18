@@ -244,6 +244,19 @@ export default function UserDashboard() {
     return showAllTransactions ? sorted.slice(0, 5) : [];
   }, [earnings, showAllTransactions]);
 
+  // Preview: show last transaction when collapsed if there are any
+  const previewTransaction = useMemo(() => {
+    if (showAllTransactions || items.length > 0) return null;
+    const arr = Array.isArray(earnings?.items) ? earnings.items : [];
+    if (arr.length === 0) return null;
+    const sorted = [...arr].sort((a, b) => {
+      const ta = new Date(a?.createdAt || a?.date || 0).getTime();
+      const tb = new Date(b?.createdAt || b?.date || 0).getTime();
+      return tb - ta;
+    });
+    return sorted[0] || null;
+  }, [earnings, showAllTransactions, items.length]);
+
   const copyCode = () => {
     if (!referralCode) return;
     navigator.clipboard.writeText(referralCode);
@@ -407,8 +420,64 @@ export default function UserDashboard() {
             </div>
 
             <div className="divide-y divide-white/5">
-              {items.length === 0 ? (
+              {items.length === 0 && !previewTransaction ? (
                 <div className="p-6 text-muted-foreground">No transactions yet.</div>
+              ) : items.length === 0 && previewTransaction ? (
+                // Show preview of last transaction when collapsed
+                (() => {
+                  const it = previewTransaction;
+                  const id = s(it?._id || it?.id || "preview");
+                  const status = s(it?.status || it?.state || "PENDING").toUpperCase();
+                  const label =
+                    s(it?.label) ||
+                    s(it?.title) ||
+                    s(it?.description) ||
+                    "Commission";
+
+                  const amount = Number(it?.amount ?? it?.value ?? 0);
+                  const createdAt = it?.createdAt || it?.date || it?.created || null;
+
+                  const isReleased = status.includes("RELEASE") || status.includes("AVAILABLE") || status === "PAID";
+                  const isLocked = status.includes("LOCK") || status.includes("PENDING") || status.includes("HOLD");
+
+                  return (
+                    <div
+                      key={id}
+                      className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-white/5 transition-colors"
+                    >
+                      <div className="col-span-6 flex items-center gap-3">
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center
+                          ${
+                            isReleased
+                              ? "bg-emerald-500/10 text-emerald-400"
+                              : isLocked
+                              ? "bg-amber-500/10 text-amber-400"
+                              : "bg-red-500/10 text-red-400"
+                          }`}
+                        >
+                          {isReleased ? (
+                            <ArrowDownLeft className="w-4 h-4" />
+                          ) : (
+                            <TrendingUp className="w-4 h-4" />
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-medium text-slate-200">{label}</div>
+                          <div className="text-xs text-muted-foreground">{status}</div>
+                        </div>
+                      </div>
+
+                      <div className="col-span-3 text-right text-sm text-muted-foreground">
+                        {safeDate(createdAt) || "-"}
+                      </div>
+
+                      <div className="col-span-3 text-right font-medium font-mono text-slate-200">
+                        {formatMoney(amount, earnings.currency || "USD")}
+                      </div>
+                    </div>
+                  );
+                })()
               ) : (
                 items.map((it, idx) => {
                   const id = s(it?._id || it?.id || idx);
