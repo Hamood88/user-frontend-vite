@@ -8,11 +8,6 @@ import {
   Wallet,
   Copy,
   Check,
-  Facebook,
-  Twitter,
-  MessageCircle,
-  Mail,
-  Share2,
 } from "lucide-react";
 
 import { apiGet, getMe, getMyFriends, pickId } from "../api.jsx";
@@ -262,53 +257,6 @@ export default function UserDashboard() {
     navigator.clipboard.writeText(referralCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
-  };
-
-  const shareText = useMemo(() => {
-    return `Join me on Moondala! Use my referral code: ${referralCode} to get started and earn rewards together!`;
-  }, [referralCode]);
-
-  const shareUrl = useMemo(() => {
-    return `${window.location.origin}/register?ref=${referralCode}`;
-  }, [referralCode]);
-
-  const shareToFacebook = () => {
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
-    window.open(url, '_blank', 'width=600,height=400');
-  };
-
-  const shareToTwitter = () => {
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
-    window.open(url, '_blank', 'width=600,height=400');
-  };
-
-  const shareToWhatsApp = () => {
-    const url = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
-    window.open(url, '_blank');
-  };
-
-  const shareViaEmail = () => {
-    const subject = "Join me on Moondala!";
-    const body = `${shareText}\n\n${shareUrl}`;
-    const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = url;
-  };
-
-  const shareViaNative = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Join Moondala',
-          text: shareText,
-          url: shareUrl,
-        });
-      } catch (err) {
-        // Fallback to copy
-        copyCode();
-      }
-    } else {
-      copyCode();
-    }
   };
 
   if (loading) {
@@ -576,61 +524,6 @@ export default function UserDashboard() {
                 );
               })
             )}
-          </div>
-
-          <div className="glass-card p-6 rounded-2xl bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 border-violet-500/20">
-            <h3 className="font-bold text-lg mb-2 text-white">Share Your Referral Code</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Invite friends and shops using your referral code to grow your network and
-              earn more commissions.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={shareToFacebook}
-                className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
-                title="Share on Facebook"
-              >
-                <Facebook className="w-4 h-4" />
-                Facebook
-              </button>
-              <button
-                type="button"
-                onClick={shareToTwitter}
-                className="flex items-center gap-2 px-3 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg text-sm font-medium transition-colors"
-                title="Share on Twitter"
-              >
-                <Twitter className="w-4 h-4" />
-                Twitter
-              </button>
-              <button
-                type="button"
-                onClick={shareToWhatsApp}
-                className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
-                title="Share on WhatsApp"
-              >
-                <MessageCircle className="w-4 h-4" />
-                WhatsApp
-              </button>
-              <button
-                type="button"
-                onClick={shareViaEmail}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition-colors"
-                title="Share via Email"
-              >
-                <Mail className="w-4 h-4" />
-                Email
-              </button>
-              <button
-                type="button"
-                onClick={shareViaNative}
-                className="flex items-center gap-2 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
-                title="Share"
-              >
-                <Share2 className="w-4 h-4" />
-                Share
-              </button>
-            </div>
           </div>
         </div>
       </div>
