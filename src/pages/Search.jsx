@@ -140,16 +140,21 @@ export default function Search() {
   function openResult(r) {
     const realType = r?.__type || pickType(r);
     const id = pickId(r);
+    console.log("Search openResult called:", { realType, id, user: r });
+    
     if (!id) return;
 
     if (realType === "shop") {
+      console.log("Navigating to shop:", `/shop/${encodeURIComponent(id)}/feed`);
       navigate(`/shop/${encodeURIComponent(id)}/feed`);
       return;
     }
 
     // ✅ Users: always try the public user page first
     // This will show basic profile info and let user decide if they want to view the feed
-    navigate(`/u/${encodeURIComponent(id)}`);
+    const userUrl = `/u/${encodeURIComponent(id)}`;
+    console.log("Navigating to public user profile:", userUrl);
+    navigate(userUrl);
   }
 
   return (

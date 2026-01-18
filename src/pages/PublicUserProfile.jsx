@@ -10,6 +10,8 @@ export default function PublicUserProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  console.log("PublicUserProfile component loaded with userId:", userId);
+
   useEffect(() => {
     async function loadUserProfile() {
       try {
