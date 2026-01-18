@@ -90,10 +90,11 @@ export default function EarnMore() {
 
   const shareOnSocial = (platform) => {
     const tagline = "Build Your Referral Tree & Earn Real Money - Get Paid Every Time Friends Shop! 🌳💰";
+    const hashtags = "#moondala #moondala.one #Happylife";
     
     const message = activeTab === "users"
-      ? `${tagline}\n\nJoin me on Moondala using code: ${referralCode}\n${userReferralLink}`
-      : `${tagline}\n\nJoin my shop on Moondala using code: ${referralCode}\n${shopReferralLink}`;
+      ? `${tagline}\n\nJoin me on Moondala using code: ${referralCode}\n${userReferralLink}\n\n${hashtags}`
+      : `${tagline}\n\nJoin my shop on Moondala using code: ${referralCode}\n${shopReferralLink}\n\n${hashtags}`;
     
     const link = activeTab === "users" ? userReferralLink : shopReferralLink;
     
