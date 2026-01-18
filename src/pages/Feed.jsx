@@ -195,7 +195,17 @@ export default function Feed() {
       const normalized = list.map(normalizePost);
       setPosts(normalized);
     } catch (e) {
-      setErr(e?.message || "Failed to load feed.");
+      console.error("Feed loading error:", e);
+      
+      // Handle specific error cases for better UX
+      if (e?.status === 403 || e?.message?.includes("private") || e?.message?.includes("403")) {
+        setErr("This user's feed is private. Only their friends can view their posts.");
+      } else if (e?.status === 404) {
+        setErr("User not found.");
+      } else {
+        setErr(e?.message || "Failed to load feed.");
+      }
+      
       setPosts([]);
     } finally {
       setLoading(false);
