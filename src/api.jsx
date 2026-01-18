@@ -435,6 +435,34 @@ export async function getMe() {
   return null;
 }
 
+/**
+ * ✅ Get other user's profile with privacy handling
+ * Returns:
+ * - { ok: true, user: {...} } if accessible
+ * - { ok: false, reason: "profile_private", canAddFriend: true, user: {...} } if private
+ * - { ok: false, message: "..." } if user not found
+ */
+export async function getUserProfile(userId) {
+  if (!userId) throw new Error("userId is required");
+  try {
+    const data = await apiGet(`/api/users/${userId}`);
+    return { ok: true, user: data?.user || data };
+  } catch (err) {
+    // ✅ Handle private account (403) - return user data to show "Add Friend" button
+    if (err?.status === 403 && err?.data) {
+      return {
+        ok: false,
+        reason: err.data.reason || "profile_private",
+        canAddFriend: err.data.canAddFriend === true,
+        message: err.data.message || "This profile is private",
+        user: err.data.user || null,
+      };
+    }
+    // Handle other errors
+    throw err;
+  }
+}
+
 /* ================================
    ✅ FRIENDS + REQUESTS
    ================================ */
