@@ -25,6 +25,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import Cart from "./pages/Cart";
 import ProductDetailsUnified from "./pages/ProductDetailsUnified";
 import PublicShareRedirect from "./pages/PublicShareRedirect";
+import PublicUserProfile from "./pages/PublicUserProfile";
 
 /* ✅ PUBLIC SHOP PAGES */
 import ShopFeedPublic from "./pages/ShopFeedPublic";
@@ -210,6 +211,9 @@ export default function App() {
 
         {/* Public product share */}
         <Route path="/p/:shareId" element={<PublicShareRedirect />} />
+
+        {/* Public user profile */}
+        <Route path="/u/:userId" element={<PublicUserProfile />} />
 
         {/* Short shop link */}
         <Route path="/s/:shopId" element={<ShopShortRedirect />} />

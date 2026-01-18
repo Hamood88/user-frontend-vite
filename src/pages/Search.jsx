@@ -147,14 +147,8 @@ export default function Search() {
       return;
     }
 
-    // ✅ Users: if logged in => private user feed page
-    const token = getToken();
-    if (token) {
-      navigate(`/feed/user/${encodeURIComponent(id)}`);
-      return;
-    }
-
-    // otherwise public user page
+    // ✅ Users: always try the public user page first
+    // This will show basic profile info and let user decide if they want to view the feed
     navigate(`/u/${encodeURIComponent(id)}`);
   }
 
