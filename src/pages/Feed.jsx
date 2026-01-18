@@ -356,6 +356,20 @@ export default function Feed() {
     setEditText("");
   }
 
+  async function sharePost(postId) {
+    try {
+      const postUrl = `${window.location.origin}/feed/post/${postId}`;
+      await navigator.clipboard.writeText(postUrl);
+      
+      // Show temporary success message
+      const originalErr = err;
+      setErr("Link copied to clipboard!");
+      setTimeout(() => setErr(originalErr), 2000);
+    } catch (e) {
+      setErr("Failed to copy link to clipboard");
+    }
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Main Feed Column */}
@@ -611,8 +625,8 @@ export default function Feed() {
                     <button
                       type="button"
                       className="md-actionBtn hover-green group ml-auto"
-                      onClick={() => navigator.clipboard.writeText(window.location.href)}
-                      title="Share (copy link)"
+                      onClick={() => sharePost(post._id)}
+                      title="Share post"
                     >
                       <span className="md-actionIconWrap group-hover:bg-green-400/10">
                         <Share2 className="w-5 h-5" />
