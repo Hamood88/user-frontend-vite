@@ -102,7 +102,7 @@ export function UserAuthForm({ mode }) {
         const data = await apiPost("/auth/login", { email: email.trim(), password });
         setSuccess(true);
         setUserSession({ token: data.token, user: data.user });
-        setTimeout(() => navigate("/dashboard"), 500);
+        setTimeout(() => navigate("/feed"), 500);
       } else if (mode === "signup") {
         // Validate required fields
         if (!firstName.trim() || !lastName.trim() || !email.trim() || !password) {
@@ -171,7 +171,7 @@ export function UserAuthForm({ mode }) {
           localStorage.removeItem("referralCode");
           localStorage.removeItem("referralMessage");
         } catch {}
-        setTimeout(() => navigate("/dashboard"), 500);
+        setTimeout(() => navigate("/feed"), 500);
       }
     } catch (err) {
       setError(err.message || "An error occurred. Please try again.");
