@@ -939,7 +939,7 @@ export default function Feed() {
           </button>
         </div>
 
-        <div className="glass-card rounded-2xl p-5">
+        <div className="glass-card rounded-2xl p-5 sticky top-96">
           <h2 className="font-display font-bold text-lg mb-4 text-white">
             Suggested People
           </h2>
