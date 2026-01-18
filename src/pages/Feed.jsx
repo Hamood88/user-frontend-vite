@@ -11,6 +11,8 @@ import {
   Send,
   X,
   Trash2,
+  Edit3,
+  Check,
 } from "lucide-react";
 
 import {
@@ -19,6 +21,8 @@ import {
   getPostsByUser,
   likePost,
   addComment,
+  updatePost,
+  deletePost,
   absUrl,
   pickId,
   getUserSession,
@@ -152,6 +156,10 @@ export default function Feed() {
   const [commentText, setCommentText] = useState("");
   const [commentBusy, setCommentBusy] = useState(false);
   const [replyTo, setReplyTo] = useState(null);
+
+  // post editing
+  const [editingPostId, setEditingPostId] = useState("");
+  const [editText, setEditText] = useState("");
 
   const container = {
     hidden: { opacity: 0 },
@@ -306,6 +314,48 @@ export default function Feed() {
     }
   }
 
+  async function handleDeletePost(postId) {
+    if (!confirm("Are you sure you want to delete this post?")) return;
+    
+    try {
+      await deletePost(postId);
+      // Remove from UI
+      setPosts(prev => prev.filter(p => p._id !== postId));
+      setErr("");
+    } catch (e) {
+      setErr(e?.message || "Failed to delete post");
+    }
+  }
+
+  function startEditingPost(post) {
+    setEditingPostId(post._id);
+    setEditText(post.text || "");
+  }
+
+  async function handleUpdatePost() {
+    if (!editingPostId || !editText.trim()) return;
+    
+    try {
+      await updatePost(editingPostId, { text: editText });
+      // Update in UI
+      setPosts(prev => prev.map(p => 
+        p._id === editingPostId 
+          ? { ...p, text: editText }
+          : p
+      ));
+      setEditingPostId("");
+      setEditText("");
+      setErr("");
+    } catch (e) {
+      setErr(e?.message || "Failed to update post");
+    }
+  }
+
+  function cancelEdit() {
+    setEditingPostId("");
+    setEditText("");
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Main Feed Column */}
@@ -435,14 +485,65 @@ export default function Feed() {
                       </div>
                     </div>
 
-                    <button type="button" className="md-iconBtn" title="More">
-                      <MoreHorizontal className="w-5 h-5" />
-                    </button>
+                    {/* Edit/Delete buttons for own posts */}
+                    {pickId(post.user) === pickId(me) ? (
+                      <div className="flex gap-2">
+                        <button 
+                          type="button" 
+                          className="md-iconBtn" 
+                          onClick={() => startEditingPost(post)}
+                          title="Edit"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </button>
+                        <button 
+                          type="button" 
+                          className="md-iconBtn text-red-400 hover:text-red-300" 
+                          onClick={() => handleDeletePost(post._id)}
+                          title="Delete"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button type="button" className="md-iconBtn" title="More">
+                        <MoreHorizontal className="w-5 h-5" />
+                      </button>
+                    )}
                   </div>
 
-                  <p className="text-base text-slate-200 mb-4 whitespace-pre-wrap leading-relaxed">
-                    {post.text}
-                  </p>
+                  {/* Post text - editable if editing */}
+                  {editingPostId === post._id ? (
+                    <div className="mb-4">
+                      <textarea
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        className="md-postBox"
+                        rows={3}
+                      />
+                      <div className="flex gap-2 mt-2">
+                        <button
+                          type="button"
+                          className="md-btnPrimary"
+                          onClick={handleUpdatePost}
+                        >
+                          <Check className="w-4 h-4" />
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          className="md-btnGhost"
+                          onClick={cancelEdit}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-base text-slate-200 mb-4 whitespace-pre-wrap leading-relaxed">
+                      {post.text}
+                    </p>
+                  )}
 
                   {post.media && post.media.type === "image" ? (
                     (() => {
