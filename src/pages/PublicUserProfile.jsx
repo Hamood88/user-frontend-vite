@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { User, Calendar, Eye, Lock } from "lucide-react";
-import { safeImageUrl, API_BASE } from "../api.jsx";
+import { User, Calendar, Eye, Lock, UserPlus } from "lucide-react";
+import { safeImageUrl, API_BASE, sendFriendRequest } from "../api.jsx";
 
 export default function PublicUserProfile() {
   const { userId } = useParams();
@@ -9,6 +9,9 @@ export default function PublicUserProfile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isPrivateProfile, setIsPrivateProfile] = useState(false);
+  const [sendingRequest, setSendingRequest] = useState(false);
+  const [requestSent, setRequestSent] = useState(false);
 
   console.log("PublicUserProfile component loaded with userId:", userId);
 
@@ -17,15 +20,24 @@ export default function PublicUserProfile() {
       try {
         setLoading(true);
         setError("");
+        setIsPrivateProfile(false);
         
         const response = await fetch(`${API_BASE}/api/public/user/${encodeURIComponent(userId)}`);
         const data = await response.json();
+        
+        // ✅ Handle 403 (private profile)
+        if (response.status === 403) {
+          setIsPrivateProfile(true);
+          setUser(data?.user || null);
+          setError(data?.message || "This profile is private.");
+          return;
+        }
         
         if (!response.ok) {
           throw new Error(data?.message || "User not found");
         }
         
-        setUser(data);
+        setUser(data?.user || data);
       } catch (err) {
         setError(err.message || "Failed to load user profile");
       } finally {
@@ -37,6 +49,21 @@ export default function PublicUserProfile() {
       loadUserProfile();
     }
   }, [userId]);
+
+  const handleSendFriendRequest = async () => {
+    if (!userId || sendingRequest || requestSent) return;
+    
+    setSendingRequest(true);
+    try {
+      await sendFriendRequest(userId, "I'd like to be friends!");
+      setRequestSent(true);
+      setError("Friend request sent! Waiting for acceptance.");
+    } catch (err) {
+      setError(`Failed to send friend request: ${err?.message || err}`);
+    } finally {
+      setSendingRequest(false);
+    }
+  };
 
   const handleViewFeed = () => {
     navigate(`/feed/user/${userId}`);
@@ -53,11 +80,33 @@ export default function PublicUserProfile() {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-800 flex items-center justify-center">
-        <div className="glass-card rounded-2xl p-8 text-center max-w-md">
-          <div className="text-red-400 mb-4">{error}</div>
+        <div className={`glass-card rounded-2xl p-8 text-center max-w-md ${isPrivateProfile ? "bg-blue-500/10 border border-blue-500/30" : ""}`}>
+          <div className={isPrivateProfile ? "text-blue-200" : "text-red-400"}>
+            {error}
+          </div>
+          
+          {/* ✅ Show Add Friend button for private profiles */}
+          {isPrivateProfile && userId && !requestSent && (
+            <button
+              onClick={handleSendFriendRequest}
+              disabled={sendingRequest}
+              className="mt-6 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white px-6 py-2 rounded-lg transition-colors w-full"
+            >
+              <UserPlus className="w-4 h-4" />
+              {sendingRequest ? "Sending..." : "Send Friend Request"}
+            </button>
+          )}
+          
+          {/* Show success message */}
+          {requestSent && (
+            <div className="mt-6 text-blue-300">
+              Request sent! Add them to see their full profile.
+            </div>
+          )}
+          
           <Link 
             to="/search" 
-            className="text-purple-400 hover:text-purple-300 transition-colors"
+            className="text-purple-400 hover:text-purple-300 transition-colors inline-block mt-6"
           >
             ← Back to Search
           </Link>
