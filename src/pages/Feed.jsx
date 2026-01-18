@@ -32,6 +32,7 @@ import {
   getUserSession,
   fixImageUrl,
   safeImageUrl,
+  sendFriendRequest,
 } from "../api.jsx";
 
 import "../styles/feedModern.css";
@@ -170,6 +171,10 @@ export default function Feed() {
   // share dropdown
   const [shareDropdownOpen, setShareDropdownOpen] = useState("");
 
+  const [sendingFriendRequest, setSendingFriendRequest] = useState(false);
+  const [friendRequestSent, setFriendRequestSent] = useState(false);
+  const [isPrivateFeed, setIsPrivateFeed] = useState(false);
+
   const container = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.08 } },
@@ -182,6 +187,8 @@ export default function Feed() {
   async function loadFeed() {
     setLoading(true);
     setErr("");
+    setIsPrivateFeed(false);
+    setFriendRequestSent(false);
     try {
       let data;
       
@@ -201,7 +208,8 @@ export default function Feed() {
       
       // Handle specific error cases for better UX
       if (e?.status === 403 || e?.message?.includes("private") || e?.message?.includes("403")) {
-        setErr("This user's feed is private. Only their friends can view their posts.");
+        setErr("This user's feed is private.");
+        setIsPrivateFeed(true);
       } else if (e?.status === 404) {
         setErr("User not found.");
       } else {
@@ -211,6 +219,21 @@ export default function Feed() {
       setPosts([]);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function sendFriendRequestToUser() {
+    if (!userId || sendingFriendRequest || friendRequestSent) return;
+
+    setSendingFriendRequest(true);
+    try {
+      await sendFriendRequest(userId, "I'd like to be friends!");
+      setFriendRequestSent(true);
+      setErr("Friend request sent!");
+    } catch (e) {
+      setErr("Failed to send friend request: " + (e?.message || e));
+    } finally {
+      setSendingFriendRequest(false);
     }
   }
 
@@ -540,7 +563,23 @@ export default function Feed() {
             </div>
           </div>
 
-          {err ? <div className="md-error mt-3">{err}</div> : null}
+          {err ? (
+            <div className="md-error mt-3">
+              {err}
+              {isPrivateFeed && userId && !friendRequestSent && (
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    className="md-btnPrimary"
+                    disabled={sendingFriendRequest}
+                    onClick={sendFriendRequestToUser}
+                  >
+                    {sendingFriendRequest ? "Sending..." : "Send Friend Request"}
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : null}
           </div>
         )}
 
