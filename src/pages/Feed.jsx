@@ -356,17 +356,24 @@ export default function Feed() {
     setEditText("");
   }
 
-  async function sharePost(postId) {
+  async function sharePost(post) {
     try {
-      const postUrl = `${window.location.origin}/feed/post/${postId}`;
-      await navigator.clipboard.writeText(postUrl);
+      // Create share text with post content and author
+      const shareText = `Check out this post by ${userName(post.user)} on Moondala:\n\n"${post.text}"\n\n`;
+      const shareUrl = userId 
+        ? `${window.location.origin}/feed/user/${userId}` // If viewing someone's feed, link to their feed
+        : `${window.location.origin}/feed`; // Otherwise link to main feed
+      
+      const fullShare = shareText + shareUrl;
+      
+      await navigator.clipboard.writeText(fullShare);
       
       // Show temporary success message
       const originalErr = err;
-      setErr("Link copied to clipboard!");
+      setErr("Post content copied to clipboard!");
       setTimeout(() => setErr(originalErr), 2000);
     } catch (e) {
-      setErr("Failed to copy link to clipboard");
+      setErr("Failed to copy to clipboard");
     }
   }
 
@@ -625,7 +632,7 @@ export default function Feed() {
                     <button
                       type="button"
                       className="md-actionBtn hover-green group ml-auto"
-                      onClick={() => sharePost(post._id)}
+                      onClick={() => sharePost(post)}
                       title="Share post"
                     >
                       <span className="md-actionIconWrap group-hover:bg-green-400/10">
