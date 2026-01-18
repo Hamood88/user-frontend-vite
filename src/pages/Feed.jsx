@@ -312,7 +312,7 @@ export default function Feed() {
       <div className="lg:col-span-2 space-y-6">
         {/* Create Post Widget - Only show if viewing own feed */}
         {!userId && (
-        <div className="glass-card rounded-2xl p-4">
+          <div className="glass-card rounded-2xl p-4">
           <div className="flex gap-4">
             <div className="md-avatarRingSm flex-shrink-0">
               {avatarUrl(me) ? (
@@ -394,7 +394,7 @@ export default function Feed() {
           </div>
 
           {err ? <div className="md-error mt-3">{err}</div> : null}
-        </div>
+          </div>
         )}
 
         {/* Posts Stream */}
