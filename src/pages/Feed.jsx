@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -144,7 +144,7 @@ async function createPostFlexible({ text, file } = {}) {
 
 export default function Feed() {
   const { userId } = useParams(); // Get userId from URL if viewing another user's feed
-  const me = useMemo(() => getUserSession(), []);
+  const me = getUserSession(); // Get fresh session data each time
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newPostText, setNewPostText] = useState("");

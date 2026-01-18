@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   Home,
@@ -43,7 +43,7 @@ function safeAvatar(u) {
 
 export default function AppLayout() {
   const nav = useNavigate();
-  const me = useMemo(() => getUserSession(), []);
+  const me = getUserSession(); // Get fresh session data each time
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 

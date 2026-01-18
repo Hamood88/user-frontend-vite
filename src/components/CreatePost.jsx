@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { API_BASE, getToken, getUserSession, absUrl, fixImageUrl } from "../api.jsx";
 
 function s(v) {
@@ -21,7 +21,7 @@ const CreatePost = ({ onPost }) => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
   const [posting, setPosting] = useState(false);
-  const user = useMemo(() => getUserSession(), []);
+  const user = getUserSession(); // Get fresh session data each time
 
   const handleSubmit = async (e) => {
     e.preventDefault();
