@@ -1014,19 +1014,26 @@ export async function createProductReview(productId, body = {}) {
    ================================ */
 export async function getReferralNetwork() {
   try {
-    const data = await apiGet("/api/users/downline-counts", { auth: true });
+    const [downlineData, earningsData] = await Promise.all([
+      apiGet("/api/users/downline-counts", { auth: true }),
+      apiGet("/api/users/earnings", { auth: true }),
+    ]);
+
     return {
-      total: data.total || 0,
-      totalEarned: data.totalEarned || 0,
-      levels: data.levels || {},
-      maxLevels: data.maxLevels || 0,
+      total: downlineData.total || 0,
+      totalEarned: earningsData.totalEarned || 0,
+      totalAvailable: earningsData.totalAvailable || 0,
+      totalPending: earningsData.totalPending || 0,
+      levels: downlineData.levels || {},
+      maxLevels: downlineData.maxLevels || 0,
     };
   } catch (e) {
     console.error("Failed to fetch referral network:", e);
-    // Return fallback data if endpoint fails
     return {
       total: 0,
       totalEarned: 0,
+      totalAvailable: 0,
+      totalPending: 0,
       levels: {},
       ok: false,
     };
