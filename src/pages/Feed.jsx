@@ -204,11 +204,18 @@ export default function Feed() {
       const normalized = list.map(normalizePost);
       setPosts(normalized);
     } catch (e) {
-      console.error("Feed loading error:", e);
+      // ✅ Only log in development mode to avoid confusing users
+      if (process.env.NODE_ENV === 'development') {
+        console.warn("Feed loading error:", e?.message || e);
+      }
       
-      // Handle specific error cases for better UX
-      if (e?.status === 403 || e?.message?.includes("private") || e?.message?.includes("403")) {
+      // ✅ Handle 403 (private feed) - check status code first, then backend message
+      if (e?.status === 403) {
         setErr("This user's feed is private.");
+        setIsPrivateFeed(true);
+      } else if (e?.message?.includes("private") || e?.data?.message?.includes("private")) {
+        // Backend returns message like "This user's feed is private (friends only)."
+        setErr(e?.data?.message || e?.message || "This user's feed is private.");
         setIsPrivateFeed(true);
       } else if (e?.status === 404) {
         setErr("User not found.");
@@ -229,9 +236,12 @@ export default function Feed() {
     try {
       await sendFriendRequest(userId, "I'd like to be friends!");
       setFriendRequestSent(true);
-      setErr("Friend request sent!");
+      // ✅ Show success message while keeping the private feed message
+      setErr("Friend request sent! Waiting for acceptance to view this feed.");
     } catch (e) {
-      setErr("Failed to send friend request: " + (e?.message || e));
+      // Show error but keep the private feed context
+      const errorMsg = e?.message || String(e);
+      setErr(`This user's feed is private. Friend request failed: ${errorMsg}`);
     } finally {
       setSendingFriendRequest(false);
     }
@@ -564,10 +574,21 @@ export default function Feed() {
           </div>
 
           {err ? (
-            <div className="md-error mt-3">
-              {err}
+            <div className={cx("rounded-2xl p-5", isPrivateFeed ? "glass-card bg-blue-500/10 border border-blue-500/30" : "md-error")}>
+              <div className="flex items-start justify-between gap-3">
+                <p className={isPrivateFeed ? "text-blue-200" : ""}>{err}</p>
+                {err && (
+                  <button
+                    type="button"
+                    className="text-white/50 hover:text-white"
+                    onClick={() => setErr("")}
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
               {isPrivateFeed && userId && !friendRequestSent && (
-                <div className="mt-3">
+                <div className="mt-4 pt-4 border-t border-blue-500/20">
                   <button
                     type="button"
                     className="md-btnPrimary"
