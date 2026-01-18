@@ -484,48 +484,6 @@ export default function UserDashboard() {
             </div>
           </div>
         </div>
-
-        {/* Network Stats */}
-        <div className="space-y-6">
-          <h2 className="text-xl font-display font-bold text-white">
-            Network Levels
-          </h2>
-
-          <div className="glass-card rounded-2xl p-6 space-y-6">
-            {levels.length === 0 ? (
-              <div className="text-muted-foreground">
-                No referrals yet. Start inviting friends to build your network!
-              </div>
-            ) : (
-              levels.map(([level, count]) => {
-                const c = Number(count || 0);
-                return (
-                  <div key={level} className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Level {level}</span>
-                      <span className="font-bold text-white">{c} Members</span>
-                    </div>
-                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.min(100, (c / 150) * 100)}%` }}
-                        className={`h-full rounded-full ${
-                          level === "1"
-                            ? "bg-violet-500"
-                            : level === "2"
-                            ? "bg-fuchsia-500"
-                            : level === "3"
-                            ? "bg-cyan-500"
-                            : "bg-slate-500"
-                        }`}
-                      />
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
       </div>
     </div>
   );

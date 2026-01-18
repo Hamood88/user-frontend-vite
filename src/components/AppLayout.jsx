@@ -65,12 +65,12 @@ export default function AppLayout() {
   const navItems = [
     { label: "Feed", icon: Home, to: "/feed" },
     { label: "Dashboard", icon: LayoutDashboard, to: "/dashboard" },
+    { label: "💰 Earn More", icon: Zap, to: "/earn-more" },
     { label: "Friends", icon: Users, to: "/friends" },
     { label: "Messages", icon: MessageSquare, to: "/messages" },
     { label: "Mall", icon: ShoppingBag, to: "/mall" },
     { label: "Orders", icon: ShoppingCart, to: "/orders" },
     { label: "Cart", icon: ShoppingCart, to: "/cart" },
-    { label: "💰 Earn More", icon: Zap, to: "/earn-more" },
     { label: "Settings", icon: Settings, to: "/settings" },
   ];
 

@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { Share2, Copy, Facebook, Twitter, Mail, Zap, Gift, Users as UsersIcon } from "lucide-react";
+import { motion } from "framer-motion";
 import QRCode from "qrcode";
 import { useNavigate } from "react-router-dom";
 import { getReferralNetwork } from "../api.jsx";
@@ -59,6 +60,7 @@ export default function EarnMore() {
         setStats({
           totalInvited: data.total || 0,
           totalEarned: data.totalEarned || 0,
+          levels: data.levels || {},
         });
       } catch (err) {
         console.error("Failed to fetch referral stats:", err);
@@ -68,6 +70,14 @@ export default function EarnMore() {
     }
     if (me) fetchStats();
   }, [me]);
+
+  const levels = useMemo(() => {
+    const obj = stats?.levels || {};
+    const entries = Object.entries(obj).sort(
+      (a, b) => Number(a[0]) - Number(b[0])
+    );
+    return entries;
+  }, [stats]);
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
@@ -367,6 +377,51 @@ export default function EarnMore() {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Network Levels Section */}
+        <div className="mt-12 space-y-6">
+          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+            <UsersIcon className="w-6 h-6" />
+            Network Levels
+          </h2>
+
+          <div className="bg-white/5 backdrop-blur rounded-lg p-8 border border-white/10">
+            {levels.length === 0 ? (
+              <div className="text-gray-400">
+                No referrals yet. Start inviting friends to build your network!
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {levels.map(([level, count]) => {
+                  const c = Number(count || 0);
+                  return (
+                    <div key={level} className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-300">Level {level}</span>
+                        <span className="font-bold text-white text-lg">{c} Members</span>
+                      </div>
+                      <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${Math.min(100, (c / 150) * 100)}%` }}
+                          className={`h-full rounded-full ${
+                            level === "1"
+                              ? "bg-violet-500"
+                              : level === "2"
+                              ? "bg-fuchsia-500"
+                              : level === "3"
+                              ? "bg-cyan-500"
+                              : "bg-slate-500"
+                          }`}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
