@@ -16,12 +16,12 @@ import {
 import {
   apiUpload,
   getMyFeed,
+  getPostsByUser,
   likePost,
   addComment,
   absUrl,
   pickId,
   getUserSession,
-  apiPost,
   fixImageUrl,
 } from "../api.jsx";
 
@@ -170,7 +170,7 @@ export default function Feed() {
       
       // If userId is in params, fetch that user's posts
       if (userId) {
-        data = await apiPost(`/api/posts/user/${userId}`, {}, { auth: true });
+        data = await getPostsByUser(userId);
       } else {
         // Otherwise fetch my feed
         data = await getMyFeed(); // /api/posts/feed
