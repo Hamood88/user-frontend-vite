@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "../styles/Search.css";
 import { API_BASE, getToken } from "../api.jsx";
 
@@ -74,8 +74,9 @@ function pickAvatar(r) {
 
 export default function Search() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(searchParams.get("q") || "");
   const [type, setType] = useState("all"); // all | users | shops
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);

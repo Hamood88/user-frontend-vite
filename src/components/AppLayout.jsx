@@ -45,9 +45,20 @@ export default function AppLayout() {
   const nav = useNavigate();
   const me = useMemo(() => getUserSession(), []);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   function handleNotificationClick() {
     nav("/notifications");
+  }
+
+  function handleSearch(e) {
+    if (e.key === "Enter") {
+      const query = searchQuery.trim();
+      if (query) {
+        nav(`/search?q=${encodeURIComponent(query)}`);
+        setSearchQuery("");
+      }
+    }
   }
 
   const navItems = [
@@ -133,7 +144,13 @@ export default function AppLayout() {
         <header className="md-topbar">
           <div className="md-searchWrap">
             <Search className="md-searchIcon" />
-            <input className="md-searchInput" placeholder="Search Moondala..." />
+            <input 
+              className="md-searchInput" 
+              placeholder="Search Moondala..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearch}
+            />
           </div>
 
           <button 
