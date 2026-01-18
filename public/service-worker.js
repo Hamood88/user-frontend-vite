@@ -1,4 +1,4 @@
-const CACHE_NAME = 'moondala-v2';
+const CACHE_NAME = 'moondala-v3';
 const urlsToCache = [
   '/',
   '/index.html',
