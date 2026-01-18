@@ -1,0 +1,55 @@
+{
+  "name": "Moondala - Marketplace & Community",
+  "short_name": "Moondala",
+  "description": "Connect, shop, and share with our vibrant marketplace community",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/moondala-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/moondala-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/moondala-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/moondala-logo.png",
+      "sizes": "540x720",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["shopping", "social"],
+  "shortcuts": [
+    {
+      "name": "Browse Mall",
+      "short_name": "Mall",
+      "description": "Browse products in the marketplace",
+      "url": "/mall",
+      "icons": [{ "src": "/moondala-logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My Orders",
+      "short_name": "Orders",
+      "description": "View your orders",
+      "url": "/orders",
+      "icons": [{ "src": "/moondala-logo.png", "sizes": "192x192" }]
+    }
+  ]
+}
