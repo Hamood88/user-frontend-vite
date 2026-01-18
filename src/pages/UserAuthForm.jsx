@@ -67,7 +67,17 @@ export function UserAuthForm({ mode }) {
   const [country, setCountry] = useState("");
   const [favoriteSport, setFavoriteSport] = useState("");
   const [interests, setInterests] = useState([]);
-  const [inviterCode, setInviterCode] = useState(searchParams.get("inviter") || "");
+  
+  // Get inviter code from URL params first, then fallback to localStorage
+  const [inviterCode, setInviterCode] = useState(() => {
+    const urlInviter = searchParams.get("inviter");
+    if (urlInviter) return urlInviter;
+    try {
+      return localStorage.getItem("referralCode") || "";
+    } catch {
+      return "";
+    }
+  });
 
   const handleInterestChange = (interest) => {
     setInterests(prev =>
@@ -156,6 +166,11 @@ export function UserAuthForm({ mode }) {
         const data = await apiPost("/auth/register", registerData);
         setSuccess(true);
         setUserSession({ token: data.token, user: data.user });
+        // Clear referral data after successful registration
+        try {
+          localStorage.removeItem("referralCode");
+          localStorage.removeItem("referralMessage");
+        } catch {}
         setTimeout(() => navigate("/dashboard"), 500);
       }
     } catch (err) {
@@ -378,14 +393,17 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label htmlFor="inviterCode" className="mb-2 block text-xs">Invited By Code (Optional)</Label>
+            <Label htmlFor="inviterCode" className="mb-2 block text-xs">
+              Invited By Code {inviterCode && <span className="text-green-400">(Auto-filled from your referral link)</span>}
+            </Label>
             <Input
               id="inviterCode"
               type="text"
               placeholder="Enter inviter code if you have one"
               value={inviterCode}
               onChange={(e) => setInviterCode(e.target.value)}
-              disabled={!!searchParams.get("inviter")}
+              disabled={!!inviterCode}
+              className={inviterCode ? "bg-green-500/10 border-green-500/30" : ""}
             />
           </div>
         </>
