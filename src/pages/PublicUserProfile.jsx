@@ -7,9 +7,11 @@ export default function PublicUserProfile() {
   const { userId } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isPrivateProfile, setIsPrivateProfile] = useState(false);
+  const [isPrivateFeed, setIsPrivateFeed] = useState(false);
   const [sendingRequest, setSendingRequest] = useState(false);
   const [requestSent, setRequestSent] = useState(false);
 
@@ -21,6 +23,8 @@ export default function PublicUserProfile() {
         setLoading(true);
         setError("");
         setIsPrivateProfile(false);
+        setIsPrivateFeed(false);
+        setPosts([]);
         
         const response = await fetch(`${API_BASE}/api/public/user/${encodeURIComponent(userId)}`);
         const data = await response.json();
@@ -38,6 +42,27 @@ export default function PublicUserProfile() {
         }
         
         setUser(data?.user || data);
+        
+        // ✅ Try to load user's posts (will be 403 if feed is private)
+        try {
+          const token = localStorage.getItem('userToken');
+          const postsResponse = await fetch(`${API_BASE}/api/posts/user/${encodeURIComponent(userId)}`, {
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+          });
+          
+          if (postsResponse.status === 403) {
+            // Feed is private - that's ok, just show the profile with friendly message
+            setIsPrivateFeed(true);
+            setPosts([]);
+          } else if (postsResponse.ok) {
+            const postsData = await postsResponse.json();
+            setPosts(postsData.posts || []);
+          }
+          // Otherwise silently ignore post load errors (network issues, etc.)
+        } catch (err) {
+          // Silently fail - profile is still shown
+          console.log("Could not load posts:", err.message);
+        }
       } catch (err) {
         setError(err.message || "Failed to load user profile");
       } finally {
@@ -182,16 +207,54 @@ export default function PublicUserProfile() {
             </div>
           )}
 
-          {/* Actions */}
-          <div className="flex gap-4 justify-center">
-            <button
-              onClick={handleViewFeed}
-              className="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl transition-colors"
-            >
-              <Eye className="w-5 h-5" />
-              View Feed
-            </button>
-          </div>
+          {/* Feed Status - Show private message if feed is private */}
+          {isPrivateFeed && (
+            <div className="mt-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/30">
+              <div className="flex items-center gap-2 text-blue-200 text-sm mb-3">
+                <Lock className="w-4 h-4" />
+                This user's feed is private (friends only)
+              </div>
+              {requestSent ? (
+                <div className="text-blue-300 text-sm">
+                  Friend request sent! Once accepted, you'll be able to see their posts.
+                </div>
+              ) : (
+                <button
+                  onClick={handleSendFriendRequest}
+                  disabled={sendingRequest}
+                  className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white px-6 py-2 rounded-lg transition-colors w-full"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  {sendingRequest ? "Sending..." : "Send Friend Request"}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Posts Section */}
+          {!isPrivateFeed && posts.length > 0 && (
+            <div className="mt-8 border-t border-white/10 pt-6">
+              <h2 className="text-xl font-bold text-white mb-4">Posts ({posts.length})</h2>
+              <div className="space-y-4">
+                {posts.map((post) => (
+                  <div key={post._id} className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <p className="text-gray-300 text-sm">{post.content}</p>
+                    {post.createdAt && (
+                      <p className="text-gray-500 text-xs mt-2">
+                        {new Date(post.createdAt).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!isPrivateFeed && posts.length === 0 && (
+            <div className="mt-8 border-t border-white/10 pt-6">
+              <p className="text-gray-400">No posts yet</p>
+            </div>
+          )}
 
           {/* Privacy Notice */}
           <div className="mt-6 p-4 bg-white/5 rounded-xl border border-white/10">
