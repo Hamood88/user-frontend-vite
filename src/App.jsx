@@ -25,7 +25,6 @@ import CheckoutPage from "./pages/CheckoutPage";
 import Cart from "./pages/Cart";
 import ProductDetailsUnified from "./pages/ProductDetailsUnified";
 import PublicShareRedirect from "./pages/PublicShareRedirect";
-import PublicUserProfile from "./pages/PublicUserProfile";
 
 /* ✅ PUBLIC SHOP PAGES */
 import ShopFeedPublic from "./pages/ShopFeedPublic";
@@ -171,6 +170,16 @@ function ShopShortRedirect() {
 }
 
 /* =========================
+   ✅ /u/:userId -> Direct to user feed (no intermediate profile page)
+   ========================= */
+function UserFeedRedirect() {
+  const { userId } = useParams();
+  const safe = cleanParam(userId);
+  if (!safe) return <Navigate to="/search" replace />;
+  return <Navigate to={`/feed/user/${encodeURIComponent(safe)}`} replace />;
+}
+
+/* =========================
    ✅ /shop/:shopId default -> Shop Feed (public landing)
    ========================= */
 function ShopDefaultToMallPreview() {
@@ -212,8 +221,8 @@ export default function App() {
         {/* Public product share */}
         <Route path="/p/:shareId" element={<PublicShareRedirect />} />
 
-        {/* Public user profile */}
-        <Route path="/u/:userId" element={<PublicUserProfile />} />
+        {/* Public user redirect - go directly to their feed */}
+        <Route path="/u/:userId" element={<UserFeedRedirect />} />
 
         {/* Short shop link */}
         <Route path="/s/:shopId" element={<ShopShortRedirect />} />
