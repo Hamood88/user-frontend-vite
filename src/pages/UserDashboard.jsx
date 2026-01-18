@@ -240,8 +240,8 @@ export default function UserDashboard() {
       const tb = new Date(b?.createdAt || b?.date || 0).getTime();
       return tb - ta;
     });
-    // Show only 3 by default, all if expanded
-    return showAllTransactions ? sorted.slice(0, 50) : sorted.slice(0, 3);
+    // Show 0 by default, 5 if expanded
+    return showAllTransactions ? sorted.slice(0, 5) : [];
   }, [earnings, showAllTransactions]);
 
   const copyCode = () => {
@@ -395,7 +395,7 @@ export default function UserDashboard() {
               onClick={() => setShowAllTransactions(!showAllTransactions)}
               className="md-btn md-btn-ghost text-sm"
             >
-              {showAllTransactions ? "Show Less" : "Show More"}
+              {showAllTransactions ? "Hide" : "Show"}
             </button>
           </div>
 
