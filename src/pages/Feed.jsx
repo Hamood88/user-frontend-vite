@@ -13,6 +13,10 @@ import {
   Trash2,
   Edit3,
   Check,
+  Link,
+  Copy,
+  Twitter,
+  Mail,
 } from "lucide-react";
 
 import {
@@ -161,6 +165,9 @@ export default function Feed() {
   const [editingPostId, setEditingPostId] = useState("");
   const [editText, setEditText] = useState("");
 
+  // share dropdown
+  const [shareDropdownOpen, setShareDropdownOpen] = useState("");
+
   const container = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.08 } },
@@ -198,6 +205,23 @@ export default function Feed() {
   useEffect(() => {
     loadFeed();
   }, [userId]);
+
+  // Close share dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (shareDropdownOpen) {
+        setShareDropdownOpen("");
+      }
+    }
+
+    if (shareDropdownOpen) {
+      document.addEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [shareDropdownOpen]);
 
   async function onCreatePost() {
     const text = s(newPostText);
@@ -356,25 +380,59 @@ export default function Feed() {
     setEditText("");
   }
 
-  async function sharePost(post) {
+  function toggleShareDropdown(postId) {
+    setShareDropdownOpen(shareDropdownOpen === postId ? "" : postId);
+  }
+
+  async function copyPostLink(post) {
     try {
-      // Create share text with post content and author
-      const shareText = `Check out this post by ${userName(post.user)} on Moondala:\n\n"${post.text}"\n\n`;
       const shareUrl = userId 
-        ? `${window.location.origin}/feed/user/${userId}` // If viewing someone's feed, link to their feed
-        : `${window.location.origin}/feed`; // Otherwise link to main feed
+        ? `${window.location.origin}/feed/user/${userId}` 
+        : `${window.location.origin}/feed`;
       
-      const fullShare = shareText + shareUrl;
+      await navigator.clipboard.writeText(shareUrl);
       
-      await navigator.clipboard.writeText(fullShare);
-      
-      // Show temporary success message
       const originalErr = err;
-      setErr("Post content copied to clipboard!");
+      setErr("Link copied to clipboard!");
       setTimeout(() => setErr(originalErr), 2000);
+      setShareDropdownOpen("");
     } catch (e) {
-      setErr("Failed to copy to clipboard");
+      setErr("Failed to copy link");
     }
+  }
+
+  async function copyPostContent(post) {
+    try {
+      const shareText = `"${post.text}" - ${userName(post.user)} on Moondala`;
+      await navigator.clipboard.writeText(shareText);
+      
+      const originalErr = err;
+      setErr("Post content copied!");
+      setTimeout(() => setErr(originalErr), 2000);
+      setShareDropdownOpen("");
+    } catch (e) {
+      setErr("Failed to copy content");
+    }
+  }
+
+  function shareToTwitter(post) {
+    const text = `Check out this post by ${userName(post.user)} on Moondala: "${post.text}"`;
+    const shareUrl = userId 
+      ? `${window.location.origin}/feed/user/${userId}` 
+      : `${window.location.origin}/feed`;
+    
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(twitterUrl, '_blank');
+    setShareDropdownOpen("");
+  }
+
+  function shareViaEmail(post) {
+    const subject = `Check out this post from Moondala`;
+    const body = `I wanted to share this post with you:\n\n"${post.text}"\n\nBy ${userName(post.user)} on Moondala\n\nCheck it out: ${userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`}`;
+    
+    const emailUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = emailUrl;
+    setShareDropdownOpen("");
   }
 
   return (
@@ -629,16 +687,55 @@ export default function Feed() {
                       <span className="text-sm font-semibold">{post.commentsCount}</span>
                     </button>
 
-                    <button
-                      type="button"
-                      className="md-actionBtn hover-green group ml-auto"
-                      onClick={() => sharePost(post)}
-                      title="Share post"
-                    >
-                      <span className="md-actionIconWrap group-hover:bg-green-400/10">
-                        <Share2 className="w-5 h-5" />
-                      </span>
-                    </button>
+                    <div className="relative ml-auto">
+                      <button
+                        type="button"
+                        className="md-actionBtn hover-green group"
+                        onClick={() => toggleShareDropdown(post._id)}
+                        title="Share post"
+                      >
+                        <span className="md-actionIconWrap group-hover:bg-green-400/10">
+                          <Share2 className="w-5 h-5" />
+                        </span>
+                      </button>
+                      
+                      {/* Share Dropdown */}
+                      {shareDropdownOpen === post._id && (
+                        <div className="absolute right-0 top-10 glass-card rounded-xl p-2 z-10 min-w-[160px] shadow-lg border border-white/10">
+                          <button
+                            onClick={() => copyPostLink(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <Link className="w-4 h-4" />
+                            Copy Link
+                          </button>
+                          
+                          <button
+                            onClick={() => copyPostContent(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <Copy className="w-4 h-4" />
+                            Copy Content
+                          </button>
+                          
+                          <button
+                            onClick={() => shareToTwitter(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <Twitter className="w-4 h-4" />
+                            Share to Twitter
+                          </button>
+                          
+                          <button
+                            onClick={() => shareViaEmail(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <Mail className="w-4 h-4" />
+                            Share via Email
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Comments Drawer (simple) */}
