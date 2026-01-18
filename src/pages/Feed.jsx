@@ -921,9 +921,9 @@ export default function Feed() {
       </div>
 
 
-      {/* Right Sidebar */}
-      <div className="hidden lg:flex flex-col gap-6 w-80">
-        <div className="glass-card rounded-2xl p-5 sticky top-24 z-10 h-fit">
+      {/* Right Sidebar - FIXED positioning */}
+      <div className="fixed right-0 top-20 w-80 h-screen overflow-y-auto pr-2 hidden lg:flex flex-col gap-6 pt-4">
+        <div className="glass-card rounded-2xl p-5">
           <h2 className="font-display font-bold text-lg mb-4 text-white">Trending</h2>
           <div className="space-y-4">
             {["#Moondala", "#SocialCommerce", "#ReferralNetwork", "#FutureOfShopping"].map((tag) => (
@@ -940,7 +940,7 @@ export default function Feed() {
           </button>
         </div>
 
-        <div className="glass-card rounded-2xl p-5 sticky top-80 z-10 h-fit">
+        <div className="glass-card rounded-2xl p-5">
           <h2 className="font-display font-bold text-lg mb-4 text-white">
             Suggested People
           </h2>
