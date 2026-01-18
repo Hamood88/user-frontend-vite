@@ -1014,14 +1014,20 @@ export async function createProductReview(productId, body = {}) {
    ================================ */
 export async function getReferralNetwork() {
   try {
-    return await apiGet("/api/users/referral-network", { auth: true });
+    const data = await apiGet("/api/users/downline-counts", { auth: true });
+    return {
+      total: data.total || 0,
+      totalEarned: data.totalEarned || 0,
+      levels: data.levels || {},
+      maxLevels: data.maxLevels || 0,
+    };
   } catch (e) {
     console.error("Failed to fetch referral network:", e);
     // Return fallback data if endpoint fails
     return {
       total: 0,
       totalEarned: 0,
-      levels: [],
+      levels: {},
       ok: false,
     };
   }
