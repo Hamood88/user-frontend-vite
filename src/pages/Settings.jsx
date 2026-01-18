@@ -52,6 +52,7 @@ export default function Settings() {
   const [emailDigest, setEmailDigest] = useState(false);
   const [mentions, setMentions] = useState(true);
 
+  // ✅ Privacy: sync with backend (false = "everyone" / public, true = "friends_only" / private)
   const [privateProfile, setPrivateProfile] = useState(false);
   const [showStatus, setShowStatus] = useState(true);
   const [theme, setTheme] = useState(() => {
@@ -98,6 +99,11 @@ export default function Settings() {
         setUsername(s(user?.username) || s(user?.handle));
         setEmail(s(user?.email));
         setBio(s(user?.bio));
+        
+        // ✅ Load privacy from backend (privacy.availability)
+        const privacy = user?.privacy || {};
+        const isPrivate = privacy.availability === "friends_only";
+        setPrivateProfile(isPrivate);
       } catch (e) {
         setErr(e?.message || "Failed to load your profile.");
       } finally {
@@ -113,17 +119,34 @@ export default function Settings() {
     setErr("");
     setMsg("");
     try {
+      // ✅ Include privacy setting in save
+      const payload = { 
+        displayName, 
+        username, 
+        email, 
+        bio,
+        privacy: {
+          availability: privateProfile ? "friends_only" : "everyone",
+          profileVisibility: privateProfile ? "friends" : "everyone",
+        }
+      };
+      
       // Try common endpoints – keep it robust
       let res = null;
       try {
-        res = await apiPut("/api/users/me", { displayName, username, email, bio });
+        res = await apiPut("/api/users/me", payload);
       } catch (_) {
-        res = await apiPut("/api/user-profile/me", { displayName, username, email, bio });
+        res = await apiPut("/api/user-profile/me", payload);
       }
 
       const user = res?.user || res?.me || res?.profile || res || null;
       if (user) {
         setMe(user);
+        // ✅ Update privacy state from response
+        const privacy = user?.privacy || {};
+        const isPrivate = privacy.availability === "friends_only";
+        setPrivateProfile(isPrivate);
+        
         try {
           localStorage.setItem("me", JSON.stringify(user));
           window.dispatchEvent(new Event("userUpdated")); // ✅ your sidebar listens to this
@@ -352,7 +375,7 @@ export default function Settings() {
               <div className="space-y-4">
                 <SettingRow
                   title="Private Profile"
-                  sub="Only friends can see your posts"
+                  sub={privateProfile ? "Only friends can see your profile" : "Everyone can see your profile"}
                   right={
                     <Switch
                       checked={privateProfile}
