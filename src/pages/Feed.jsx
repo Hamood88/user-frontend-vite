@@ -31,6 +31,7 @@ import {
   pickId,
   getUserSession,
   fixImageUrl,
+  safeImageUrl,
 } from "../api.jsx";
 
 import "../styles/feedModern.css";
@@ -68,7 +69,8 @@ function userName(u) {
 }
 
 function avatarUrl(u) {
-  return fixImageUrl(absUrl(u?.avatarUrl || u?.avatar || u?.photoUrl || ""));
+  const url = u?.avatarUrl || u?.avatar || u?.photoUrl || "";
+  return safeImageUrl(url, 'avatar', u);
 }
 
 function normalizePost(p) {
@@ -459,12 +461,18 @@ export default function Feed() {
                   src={avatarUrl(me)}
                   alt="Me"
                   className="md-avatarImgSm"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
                 />
-              ) : (
-                <div className="md-avatarFallbackSm">
-                  {(userName(me) || "M").slice(0, 1).toUpperCase()}
-                </div>
-              )}
+              ) : null}
+              <div 
+                className="md-avatarFallbackSm" 
+                style={{ display: avatarUrl(me) ? 'none' : 'flex' }}
+              >
+                {(userName(me) || "M").slice(0, 1).toUpperCase()}
+              </div>
             </div>
 
             <div className="flex-1 space-y-4">
@@ -555,14 +563,22 @@ export default function Feed() {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex gap-3">
-                      <div className="w-10 h-10 rounded-full bg-white/5 overflow-hidden border border-white/10">
+                      <div className="w-10 h-10 rounded-full bg-white/5 overflow-hidden border border-white/10 flex items-center justify-center">
                         {avatarUrl(post.user) ? (
                           <img
                             src={avatarUrl(post.user)}
                             alt={userName(post.user)}
                             className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.parentNode.innerHTML = `<div class="text-white text-sm font-bold">${userName(post.user).charAt(0).toUpperCase()}</div>`;
+                            }}
                           />
-                        ) : null}
+                        ) : (
+                          <div className="text-white text-sm font-bold">
+                            {userName(post.user).charAt(0).toUpperCase()}
+                          </div>
+                        )}
                       </div>
                       <div>
                         <h3 className="font-bold text-foreground hover:underline cursor-pointer">

@@ -249,6 +249,42 @@ export function fixImageUrl(url) {
   return s;
 }
 
+/**
+ * ✅ Get default avatar when user has no profile picture
+ */
+export function getDefaultAvatar(user = {}) {
+  // You can replace this with a default avatar URL or data URI
+  const name = user?.firstName || user?.displayName || user?.username || "U";
+  const initial = name.charAt(0).toUpperCase();
+  
+  // Create a simple colored avatar based on the user's initial
+  const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57', '#FF9FF3', '#54A0FF'];
+  const colorIndex = initial.charCodeAt(0) % colors.length;
+  const color = colors[colorIndex];
+  
+  // Return a data URI for a simple avatar
+  const svg = `
+    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="20" fill="${color}"/>
+      <text x="20" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="white" font-weight="bold">${initial}</text>
+    </svg>
+  `;
+  
+  return `data:image/svg+xml;base64,${btoa(svg)}`;
+}
+
+/**
+ * ✅ Safe image URL with fallback
+ */
+export function safeImageUrl(url, fallbackType = 'avatar', user = {}) {
+  if (!url) {
+    return fallbackType === 'avatar' ? getDefaultAvatar(user) : null;
+  }
+  
+  const fixed = fixImageUrl(url);
+  return fixed;
+}
+
 /* ================================
    ✅ CORE REQUEST
    ================================ */

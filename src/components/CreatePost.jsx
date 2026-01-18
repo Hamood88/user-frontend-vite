@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { API_BASE, getToken, getUserSession, absUrl, fixImageUrl } from "../api.jsx";
+import { API_BASE, getToken, getUserSession, absUrl, fixImageUrl, safeImageUrl } from "../api.jsx";
 
 function s(v) {
   return String(v || "").trim();
@@ -13,7 +13,7 @@ function userName(u) {
 }
 
 function avatarUrl(u) {
-  return fixImageUrl(absUrl(u?.avatarUrl || u?.avatar || u?.photoUrl || ""));
+  return safeImageUrl(u?.avatarUrl || u?.avatar || u?.photoUrl || "", 'avatar', u);
 }
 
 const CreatePost = ({ onPost }) => {

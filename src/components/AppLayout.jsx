@@ -15,7 +15,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 
-import { clearUserSession, getUserSession, absUrl } from "../api.jsx";
+import { clearUserSession, getUserSession, absUrl, safeImageUrl } from "../api.jsx";
 import "../styles/appLayoutModern.css";
 
 /* =========================
@@ -38,7 +38,7 @@ function safeHandle(u) {
 }
 
 function safeAvatar(u) {
-  return absUrl(u?.avatarUrl || u?.avatar || u?.photoUrl || "");
+  return safeImageUrl(u?.avatarUrl || u?.avatar || u?.photoUrl || "", 'avatar', u);
 }
 
 export default function AppLayout() {
