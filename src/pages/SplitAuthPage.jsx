@@ -76,7 +76,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    fontFamily: \'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif\',
+    fontFamily: "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
   },
   switcher: {
     display: "flex",
