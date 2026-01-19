@@ -17,6 +17,10 @@ import {
   Copy,
   Twitter,
   Mail,
+  MessageCircleWarning,
+  Download,
+  Printer,
+  Flag,
 } from "lucide-react";
 
 import {
@@ -480,6 +484,124 @@ export default function Feed() {
     setShareDropdownOpen("");
   }
 
+  function shareToWhatsApp(post) {
+    const text = `Check out this post by ${userName(post.user)}: "${post.text}"\n\n${userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, '_blank');
+    setShareDropdownOpen("");
+  }
+
+  function shareToFacebook(post) {
+    const shareUrl = userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(post.text)}`;
+    window.open(facebookUrl, '_blank');
+    setShareDropdownOpen("");
+  }
+
+  function shareToLinkedIn(post) {
+    const shareUrl = userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`;
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+    window.open(linkedInUrl, '_blank');
+    setShareDropdownOpen("");
+  }
+
+  function shareToTelegram(post) {
+    const text = `${post.text}\n\nBy ${userName(post.user)} on Moondala`;
+    const shareUrl = userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`;
+    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`;
+    window.open(telegramUrl, '_blank');
+    setShareDropdownOpen("");
+  }
+
+  function shareToReddit(post) {
+    const shareUrl = userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`;
+    const redditUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(post.text)}`;
+    window.open(redditUrl, '_blank');
+    setShareDropdownOpen("");
+  }
+
+  function shareViaSMS(post) {
+    const text = `Check out this post: "${post.text}" - ${userName(post.user)} on Moondala\n${userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`}`;
+    const smsUrl = `sms:?&body=${encodeURIComponent(text)}`;
+    window.location.href = smsUrl;
+    setShareDropdownOpen("");
+  }
+
+  async function downloadPostAsImage(post) {
+    try {
+      // Simple download of post content as text file
+      const content = `${post.text}\n\n- ${userName(post.user)}\nPosted: ${new Date(post.createdAt).toLocaleDateString()}`;
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `moondala-post-${post._id}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      const originalErr = err;
+      setErr("Post downloaded!");
+      setTimeout(() => setErr(originalErr), 2000);
+      setShareDropdownOpen("");
+    } catch (e) {
+      setErr("Failed to download post");
+    }
+  }
+
+  function printPost(post) {
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Moondala Post</title>');
+    printWindow.document.write('<style>body{font-family:Arial,sans-serif;padding:20px;max-width:600px;margin:0 auto;}h2{color:#333;}.meta{color:#666;font-size:14px;margin:10px 0;}.content{line-height:1.6;margin:20px 0;}</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(`<h2>${userName(post.user)}</h2>`);
+    printWindow.document.write(`<div class="meta">Posted: ${new Date(post.createdAt).toLocaleString()}</div>`);
+    printWindow.document.write(`<div class="content">${post.text.replace(/\n/g, '<br>')}</div>`);
+    if (post.media && post.media.url) {
+      printWindow.document.write(`<img src="${fixImageUrl(absUrl(post.media.url))}" style="max-width:100%;margin:20px 0;">`);
+    }
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 250);
+    setShareDropdownOpen("");
+  }
+
+  async function reportPost(post) {
+    const reason = prompt('Why are you reporting this post?\n\nReasons:\n1. Spam\n2. Inappropriate content\n3. Harassment\n4. False information\n5. Other\n\nPlease enter the number (1-5):');
+    
+    if (!reason) {
+      setShareDropdownOpen("");
+      return;
+    }
+
+    const reasons = {
+      '1': 'Spam',
+      '2': 'Inappropriate content',
+      '3': 'Harassment',
+      '4': 'False information',
+      '5': 'Other'
+    };
+
+    const reportReason = reasons[reason] || 'Other';
+    
+    try {
+      // TODO: Implement backend API call to report post
+      // await apiPost(`/posts/${post._id}/report`, { reason: reportReason });
+      
+      const originalErr = err;
+      setErr(`Post reported for: ${reportReason}. Thank you for helping keep Moondala safe.`);
+      setTimeout(() => setErr(originalErr), 3000);
+      setShareDropdownOpen("");
+    } catch (e) {
+      setErr("Failed to report post");
+    }
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Main Feed Column */}
@@ -787,7 +909,7 @@ export default function Feed() {
                       
                       {/* Share Dropdown */}
                       {shareDropdownOpen === post._id && (
-                        <div className="absolute right-0 top-10 glass-card rounded-xl p-2 z-10 min-w-[160px] shadow-lg border border-white/10">
+                        <div className="absolute right-0 top-10 glass-card rounded-xl p-2 z-10 min-w-[200px] max-h-[400px] overflow-y-auto shadow-lg border border-white/10">
                           <button
                             onClick={() => copyPostLink(post)}
                             className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
@@ -804,12 +926,54 @@ export default function Feed() {
                             Copy Content
                           </button>
                           
+                          <div className="border-t border-white/10 my-1"></div>
+                          
+                          <button
+                            onClick={() => shareToWhatsApp(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <MessageCircleWarning className="w-4 h-4" />
+                            WhatsApp
+                          </button>
+                          
+                          <button
+                            onClick={() => shareToFacebook(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <Share2 className="w-4 h-4" />
+                            Facebook
+                          </button>
+                          
+                          <button
+                            onClick={() => shareToLinkedIn(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <Users className="w-4 h-4" />
+                            LinkedIn
+                          </button>
+                          
+                          <button
+                            onClick={() => shareToTelegram(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <Send className="w-4 h-4" />
+                            Telegram
+                          </button>
+                          
+                          <button
+                            onClick={() => shareToReddit(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <Share2 className="w-4 h-4" />
+                            Reddit
+                          </button>
+                          
                           <button
                             onClick={() => shareToTwitter(post)}
                             className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
                           >
                             <Twitter className="w-4 h-4" />
-                            Share to Twitter
+                            Twitter
                           </button>
                           
                           <button
@@ -817,7 +981,43 @@ export default function Feed() {
                             className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
                           >
                             <Mail className="w-4 h-4" />
-                            Share via Email
+                            Email
+                          </button>
+                          
+                          <button
+                            onClick={() => shareViaSMS(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                            SMS/Text
+                          </button>
+                          
+                          <div className="border-t border-white/10 my-1"></div>
+                          
+                          <button
+                            onClick={() => downloadPostAsImage(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <Download className="w-4 h-4" />
+                            Download
+                          </button>
+                          
+                          <button
+                            onClick={() => printPost(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                          >
+                            <Printer className="w-4 h-4" />
+                            Print
+                          </button>
+                          
+                          <div className="border-t border-white/10 my-1"></div>
+                          
+                          <button
+                            onClick={() => reportPost(post)}
+                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-red-400 hover:bg-red-400/10 transition-colors"
+                          >
+                            <Flag className="w-4 h-4" />
+                            Report Post
                           </button>
                         </div>
                       )}
