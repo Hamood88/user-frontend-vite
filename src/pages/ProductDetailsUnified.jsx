@@ -254,12 +254,15 @@ export default function ProductDetailsUnified() {
   const total = safeNum(price, 0) * qtySafe;
 
   const shopId = getShopIdFromProduct(product);
+  
+  // Get max stock from product (use quantity or fallback to 99)
+  const maxStock = Math.max(1, safeNum(product?.quantity, 99));
 
   function dec() {
     setQty((q) => Math.max(1, Number(q) - 1));
   }
   function inc() {
-    setQty((q) => Math.min(99, Number(q) + 1));
+    setQty((q) => Math.min(maxStock, Number(q) + 1));
   }
 
   function addToCart() {
@@ -284,7 +287,7 @@ export default function ProductDetailsUnified() {
     if (idx >= 0) {
       cart[idx] = {
         ...cart[idx],
-        qty: Math.min(99, Math.max(1, safeNum(cart[idx]?.qty, 1)) + qtySafe),
+        qty: Math.min(maxStock, Math.max(1, safeNum(cart[idx]?.qty, 1)) + qtySafe),
       };
     } else {
       cart.push(item);
@@ -445,12 +448,8 @@ export default function ProductDetailsUnified() {
     <div className="pdu-wrap">
       <div className="pdu-topbar">
         <div className="pdu-breadcrumb">
-          <span style={{ opacity: 0.95 }}>
-            {product?.shopName || product?.shop?.shopName || "Shop"}
-          </span>
-          <span style={{ opacity: 0.55 }}>•</span>
           <button className="pdu-back" onClick={() => nav(backTo)} type="button">
-            Back to products
+            ← Back
           </button>
         </div>
 
@@ -465,7 +464,7 @@ export default function ProductDetailsUnified() {
           </button>
 
           <button className="pdu-pill" onClick={goToShop} disabled={!shopId} type="button">
-            Go to shop
+            Shop page
           </button>
 
           <button className="pdu-pill" onClick={messageShop} disabled={!shopId} type="button">
@@ -503,6 +502,19 @@ export default function ProductDetailsUnified() {
 
         <div className="pdu-right">
           <h1 className="pdu-title">{title}</h1>
+
+          {/* Store name - clickable to shop page */}
+          {(product?.shopName || product?.shop?.shopName) && shopId && (
+            <div 
+              className="pdu-store-link"
+              onClick={goToShop}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && goToShop()}
+            >
+              {product?.shopName || product?.shop?.shopName}
+            </div>
+          )}
 
           <div className="pdu-meta">
             <div style={{ fontWeight: 900, opacity: 0.85 }}>Category</div>

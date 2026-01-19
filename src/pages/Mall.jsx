@@ -887,13 +887,49 @@ export default function Mall() {
             {products.map((p) => {
               const firstImage = Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : "";
               const img = firstImage ? absUrl(firstImage) : "";
+              const shopId = p?.shopId || p?.shop?._id || p?.shop;
+              const shopName = p?.shopName || p?.shop?.shopName || "";
 
               return (
                 <div key={p._id} style={S.card}>
-                  {img ? <img src={img} alt="" style={S.img} /> : <div style={S.noImg}>No image</div>}
+                  {/* Clickable product image */}
+                  <div
+                    style={{ ...S.imgWrap, cursor: "pointer" }}
+                    onClick={() => nav(`/product/${encodeURIComponent(p._id)}`)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && nav(`/product/${encodeURIComponent(p._id)}`)}
+                  >
+                    {img ? <img src={img} alt="" style={S.img} /> : <div style={S.noImg}>No image</div>}
+                  </div>
 
                   <div style={S.body}>
-                    <div style={S.title}>{p.title || "Untitled"}</div>
+                    <div 
+                      style={S.title} 
+                      onClick={() => nav(`/product/${encodeURIComponent(p._id)}`)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => e.key === "Enter" && nav(`/product/${encodeURIComponent(p._id)}`)}
+                    >
+                      {p.title || "Untitled"}
+                    </div>
+
+                    {/* Store name - clickable to shop feed */}
+                    {shopName && shopId && (
+                      <div
+                        style={S.storeName}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          nav(`/shop/${encodeURIComponent(shopId)}/mall`);
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => e.key === "Enter" && nav(`/shop/${encodeURIComponent(shopId)}/mall`)}
+                      >
+                        {shopName}
+                      </div>
+                    )}
+
                     <div style={S.meta}>{p.category || p.categoryLabel || ""}</div>
 
                     <div style={S.priceRow}>
@@ -905,11 +941,6 @@ export default function Mall() {
                         {p.inStock ? "In stock" : "Out"}
                       </span>
                     </div>
-
-                    {/* ✅ FIXED: go to PUBLIC product route */}
-                    <button style={S.openBtn} onClick={() => nav(`/product/${encodeURIComponent(p._id)}`)}>
-                      View Product
-                    </button>
                   </div>
                 </div>
               );
@@ -1169,6 +1200,12 @@ const S = {
     overflow: "hidden",
   },
 
+  imgWrap: {
+    position: "relative",
+    overflow: "hidden",
+    transition: "opacity 0.2s ease",
+  },
+
   img: { width: "100%", height: 170, objectFit: "cover", display: "block", background: "#000" },
 
   noImg: {
@@ -1181,7 +1218,22 @@ const S = {
 
   body: { padding: 12 },
 
-  title: { fontWeight: 900, fontSize: 14 },
+  title: { 
+    fontWeight: 900, 
+    fontSize: 14, 
+    cursor: "pointer",
+    transition: "color 0.2s ease",
+  },
+  
+  storeName: {
+    fontSize: 12,
+    fontWeight: 800,
+    color: "rgba(147, 197, 253, 0.95)",
+    marginTop: 4,
+    cursor: "pointer",
+    transition: "color 0.2s ease",
+  },
+
   meta: { opacity: 0.75, marginTop: 4, fontSize: 12 },
 
   priceRow: { display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 },

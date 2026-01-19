@@ -135,6 +135,21 @@
   letter-spacing: 0.3px;
 }
 
+.pdu-store-link {
+  font-size: 14px;
+  font-weight: 800;
+  color: rgba(147, 197, 253, 0.95);
+  margin-bottom: 14px;
+  cursor: pointer;
+  display: inline-block;
+  transition: color 0.2s ease;
+}
+
+.pdu-store-link:hover {
+  color: rgba(96, 165, 250, 1);
+  text-decoration: underline;
+}
+
 .pdu-meta {
   display: flex;
   gap: 10px;
