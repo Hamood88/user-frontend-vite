@@ -28,7 +28,12 @@ export function ShopAuthForm({ mode }) {
         const data = await apiPost("/shop/auth/login", { email: shopEmail.trim().toLowerCase(), password });
         setSuccess(true);
         setUserSession({ token: data.token, shop: data.shop }, "shop");
-        setTimeout(() => navigate("/shop/dashboard"), 500);
+        
+        // ✅ Redirect with token in URL for cross-domain auth
+        const shopUrl = import.meta.env.PROD 
+          ? `https://shop.moondala.one/shop/feed?token=${data.token}` 
+          : `/shop/feed?token=${data.token}`;
+        setTimeout(() => window.location.href = shopUrl, 500);
       } else {
         if (!shopName.trim() || !shopEmail.trim() || !password) {
           throw new Error("Please fill in Shop Name, Email, and Password");
@@ -42,7 +47,12 @@ export function ShopAuthForm({ mode }) {
         });
         setSuccess(true);
         setUserSession({ token: data.token, shop: data.shop }, "shop");
-        setTimeout(() => navigate("/shop/dashboard"), 500);
+        
+        // ✅ Redirect with token in URL for cross-domain auth
+        const shopUrl = import.meta.env.PROD 
+          ? `https://shop.moondala.one/shop/feed?token=${data.token}` 
+          : `/shop/feed?token=${data.token}`;
+        setTimeout(() => window.location.href = shopUrl, 500);
       }
     } catch (err) {
       setError(err.message || "An error occurred. Please try again.");
