@@ -24,14 +24,9 @@ export default function SplitAuthPage() {
       <div className="auth-card">
         {/* Logo Section */}
         <div className="auth-header">
-          <img 
-            src="/moondala-logo.png" 
-            alt="Moondala" 
-            className="auth-logo-img"
-          />
           <h1 className="auth-title">Moondala</h1>
           <p className="auth-subtitle">
-            {activeRole === "user" ? "Welcome back, explorer" : "Manage your business"}
+            {activeRole === "user" ? "Your marketplace universe awaits" : "Grow your business with us"}
           </p>
         </div>
 
