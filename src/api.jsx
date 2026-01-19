@@ -516,6 +516,14 @@ export function addComment(postId, { text, parentComment = null } = {}) {
   });
 }
 
+export function likeComment(postId, commentId) {
+  const pid = String(postId || "").trim();
+  const cid = String(commentId || "").trim();
+  if (!pid) throw new Error("Missing postId");
+  if (!cid) throw new Error("Missing commentId");
+  return apiPost(`/api/posts/${encodeURIComponent(pid)}/comments/${encodeURIComponent(cid)}/like`, {});
+}
+
 export function updatePost(postId, { text } = {}) {
   const id = String(postId || "").trim();
   if (!id) throw new Error("Missing postId");

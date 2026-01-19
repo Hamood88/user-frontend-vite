@@ -21,6 +21,7 @@ import {
   Download,
   Printer,
   Flag,
+  ThumbsUp,
 } from "lucide-react";
 
 import {
@@ -29,6 +30,7 @@ import {
   getPostsByUser,
   likePost,
   addComment,
+  likeComment,
   updatePost,
   deletePost,
   absUrl,
@@ -340,17 +342,59 @@ export default function Feed() {
     setCommentBusy(true);
     setErr("");
     try {
-      await addComment(pid, { text, parentComment: replyTo?._id });
-      setCommentText("");
-      setReplyTo(null);
-      setOpenPostId(""); // Close the comment drawer after posting
-      // optimistic: bump count
+      // Create optimistic comment
+      const optimisticComment = {
+        _id: `temp-${Date.now()}`,
+        text,
+        parentComment: replyTo?._id || null,
+        createdAt: new Date().toISOString(),
+        authorId: me?.user?._id || me?._id,
+        authorModel: "User",
+        // Include user info for immediate display
+        user: me?.user || me,
+      };
+
+      // Optimistically add comment to UI immediately
       setPosts((prev) =>
         prev.map((p) =>
-          p._id === pid ? { ...p, commentsCount: Number(p.commentsCount || 0) + 1 } : p
+          p._id === pid
+            ? {
+                ...p,
+                comments: [...(p.comments || []), optimisticComment],
+                commentsCount: Number(p.commentsCount || 0) + 1,
+              }
+            : p
         )
       );
+
+      setCommentText("");
+      setReplyTo(null);
+      // Keep drawer open so user can see their comment
+
+      // Send to server and update with real data
+      const result = await addComment(pid, { text, parentComment: replyTo?._id });
+      
+      // If server returns updated post, use that for accurate data
+      if (result?.post) {
+        setPosts((prev) =>
+          prev.map((p) =>
+            p._id === pid ? normalizePost(result.post) : p
+          )
+        );
+      }
     } catch (e) {
+      // Revert optimistic update on error
+      setPosts((prev) =>
+        prev.map((p) =>
+          p._id === pid
+            ? {
+                ...p,
+                comments: (p.comments || []).filter((c) => !String(c._id).startsWith("temp-")),
+                commentsCount: Math.max(0, Number(p.commentsCount || 0) - 1),
+              }
+            : p
+        )
+      );
       setErr(e?.message || "Comment failed.");
     } finally {
       setCommentBusy(false);
@@ -384,6 +428,45 @@ export default function Feed() {
       // Revert: reload the post
       await loadFeed();
       setErr(e?.message || "Delete comment failed.");
+    }
+  }
+
+  async function handleLikeComment(postId, commentId) {
+    const pid = s(postId);
+    const cid = s(commentId);
+    if (!pid || !cid) return;
+
+    const myId = pickId(me);
+
+    // Optimistic update
+    setPosts((prev) =>
+      prev.map((p) => {
+        if (p._id === pid) {
+          const updatedComments = (p.comments || []).map((c) => {
+            if (String(c._id) === cid) {
+              const likes = Array.isArray(c.likes) ? [...c.likes] : [];
+              const idx = likes.findIndex((id) => String(id) === String(myId));
+              if (idx > -1) {
+                likes.splice(idx, 1); // Unlike
+              } else {
+                likes.push(myId); // Like
+              }
+              return { ...c, likes };
+            }
+            return c;
+          });
+          return { ...p, comments: updatedComments };
+        }
+        return p;
+      })
+    );
+
+    try {
+      await likeComment(pid, cid);
+    } catch (e) {
+      // Revert on error
+      await loadFeed();
+      setErr(e?.message || "Like comment failed.");
     }
   }
 
@@ -1039,58 +1122,168 @@ export default function Feed() {
                         </button>
                       </div>
 
-                      {/* Comments List */}
+                      {/* Reply indicator */}
+                      {replyTo && (
+                        <div className="flex items-center gap-2 mb-2 p-2 bg-blue-500/10 rounded-lg">
+                          <span className="text-xs text-blue-400">
+                            Replying to {userName(replyTo.user || replyTo.authorId)}
+                          </span>
+                          <button
+                            type="button"
+                            className="text-xs text-gray-400 hover:text-white"
+                            onClick={() => setReplyTo(null)}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Comments List - organized with replies */}
                       {post.comments && post.comments.length > 0 && (
                         <div className="space-y-2 mb-4 max-h-60 overflow-y-auto">
-                          {post.comments.map((comment) => (
-                            <div key={comment._id} className="bg-white/5 p-3 rounded-lg">
-                              <div className="flex items-start gap-2">
-                                <div className="w-6 h-6 rounded-full bg-white/10 flex-shrink-0">
-                                  {avatarUrl(comment.authorId) ? (
-                                    <img
-                                      src={avatarUrl(comment.authorId)}
-                                      alt={userName(comment.authorId)}
-                                      className="w-full h-full object-cover rounded-full"
-                                    />
-                                  ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-xs">
-                                      {(userName(comment.authorId) || "U").slice(0, 1).toUpperCase()}
+                          {/* Filter to show top-level comments first, then their replies */}
+                          {post.comments
+                            .filter((c) => !c.parentComment) // Top-level comments
+                            .map((comment) => {
+                              const commentUser = comment.user || comment.authorId;
+                              const replies = post.comments.filter(
+                                (r) => String(r.parentComment) === String(comment._id)
+                              );
+                              return (
+                                <div key={comment._id}>
+                                  {/* Main comment */}
+                                  <div className="bg-white/5 p-3 rounded-lg">
+                                    <div className="flex items-start gap-2">
+                                      <div className="w-6 h-6 rounded-full bg-white/10 flex-shrink-0">
+                                        {avatarUrl(commentUser) ? (
+                                          <img
+                                            src={avatarUrl(commentUser)}
+                                            alt={userName(commentUser)}
+                                            className="w-full h-full object-cover rounded-full"
+                                          />
+                                        ) : (
+                                          <div className="w-full h-full flex items-center justify-center text-xs">
+                                            {(userName(commentUser) || "U").slice(0, 1).toUpperCase()}
+                                          </div>
+                                        )}
+                                      </div>
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                          <span className="font-semibold text-sm text-white">
+                                            {userName(commentUser)}
+                                          </span>
+                                          <span className="text-xs text-gray-400">
+                                            {timeAgo(comment.createdAt)}
+                                          </span>
+                                        </div>
+                                        <p className="text-sm text-gray-200 mb-2">{comment.text}</p>
+                                        <div className="flex gap-3 items-center">
+                                          <button
+                                            type="button"
+                                            className={`text-xs flex items-center gap-1 ${
+                                              (comment.likes || []).some((id) => String(id) === String(pickId(me)))
+                                                ? "text-pink-400"
+                                                : "text-gray-400 hover:text-pink-400"
+                                            }`}
+                                            onClick={() => handleLikeComment(post._id, comment._id)}
+                                          >
+                                            <ThumbsUp className="w-3 h-3" />
+                                            {(comment.likes || []).length > 0 && (comment.likes || []).length}
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="text-xs text-blue-400 hover:underline"
+                                            onClick={() => setReplyTo(comment)}
+                                          >
+                                            Reply
+                                          </button>
+                                          {(pickId(comment.authorId) === pickId(me) || pickId(commentUser) === pickId(me)) && (
+                                            <button
+                                              type="button"
+                                              className="text-xs text-red-400 hover:underline flex items-center gap-1"
+                                              onClick={() => deleteComment(post._id, comment._id)}
+                                            >
+                                              <Trash2 className="w-3 h-3" />
+                                              Delete
+                                            </button>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Replies - nested */}
+                                  {replies.length > 0 && (
+                                    <div className="ml-6 mt-1 space-y-1 border-l-2 border-white/10 pl-3">
+                                      {replies.map((reply) => {
+                                        const replyUser = reply.user || reply.authorId;
+                                        return (
+                                          <div key={reply._id} className="bg-white/5 p-2 rounded-lg">
+                                            <div className="flex items-start gap-2">
+                                              <div className="w-5 h-5 rounded-full bg-white/10 flex-shrink-0">
+                                                {avatarUrl(replyUser) ? (
+                                                  <img
+                                                    src={avatarUrl(replyUser)}
+                                                    alt={userName(replyUser)}
+                                                    className="w-full h-full object-cover rounded-full"
+                                                  />
+                                                ) : (
+                                                  <div className="w-full h-full flex items-center justify-center text-[10px]">
+                                                    {(userName(replyUser) || "U").slice(0, 1).toUpperCase()}
+                                                  </div>
+                                                )}
+                                              </div>
+                                              <div className="flex-1">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                  <span className="font-semibold text-xs text-white">
+                                                    {userName(replyUser)}
+                                                  </span>
+                                                  <span className="text-[10px] text-gray-400">
+                                                    {timeAgo(reply.createdAt)}
+                                                  </span>
+                                                </div>
+                                                <p className="text-xs text-gray-200 mb-1">{reply.text}</p>
+                                                <div className="flex gap-2 items-center">
+                                                  <button
+                                                    type="button"
+                                                    className={`text-[10px] flex items-center gap-1 ${
+                                                      (reply.likes || []).some((id) => String(id) === String(pickId(me)))
+                                                        ? "text-pink-400"
+                                                        : "text-gray-400 hover:text-pink-400"
+                                                    }`}
+                                                    onClick={() => handleLikeComment(post._id, reply._id)}
+                                                  >
+                                                    <ThumbsUp className="w-2.5 h-2.5" />
+                                                    {(reply.likes || []).length > 0 && (reply.likes || []).length}
+                                                  </button>
+                                                  <button
+                                                    type="button"
+                                                    className="text-[10px] text-blue-400 hover:underline"
+                                                    onClick={() => setReplyTo(reply)}
+                                                  >
+                                                    Reply
+                                                  </button>
+                                                  {(pickId(reply.authorId) === pickId(me) || pickId(replyUser) === pickId(me)) && (
+                                                    <button
+                                                      type="button"
+                                                      className="text-[10px] text-red-400 hover:underline flex items-center gap-1"
+                                                      onClick={() => deleteComment(post._id, reply._id)}
+                                                    >
+                                                      <Trash2 className="w-2.5 h-2.5" />
+                                                      Delete
+                                                    </button>
+                                                  )}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
                                     </div>
                                   )}
                                 </div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className="font-semibold text-sm text-white">
-                                      {userName(comment.authorId)}
-                                    </span>
-                                    <span className="text-xs text-gray-400">
-                                      {timeAgo(comment.createdAt)}
-                                    </span>
-                                  </div>
-                                  <p className="text-sm text-gray-200 mb-2">{comment.text}</p>
-                                  <div className="flex gap-2">
-                                    <button
-                                      type="button"
-                                      className="text-xs text-blue-400 hover:underline"
-                                      onClick={() => setReplyTo(comment)}
-                                    >
-                                      Reply
-                                    </button>
-                                    {pickId(comment.authorId) === pickId(me) && (
-                                      <button
-                                        type="button"
-                                        className="text-xs text-red-400 hover:underline flex items-center gap-1"
-                                        onClick={() => deleteComment(post._id, comment._id)}
-                                      >
-                                        <Trash2 className="w-3 h-3" />
-                                        Delete
-                                      </button>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
+                              );
+                            })}
                         </div>
                       )}
 
@@ -1099,7 +1292,7 @@ export default function Feed() {
                           value={commentText}
                           onChange={(e) => setCommentText(e.target.value)}
                           className="md-commentInput"
-                          placeholder={replyTo ? `Reply to ${userName(replyTo.authorId)}...` : "Write something..."}
+                          placeholder={replyTo ? `Reply to ${userName(replyTo.user || replyTo.authorId)}...` : "Write something..."}
                         />
                         <button
                           type="button"
