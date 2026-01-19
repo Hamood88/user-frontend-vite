@@ -146,7 +146,7 @@ function NotFound() {
    ========================= */
 function HomeRouter() {
   const token = getUserTokenOnly();
-  if (token) return <Navigate to="/dashboard" replace />;
+  if (token) return <Navigate to="/feed" replace />;
   return <SplitAuthPage />;
 }
 
