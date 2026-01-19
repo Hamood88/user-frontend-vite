@@ -86,7 +86,12 @@ export function toAbsUrl(url) {
 // Aliases for backward compatibility
 export const absUrl = toAbsUrl;
 export const fixImageUrl = toAbsUrl;
-export const safeImageUrl = toAbsUrl;
+export const safeImageUrl = (url, fallbackType = 'avatar', user = {}) => {
+  if (!url) {
+    return fallbackType === 'avatar' ? getDefaultAvatar(user) : null;
+  }
+  return toAbsUrl(url);
+};
 
 /* ================================
    ✅ USER TOKEN KEYS (ONLY)
@@ -254,30 +259,6 @@ export function buildUrl(path) {
 }
 
 /**
- * ✅ Convert old localhost URLs to production
- * Fixes images/uploads that were stored with localhost:5000 URLs
- */
-export function fixImageUrl(url) {
-  if (!url) return url;
-  const s = String(url || "").trim();
-  
-  // Replace localhost URLs with production API base
-  if (s.includes("localhost:5000")) {
-    return s.replace(/http:\/\/localhost:5000/g, API_BASE);
-  }
-  if (s.includes("127.0.0.1:5000")) {
-    return s.replace(/http:\/\/127\.0\.0\.1:5000/g, API_BASE);
-  }
-  
-  // If relative path, ensure it has API_BASE
-  if (s.startsWith("/uploads/") && !s.startsWith("http")) {
-    return `${API_BASE}${s}`;
-  }
-  
-  return s;
-}
-
-/**
  * ✅ Get default avatar when user has no profile picture
  */
 export function getDefaultAvatar(user = {}) {
@@ -299,18 +280,6 @@ export function getDefaultAvatar(user = {}) {
   `;
   
   return `data:image/svg+xml;base64,${btoa(svg)}`;
-}
-
-/**
- * ✅ Safe image URL with fallback
- */
-export function safeImageUrl(url, fallbackType = 'avatar', user = {}) {
-  if (!url) {
-    return fallbackType === 'avatar' ? getDefaultAvatar(user) : null;
-  }
-  
-  const fixed = fixImageUrl(url);
-  return fixed;
 }
 
 /* ================================
@@ -1071,14 +1040,6 @@ export async function getReferralNetwork() {
 /* ================================
    ✅ SMALL HELPERS
    ================================ */
-export function absUrl(u) {
-  const s = String(u || "").trim();
-  if (!s) return "";
-  if (s.startsWith("http://") || s.startsWith("https://")) return s;
-  const base = String(API_BASE || DEFAULT_BASE).replace(/\/$/, "");
-  return `${base}${s.startsWith("/") ? "" : "/"}${s}`;
-}
-
 export function pickId(x) {
   if (!x) return "";
   return String(x._id || x.id || x.productId || x.shopId || x.userId || "").trim();
