@@ -560,7 +560,7 @@ export default function MyOrders() {
                     style={{ ...S.thumbWrap, cursor: "pointer" }}
                     onClick={() => {
                       const pid = pickProductId(o);
-                      if (pid) navigate(`/product/${pid}`);
+                      if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders" } });
                     }}
                   >
                     {productImg ? (
@@ -578,7 +578,15 @@ export default function MyOrders() {
                   </div>
 
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={S.product}>{o.productTitle || "Product"}</div>
+                    <div 
+                      style={{ ...S.product, cursor: "pointer" }}
+                      onClick={() => {
+                        const pid = pickProductId(o);
+                        if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders" } });
+                      }}
+                    >
+                      {o.productTitle || "Product"}
+                    </div>
                     <div style={S.meta}>
                       Sold by {o.shopName || "Shop"} · Qty: {o.quantity || 1}
                     </div>
