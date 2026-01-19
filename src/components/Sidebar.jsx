@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/Sidebar.css";
-import { apiGet, API_BASE } from "../api.jsx";
+import { apiGet, API_BASE, toAbsUrl } from "../api.jsx";
 
 // ✅ Fix your Vite import issue (AppLayout.jsx can import these)
 export const SIDEBAR_WIDTH = 260;
@@ -20,14 +20,6 @@ function getMe() {
   } catch {
     return null;
   }
-}
-
-function getFullImageUrl(url) {
-  const s = safeStr(url);
-  if (!s) return "";
-  if (s.startsWith("http://") || s.startsWith("https://")) return s;
-  // Relative URL - prepend API_BASE
-  return `${API_BASE}${s}`;
 }
 
 export default function Sidebar({ collapsed = false, onToggle }) {
@@ -99,7 +91,7 @@ export default function Sidebar({ collapsed = false, onToggle }) {
 
   const name = safeStr(me?.firstName) || safeStr(me?.name) || safeStr(me?.username) || "User";
   const country = safeStr(me?.country) || safeStr(me?.location) || "";
-  const avatar = getFullImageUrl(me?.avatar || me?.profilePic || me?.photo || me?.avatarUrl);
+  const avatar = toAbsUrl(me?.avatar || me?.profilePic || me?.photo || me?.avatarUrl);
 
   function logout() {
     try {

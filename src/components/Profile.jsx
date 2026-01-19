@@ -11,17 +11,9 @@ import {
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { MdEmail, MdClose } from "react-icons/md";
 import { QRCodeCanvas } from "qrcode.react"; // npm i qrcode.react
-import { API_BASE } from "../api.jsx";
+import { API_BASE, toAbsUrl } from "../api.jsx";
 
 const APP_BASE = window.location.origin;
-
-// Helper to construct full image URL
-function getFullImageUrl(url) {
-  if (!url) return "";
-  if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  // Relative URL - prepend API_BASE
-  return `${API_BASE}${url}`;
-}
 
 const allSports = [
   "Soccer",
@@ -378,7 +370,7 @@ export default function Profile() {
                 />
               ) : user?.avatarUrl ? (
                 <img
-                  src={getFullImageUrl(user.avatarUrl)}
+                  src={toAbsUrl(user.avatarUrl)}
                   alt="Current avatar"
                   style={{
                     width: 100,

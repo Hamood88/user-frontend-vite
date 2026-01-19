@@ -61,6 +61,34 @@ export const API_BASE = normalizeBase(
 const API_ROOT = API_BASE.endsWith("/api") ? API_BASE : `${API_BASE}/api`;
 
 /* ================================
+   ✅ IMAGE URL HELPER
+   ================================ */
+/**
+ * Convert relative image paths to absolute URLs
+ * Handles uploads from backend (/uploads/...) and fixes localhost URLs
+ */
+export function toAbsUrl(url) {
+  if (!url) return "";
+  const s = String(url);
+  
+  // Fix localhost URLs to use production API_BASE
+  if (s.includes("localhost:5000")) return s.replace(/http:\/\/localhost:5000/g, API_BASE);
+  if (s.includes("127.0.0.1:5000")) return s.replace(/http:\/\/127\.0\.0\.1:5000/g, API_BASE);
+  
+  // Already absolute URL
+  if (s.startsWith("http://") || s.startsWith("https://")) return s;
+  
+  // Relative path - add API_BASE
+  if (s.startsWith("/")) return `${API_BASE}${s}`;
+  return `${API_BASE}/${s}`;
+}
+
+// Aliases for backward compatibility
+export const absUrl = toAbsUrl;
+export const fixImageUrl = toAbsUrl;
+export const safeImageUrl = toAbsUrl;
+
+/* ================================
    ✅ USER TOKEN KEYS (ONLY)
    ================================ */
 const USER_TOKEN_KEY = "userToken";
