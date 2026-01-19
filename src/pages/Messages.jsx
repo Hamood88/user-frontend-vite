@@ -1466,10 +1466,12 @@ const styles = {
   wrapMobile: {
     display: "flex",
     flexDirection: "column",
-    padding: 8,
+    padding: 6,
+    paddingTop: 0,
     maxWidth: "100vw",
     boxSizing: "border-box",
-    height: "calc(100dvh - 80px)",
+    height: "calc(100dvh - 140px)",
+    overflow: "hidden",
   },
 
   left: (t) => ({
@@ -1485,12 +1487,13 @@ const styles = {
 
   leftMobile: (t) => ({
     border: `1px solid ${t.border}`,
-    borderRadius: 16,
-    padding: 10,
+    borderRadius: 12,
+    padding: 8,
     background: t.panel,
     flex: 1,
     overflow: "auto",
     backdropFilter: "blur(12px)",
+    minHeight: 0,
   }),
 
   leftTop: (t) => ({
@@ -1553,39 +1556,42 @@ const styles = {
 
   rightMobile: (t) => ({
     border: `1px solid ${t.border}`,
-    borderRadius: 16,
+    borderRadius: 12,
     background: t.panel,
     flex: 1,
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
     backdropFilter: "blur(14px)",
+    minHeight: 0,
   }),
 
   chatTop: (t) => ({
-    padding: 12,
+    padding: "8px 10px",
     borderBottom: `1px solid ${t.border}`,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 10,
+    gap: 8,
+    flexShrink: 0,
   }),
 
   productBar: (t) => ({
     border: "none",
     borderBottom: `1px solid ${t.border}`,
     background: "rgba(0,0,0,0.12)",
-    padding: "10px 12px",
+    padding: "8px 10px",
     display: "flex",
     alignItems: "center",
-    gap: 12,
+    gap: 10,
     cursor: "pointer",
+    flexShrink: 0,
   }),
 
   prodAvatar: (t) => ({
-    width: 46,
-    height: 46,
-    borderRadius: 14,
+    width: 40,
+    height: 40,
+    borderRadius: 10,
     border: `1px solid ${t.border}`,
     display: "grid",
     placeItems: "center",
@@ -1595,10 +1601,11 @@ const styles = {
   }),
 
   chatBody: (t) => ({
-    padding: 12,
+    padding: 10,
     overflow: "auto",
     flex: 1,
     background: "rgba(0,0,0,0.10)",
+    minHeight: 0,
   }),
 
   bubbleRow: { display: "flex", marginBottom: 10 },
@@ -1635,25 +1642,26 @@ const styles = {
   },
 
   time: (t) => ({
-    marginTop: 8,
-    fontSize: 11,
+    marginTop: 6,
+    fontSize: 10,
     color: t.muted,
     fontWeight: 700,
   }),
 
   chatForm: (t) => ({
-    padding: 12,
+    padding: "8px 10px",
     borderTop: `1px solid ${t.border}`,
     display: "flex",
-    gap: 10,
+    gap: 8,
     alignItems: "center",
     background: "rgba(0,0,0,0.12)",
+    flexShrink: 0,
   }),
 
   attachBtn: (t) => ({
-    width: 44,
-    height: 44,
-    borderRadius: 12,
+    width: 38,
+    height: 38,
+    borderRadius: 10,
     border: `1px solid ${t.border}`,
     display: "grid",
     placeItems: "center",
@@ -1662,26 +1670,29 @@ const styles = {
     fontWeight: 900,
     color: t.text,
     background: "rgba(0,0,0,0.25)",
+    flexShrink: 0,
   }),
 
   chatInput: (t) => ({
     flex: 1,
-    padding: 12,
-    borderRadius: 12,
+    padding: 10,
+    borderRadius: 10,
     border: `1px solid ${t.border}`,
     outline: "none",
     background: t.inputBg,
     color: t.text,
+    minWidth: 0,
   }),
 
   sendBtn: (t) => ({
-    padding: "12px 14px",
-    borderRadius: 12,
+    padding: "10px 12px",
+    borderRadius: 10,
     border: "none",
     background: t.accent,
     color: "white",
     fontWeight: 900,
     cursor: "pointer",
+    flexShrink: 0,
   }),
 
   filesBar: (t) => ({
