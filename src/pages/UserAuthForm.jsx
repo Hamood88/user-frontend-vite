@@ -378,16 +378,20 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label className="mb-2 block text-xs">Interests *</Label>
-            <div className="grid grid-cols-2 gap-2">
+            <Label className="mb-3 block text-xs">Interests *</Label>
+            <div className="interests-grid">
               {INTERESTS.map(interest => (
-                <Checkbox
+                <label
                   key={interest}
-                  id={`interest-${interest}`}
-                  label={interest}
-                  checked={interests.includes(interest)}
-                  onChange={() => handleInterestChange(interest)}
-                />
+                  className={`interest-chip ${interests.includes(interest) ? 'selected' : ''}`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={interests.includes(interest)}
+                    onChange={() => handleInterestChange(interest)}
+                  />
+                  <span>{interest}</span>
+                </label>
               ))}
             </div>
           </div>
