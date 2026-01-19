@@ -1,0 +1,485 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { apiPost, setUserSession } from '../api';
+import '../styles/authPage.css';
+
+export default function UserLogin() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  
+  const [userMode, setUserMode] = useState('user'); // 'user' or 'shop'
+  const [activeTab, setActiveTab] = useState('login');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+
+  // Login fields
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+
+  // Signup fields
+  const [signupForm, setSignupForm] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    phoneNumber: '',
+    dateOfBirth: '',
+    gender: '',
+    country: '',
+    favoriteSport: '',
+    interests: [],
+    invitedByCode: '',
+  });
+
+  // Extract inviter code from URL
+  useEffect(() => {
+    const codeFromUrl = searchParams.get('inviterCode') || 
+                       searchParams.get('code') || 
+                       searchParams.get('ref') || '';
+    if (codeFromUrl) {
+      setSignupForm(prev => ({
+        ...prev,
+        invitedByCode: codeFromUrl.toUpperCase()
+      }));
+    }
+  }, [searchParams]);
+
+  // Check if already logged in
+  useEffect(() => {
+    const token = localStorage.getItem('userToken');
+    if (token) {
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
+
+  const countryOptions = [
+    "United States", "Canada", "United Kingdom", "Australia", 
+    "India", "China", "Japan", "Germany", "France", "Brazil", 
+    "Mexico", "Spain", "Italy", "Netherlands", "Sweden"
+  ];
+
+  const sportOptions = [
+    "Soccer", "Basketball", "American Football", "Baseball", 
+    "Tennis", "MMA", "Cricket", "Golf", "Swimming"
+  ];
+
+  const interestOptions = [
+    "Technology", "Gaming", "Fitness", "Fashion", "Travel", 
+    "Food", "Music", "Investing", "Pets", "Sports", "Photography"
+  ];
+
+  const calculateAge = (dobString) => {
+    if (!dobString) return null;
+    const dob = new Date(dobString);
+    if (Number.isNaN(dob.getTime())) return null;
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+    return age;
+  };
+
+  const userAge = useMemo(() => calculateAge(signupForm.dateOfBirth), [signupForm.dateOfBirth]);
+
+  const handleSignupChange = (e) => {
+    const { name, value } = e.target;
+    setSignupForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const toggleInterest = (interest) => {
+    setSignupForm(prev => {
+      const hasInterest = prev.interests.includes(interest);
+      return {
+        ...prev,
+        interests: hasInterest
+          ? prev.interests.filter(i => i !== interest)
+          : [...prev.interests, interest]
+      };
+    });
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!loginEmail.trim()) return setError('Email is required');
+    if (!loginPassword.trim()) return setError('Password is required');
+
+    setLoading(true);
+    try {
+      const data = await apiPost('/auth/login', {
+        email: loginEmail.trim().toLowerCase(),
+        password: loginPassword
+      });
+
+      setUserSession({ token: data.token, user: data.user });
+      setSuccess('✅ Login successful!');
+      setTimeout(() => navigate('/'), 1500);
+    } catch (err) {
+      setError(err?.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!signupForm.firstName.trim()) return setError('First name is required');
+    if (!signupForm.lastName.trim()) return setError('Last name is required');
+    if (!signupForm.email.trim()) return setError('Email is required');
+    if (!signupForm.password.trim()) return setError('Password is required');
+    if (!signupForm.phoneNumber.trim()) return setError('Phone number is required');
+    if (!signupForm.dateOfBirth) return setError('Date of birth is required');
+    if (userAge !== null && userAge < 10) return setError('You must be at least 10 years old');
+    if (!signupForm.gender) return setError('Gender is required');
+    if (!signupForm.country) return setError('Country is required');
+    if (!signupForm.favoriteSport) return setError('Favorite sport is required');
+    if (!Array.isArray(signupForm.interests) || signupForm.interests.length === 0) {
+      return setError('Please select at least 1 interest');
+    }
+
+    setLoading(true);
+    try {
+      const payload = {
+        firstName: signupForm.firstName.trim(),
+        lastName: signupForm.lastName.trim(),
+        email: signupForm.email.trim().toLowerCase(),
+        password: signupForm.password,
+        phoneNumber: signupForm.phoneNumber.trim(),
+        dateOfBirth: signupForm.dateOfBirth,
+        gender: signupForm.gender,
+        country: signupForm.country,
+        favoriteSport: signupForm.favoriteSport,
+        interests: signupForm.interests,
+        invitedByCode: signupForm.invitedByCode.trim() || undefined,
+      };
+
+      const data = await apiPost('/auth/register', payload);
+      setUserSession({ token: data.token, user: data.user });
+      setSuccess('✅ Registration successful!');
+      setTimeout(() => navigate('/'), 1500);
+    } catch (err) {
+      setError(err?.message || 'Registration failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="auth-page-wrapper">
+      <div className="auth-background">
+        <div className="auth-gradient"></div>
+        <div className="auth-circles">
+          <div className="circle circle-1"></div>
+          <div className="circle circle-2"></div>
+          <div className="circle circle-3"></div>
+        </div>
+      </div>
+
+      <div className="auth-container">
+        <div className="auth-logo">
+          <div className="logo-icon">🌙</div>
+          <h1 className="logo-text">Moondala</h1>
+        </div>
+
+        <div className="mode-selector">
+          <button
+            className={`mode-btn ${userMode === 'user' ? 'active' : ''}`}
+            onClick={() => setUserMode('user')}
+          >
+            <span className="mode-icon">👤</span>
+            <span className="mode-label">User</span>
+          </button>
+          <button
+            className={`mode-btn ${userMode === 'shop' ? 'active' : ''}`}
+            onClick={() => window.location.href = process.env.REACT_APP_SHOP_APP_URL || 'http://localhost:3001'}
+          >
+            <span className="mode-icon">🏪</span>
+            <span className="mode-label">Shop</span>
+          </button>
+        </div>
+
+        <div className="auth-tabs">
+          <button
+            className={`tab-btn ${activeTab === 'login' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('login'); setError(''); setSuccess(''); }}
+          >
+            Log In
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'signup' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('signup'); setError(''); setSuccess(''); }}
+          >
+            Sign Up
+          </button>
+        </div>
+
+        {error && (
+          <div className="auth-alert error-alert">
+            <span className="alert-icon">⚠️</span>
+            <span>{error}</span>
+          </div>
+        )}
+        {success && (
+          <div className="auth-alert success-alert">
+            <span className="alert-icon">✓</span>
+            <span>{success}</span>
+          </div>
+        )}
+
+        {activeTab === 'login' && (
+          <form onSubmit={handleLogin} className="auth-form">
+            <div className="form-group">
+              <label className="form-label">
+                <span className="label-icon">📧</span>
+                EMAIL *
+              </label>
+              <div className="input-wrapper">
+                <span className="input-icon">✉️</span>
+                <input
+                  type="email"
+                  className="form-input"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                <span className="label-icon">🔒</span>
+                PASSWORD *
+              </label>
+              <div className="input-wrapper">
+                <span className="input-icon">🔐</span>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className="form-input"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                </button>
+              </div>
+            </div>
+
+            <div className="form-options">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                <span>Remember me</span>
+              </label>
+              <a href="#forgot" className="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" disabled={loading} className="submit-btn">
+              {loading ? (
+                <>
+                  <span className="btn-spinner"></span>
+                  <span>Logging in...</span>
+                </>
+              ) : (
+                <span>Log In</span>
+              )}
+            </button>
+          </form>
+        )}
+
+        {activeTab === 'signup' && (
+          <form onSubmit={handleSignup} className="auth-form signup-form">
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">First Name *</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  name="firstName"
+                  value={signupForm.firstName}
+                  onChange={handleSignupChange}
+                  placeholder="John"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Last Name *</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  name="lastName"
+                  value={signupForm.lastName}
+                  onChange={handleSignupChange}
+                  placeholder="Doe"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Email Address *</label>
+              <input
+                type="email"
+                className="form-input"
+                name="email"
+                value={signupForm.email}
+                onChange={handleSignupChange}
+                placeholder="your@email.com"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Password *</label>
+              <input
+                type="password"
+                className="form-input"
+                name="password"
+                value={signupForm.password}
+                onChange={handleSignupChange}
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Phone Number *</label>
+              <input
+                type="tel"
+                className="form-input"
+                name="phoneNumber"
+                value={signupForm.phoneNumber}
+                onChange={handleSignupChange}
+                placeholder="+1 (555) 000-0000"
+                required
+              />
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Date of Birth *</label>
+                <input
+                  type="date"
+                  className="form-input"
+                  name="dateOfBirth"
+                  value={signupForm.dateOfBirth}
+                  onChange={handleSignupChange}
+                  required
+                />
+                {userAge !== null && <small className="field-hint">Age: {userAge} years</small>}
+              </div>
+              <div className="form-group">
+                <label className="form-label">Gender *</label>
+                <select
+                  className="form-input"
+                  name="gender"
+                  value={signupForm.gender}
+                  onChange={handleSignupChange}
+                  required
+                >
+                  <option value="">Select...</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Country *</label>
+                <select
+                  className="form-input"
+                  name="country"
+                  value={signupForm.country}
+                  onChange={handleSignupChange}
+                  required
+                >
+                  <option value="">Select Country...</option>
+                  {countryOptions.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Favorite Sport *</label>
+                <select
+                  className="form-input"
+                  name="favoriteSport"
+                  value={signupForm.favoriteSport}
+                  onChange={handleSignupChange}
+                  required
+                >
+                  <option value="">Select Sport...</option>
+                  {sportOptions.map(s => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Interests (Select at least 1) *</label>
+              <div className="interests-grid">
+                {interestOptions.map(interest => (
+                  <label key={interest} className="interest-tag">
+                    <input
+                      type="checkbox"
+                      checked={signupForm.interests.includes(interest)}
+                      onChange={() => toggleInterest(interest)}
+                    />
+                    <span className="tag-text">{interest}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">🎁 Referral Code (Optional)</label>
+              <input
+                type="text"
+                className="form-input"
+                name="invitedByCode"
+                value={signupForm.invitedByCode}
+                onChange={handleSignupChange}
+                placeholder="Enter referral code"
+              />
+              {signupForm.invitedByCode && (
+                <small className="field-hint success-hint">✓ Referral code applied: {signupForm.invitedByCode}</small>
+              )}
+            </div>
+
+            <button type="submit" disabled={loading} className="submit-btn">
+              {loading ? (
+                <>
+                  <span className="btn-spinner"></span>
+                  <span>Creating Account...</span>
+                </>
+              ) : (
+                <span>Create Account</span>
+              )}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
