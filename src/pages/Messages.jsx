@@ -13,6 +13,7 @@ import {
 
   // ✅ NEW (from our api.jsx fix)
   markConversationMessageNotificationsRead,
+  toAbsUrl,
 } from "../api.jsx";
 
 /* =========================
@@ -23,23 +24,8 @@ function useQuery() {
   return useMemo(() => new URLSearchParams(search), [search]);
 }
 
-function absUrl(u) {
-  if (!u) return "";
-  const s = String(u);
-  
-  // Fix localhost URLs to use production API_BASE
-  if (s.includes("localhost:5000")) {
-    return s.replace(/http:\/\/localhost:5000/g, API_BASE);
-  }
-  if (s.includes("127.0.0.1:5000")) {
-    return s.replace(/http:\/\/127\.0\.0\.1:5000/g, API_BASE);
-  }
-  
-  // Already absolute URL
-  if (s.startsWith("http://") || s.startsWith("https://")) return s;
-  if (s.startsWith("/")) return `${API_BASE}${s}`;
-  return `${API_BASE}/${s}`;
-}
+// Use the centralized toAbsUrl from api.jsx (kept as absUrl for backwards compatibility)
+const absUrl = toAbsUrl;
 
 function isImage(m) {
   const s = String(m || "").toLowerCase();
@@ -133,6 +119,9 @@ function normalizeConversation(c, meId) {
   const otherName =
     c?.otherName || c?.otherParticipantName || c?.other?.name || c?.title || "Conversation";
 
+  const otherAvatarUrl =
+    c?.otherAvatarUrl || c?.otherAvatar || c?.other?.avatarUrl || c?.other?.avatar || "";
+
   const lastText =
     c?.lastText ||
     c?.lastMessage?.text ||
@@ -161,6 +150,7 @@ function normalizeConversation(c, meId) {
     otherType: otherType || "user",
     otherId,
     otherName,
+    otherAvatarUrl,
     lastText,
     unreadCount,
     productPreview,
@@ -976,7 +966,24 @@ export default function Messages() {
                         border: `1px solid ${theme.border}`,
                       }}
                     />
-                  ) : (
+                  ) : c?.otherAvatarUrl ? (
+                    <img
+                      src={absUrl(c.otherAvatarUrl)}
+                      alt={otherName}
+                      style={{
+                        width: 42,
+                        height: 42,
+                        borderRadius: 12,
+                        objectFit: "cover",
+                        border: `1px solid ${theme.border}`,
+                      }}
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        e.target.nextElementSibling.style.display = "flex";
+                      }}
+                    />
+                  ) : null}
+                  {!previewImg && !c?.otherAvatarUrl && (
                     <div style={styles.avatar(theme)}>
                       {(otherName?.[0] || "C").toUpperCase?.() || "C"}
                     </div>
