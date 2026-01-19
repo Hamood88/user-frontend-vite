@@ -22,10 +22,10 @@
 }
 
 .auth-page.shop-theme {
-  --primary: #f472b6;
-  --primary-glow: rgba(244, 114, 182, 0.4);
-  --accent: #fb7185;
-  --border: rgba(244, 114, 182, 0.2);
+  --primary: #10b981;
+  --primary-glow: rgba(16, 185, 129, 0.4);
+  --accent: #34d399;
+  --border: rgba(16, 185, 129, 0.2);
 }
 
 .auth-bg {
@@ -422,7 +422,7 @@
 }
 
 .shop-theme .interest-chip.selected {
-  background: rgba(244, 114, 182, 0.15);
+  background: rgba(16, 185, 129, 0.15);
 }
 
 .interest-chip input[type="checkbox"] {
