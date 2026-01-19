@@ -217,6 +217,17 @@ export default function Messages() {
   const params = useParams();
   const query = useQuery();
 
+  // ✅ Mobile responsive detection
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // ✅ support:
   //   /messages/:conversationId
   //   /messages?conversationId=...
@@ -868,10 +879,15 @@ export default function Messages() {
     badgeUserBd: "rgba(148,163,184,0.35)",
   };
 
+  // Mobile: show only chat when conversation is selected, else show inbox
+  const showInboxOnMobile = isMobile && !conversationId;
+  const showChatOnMobile = isMobile && conversationId;
+
   return (
-    <div style={styles.wrap}>
-      {/* LEFT: Inbox */}
-      <div style={styles.left(theme)}>
+    <div style={isMobile ? styles.wrapMobile : styles.wrap}>
+      {/* LEFT: Inbox - hide on mobile when chat is open */}
+      {(!isMobile || showInboxOnMobile) && (
+      <div style={isMobile ? styles.leftMobile(theme) : styles.left(theme)}>
         <div style={styles.leftTop(theme)}>
           <div style={styles.h(theme)}>Messages</div>
           <div style={{ display: "flex", gap: 8 }}>
@@ -881,7 +897,7 @@ export default function Messages() {
               type="button"
               disabled={loadingInbox}
             >
-              {loadingInbox ? "Loading..." : "Refresh"}
+              {loadingInbox ? "..." : "↻"}
             </button>
             <button onClick={openNewChat} style={styles.btnPrimary(theme)} type="button">
               + New
@@ -1032,9 +1048,11 @@ export default function Messages() {
           ) : null}
         </div>
       </div>
+      )}
 
-      {/* RIGHT: Chat */}
-      <div style={styles.right(theme)}>
+      {/* RIGHT: Chat - hide on mobile when no conversation selected */}
+      {(!isMobile || showChatOnMobile) && (
+      <div style={isMobile ? styles.rightMobile(theme) : styles.right(theme)}>
         {!conversationId ? (
           <div style={styles.centerEmpty(theme)}>
             <div style={{ fontWeight: 900, fontSize: 18, color: theme.text }}>
@@ -1047,8 +1065,18 @@ export default function Messages() {
         ) : (
           <>
             <div style={styles.chatTop(theme)}>
-              <div style={{ fontWeight: 900, color: theme.text }}>
-                Chat with: {activeRow?.otherName || "Conversation"}
+              {/* Mobile back button */}
+              {isMobile && (
+                <button
+                  type="button"
+                  style={{ ...styles.btnGhost(theme), marginRight: 8 }}
+                  onClick={() => nav('/messages')}
+                >
+                  ← Back
+                </button>
+              )}
+              <div style={{ fontWeight: 900, color: theme.text, flex: 1 }}>
+                {activeRow?.otherName || "Chat"}
               </div>
 
               <button
@@ -1057,7 +1085,7 @@ export default function Messages() {
                 onClick={() => loadChat(conversationId)}
                 disabled={loadingChat}
               >
-                {loadingChat ? "Loading..." : "Refresh"}
+                {loadingChat ? "..." : "↻"}
               </button>
             </div>
 
@@ -1261,12 +1289,13 @@ export default function Messages() {
               />
 
               <button type="submit" style={styles.sendBtn(theme)} disabled={sending}>
-                {sending ? "Sending…" : "Send"}
+                {sending ? "..." : "Send"}
               </button>
             </form>
           </>
         )}
       </div>
+      )}
 
       {/* NEW CHAT MODAL */}
       {openNew ? (
@@ -1427,9 +1456,20 @@ export default function Messages() {
 const styles = {
   wrap: {
     display: "grid",
-    gridTemplateColumns: "380px 1fr",
+    gridTemplateColumns: "minmax(280px, 380px) 1fr",
     gap: 12,
     padding: 14,
+    maxWidth: "100vw",
+    boxSizing: "border-box",
+  },
+
+  wrapMobile: {
+    display: "flex",
+    flexDirection: "column",
+    padding: 8,
+    maxWidth: "100vw",
+    boxSizing: "border-box",
+    height: "calc(100dvh - 80px)",
   },
 
   left: (t) => ({
@@ -1438,6 +1478,17 @@ const styles = {
     padding: 12,
     background: t.panel,
     height: "calc(100vh - 110px)",
+    maxHeight: "calc(100dvh - 110px)",
+    overflow: "auto",
+    backdropFilter: "blur(12px)",
+  }),
+
+  leftMobile: (t) => ({
+    border: `1px solid ${t.border}`,
+    borderRadius: 16,
+    padding: 10,
+    background: t.panel,
+    flex: 1,
     overflow: "auto",
     backdropFilter: "blur(12px)",
   }),
@@ -1494,6 +1545,17 @@ const styles = {
     borderRadius: 16,
     background: t.panel,
     height: "calc(100vh - 110px)",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+    backdropFilter: "blur(14px)",
+  }),
+
+  rightMobile: (t) => ({
+    border: `1px solid ${t.border}`,
+    borderRadius: 16,
+    background: t.panel,
+    flex: 1,
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
