@@ -217,16 +217,8 @@ export default function Messages() {
   const params = useParams();
   const query = useQuery();
 
-  // ✅ Mobile responsive detection
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  
-  useEffect(() => {
-    function handleResize() {
-      setIsMobile(window.innerWidth < 768);
-    }
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // ✅ Mobile detection - check once on mount, avoid resize shaking
+  const [isMobile] = useState(() => window.innerWidth < 768);
 
   // ✅ support:
   //   /messages/:conversationId
@@ -1468,9 +1460,11 @@ const styles = {
     flexDirection: "column",
     padding: 6,
     paddingTop: 0,
+    width: "100%",
     maxWidth: "100vw",
     boxSizing: "border-box",
-    height: "calc(100dvh - 140px)",
+    height: "calc(100dvh - 120px)",
+    minHeight: "400px",
     overflow: "hidden",
   },
 
