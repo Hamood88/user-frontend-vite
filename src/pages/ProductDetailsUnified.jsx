@@ -330,14 +330,37 @@ export default function ProductDetailsUnified() {
     }
   }
 
-  // ✅ Go to shop -> ShopMall preview (public)
+  // ✅ Go to shop -> Shop Feed (public)
   function goToShop() {
     if (!shopId) {
       alert("Shop id is missing for this product.");
       return;
     }
-    nav(`/shop/${encodeURIComponent(shopId)}/mall`);
+    nav(`/shop-feed/${encodeURIComponent(shopId)}`);
   }
+
+  // Toggle buyers panel (click to open/close)
+  function toggleBuyers() {
+    if (buyersOpen) {
+      setBuyersOpen(false);
+    } else {
+      loadBuyers();
+    }
+  }
+
+  // Close buyers when clicking outside
+  const buyersRef = React.useRef(null);
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (buyersRef.current && !buyersRef.current.contains(e.target)) {
+        setBuyersOpen(false);
+      }
+    }
+    if (buyersOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [buyersOpen]);
 
   // ✅ FIXED: load buyers WITHOUT getAskBuyers import
   async function loadBuyers() {
@@ -556,17 +579,16 @@ export default function ProductDetailsUnified() {
             </button>
           </div>
 
-          <div className="pdu-small">Product ID: {pid}</div>
-
-          {/* ✅ Ask Previous Buyers */}
-          <div style={{ marginTop: 14 }}>
+          {/* ✅ Ask Previous Buyers - Toggle on/off */}
+          <div style={{ marginTop: 14, position: 'relative' }} ref={buyersRef}>
             <button
               className="pdu-btn"
               type="button"
-              onClick={loadBuyers}
+              onClick={toggleBuyers}
               disabled={buyersLoading || !pid}
+              style={buyersOpen ? { background: 'rgba(59,130,246,0.25)' } : {}}
             >
-              {buyersLoading ? "Loading buyers..." : "Ask previous buyers"}
+              {buyersLoading ? "Loading buyers..." : buyersOpen ? "Close buyers ▲" : "Ask previous buyers ▼"}
             </button>
 
             {buyersOpen && (
