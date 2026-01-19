@@ -4,72 +4,87 @@ import ShopAuthForm from "./ShopAuthForm";
 import "../styles/splitAuthPage.css";
 
 export default function SplitAuthPage() {
-  const [activeRole, setActiveRole] = useState("user"); // "user" or "shop"
-  const [activeMode, setActiveMode] = useState("login"); // "login" or "signup"
+  const [activeRole, setActiveRole] = useState("user");
+  const [activeMode, setActiveMode] = useState("login");
 
   return (
-    <div className="auth-page">
-      {/* Background Effects */}
+    <div className={`auth-page ${activeRole}-theme`}>
+      {/* Animated Background */}
       <div className="auth-bg">
-        <div className="auth-gradient"></div>
-        <div className="auth-circles">
-          <div className="circle c1"></div>
-          <div className="circle c2"></div>
-          <div className="circle c3"></div>
+        <div className="auth-gradient" />
+        <div className="auth-orbs">
+          <div className="orb orb-1" />
+          <div className="orb orb-2" />
+          <div className="orb orb-3" />
         </div>
+        <div className="auth-grid" />
       </div>
 
-      <div className="auth-content">
-        {/* Logo */}
-        <div className="auth-logo">
-          <span className="logo-icon">🌙</span>
-          <h1 className="logo-text">Moondala</h1>
+      {/* Main Content */}
+      <div className="auth-card">
+        {/* Logo Section */}
+        <div className="auth-header">
+          <img 
+            src="/moondala-logo.png" 
+            alt="Moondala" 
+            className="auth-logo-img"
+          />
+          <h1 className="auth-title">Moondala</h1>
+          <p className="auth-subtitle">
+            {activeRole === "user" ? "Welcome back, explorer" : "Manage your business"}
+          </p>
         </div>
 
-        {/* Role Switcher */}
-        <div className="role-switcher">
+        {/* Role Toggle */}
+        <div className="role-toggle">
           <button
-            className={`role-btn ${activeRole === "user" ? "active user-active" : ""}`}
-            onClick={() => {
-              setActiveRole("user");
-              setActiveMode("login");
-            }}
+            className={`role-option ${activeRole === "user" ? "active" : ""}`}
+            onClick={() => { setActiveRole("user"); setActiveMode("login"); }}
           >
-            <span className="role-icon">👤</span>
+            <svg className="role-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
             <span>User</span>
           </button>
           <button
-            className={`role-btn ${activeRole === "shop" ? "active shop-active" : ""}`}
-            onClick={() => {
-              setActiveRole("shop");
-              setActiveMode("login");
-            }}
+            className={`role-option ${activeRole === "shop" ? "active" : ""}`}
+            onClick={() => { setActiveRole("shop"); setActiveMode("login"); }}
           >
-            <span className="role-icon">🏪</span>
+            <svg className="role-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
             <span>Shop</span>
           </button>
+          <div className={`role-slider ${activeRole}`} />
         </div>
 
-        {/* Login/Register Tabs */}
+        {/* Auth Tabs */}
         <div className="auth-tabs">
           <button
-            className={`tab-btn ${activeMode === "login" ? "active" : ""}`}
+            className={`auth-tab ${activeMode === "login" ? "active" : ""}`}
             onClick={() => setActiveMode("login")}
           >
-            Log In
+            Sign In
           </button>
           <button
-            className={`tab-btn ${activeMode === "signup" ? "active" : ""}`}
+            className={`auth-tab ${activeMode === "signup" ? "active" : ""}`}
             onClick={() => setActiveMode("signup")}
           >
-            Sign Up
+            Create Account
           </button>
         </div>
 
-        {/* Auth Forms */}
-        <div className="auth-form-container">
+        {/* Form */}
+        <div className="auth-form-wrapper">
           {activeRole === "user" && <UserAuthForm mode={activeMode} />}
           {activeRole === "shop" && <ShopAuthForm mode={activeMode} />}
+        </div>
+
+        {/* Footer */}
+        <div className="auth-footer">
+          <p>© 2026 Moondala Inc. All rights reserved.</p>
         </div>
       </div>
     </div>
