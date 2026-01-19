@@ -47,6 +47,24 @@ export default function AppLayout() {
   const me = getUserSession(); // Get fresh session data each time
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try {
+      const saved = localStorage.getItem("sidebarCollapsed");
+      return saved === "true";
+    } catch {
+      return false;
+    }
+  });
+
+  function toggleSidebar() {
+    setSidebarCollapsed(prev => {
+      const newValue = !prev;
+      try {
+        localStorage.setItem("sidebarCollapsed", String(newValue));
+      } catch {}
+      return newValue;
+    });
+  }
 
   function handleNotificationClick() {
     nav("/notifications");
@@ -82,9 +100,22 @@ export default function AppLayout() {
   return (
     <div className="md-shell">
       {/* Desktop Sidebar */}
-      <aside className="md-side">
-        <div className="md-brand">
-          <div className="md-logoText">Moondala</div>
+      <aside className={cx("md-side", sidebarCollapsed ? "md-sideCollapsed" : "")}>
+        <div className="md-sideHeader">
+          {!sidebarCollapsed && (
+            <div className="md-brand">
+              <div className="md-logoText">Moondala</div>
+            </div>
+          )}
+          <button
+            type="button"
+            className="md-toggleBtn"
+            onClick={toggleSidebar}
+            aria-label="Toggle sidebar"
+            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {sidebarCollapsed ? "»" : "«"}
+          </button>
         </div>
 
         <nav className="md-nav">
@@ -95,9 +126,10 @@ export default function AppLayout() {
               className={({ isActive }) =>
                 cx("md-navItem", isActive ? "md-navItemActive" : "")
               }
+              title={sidebarCollapsed ? item.label : undefined}
             >
               <item.icon className="md-navIcon" />
-              <span>{item.label}</span>
+              {!sidebarCollapsed && <span>{item.label}</span>}
             </NavLink>
           ))}
         </nav>
@@ -141,7 +173,7 @@ export default function AppLayout() {
       )}
 
       {/* Main */}
-      <main className="md-main">
+      <main className={cx("md-main", sidebarCollapsed ? "md-mainExpanded" : "")}>
         {/* Desktop Top Bar */}
         <header className="md-topbar">
           <div className="md-searchWrap">

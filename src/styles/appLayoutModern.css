@@ -21,12 +21,58 @@
     backdrop-filter: blur(10px);
     z-index: 50;
     padding: 18px 12px;
+    transition: width 300ms ease, padding 300ms ease;
+  }
+
+  .md-sideCollapsed {
+    width: 80px;
+    padding: 18px 8px;
+  }
+
+  .md-main {
+    margin-left: 260px;
+    transition: margin-left 300ms ease;
+  }
+
+  .md-mainExpanded {
+    margin-left: 80px;
   }
 }
 
 .md-brand {
   padding: 12px 6px 22px 6px;
 }
+
+.md-sideHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.md-toggleBtn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255,255,255,0.7);
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 200ms ease;
+  flex-shrink: 0;
+}
+
+.md-toggleBtn:hover {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.95);
+  border-color: rgba(167,139,250,0.3);
+}
+
 .md-logoText {
   font-size: 20px;
   font-weight: 900;
@@ -58,7 +104,15 @@
   background: rgba(255,255,255,0.01);
   transition: 180ms ease;
   min-height: 48px;
+  white-space: nowrap;
+  justify-content: flex-start;
 }
+
+.md-sideCollapsed .md-navItem {
+  padding: 12px;
+  justify-content: center;
+}
+
 .md-navItem:hover {
   background: rgba(255,255,255,0.03);
   color: rgba(255,255,255,0.95);
@@ -214,7 +268,6 @@
 @media (min-width: 768px) {
   .md-main {
     padding-top: 0;
-    padding-left: 260px;
   }
 }
 
