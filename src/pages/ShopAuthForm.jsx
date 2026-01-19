@@ -80,7 +80,7 @@ export function ShopAuthForm({ mode }) {
         setUserSession({ token: data.token, shop: data.shop }, "shop");
         
         // Redirect to shop dashboard
-        window.location.href = process.env.REACT_APP_SHOP_APP_URL || "http://localhost:3001/shop/dashboard";
+        const shopUrl = import.meta.env.PROD ? "https://shop.moondala.one/shop/dashboard" : "http://localhost:3001/shop/dashboard"; window.location.href = shopUrl;
       } else if (mode === "signup") {
         // Validate required fields
         if (!shopName.trim() || !ownerFirstName.trim() || !ownerLastName.trim() || !shopEmail.trim() || !password) {
@@ -139,7 +139,7 @@ export function ShopAuthForm({ mode }) {
         } catch {}
         
         // Redirect to shop dashboard
-        window.location.href = process.env.REACT_APP_SHOP_APP_URL || "http://localhost:3001/shop/dashboard";
+        const shopUrl = import.meta.env.PROD ? "https://shop.moondala.one/shop/dashboard" : "http://localhost:3001/shop/dashboard"; window.location.href = shopUrl;
       }
     } catch (err) {
       setError(err.message || "An error occurred. Please try again.");
