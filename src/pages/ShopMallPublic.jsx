@@ -1,18 +1,24 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_BASE, toAbsUrl } from "../api.jsx"; 
+import { API_BASE, toAbsUrl, apiPost } from "../api.jsx"; 
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  Search, 
+  ShoppingBag, 
+  MapPin, 
+  Star, 
+  ArrowLeft,
+  Store,
+  Share2
+} from "lucide-react";
 import "../styles/shopMallPublic.css";
 
 /* =========================
    Helpers
    ========================= */
-function s(v) {
-  return String(v || "").trim();
-}
+function s(v) { return String(v || "").trim(); }
 
-function isObjectId24(v) {
-  return /^[a-fA-F0-9]{24}$/.test(s(v));
-}
+function isObjectId24(v) { return /^[a-fA-F0-9]{24}$/.test(s(v)); }
 
 function pickId(x) {
   if (!x) return "";
@@ -33,7 +39,6 @@ function pickCurrency(p) {
 }
 
 function pickImageRaw(p) {
-  // Use toAbsUrl from api.jsx for cleaner conversion
   return toAbsUrl(
     s(p?.image) ||
     s(p?.imageUrl) ||
@@ -56,10 +61,7 @@ function money(n) {
 async function fetchPublicMallPage(shopId) {
   try {
     const res = await fetch(`${API_BASE}/api/public/shops/${shopId}/mall`);
-    if (!res.ok) {
-       // Graceful fallback for 404/500
-       return { ok: false };
-    }
+    if (!res.ok) return { ok: false };
     return await res.json();
   } catch (err) {
     console.warn("Mall fetch error:", err);
@@ -77,14 +79,9 @@ function normalizePublicMall(raw) {
   const mp = raw.mallPage || raw.page || {};
   const sections = Array.isArray(mp.sections) ? mp.sections : [];
 
-  // gather all products from sections for the "All" view or searching
   const gathered = [];
   sections.forEach((sec) => (sec?.products || []).forEach((p) => gathered.push(p)));
 
-  // Case 1: Gathered from sections
-  // Case 2: Direct products array (from backend published mode)
-  // Case 3: Legacy featuredProducts
-  
   const directProducts = Array.isArray(mp.products) ? mp.products : [];
   const featuredProducts = Array.isArray(raw.featuredProducts) ? raw.featuredProducts : [];
 
@@ -95,50 +92,69 @@ function normalizePublicMall(raw) {
   return {
     header: {
       title: s(shop.name || shop.shopName || mp.title || "Shop"),
-      subtitle: s(shop.description || mp.subtitle || ""),
-      coverImageUrl: toAbsUrl(s(mp.coverUrl || mp.coverImageUrl || mp.coverImage || "")),
+      subtitle: s(shop.description || s(shop.bio) || mp.subtitle || ""),
+      coverImageUrl: toAbsUrl(s(mp.coverUrl || mp.coverImageUrl || mp.coverImage || shop.coverImage || "")),
       logoUrl: toAbsUrl(s(shop.logo || shop.logoUrl || "")),
+      address: s(shop.address || shop.location || ""),
+      rating: Number(shop.rating || 5.0),
+      reviewCount: Number(shop.reviewCount || 0)
     },
     sections,
-    allProducts, // For client-side searching
+    allProducts,
     shop,
     mallPage: mp,
   };
 }
 
 /* =========================
-   Components
+   Component: Product Card
    ========================= */
-function ProductCard({ p, onClick }) {
+function ProductCard({ p, onClick, onAddToCart }) {
   const title = pickTitle(p);
   const price = pickPrice(p);
   const cur = pickCurrency(p);
   const img = pickImageRaw(p);
+  const pid = pickId(p);
 
   return (
-    <div 
-      className="prodCard" 
-      onClick={() => onClick(pickId(p))}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && onClick(pickId(p))}
+    <motion.div 
+      layout
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      whileHover={{ y: -4 }}
+      className="prodCard"
+      onClick={() => onClick(pid)}
     >
       <div className="pcImgBox">
         {img ? (
           <img src={img} alt={title} className="pcImg" loading="lazy" />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-slate-800 text-slate-600 text-sm">
-             No Image
-          </div>
+          <div className="pcNoImg"><span>No Image</span></div>
         )}
+        
+        {/* Quick actions overlay */}
+        <div className="pcActions">
+          <button 
+            className="pcBtn"
+            title="Quick Add"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart(pid);
+            }}
+          >
+            <ShoppingBag size={18} fill="currentColor" />
+          </button>
+        </div>
       </div>
+
       <div className="pcInfo">
         <h3 className="pcName">{title}</h3>
-        <div className="pcPriceRow">
+        <div className="pcMeta">
           <span className="pcPrice">{cur} {money(price)}</span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -153,11 +169,13 @@ export default function ShopMallPublic() {
   const [data, setData] = useState(null);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("all"); 
+  const [addingToCart, setAddingToCart] = useState(null);
+
+  const containerRef = useRef(null);
 
   useEffect(() => {
     let alive = true;
     (async () => {
-      // Allow non-24char if using handles in future, but for now strict
       if (!shopId) {
         setLoading(false);
         return;
@@ -174,14 +192,13 @@ export default function ShopMallPublic() {
 
   const normalized = useMemo(() => normalizePublicMall(data), [data]);
 
-  // Derived sections based on search/tabs
+  // Derived sections
   const displaySections = useMemo(() => {
     if (!normalized) return [];
 
-    let result = [];
     const q = search.trim().toLowerCase();
 
-    // If searching, show a single "Results" section
+    // Search Mode
     if (q) {
       const filtered = normalized.allProducts.filter(p => {
         const t = pickTitle(p).toLowerCase();
@@ -189,19 +206,16 @@ export default function ShopMallPublic() {
       });
       return [{
         _id: "search",
-        title: `Search Result for "${search}"`,
+        title: `Results for "${search}"`,
+        subtitle: `${filtered.length} items found`,
         products: filtered,
         type: "grid"
       }];
     }
 
-    // If "all" tab, just show sections as defined by shop owner
+    // "All" Tab
     if (activeTab === "all") {
-       // If shop owner defined sections, show them
-       if (normalized.sections.length > 0) {
-         return normalized.sections;
-       }
-       // Else show all products as "All Products"
+       if (normalized.sections.length > 0) return normalized.sections;
        return [{
          _id: "default",
          title: "All Products",
@@ -210,94 +224,145 @@ export default function ShopMallPublic() {
        }];
     }
 
-    // Filter by specific section ID (tab)
-    if (normalized.sections.find(s => s._id === activeTab)) {
-       return normalized.sections.filter(s => s._id === activeTab);
-    }
-
-    return [];
+    // Specific Section Tab
+    const sec = normalized.sections.find(s => s._id === activeTab);
+    return sec ? [sec] : [];
   }, [normalized, search, activeTab]);
 
   const handleProductClick = (pid) => {
     if (pid) navigate(`/product/${pid}`);
   };
 
+  const handleAddToCart = async (pid) => {
+    if (addingToCart) return; 
+    try {
+      setAddingToCart(pid);
+      await apiPost("/cart/add", { productId: pid, quantity: 1 });
+      // In a real app we'd show a toast
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAddingToCart(null);
+    }
+  };
+
+  const tabs = useMemo(() => {
+    if (!normalized) return [];
+    return [
+      { id: "all", label: "All" },
+      ...normalized.sections.map(s => ({ id: s._id, label: s.title || "Untitled" }))
+    ];
+  }, [normalized]);
+
   if (loading) {
     return (
-      <div className="shopMallContainer">
-        <div className="loadingSpinner">Loading Mall...</div>
+      <div className="shopMallContainer loadingCenter">
+        <div className="spinner"></div>
       </div>
     );
   }
 
   if (!normalized) {
     return (
-      <div className="shopMallContainer">
-        <div className="emptyState">
-          <h2>Shop Not Found</h2>
-          <p>The shop you are looking for does not exist or has not set up their mall yet.</p>
-          <button 
-            onClick={() => navigate("/")}
-            style={{marginTop: 20, padding: "8px 16px", background: "#333", color: "#fff", border: "none", borderRadius: 4, cursor: "pointer"}}
-          >
-            Go Home
-          </button>
-        </div>
+      <div className="shopMallContainer emptyCenter">
+        <Store size={48} className="text-muted mb-4" />
+        <h2>Shop Not Found</h2>
+        <p>The shop you are looking for is unavailable.</p>
+        <button onClick={() => navigate("/")} className="btnPrimary">
+          Go Home
+        </button>
       </div>
     );
   }
 
   const { header } = normalized;
 
-  // Tabs: "All" + each section title
-  const tabs = [
-    { id: "all", label: "All" },
-    ...normalized.sections.map(s => ({ id: s._id, label: s.title || "Untitled" }))
-  ];
-
   return (
-    <div className="shopMallContainer">
-      {/* Header */}
+    <div className="shopMallContainer" ref={containerRef}>
+      
+      {/* Dynamic Header Background */}
       <div 
-        className="mallHeader"
-        style={{ backgroundImage: header.coverImageUrl ? `url(${header.coverImageUrl})` : undefined }}
+        className="mallHero"
+        style={{ 
+          backgroundImage: header.coverImageUrl ? `url(${header.coverImageUrl})` : undefined 
+        }}
       >
-        <div className="mallHeaderOverlay"></div>
-        <div className="mallHeaderContent">
-          <div className="mallBrand">
-            {header.logoUrl && <img src={header.logoUrl} alt="Logo" className="mallLogo" />}
-            <div className="mallTitleBlock">
+        <div className="mallHeroOverlay" />
+        
+        {/* Top Safe Area / Nav */}
+        <div className="mallTopNav">
+           <button onClick={() => navigate(-1)} className="mallNavBtn glassBtn">
+             <ArrowLeft size={20} />
+           </button>
+           
+           <div className="mallNavTitle faded">{header.title}</div>
+           
+           <button 
+             className="mallNavBtn glassBtn" 
+             onClick={() => {
+                if (navigator.share) {
+                  navigator.share({ title: header.title, url: window.location.href });
+                } else {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert("Link copied!");
+                }
+             }}
+           >
+             <Share2 size={20} />
+           </button>
+        </div>
+
+        <div className="mallHeroContent">
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }} 
+            animate={{ y: 0, opacity: 1 }}
+            className="mallBrand"
+          >
+            {header.logoUrl && (
+              <img src={header.logoUrl} alt="Logo" className="mallLogo" />
+            )}
+            <div className="mallMeta">
               <h1 className="mallTitle">{header.title}</h1>
-              {header.subtitle && <p className="mallSubtitle">{header.subtitle}</p>}
+              {header.subtitle && <p className="mallDesc">{header.subtitle}</p>}
+              
+              <div className="mallStats">
+                {header.rating > 0 && (
+                   <span className="mallStatTag">
+                     <Star size={14} fill="#fbbf24" stroke="none" /> 
+                     {header.rating.toFixed(1)}
+                   </span>
+                )}
+                {header.address && (
+                   <span className="mallStatTag">
+                     <MapPin size={14} /> 
+                     {header.address}
+                   </span>
+                )}
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="mallControlsBar">
-        <div className="mallControlsContent">
-          {/* Search */}
-          <div className="searchBox">
-            <span className="searchIcon">🔍</span>
+      {/* Sticky Tab Bar */}
+      <div className="mallStickyBar">
+        <div className="mallStickyContent">
+          <div className="searchWrap">
+            <Search size={16} className="searchIcon" />
             <input 
-              type="text" 
-              placeholder="Search in this shop..." 
               value={search}
               onChange={e => setSearch(e.target.value)}
+              placeholder="Search items..."
+              className="searchInput"
             />
           </div>
 
-          {/* Categories / Tabs */}
-          <div className="catChips">
+          <div className="tabScroll">
             {tabs.map(t => (
               <button
                 key={t.id}
-                className={`chip ${activeTab === t.id && !search ? "active" : ""}`}
-                onClick={() => {
-                  setActiveTab(t.id);
-                  setSearch(""); // clear search when switching tabs
-                }}
+                onClick={() => { setActiveTab(t.id); setSearch(""); }}
+                className={`tabChip ${activeTab === t.id && !search ? "active" : ""}`}
               >
                 {t.label}
               </button>
@@ -306,30 +371,52 @@ export default function ShopMallPublic() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="mallContent">
-        {displaySections.length === 0 ? (
-          <div className="emptyState">No products found.</div>
-        ) : (
-          displaySections.map(sec => (
-            <div key={sec._id || Math.random()} className="section">
-              <div className={`sectionHeader ${sec.type === 'featured_products' ? 'featuredHeader' : ''}`}>
-                <h2 className="sectionTitle">{sec.title}</h2>
-                <span className="sectionCount">{sec.products?.length || 0} items</span>
+      {/* Main Grid */}
+      <div className="mallGridArea">
+        <AnimatePresence mode="wait">
+          {displaySections.length === 0 ? (
+            <motion.div 
+              key="empty" 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              className="sectionEmpty"
+            >
+              <div className="emptyBox">
+                <ShoppingBag size={40} />
+                <p>No products found here.</p>
+                {search && <button className="clrSearchBtn" onClick={() => setSearch("")}>Clear Search</button>}
               </div>
-              
-              <div className="productGrid">
-                {sec.products && sec.products.map(p => (
-                  <ProductCard 
-                    key={pickId(p)} 
-                    p={p} 
-                    onClick={handleProductClick} 
-                  />
-                ))}
-              </div>
+            </motion.div>
+          ) : (
+            <div className="sectionsList">
+              {displaySections.map(sec => (
+                <div key={sec._id || "sec"} className="mallSection">
+                  {(sec.title || sec.type === 'search') && (
+                    <div className="secHeader">
+                       <h2>{sec.title}</h2>
+                       {sec.subtitle && <span className="secSub">{sec.subtitle}</span>}
+                    </div>
+                  )}
+                  
+                  <div className="gridEx">
+                    {sec.products && sec.products.length > 0 ? (
+                       sec.products.map(p => (
+                         <ProductCard 
+                           key={pickId(p)} 
+                           p={p} 
+                           onClick={handleProductClick} 
+                           onAddToCart={handleAddToCart}
+                         />
+                       ))
+                    ) : (
+                       <div className="secEmpty">No items in this section.</div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))
-        )}
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
