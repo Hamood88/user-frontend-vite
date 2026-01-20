@@ -1366,23 +1366,7 @@ export default function Feed() {
 
       {/* Right Sidebar - FIXED positioning */}
       <div className="fixed right-0 top-20 w-80 h-screen overflow-y-auto pr-2 hidden lg:flex flex-col gap-6 pt-4">
-        <div className="glass-card rounded-2xl p-5">
-          <h2 className="font-display font-bold text-lg mb-4 text-white">Trending</h2>
-          <div className="space-y-4">
-            {["#Moondala", "#SocialCommerce", "#ReferralNetwork", "#FutureOfShopping"].map((tag) => (
-              <div key={tag} className="flex justify-between items-center group cursor-pointer">
-                <span className="text-muted-foreground group-hover:text-primary transition-colors">
-                  {tag}
-                </span>
-                <span className="text-xs text-muted-foreground/60">—</span>
-              </div>
-            ))}
-          </div>
-          <button type="button" className="md-btnOutline w-full mt-6">
-            Explore
-          </button>
-        </div>
-
+        {/* Top Inviters - First */}
         <div className="glass-card rounded-2xl p-5">
           <h2 className="font-display font-bold text-lg mb-4 text-white flex items-center gap-2">
             <Users className="w-5 h-5" />
@@ -1439,6 +1423,24 @@ export default function Feed() {
           <button type="button" className="md-btnGhost w-full mt-4">
             <Users className="w-4 h-4" />
             View Full Leaderboard
+          </button>
+        </div>
+
+        {/* Trending - Second */}
+        <div className="glass-card rounded-2xl p-5">
+          <h2 className="font-display font-bold text-lg mb-4 text-white">Trending</h2>
+          <div className="space-y-4">
+            {["#Moondala", "#SocialCommerce", "#ReferralNetwork", "#FutureOfShopping"].map((tag) => (
+              <div key={tag} className="flex justify-between items-center group cursor-pointer">
+                <span className="text-muted-foreground group-hover:text-primary transition-colors">
+                  {tag}
+                </span>
+                <span className="text-xs text-muted-foreground/60">—</span>
+              </div>
+            ))}
+          </div>
+          <button type="button" className="md-btnOutline w-full mt-6">
+            Explore
           </button>
         </div>
       </div>
