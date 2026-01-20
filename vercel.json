@@ -15,11 +15,13 @@
     },
     {
       "src": "/manifest.json",
-      "dest": "/manifest.json"
+      "dest": "/manifest.json",
+      "headers": { "content-type": "application/manifest+json; charset=utf-8" }
     },
     {
       "src": "/service-worker.js",
-      "dest": "/service-worker.js"
+      "dest": "/service-worker.js",
+      "headers": { "content-type": "application/javascript; charset=utf-8" }
     },
     {
       "src": "/.*",
