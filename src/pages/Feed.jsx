@@ -39,6 +39,7 @@ import {
   fixImageUrl,
   safeImageUrl,
   sendFriendRequest,
+  toAbsUrl,
 } from "../api.jsx";
 
 import "../styles/feedModern.css";
@@ -81,43 +82,71 @@ function avatarUrl(u) {
 }
 
 function normalizePost(p) {
-  // Your backend might return { userId } or { user } populated
-  const user = p?.user || p?.author || p?.createdBy || p?.userId || {};
-  // Normalize media: backend may use different fields (media, image, imageUrl, images, filename, videoUrl)
-  let media = null;
-  // If backend already provides media object
-  if (p?.media) {
-    if (Array.isArray(p.media) && p.media.length > 0) {
-      media = p.media[0];
-    } else if (typeof p.media === 'object') {
-      media = p.media;
-    }
+
+  // Debug: log post object to inspect media fields
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      if (window.__DEBUG_FEED_POSTS !== true) {
+        console.log('[Feed] Post object:', p);
+        window.__DEBUG_FEED_POSTS = true;
+      }
+    } catch {}
   }
 
-  // backend may provide a convenience `mediaUrl` (relative path like '/uploads/...')
-  else if (p?.mediaUrl) {
-    const url = String(p.mediaUrl || "").trim();
-    const isVideo = /\.(mp4|mov|webm)$|video/i.test(url);
-    media = { type: isVideo ? "video" : "image", url };
-  } else if (p?.videoUrl) {
-    media = { type: "video", url: p.videoUrl };
-  } else if (p?.imageUrl) {
-    media = { type: "image", url: p.imageUrl };
-  } else if (p?.image) {
-    media = { type: "image", url: p.image };
-  } else if (Array.isArray(p?.images) && p.images.length > 0) {
-    const first = p.images[0];
-    if (!first) {
-      media = null;
-    } else if (typeof first === "string") {
-      media = { type: "image", url: first };
-    } else if (typeof first === "object") {
-      const u =
-        String(first.url || first.path || first.image || first.filename || "").trim();
-      media = u ? { type: "image", url: u } : null;
+  // Your backend might return `{ user }`, `{ author }`, `{ createdBy }`, or just a user id string
+  let user = p?.user || p?.author || p?.createdBy || p?.userId || {};
+  // If backend returned a simple id string/number, coerce into an object so helpers can read fields
+  if (typeof user === 'string' || typeof user === 'number') {
+    user = { _id: String(user) };
+  }
+  // If backend returned an object with `id` but not `_id`, copy it for consistency
+  else if (user && typeof user === 'object' && !user._id && user.id) {
+    user._id = user.id;
+  }
+  // Patch: Always extract Cloudinary image URL from all possible fields
+  let media = null;
+  // 1. Check media array/object
+  if (p?.media) {
+    if (Array.isArray(p.media) && p.media.length > 0) {
+      const first = p.media[0];
+      if (first?.url) media = { type: first.type || (/video/i.test(first.url) ? 'video' : 'image'), url: first.url };
+      else if (typeof first === 'string') media = { type: 'image', url: first };
+      else if (typeof first === 'object') {
+        const u = String(first.url || first.path || first.image || first.filename || '').trim();
+        if (u) media = { type: 'image', url: u };
+      }
+    } else if (typeof p.media === 'object') {
+      const u = String(p.media.url || p.media.path || p.media.image || p.media.filename || '').trim();
+      if (u) media = { type: p.media.type || (/video/i.test(u) ? 'video' : 'image'), url: u };
     }
-  } else if (p?.filename) {
-    media = { type: "image", url: `/uploads/${String(p.filename)}` };
+  }
+  // 2. Check mediaUrl
+  if (!media && p?.mediaUrl) {
+    const url = String(p.mediaUrl || '').trim();
+    if (url) media = { type: /video/i.test(url) ? 'video' : 'image', url };
+  }
+  // 3. Check imageUrl, videoUrl
+  if (!media && p?.imageUrl) {
+    const url = String(p.imageUrl || '').trim();
+    if (url) media = { type: 'image', url };
+  }
+  if (!media && p?.videoUrl) {
+    const url = String(p.videoUrl || '').trim();
+    if (url) media = { type: 'video', url };
+  }
+  // 4. Check images array
+  if (!media && Array.isArray(p?.images) && p.images.length > 0) {
+    const first = p.images[0];
+    if (typeof first === 'string') media = { type: 'image', url: first };
+    else if (typeof first === 'object') {
+      const u = String(first.url || first.path || first.image || first.filename || '').trim();
+      if (u) media = { type: 'image', url: u };
+    }
+  }
+  // 5. Check filename
+  if (!media && p?.filename) {
+    const url = `/uploads/${String(p.filename)}`;
+    if (url) media = { type: 'image', url };
   }
 
   // likes/comments may be counts or arrays
@@ -917,9 +946,9 @@ export default function Feed() {
 
                   {post.media && post.media.type === "image" ? (
                     (() => {
-                      const mediaUrl = fixImageUrl(absUrl(post.media.url));
+                      const rawUrl = post.media.url;
+                      const mediaUrl = toAbsUrl(rawUrl);
                       const hasFailed = failedImages.has(mediaUrl);
-                      
                       return (
                         <div className="mb-4 rounded-xl overflow-hidden border border-white/5 bg-black/20">
                           {hasFailed ? (
@@ -948,7 +977,7 @@ export default function Feed() {
                   {post.media && post.media.type === "video" ? (
                     <div className="mb-4 rounded-xl overflow-hidden border border-white/5 bg-black/20">
                       <video
-                        src={fixImageUrl(absUrl(post.media.url))}
+                        src={toAbsUrl(post.media.url)}
                         controls
                         className="w-full max-h-[520px]"
                       />
