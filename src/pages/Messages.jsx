@@ -1486,11 +1486,11 @@ const styles = {
     overflow: "auto",
     backdropFilter: "blur(12px)",
   }),
-"none",
+
+  leftMobile: (t) => ({
+    border: "none",
     borderRadius: 0,
-    padding: "8px 0"px solid ${t.border}`,
-    borderRadius: 12,
-    padding: 8,
+    padding: 0,
     background: t.panel,
     flex: 1,
     overflow: "auto",
