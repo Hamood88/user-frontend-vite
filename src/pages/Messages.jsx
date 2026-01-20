@@ -217,8 +217,14 @@ export default function Messages() {
   const params = useParams();
   const query = useQuery();
 
-  // ✅ Mobile detection - check once on mount, avoid resize shaking
-  const [isMobile] = useState(() => window.innerWidth < 768);
+  // ✅ Mobile detection (Responsive & PWA-ready)
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // ✅ support:
   //   /messages/:conversationId
@@ -1458,13 +1464,15 @@ const styles = {
   wrapMobile: {
     display: "flex",
     flexDirection: "column",
-    padding: 6,
-    paddingTop: 0,
-    width: "100%",
-    maxWidth: "100vw",
-    boxSizing: "border-box",
-    height: "calc(100dvh - 120px)",
-    minHeight: "400px",
+    // ✅ PWA Fix: Break out of md-content padding to fill screen
+    position: "fixed",
+    top: 64, // below md-mHeader
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 40,
+    background: "hsl(225 30% 5%)", // match app bg
+    padding: 0,
     overflow: "hidden",
   },
 
@@ -1478,9 +1486,9 @@ const styles = {
     overflow: "auto",
     backdropFilter: "blur(12px)",
   }),
-
-  leftMobile: (t) => ({
-    border: `1px solid ${t.border}`,
+"none",
+    borderRadius: 0,
+    padding: "8px 0"px solid ${t.border}`,
     borderRadius: 12,
     padding: 8,
     background: t.panel,
@@ -1494,9 +1502,9 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 10,
+    marginBottom: 0,
     gap: 10,
-    paddingBottom: 10,
+    padding: "10px 14px",
     borderBottom: `1px solid ${t.border}`,
   }),
 
@@ -1549,8 +1557,8 @@ const styles = {
   }),
 
   rightMobile: (t) => ({
-    border: `1px solid ${t.border}`,
-    borderRadius: 12,
+    border: "none",
+    borderRadius: 0,
     background: t.panel,
     flex: 1,
     display: "flex",
