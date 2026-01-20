@@ -77,6 +77,15 @@ export function toAbsUrl(url) {
   
   // Already absolute URL
   if (s.startsWith("http://") || s.startsWith("https://")) return s;
+
+  // Cloudinary-style path (missing host), e.g. '/dohetomaw/image/upload/v123/...'
+  // Map to the Cloudinary CDN root so frontend fetches directly from Cloudinary
+  try {
+    const pathNoSlash = s.replace(/^\/+/, "");
+    if (/^[a-z0-9_-]+\/(?:image|video)\/upload\//i.test(pathNoSlash)) {
+      return `https://res.cloudinary.com/${pathNoSlash}`;
+    }
+  } catch {}
   
   // Relative path - add API_BASE
   if (s.startsWith("/")) return `${API_BASE}${s}`;
@@ -376,6 +385,7 @@ export function apiUpload(path, formData, opts = {}) {
     body: formData,
     ...opts,
     isFormData: true,
+    auth: true,
   });
 }
 export function apiUploadPut(path, formData, opts = {}) {
@@ -384,6 +394,7 @@ export function apiUploadPut(path, formData, opts = {}) {
     body: formData,
     ...opts,
     isFormData: true,
+    auth: true,
   });
 }
 
