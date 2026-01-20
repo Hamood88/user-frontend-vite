@@ -440,3 +440,29 @@
   border-radius: 8px;
   cursor: pointer;
 }
+
+/* ==================================
+   Custom Block Effects 
+   ================================= */
+.pubBlock {
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 100%;
+}
+
+.shape-rounded { margin: 12px auto; border-radius: 16px; width: calc(100% - 24px); max-width: 600px; }
+.shape-circle { border-radius: 50%; aspect-ratio: 1; max-width: 300px; margin: 24px auto; width: 80%; }
+.shape-pill { border-radius: 9999px; width: calc(100% - 24px); max-width: 600px; margin: 12px auto; }
+.shape-rectangle { width: 100%; margin: 0; border-radius: 0; }
+
+@media (min-width: 1024px) {
+  .shape-rounded { max-width: 1000px; width: calc(100% - 40px); }
+  .shape-pill { max-width: 800px; }
+  .shape-circle { max-width: 400px; }
+}
+
+.effect-glass { background: rgba(255,255,255,0.1) !important; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
+.effect-neon { border: 1px solid #a855f7; box-shadow: 0 0 15px #a855f7, inset 0 0 10px #a855f7; }
+.effect-outline { border: 2px solid #fff; background: transparent !important; }
+.effect-depth { box-shadow: 0 10px 40px rgba(0,0,0,0.7); transform: translateY(-4px); }
+

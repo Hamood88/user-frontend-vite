@@ -159,6 +159,59 @@ function ProductCard({ p, onClick, onAddToCart }) {
 }
 
 /* =========================
+   Component: Custom Block Renderer
+   ========================= */
+function PublicBlock({ block }) {
+  const { shape, height, effect, bg, content } = block;
+  
+  return (
+    <div 
+      className={`pubBlock shape-${shape} effect-${effect}`}
+      style={{ 
+        height: height || '200px', 
+        backgroundColor: bg || 'transparent',
+        marginBottom: 24,
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        background: bg // direct override if color picked
+      }}
+    >
+        {content?.type === 'image' && content.url && (
+            <img 
+              src={toAbsUrl(content.url)} 
+              className="pbImg" 
+              alt="" 
+              style={{position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover'}} 
+            />
+        )}
+        
+        {content?.type === 'video' && content.url && (
+            <video 
+              src={content.url} 
+              autoPlay muted loop playsInline 
+              style={{position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover'}}
+            />
+        )}
+        
+        {(content?.type === 'image' || content?.type === 'video') && (
+            <div style={{position:'absolute', inset:0, background:'rgba(0,0,0,0.4)', zIndex:1}} />
+        )}
+
+        <div className="pbText" style={{zIndex:2, textAlign:'center', padding:20}}>
+            {content?.text && <h3 style={{fontSize:24, fontWeight:800, margin:0, textShadow:'0 2px 10px rgba(0,0,0,0.5)'}}>{content.text}</h3>}
+            {content?.subtext && <p style={{fontSize:16, opacity:0.9, marginTop:8}}>{content.subtext}</p>}
+        </div>
+    </div>
+  );
+}
+
+/* =========================
    Main Page
    ========================= */
 export default function ShopMallPublic() {
@@ -191,6 +244,7 @@ export default function ShopMallPublic() {
   }, [shopId]);
 
   const normalized = useMemo(() => normalizePublicMall(data), [data]);
+  const pgBg = normalized?.mallPage?.pageBg || (normalized?.pageBg) || "#09090b";
 
   // Derived sections
   const displaySections = useMemo(() => {
@@ -278,7 +332,7 @@ export default function ShopMallPublic() {
   const { header } = normalized;
 
   return (
-    <div className="shopMallContainer" ref={containerRef}>
+    <div className="shopMallContainer" ref={containerRef} style={{ backgroundColor: pgBg, transition:'background-color 0.3s' }}>
       
       {/* Dynamic Header Background */}
       <div 
@@ -389,7 +443,14 @@ export default function ShopMallPublic() {
             </motion.div>
           ) : (
             <div className="sectionsList">
-              {displaySections.map(sec => (
+              {displaySections.map(sec => {
+                // ✅ Custom Block Renderer
+                if (sec.type === 'custom_block' || sec.type === 'block') {
+                   return <PublicBlock key={sec._id || sec.id} block={sec} />;
+                }
+
+                // ✅ Existing Product Section Renderer
+                return (
                 <div key={sec._id || "sec"} className="mallSection">
                   {(sec.title || sec.type === 'search') && (
                     <div className="secHeader">
@@ -413,7 +474,8 @@ export default function ShopMallPublic() {
                     )}
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </AnimatePresence>
