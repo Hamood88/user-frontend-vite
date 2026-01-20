@@ -78,8 +78,18 @@ export function toAbsUrl(url) {
   // Already absolute URL
   if (s.startsWith("http://") || s.startsWith("https://")) return s;
 
-  // Cloudinary-style path (missing host), e.g. '/dohetomaw/image/upload/v123/...'
-  // Map to the Cloudinary CDN root so frontend fetches directly from Cloudinary
+  // ROBUST CLOUDINARY DETECTION (Fixes /uploads/cloudname/... paths)
+  const cloudMatch = s.match(/(?:^|\/)([a-z0-9_-]+)\/(image|video)\/upload\/(.+)/i);
+  if (cloudMatch) {
+    const cloudName = cloudMatch[1];
+    const type = cloudMatch[2].toLowerCase();
+    const rest = cloudMatch[3];
+    if (cloudName !== 'uploads') {
+       return `https://res.cloudinary.com/${cloudName}/${type}/upload/${rest}`;
+    }
+  }
+
+  // Cloudinary-style path (legacy check)
   try {
     const pathNoSlash = s.replace(/^\/+/, "");
     if (/^[a-z0-9_-]+\/(?:image|video)\/upload\//i.test(pathNoSlash)) {
