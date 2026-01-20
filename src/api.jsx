@@ -1057,6 +1057,20 @@ export async function getReferralNetwork() {
 }
 
 /* ================================
+   ✅ TOP INVITERS (Leaderboard)
+   ================================ */
+export async function getTopInviters(limit = 5) {
+  try {
+    const params = new URLSearchParams({ limit: String(limit) });
+    const data = await apiGet(`/api/top-inviters?${params.toString()}`, { auth: false });
+    return data?.topInviters || [];
+  } catch (e) {
+    console.error("Failed to fetch top inviters:", e);
+    return [];
+  }
+}
+
+/* ================================
    ✅ SMALL HELPERS
    ================================ */
 export function pickId(x) {

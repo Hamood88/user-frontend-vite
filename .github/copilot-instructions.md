@@ -2,16 +2,45 @@
 
 **See `backend/.github/copilot-instructions.md` for system architecture, models, backend auth flow, and shared patterns.**
 
+## Multi-Frontend Architecture Overview
+
+This project has **three separate frontend applications** sharing one backend:
+
+| Frontend | Purpose | Token | Port (Dev) | Auth Routes |
+|----------|---------|-------|------------|-------------|
+| **User Frontend** (this) | Customer marketplace, shopping, social feed | `userToken` | 5173 | `/api/auth/*`, `/api/users/*` |
+| **Shop Frontend** | Vendor dashboard, product/order management | `shopToken` | 3001 | `/api/shop/*` |
+| **Admin Frontend** | Moderation, approvals, analytics | `adminToken` | 3002 | `/api/admin/*` |
+
+### Critical Token Isolation Rules
+- **NEVER access `shopToken` or `adminToken` in user frontend** — localStorage keys are isolated per frontend
+- **NEVER call `/api/shop/*` or `/api/admin/*` endpoints** from user frontend — backend will reject with 401/403
+- **Public endpoints** (`/api/public/*`) are accessible without tokens from all frontends
+- **Shop viewing**: Users view shops via public routes (`/shop/:shopId`) using `/api/public/shops/:id` endpoint
+
+### Cross-Frontend Interactions
+1. **User → Shop** (viewing only): User frontend displays shop pages using public API endpoints
+2. **User → Product** (viewing/purchasing): Uses public product endpoints + authenticated cart/order endpoints
+3. **Shop → User** (messaging): Shop owners message customers via shared `/api/messages/*` endpoint (auth determines role)
+4. **No direct frontend-to-frontend communication**: All data flows through backend API
+
+### When Working in User Frontend
+- ✅ Use only `getUserToken()`, `setUserSession()`, `clearUserSession()` from `api.jsx`
+- ✅ Call endpoints: `/api/auth/*`, `/api/users/*`, `/api/public/*`, `/api/cart/*`, `/api/orders/*`, `/api/messages/*`
+- ❌ Never import or reference shop/admin frontend code
+- ❌ Never use `shopToken`, `adminToken`, or shop/admin API functions
+
 ## User Frontend Quick Facts
 
 - **Stack**: React 18+ (Vite), React Router v6+, Tailwind CSS v4, Framer Motion, Lucide React, Fetch API
-- **Purpose**: Customer marketplace UI for product browsing, shopping, orders, reviews, messaging, user profile
-- **API Integration**: Centralized in `src/api.jsx` (999+ lines)
+- **Purpose**: Customer marketplace UI for product browsing, shopping, orders, reviews, messaging, user profile, referral system
+- **API Integration**: Centralized in `src/api.jsx` (1055+ lines, 48+ API functions)
 - **Auth**: `userToken` stored in localStorage, validated via `ProtectedRoute` guard
 - **Ports**: Dev runs on `http://localhost:5173` (Vite dev server)
 - **Entry**: `src/main.jsx` → `src/App.jsx` (all routing, error boundary)
 - **Relative imports**: All imports use `../` (no absolute path aliases)
-- **Deployment**: Vercel (GitHub repo: `Hamood88/user-frontend-vite`)
+- **Deployment**: Vercel with SPA routing (`vercel.json` rewrites all to `/index.html`)
+- **Error Handling**: Global `ErrorBoundary` in `App.jsx` prevents blank screens
 
 ## Development Setup
 
@@ -100,30 +129,43 @@ export async function apiPost(endpoint, body) {
 /                               ProtectedRoute → AppLayout (sidebar, topbar, mobile nav)
   ├── /                         UserDashboard (feed/home)
   ├── /mall                     Mall (product browsing/search)
-  ├── /shop/:shopId             ShopDetails
-  ├── /product/:productId       ProductDetailsUnified
-  ├── /cart                     CartPage
+  ├── /shop/:shopId             ShopDetails (shop page)
+  ├── /product/:productId       ProductDetailsUnified (product detail)
+  ├── /cart                     Cart (shopping cart)
   ├── /checkout                 CheckoutPage
-  ├── /orders                   OrdersPage
-  ├── /orders/:orderId          OrderDetailsPage
-  ├── /profile                  UserProfilePage
-  ├── /messages                 MessagesPage
-  ├── /messages/:userId         ConversationPage
+  ├── /orders                   MyOrders (order history)
+  ├── /earn-more                EarnMore (referral system - NEW)
+  ├── /profile                  Profile (user profile)
+  ├── /messages                 Messages (inbox)
+  ├── /notifications            Notifications
+  ├── /settings                 Settings
+  ├── /friends                  Friends
+  ├── /search                   Search (global search)
+  ├── /refer/user/:code         UserReferralSignup (redirect handler)
+  ├── /refer/shop/:code         ShopReferralSignup (redirect handler)
   └── /login (+ /register)      SplitAuthPage (unprotected)
-  └── /_probe                   Always available (health/debug)
+  └── /_probe                   Health check (always available)
 ```
 
-All routes except `/login` and `/_probe` are protected.
+All routes except `/login`, `/register`, `/refer/*`, and `/_probe` are protected.
 
 ## Component & File Structure
 
 - **Entry**: `src/main.jsx` (mounts App), `src/App.jsx` (all routes, error boundary)
 - **Layout**: `src/components/AppLayout.jsx` (sidebar, topbar, mobile nav, nested routes)
-- **Pages** (`src/pages/`): Full views like `UserDashboard.jsx`, `Mall.jsx`, `OrdersPage.jsx`
-- **Components** (`src/components/`): Reusable UI (ProductCard, OrderItem, ReviewForm, etc.)
-- **Hooks** (`src/hooks/`): Custom React hooks for shared logic
+- **Pages** (`src/pages/`): Full views like `UserDashboard.jsx`, `Mall.jsx`, `MyOrders.jsx`, `EarnMore.jsx`
+- **Components** (`src/components/`): Reusable UI (ProductCard, Comment, Post, StarRating, etc.)
+- **Hooks** (`src/hooks/`): Custom React hooks for shared logic (if exists)
 - **Utils** (`src/utils/`): Helper functions (formatters, validators, etc.)
-- **Styling**: Tailwind CSS v4 in `tailwind.config.js`, custom CSS in `src/styles/`
+- **Styling**: Tailwind CSS v4 + custom CSS in `src/styles/` (theme.css, app.css, component-specific CSS)
+- **Error Boundary**: `App.jsx` has global `ErrorBoundary` class component to catch rendering errors
+
+### Key Components
+- **ProtectedRoute.jsx**: Checks `userToken` in localStorage, redirects to `/login` if missing
+- **AppLayout.jsx**: Main layout with sidebar navigation (Sidebar.jsx) and top bar (TopBar.jsx/UserTopBar.jsx)
+- **Sidebar.jsx**: Navigation menu with links (Home, Mall, Cart, Earn More, Messages, Profile, Settings, etc.)
+- **ProductDetailsUnified.jsx**: Unified product detail page with reviews, cart integration, shop info
+- **EarnMore.jsx**: Referral system page with QR codes, social sharing, dual tabs (user/shop invitations)
 
 ## Common User Workflows
 
@@ -192,21 +234,170 @@ const handleAvatarUpload = async (file) => {
 };
 ```
 
+## Critical Development Patterns
+
+### Image URL Handling
+**ALWAYS use `toAbsUrl()` for all backend image paths**:
+```javascript
+import { toAbsUrl } from '../api.jsx';
+
+// Convert relative paths to absolute URLs
+const avatarUrl = toAbsUrl(user?.avatarUrl);  // /uploads/avatar.jpg → https://backend.com/uploads/avatar.jpg
+const productImage = toAbsUrl(product?.image); // handles localhost:5000 conversions too
+```
+
+**Image extraction helper** (see `ProductDetailsUnified.jsx` lines 66-79):
+```javascript
+function pickImages(product) {
+  const arr = [];
+  if (product?.image) arr.push(product.image);
+  if (product?.imageUrl) arr.push(product.imageUrl);
+  if (Array.isArray(product?.images)) arr.push(...product.images);
+  // ... checks all possible image field variations
+  return Array.from(new Set(arr.filter(Boolean).map(toAbsUrl).filter(Boolean)));
+}
+```
+
+### Token Management - CRITICAL
+**Never mix user/shop/admin tokens**:
+```javascript
+// ✅ CORRECT - User frontend only
+function getUserTokenOnly() {
+  try {
+    return localStorage.getItem("userToken") || localStorage.getItem("token") || "";
+  } catch {
+    return "";
+  }
+}
+
+// ❌ WRONG - Don't access shopToken or adminToken in user frontend
+const token = localStorage.getItem("shopToken"); // NO!
+```
+
+### Cart Handling with User-Specific Keys
+```javascript
+function getUserCartKey() {
+  try {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const userId = user?._id || user?.id || "guest";
+    return `cart_items_${userId}`;  // Prevents cart conflicts between users
+  } catch {
+    return "cart_items_guest";
+  }
+}
+
+function readCart() {
+  const key = getUserCartKey();
+  return JSON.parse(localStorage.getItem(key) || "[]");
+}
+```
+
+### Safe Data Extraction Helpers
+**Pattern used throughout** (see `ProductDetailsUnified.jsx`, `AppLayout.jsx`):
+```javascript
+// Safe string extraction
+function safeName(user) {
+  const displayName = String(user?.displayName || "").trim();
+  const fn = String(user?.firstName || "").trim();
+  const ln = String(user?.lastName || "").trim();
+  return displayName || `${fn} ${ln}`.trim() || "User";
+}
+
+// Safe number parsing
+function safeNum(value, fallback = 0) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+// Clean user input (XSS prevention)
+function cleanId(value) {
+  const s = String(value || "").replace(/[<>]/g, "").trim();
+  const noColon = s.startsWith(":") ? s.slice(1) : s;
+  return noColon;
+}
+```
+
+### Error Boundary Pattern
+**All page components** should be wrapped in `App.jsx`'s ErrorBoundary (already configured):
+```javascript
+class ErrorBoundary extends React.Component {
+  state = { hasError: false, message: "", stack: "" };
+  
+  static getDerivedStateFromError(err) {
+    return {
+      hasError: true,
+      message: String(err?.message || "Unknown error"),
+      stack: String(err?.stack || "")
+    };
+  }
+  
+  componentDidCatch(err, info) {
+    console.error("[App ErrorBoundary]", err, info.componentStack);
+  }
+  
+  render() {
+    if (!this.state.hasError) return this.props.children;
+    return <div>❌ Error: {this.state.message}</div>;
+  }
+}
+```
+
+### API Request Pattern - REQUIRED
+**Use centralized API functions from `src/api.jsx`** (don't call fetch directly):
+```javascript
+import { apiGet, apiPost, apiPut, apiDelete } from '../api.jsx';
+
+// ✅ CORRECT
+const data = await apiGet('/products/123');
+const result = await apiPost('/cart/add', { productId, quantity });
+
+// ❌ WRONG - Don't bypass API layer
+const res = await fetch(`${API_BASE}/api/products/123`);  // NO!
+```
+
+### Referral System Integration
+**EarnMore page** demonstrates QR code generation and social sharing:
+```javascript
+import QRCode from 'qrcode';
+
+// Generate QR code
+const generateQR = async (url) => {
+  try {
+    const qrDataUrl = await QRCode.toDataURL(url, {
+      width: 300,
+      margin: 2,
+      errorCorrectionLevel: 'H'
+    });
+    return qrDataUrl;
+  } catch (err) {
+    console.error('QR generation failed:', err);
+    return null;
+  }
+};
+
+// Download QR code
+const downloadQR = (dataUrl, filename) => {
+  const link = document.createElement('a');
+  link.href = dataUrl;
+  link.download = filename;
+  link.click();
+};
+```
+
 ## Styling & CSS
 
-- **Custom CSS** in `src/styles/` directory (theme.css, app.css, Sidebar.css, readabilityFix.css)
-- **Component styles** in dedicated CSS files or inline styles
-- **Theme colors**: Defined in `src/styles/theme.css` as CSS variables
-- **Import CSS**: `src/index.css` imports global styles
-- **Lucide Icons**: For SVG icons (`lucide-react` package)
-
-No CSS-in-JS;Tailwind v4
-
 - **Tailwind CSS v4** configured in `tailwind.config.js` (PostCSS pipeline)
-- **Custom styles** in `src/styles/` or inline `className=""` attributes
-- **Import CSS**: `src/index.css` (auto-imported by Vite)
-- **Framer Motion**: For animations (`framer-motion` package)
-- **Lucide Icons**: For SVG icons (`lucide-react` package)
+- **Custom CSS modules** in `src/styles/` (19 CSS files for component-specific styling):
+  - `theme.css` — CSS variables for colors, spacing, typography
+  - `app.css` — Global app styles
+  - `appLayoutModern.css`, `Sidebar.css`, `userTopBar.css` — Layout components
+  - Component-specific: `productDetailsUnified.css`, `cart.css`, `Mall.css`, `messages.css`, etc.
+  - `readabilityFix.css` — Accessibility and typography improvements
+- **Import pattern**: Import CSS files in component files (`import "../styles/componentName.css"`)
+- **Utility classes**: Tailwind classes for responsive design, spacing, colors
+- **Custom colors**: Extended in `tailwind.config.js` (purple-950, slate-900/950, yellow-300/400)
+- **Icons**: Lucide React (`lucide-react` package) for consistent SVG icons
+- **Animations**: Framer Motion (`framer-motion`) for page transitions and interactive elements
 
 No CSS-in-JS; use Tailwind utility classes and `.css` files.
 

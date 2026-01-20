@@ -40,6 +40,7 @@ import {
   safeImageUrl,
   sendFriendRequest,
   toAbsUrl,
+  getTopInviters,
 } from "../api.jsx";
 
 import "../styles/feedModern.css";
@@ -210,6 +211,10 @@ export default function Feed() {
   const [friendRequestSent, setFriendRequestSent] = useState(false);
   const [isPrivateFeed, setIsPrivateFeed] = useState(false);
 
+  // top inviters
+  const [topInviters, setTopInviters] = useState([]);
+  const [loadingInviters, setLoadingInviters] = useState(false);
+
   const container = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.08 } },
@@ -285,6 +290,22 @@ export default function Feed() {
   useEffect(() => {
     loadFeed();
   }, [userId]);
+
+  // Load top inviters on mount
+  useEffect(() => {
+    async function loadInviters() {
+      setLoadingInviters(true);
+      try {
+        const data = await getTopInviters(5);
+        setTopInviters(data);
+      } catch (e) {
+        console.error("Failed to load top inviters:", e);
+      } finally {
+        setLoadingInviters(false);
+      }
+    }
+    loadInviters();
+  }, []);
 
   // Close share dropdown when clicking outside
   useEffect(() => {
@@ -1363,15 +1384,61 @@ export default function Feed() {
         </div>
 
         <div className="glass-card rounded-2xl p-5">
-          <h2 className="font-display font-bold text-lg mb-4 text-white">
-            Suggested People
+          <h2 className="font-display font-bold text-lg mb-4 text-white flex items-center gap-2">
+            <Users className="w-5 h-5" />
+            Top Inviters
           </h2>
-          <div className="text-sm text-muted-foreground">
-            Suggestions need a backend endpoint. We can add it after the feed is stable.
-          </div>
+          
+          {loadingInviters ? (
+            <div className="text-sm text-muted-foreground">Loading...</div>
+          ) : topInviters.length === 0 ? (
+            <div className="text-sm text-muted-foreground">No top inviters yet.</div>
+          ) : (
+            <div className="space-y-3">
+              {topInviters.map((inviter, index) => (
+                <div
+                  key={inviter._id}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                >
+                  <div className="relative">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center overflow-hidden">
+                      {inviter.avatarUrl ? (
+                        <img
+                          src={toAbsUrl(inviter.avatarUrl)}
+                          alt={inviter.displayName}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-lg font-bold text-primary">
+                          {(inviter.displayName || "U").charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-xs font-bold text-black">
+                      {index + 1}
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-white truncate">
+                      {inviter.displayName}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {inviter.totalReferrals} referral{inviter.totalReferrals !== 1 ? 's' : ''}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <TrendingUp className="w-4 h-4 text-green-400" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          
           <button type="button" className="md-btnGhost w-full mt-4">
             <Users className="w-4 h-4" />
-            Find Friends
+            View Full Leaderboard
           </button>
         </div>
       </div>
