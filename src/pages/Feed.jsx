@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Heart,
@@ -22,6 +22,7 @@ import {
   Printer,
   Flag,
   ThumbsUp,
+  TrendingUp,
 } from "lucide-react";
 
 import {
@@ -214,6 +215,7 @@ export default function Feed() {
   // top inviters
   const [topInviters, setTopInviters] = useState([]);
   const [loadingInviters, setLoadingInviters] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   const container = {
     hidden: { opacity: 0 },
@@ -743,7 +745,10 @@ export default function Feed() {
         {!userId && (
           <div className="glass-card rounded-2xl p-4">
           <div className="flex gap-4">
-            <div className="md-avatarRingSm flex-shrink-0">
+            <RouterLink 
+              to="/profile"
+              className="md-avatarRingSm flex-shrink-0 hover:opacity-80 transition-opacity"
+            >
               {avatarUrl(me) ? (
                 <img
                   src={avatarUrl(me)}
@@ -761,7 +766,7 @@ export default function Feed() {
               >
                 {(userName(me) || "M").slice(0, 1).toUpperCase()}
               </div>
-            </div>
+            </RouterLink>
 
             <div className="flex-1 space-y-4">
               <textarea
@@ -878,7 +883,10 @@ export default function Feed() {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex gap-3">
-                      <div className="w-10 h-10 rounded-full bg-white/5 overflow-hidden border border-white/10 flex items-center justify-center">
+                      <RouterLink 
+                        to={`/feed/user/${post.user._id}`}
+                        className="w-10 h-10 rounded-full bg-white/5 overflow-hidden border border-white/10 flex items-center justify-center hover:opacity-80 transition-opacity"
+                      >
                         {avatarUrl(post.user) ? (
                           <img
                             src={avatarUrl(post.user)}
@@ -894,11 +902,13 @@ export default function Feed() {
                             {userName(post.user).charAt(0).toUpperCase()}
                           </div>
                         )}
-                      </div>
+                      </RouterLink>
                       <div>
-                        <h3 className="font-bold text-foreground hover:underline cursor-pointer">
-                          {userName(post.user)}
-                        </h3>
+                        <RouterLink to={`/feed/user/${post.user._id}`}>
+                          <h3 className="font-bold text-foreground hover:underline cursor-pointer">
+                            {userName(post.user)}
+                          </h3>
+                        </RouterLink>
                         <p className="text-xs text-muted-foreground">
                           {timeAgo(post.createdAt)}
                         </p>
@@ -983,7 +993,8 @@ export default function Feed() {
                             <img
                               src={mediaUrl}
                               alt="Post"
-                              className="w-full max-h-[520px] object-contain"
+                              className="w-full max-h-[520px] object-contain cursor-pointer"
+                              onClick={() => setLightboxImage(mediaUrl)}
                               onError={() => {
                                 console.warn(`[Feed] image failed to load: ${mediaUrl}`);
                                 setFailedImages(prev => new Set([...prev, mediaUrl]));
@@ -1204,7 +1215,10 @@ export default function Feed() {
                                   {/* Main comment */}
                                   <div className="bg-white/5 p-3 rounded-lg">
                                     <div className="flex items-start gap-2">
-                                      <div className="w-6 h-6 rounded-full bg-white/10 flex-shrink-0">
+                                      <RouterLink
+                                        to={`/feed/user/${pickId(commentUser)}`}
+                                        className="w-6 h-6 rounded-full bg-white/10 flex-shrink-0 hover:opacity-80 transition-opacity"
+                                      >
                                         {avatarUrl(commentUser) ? (
                                           <img
                                             src={avatarUrl(commentUser)}
@@ -1216,12 +1230,15 @@ export default function Feed() {
                                             {(userName(commentUser) || "U").slice(0, 1).toUpperCase()}
                                           </div>
                                         )}
-                                      </div>
+                                      </RouterLink>
                                       <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-1">
-                                          <span className="font-semibold text-sm text-white">
+                                          <RouterLink
+                                            to={`/feed/user/${pickId(commentUser)}`}
+                                            className="font-semibold text-sm text-white hover:underline"
+                                          >
                                             {userName(commentUser)}
-                                          </span>
+                                          </RouterLink>
                                           <span className="text-xs text-gray-400">
                                             {timeAgo(comment.createdAt)}
                                           </span>
@@ -1270,7 +1287,10 @@ export default function Feed() {
                                         return (
                                           <div key={reply._id} className="bg-white/5 p-2 rounded-lg">
                                             <div className="flex items-start gap-2">
-                                              <div className="w-5 h-5 rounded-full bg-white/10 flex-shrink-0">
+                                              <RouterLink
+                                                to={`/feed/user/${pickId(replyUser)}`}
+                                                className="w-5 h-5 rounded-full bg-white/10 flex-shrink-0 hover:opacity-80 transition-opacity"
+                                              >
                                                 {avatarUrl(replyUser) ? (
                                                   <img
                                                     src={avatarUrl(replyUser)}
@@ -1282,12 +1302,15 @@ export default function Feed() {
                                                     {(userName(replyUser) || "U").slice(0, 1).toUpperCase()}
                                                   </div>
                                                 )}
-                                              </div>
+                                              </RouterLink>
                                               <div className="flex-1">
                                                 <div className="flex items-center gap-2 mb-1">
-                                                  <span className="font-semibold text-xs text-white">
+                                                  <RouterLink
+                                                    to={`/feed/user/${pickId(replyUser)}`}
+                                                    className="font-semibold text-xs text-white hover:underline"
+                                                  >
                                                     {userName(replyUser)}
-                                                  </span>
+                                                  </RouterLink>
                                                   <span className="text-[10px] text-gray-400">
                                                     {timeAgo(reply.createdAt)}
                                                   </span>
@@ -1380,12 +1403,13 @@ export default function Feed() {
           ) : (
             <div className="space-y-3">
               {topInviters.map((inviter, index) => (
-                <div
+                <RouterLink
+                  to={`/feed/user/${inviter._id}`}
                   key={inviter._id}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group"
                 >
                   <div className="relative">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center overflow-hidden">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity">
                       {inviter.avatarUrl ? (
                         <img
                           src={toAbsUrl(inviter.avatarUrl)}
@@ -1404,7 +1428,7 @@ export default function Feed() {
                   </div>
                   
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-white truncate">
+                    <div className="font-semibold text-white truncate group-hover:underline">
                       {inviter.displayName}
                     </div>
                     <div className="text-xs text-muted-foreground">
@@ -1415,7 +1439,7 @@ export default function Feed() {
                   <div className="flex items-center gap-1">
                     <TrendingUp className="w-4 h-4 text-green-400" />
                   </div>
-                </div>
+                </RouterLink>
               ))}
             </div>
           )}
@@ -1444,6 +1468,28 @@ export default function Feed() {
           </button>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      {lightboxImage && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-200"
+          onClick={() => setLightboxImage(null)}
+        >
+          <button 
+            type="button" 
+            className="absolute top-4 right-4 text-white/70 hover:text-white bg-black/50 rounded-full p-2 transition-colors"
+            onClick={() => setLightboxImage(null)}
+          >
+            <X className="w-8 h-8" />
+          </button>
+          <img 
+            src={lightboxImage} 
+            alt="Full screen" 
+            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl cursor-default"
+            onClick={(e) => e.stopPropagation()} 
+          />
+        </div>
+      )}
     </div>
   );
 }

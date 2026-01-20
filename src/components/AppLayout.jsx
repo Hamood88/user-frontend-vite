@@ -84,6 +84,7 @@ export default function AppLayout() {
     { label: "Feed", icon: Home, to: "/feed" },
     { label: "Dashboard", icon: LayoutDashboard, to: "/dashboard" },
     { label: "💰 Earn More", icon: Zap, to: "/earn-more" },
+    { label: "Search", icon: Search, to: "/search" },
     { label: "Friends", icon: Users, to: "/friends" },
     { label: "Messages", icon: MessageSquare, to: "/messages" },
     { label: "Mall", icon: ShoppingBag, to: "/mall" },
