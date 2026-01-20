@@ -204,7 +204,7 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
    ========================= */
 async function loadPublicShopFeed(shopId) {
   // request more items (backend may paginate); default feed sometimes returns just a few items
-  const res = await fetch(apiUrl(`/public/shops/${shopId}/feed?limit=100`), {
+  const res = await fetch(apiUrl(`/public/shops/${shopId}/feed?limit=200`), {
     headers: { Accept: "application/json" },
   });
 
@@ -225,7 +225,21 @@ const SHOP_APP_URL =
   "http://localhost:3000";
 
 // set to true if you want the button visible
-const SHOW_OPEN_SHOP_APP = false;
+const SHOW_OPEN_SHOP_APP = true;
+
+/* =========================
+   ✅ Helper for Shop App URL
+   ========================= */
+function getShopAppUrl(shopId) {
+  // If explicitly localhost in env, use that. Otherwise moondala.one logic
+  let base = SHOP_APP_URL || "https://shop.moondala.one";
+  if (base.includes("localhost")) {
+    base = base.replace(/\/+$/, "");
+    return `${base}/shop/${encodeURIComponent(shopId)}`;
+  }
+  // Production
+  return `https://shop.moondala.one/shop/${encodeURIComponent(shopId)}`;
+}
 
 export default function ShopFeedPublic() {
   const nav = useNavigate();
@@ -266,14 +280,27 @@ export default function ShopFeedPublic() {
 
       setShop(data?.shop || null);
 
-      // Public feed endpoint only returns posts. Fetch public products separately
-      // and use them as featured products for the public view.
+      // Public feed endpoint returns shop.
+      // Fetch public products separately and use them as featured products for the public view.
+      // If shop has featuredProductIds, use those to filter or sort.
       try {
         const prodRes = await fetch(apiUrl(`/public/shops/${safeShopId}/products?limit=100`), {
           headers: { Accept: "application/json" },
         });
         const prodData = await prodRes.json().catch(() => ({}));
-        const prods = Array.isArray(prodData?.products) ? prodData.products : [];
+        let prods = Array.isArray(prodData?.products) ? prodData.products : [];
+        
+        // Filter by featured IDs if available
+        const featuredIds = data?.shop?.featuredProductIds || [];
+        if (featuredIds.length > 0) {
+           const featuredSet = new Set(featuredIds.map(x => String(x)));
+           const featuredList = prods.filter(p => featuredSet.has(String(p._id || p.id)));
+           // If we have actual featured matches, use them. Else fallback to all.
+           if (featuredList.length > 0) {
+             prods = featuredList;
+           }
+        }
+
         setFeatured(
           prods.map((p) => ({ ...p, _id: p._id || p.id, _image: normalizeProductImage(p) }))
         );
@@ -388,9 +415,8 @@ export default function ShopFeedPublic() {
   }
 
   function openShopAppNewTab() {
-    // shop-frontend should have a public preview route (example):
-    // /shop/:shopId or /s/:shopId
-    const url = `${String(SHOP_APP_URL).replace(/\/+$/, "")}/shop/${encodeURIComponent(safeShopId)}`;
+    if (!safeShopId) return;
+    const url = getShopAppUrl(safeShopId);
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
