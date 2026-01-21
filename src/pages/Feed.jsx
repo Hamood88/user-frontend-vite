@@ -81,8 +81,8 @@ function userName(u) {
 }
 
 function avatarUrl(u) {
-  const url = u?.avatarUrl || u?.avatar || u?.photoUrl || "";
-  // Return null if no specific avatar set, so we can show the CSS fallback
+  // Check ALL possible fields
+  const url = u?.avatarUrl || u?.avatar || u?.photoUrl || u?.profilePic || u?.image || "";
   return url ? safeImageUrl(url, 'null', u) : null;
 }
 
