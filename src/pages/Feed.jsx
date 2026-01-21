@@ -42,6 +42,8 @@ import {
   sendFriendRequest,
   toAbsUrl,
   getTopInviters,
+  getMyUserProfile,
+  setUserSession,
 } from "../api.jsx";
 
 import "../styles/feedModern.css";
@@ -80,7 +82,8 @@ function userName(u) {
 
 function avatarUrl(u) {
   const url = u?.avatarUrl || u?.avatar || u?.photoUrl || "";
-  return safeImageUrl(url, 'avatar', u);
+  // Return null if no specific avatar set, so we can show the CSS fallback
+  return url ? safeImageUrl(url, 'null', u) : null;
 }
 
 function normalizePost(p) {
@@ -184,7 +187,7 @@ async function createPostFlexible({ text, file } = {}) {
 
 export default function Feed() {
   const { userId } = useParams(); // Get userId from URL if viewing another user's feed
-  const me = getUserSession(); // Get fresh session data each time
+  const [me, setMe] = useState(() => getUserSession()); // Keep session fresh
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newPostText, setNewPostText] = useState("");
@@ -216,6 +219,22 @@ export default function Feed() {
   const [topInviters, setTopInviters] = useState([]);
   const [loadingInviters, setLoadingInviters] = useState(false);
   const [lightboxImage, setLightboxImage] = useState(null);
+
+  // Sync user profile to ensure avatar is up to date
+  useEffect(() => {
+    async function syncProfile() {
+      try {
+        const data = await getMyUserProfile();
+        if (data?.user) {
+          setMe(data.user);
+          setUserSession({ user: data.user });
+        }
+      } catch (err) {
+        // failed to sync, just keep using localStorage
+      }
+    }
+    syncProfile();
+  }, []);
 
   const container = {
     hidden: { opacity: 0 },
