@@ -512,6 +512,14 @@ export function respondFriendRequest(requestId, action) {
 /* ================================
    ✅ POSTS
    ================================ */
+
+/* ================================
+   ✅ PROFILES
+   ================================ */
+export function getMyUserProfile() {
+  return apiGet("/api/users/profile");
+}
+
 export function getPostsByUser(userId) {
   const id = String(userId || "").trim();
   if (!id) throw new Error("Missing userId");
