@@ -10,29 +10,14 @@ import { apiGet } from "../api"; // Assuming apiGet is available for public rout
 import { Loader2 } from "lucide-react";
 
 // Helper to normalize props (Same logic as Editor/Preview)
-function resolveProps(section, shopInfo = null) {
+function resolveProps(section) {
     if (!section) return {};
     
-    // 1. Editor Structure (Priority)
-    if (section.props) {
-        const props = section.props;
-        
-        // ✅ CRITICAL: ProfileHeader should ALWAYS use live shop data
-        if (section.type === 'ProfileHeader' && shopInfo) {
-            return {
-                ...props,
-                shopName: shopInfo.shopName || shopInfo.name || props.shopName,
-                bio: shopInfo.bio || props.bio,
-                avatarUrl: shopInfo.logoUrl || shopInfo.logo || props.avatarUrl,
-                coverUrl: shopInfo.coverImage || props.coverUrl,
-            };
-        }
-        
-        return props;
-    }
+    // 1. Editor Structure (Priority) - use saved props exactly as they are
+    if (section.props) return section.props; 
 
-    // 2. Backend Structure (Flat + Content)
-    const flatProps = {
+    // 2. Backend Structure (Flat + Content) - merge saved fields
+    return {
         ...section, 
         ...(section.content || {}), 
         content: section.content?.content || section.content?.value || section.content,
@@ -40,19 +25,6 @@ function resolveProps(section, shopInfo = null) {
         subtitle: section.subtitle || section.content?.subtitle,
         productIds: section.productIds || section.content?.productIds
     };
-    
-    // ✅ CRITICAL: ProfileHeader should ALWAYS use live shop data
-    if (section.type === 'ProfileHeader' && shopInfo) {
-        return {
-            ...flatProps,
-            shopName: shopInfo.shopName || shopInfo.name || flatProps.shopName,
-            bio: shopInfo.bio || flatProps.bio,
-            avatarUrl: shopInfo.logoUrl || shopInfo.logo || flatProps.avatarUrl,
-            coverUrl: shopInfo.coverImage || flatProps.coverUrl,
-        };
-    }
-    
-    return flatProps;
 }
 
 export default function ShopMallPublic() {
@@ -218,7 +190,7 @@ export default function ShopMallPublic() {
     const visualSections = rawSections.filter(s => String(s.type).toLowerCase() !== 'navigationmenu');
     const navSection = rawSections.find(s => String(s.type).toLowerCase() === 'navigationmenu');
     
-    const navProps = resolveProps(navSection, shopInfo);
+    const navProps = resolveProps(navSection);
     const finalNavLinks = (navProps.useManualLinks && navProps.links?.length > 0) 
         ? navProps.links 
         : industryLinks;
@@ -260,7 +232,7 @@ export default function ShopMallPublic() {
     // If searching or filtering, show results grid instead of sections
     if (hasActiveFilters) {
         const profileSection = visualSections.find(s => s.type === 'ProfileHeader');
-        const profileProps = profileSection ? resolveProps(profileSection, shopInfo) : { shopName: finalShopName, bio: shopInfo?.bio };
+        const profileProps = profileSection ? resolveProps(profileSection) : { shopName: finalShopName, bio: shopInfo?.bio };
         
         // Build Title
         let viewTitle = "";
@@ -351,7 +323,7 @@ export default function ShopMallPublic() {
                         visualSections.map((section, idx) => {
                             const Component = COMPONENT_MAP[section.type];
                             if (!Component) return null;
-                            const props = resolveProps(section, shopInfo);
+                            const props = resolveProps(section);
                             return (
                                 <div key={section.id || idx} className="mb-8">
                                     <Component data={props} theme={theme} />
