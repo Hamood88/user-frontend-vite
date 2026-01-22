@@ -14,16 +14,39 @@ function resolveProps(section) {
     if (!section) return {};
     
     // 1. Editor Structure (Priority) - use saved props exactly as they are
-    if (section.props) return section.props; 
+    if (section.props && typeof section.props === 'object') {
+        return section.props;
+    }
 
-    // 2. Backend Structure (Flat + Content) - merge saved fields
+    // 2. Backend Structure (Flat + Content) - merge all fields
+    // ProfileHeader needs: shopName, bio, avatarUrl, coverUrl
+    // HeroBanner needs: title, subtitle, imageUrl, buttonText, buttonLink
+    // ProductGrid needs: title, productIds
+    // LinkList needs: links
+    // RichText needs: content, align
+    // NavigationMenu needs: links (or auto-generated)
+    
+    const base = { ...section }; // Get all root fields
+    const content = section.content || {};
+    
+    // Merge content fields into base (content takes priority)
     return {
-        ...section, 
-        ...(section.content || {}), 
-        content: section.content?.content || section.content?.value || section.content,
-        title: section.title || section.content?.title,
-        subtitle: section.subtitle || section.content?.subtitle,
-        productIds: section.productIds || section.content?.productIds
+        ...base,
+        ...content,
+        // Ensure specific fields are properly mapped
+        shopName: content.shopName || section.shopName || base.shopName,
+        bio: content.bio || section.bio || base.bio,
+        avatarUrl: content.avatarUrl || section.avatarUrl || base.avatarUrl,
+        coverUrl: content.coverUrl || section.coverUrl || base.coverUrl,
+        title: content.title || section.title || base.title,
+        subtitle: content.subtitle || section.subtitle || base.subtitle,
+        imageUrl: content.imageUrl || section.imageUrl || base.imageUrl,
+        buttonText: content.buttonText || section.buttonText || base.buttonText,
+        buttonLink: content.buttonLink || section.buttonLink || base.buttonLink,
+        productIds: content.productIds || section.productIds || base.productIds,
+        links: content.links || section.links || base.links,
+        content: content.content || section.content?.value || content.value || section.value,
+        align: content.align || section.align || base.align,
     };
 }
 
@@ -54,7 +77,7 @@ export default function ShopMallPublic() {
         // ✅ Fetch Mall Page AND All Products (for sidebar/search)
         Promise.all([
             apiGet(`/public/shops/${shopId}/mall?_t=${timestamp}`),
-            apiGet(`/public/shops/${shopId}/products?limit=200`)
+            apiGet(`/public/shops/${shopId}/products?limit=500`)
                 .then(res => res.products || [])
                 .catch(err => {
                     console.warn("Failed to load shop products:", err);
@@ -63,6 +86,13 @@ export default function ShopMallPublic() {
         ])
             .then(([res, productList]) => {
                 console.log("[ShopMallPublic] API Response:", res);
+                console.log("[ShopMallPublic] Response structure check:", {
+                    hasOk: !!res.ok,
+                    hasPage: !!res.page,
+                    hasMallPage: !!res.mallPage,
+                    pageThemeId: res.page?.themeId,
+                    pagePageBg: res.page?.pageBg
+                });
 
                 if (!res.ok && !res.mallPage && !res.page) {
                     throw new Error(res.message || "Failed to load shop");
@@ -72,9 +102,11 @@ export default function ShopMallPublic() {
                 const mallPage = res.page || res.mallPage || {};
                 const sections = Array.isArray(mallPage.sections) ? mallPage.sections : [];
                 
-                // ✅ Extract theme
+                // ✅ Extract theme with fallback chain
                 const themeId = mallPage.themeId || res.themeId || 'midnight';
                 const pageBg = mallPage.pageBg || res.pageBg || '';
+                
+                console.log("[ShopMallPublic] Extracted theme:", { themeId, pageBg });
                 
                 setData({ ...mallPage, sections, themeId, pageBg });
                 setShopInfo(res.shop || {});
@@ -140,16 +172,25 @@ export default function ShopMallPublic() {
     // Sync Search Query with URL if needed, but local is smoother. 
     // We already init from URL.
     
-    const normalize = (str) => {
-        if (!str) return '';
-        return String(str).trim()
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join(' ');
-    };
+    const normalizedProducts = useMemo(() => {
+        return products.map(p => ({
+             ...p,
+             id: p._id || p.id || p.productId,
+             price: p.localPrice || p.price
+        }));
+    }, [products]);
+
+    // Product Map for fast hydration
+    const productMap = useMemo(() => {
+        const map = {};
+        normalizedProducts.forEach(p => {
+            if(p.id) map[p.id] = p;
+        });
+        return map;
+    }, [normalizedProducts]);
 
     const filteredProducts = useMemo(() => {
-        return products.filter(p => {
+        return normalizedProducts.filter(p => {
             // 1. Search Query
             if (searchQuery) {
                 const q = searchQuery.toLowerCase();
@@ -170,12 +211,17 @@ export default function ShopMallPublic() {
             }
             return true;
         });
-    }, [products, filterInd, filterCat, searchQuery]);
+    }, [normalizedProducts, filterInd, filterCat, searchQuery]);
+
+    // Fallback products (top 8 newest) for empty grids
+    const fallbackProducts = useMemo(() => {
+        return normalizedProducts.slice(0, 8);
+    }, [normalizedProducts]);
 
     // Sidebar Links
     const industryLinks = useMemo(() => {
         const hierarchy = {};
-        products.forEach(p => {
+        normalizedProducts.forEach(p => {
             const rawInd = p.industry || p.industryLabel || p.industryName || "Other Industries";
             const rawCat = p.category || p.categoryLabel || p.categoryName || "Other";
             
@@ -194,11 +240,7 @@ export default function ShopMallPublic() {
             }))
         }));
 
-        // ✅ Return "Show All Products" (clears filters) + Categories
-        return [
-            { label: "Show All Products", url: "?", icon: Layout }, 
-            ...generated
-        ];
+        return generated;
     }, [products]);
 
     // Section Logic
@@ -207,9 +249,8 @@ export default function ShopMallPublic() {
     const navSection = rawSections.find(s => String(s.type).toLowerCase() === 'navigationmenu');
     
     const navProps = resolveProps(navSection);
-    const finalNavLinks = (navProps.useManualLinks && navProps.links?.length > 0) 
-        ? navProps.links 
-        : industryLinks;
+    // ✅ FORCE industryLinks to match ShopMallPreview behavior (which ignores custom nav currently)
+    const finalNavLinks = industryLinks;
 
     // Shop Info Fallback
     const finalShopName = shopInfo?.shopName || shopInfo?.name || safeData.shopName || "Shop";
@@ -243,7 +284,8 @@ export default function ShopMallPublic() {
         );
     }
 
-    const hasActiveFilters = !!(filterInd || filterCat || searchQuery);
+    const showAll = searchParams.get("showAll") === "true";
+    const hasActiveFilters = !!(filterInd || filterCat || searchQuery || showAll);
 
     // If searching or filtering, show results grid instead of sections
     if (hasActiveFilters) {
@@ -252,9 +294,12 @@ export default function ShopMallPublic() {
         
         // Build Title
         let viewTitle = "";
-        if (searchQuery) viewTitle += `Results for "${searchQuery}"`;
-        if (filterInd) viewTitle += (viewTitle ? " in " : "") + filterInd;
-        if (filterCat) viewTitle += ` › ${filterCat}`;
+        if (searchQuery) viewTitle = `Results for "${searchQuery}"`;
+        else if (showAll) viewTitle = "All Products";
+        else {
+            if (filterInd) viewTitle += filterInd;
+            if (filterCat) viewTitle += ` › ${filterCat}`;
+        }
 
         return (
             <ShopLayout 
@@ -278,7 +323,52 @@ export default function ShopMallPublic() {
                                 {viewTitle}
                             </h2>
                             {filteredProducts.length > 0 ? (
-                                <COMPONENT_MAP.ProductGrid data={{ products: filteredProducts, title: "" }} theme={theme} />
+                                showAll ? (
+                                    // ✅ Grouped View for Show All
+                                    <div className="space-y-12">
+                                        {industryLinks.filter(i => i.children).map((industry, iIdx) => (
+                                            <div key={iIdx} className="space-y-8">
+                                                <div className="border-b-2 pb-3" style={{ borderColor: theme.primary }}>
+                                                    <h3 className="text-2xl font-bold" style={{ color: theme.primary }}>
+                                                        {industry.label}
+                                                    </h3>
+                                                </div>
+                                                {industry.children.map((cat, cIdx) => {
+                                                    const catName = cat.label;
+                                                    const catProducts = filteredProducts.filter(p => {
+                                                        const pInd = normalize(p.industry || p.industryLabel || p.industryName || 'Other Industries');
+                                                        const pCat = normalize(p.category || p.categoryLabel || p.categoryName || 'Other');
+                                                        return pInd === industry.label && pCat === catName;
+                                                    });
+                                                    
+                                                    if (catProducts.length === 0) return null;
+                                                    
+                                                    return (
+                                                        <div key={cIdx} className="space-y-4">
+                                                            <div 
+                                                                onClick={() => navigate(cat.url)}
+                                                                className="text-lg font-semibold opacity-90 cursor-pointer hover:underline decoration-2 underline-offset-4 flex items-center gap-2"
+                                                                style={{ color: theme.text }}
+                                                            >
+                                                                {catName}
+                                                                <span className="text-xs opacity-50 font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: theme.primary + '20' }}>
+                                                                    {catProducts.length}
+                                                                </span>
+                                                            </div>
+                                                            <COMPONENT_MAP.ProductGrid 
+                                                                data={{ products: catProducts, title: "" }} 
+                                                                theme={theme} 
+                                                            />
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    // Standard filtered list
+                                    <COMPONENT_MAP.ProductGrid data={{ products: filteredProducts, title: "" }} theme={theme} />
+                                )
                             ) : (
                                 <div className="text-center py-24 opacity-50" style={{ color: theme.text }}>
                                     No products found.
@@ -340,9 +430,34 @@ export default function ShopMallPublic() {
                             const Component = COMPONENT_MAP[section.type];
                             if (!Component) return null;
                             const props = resolveProps(section);
+                            
+                            // ✅ Hydrate ProductGrid with fallback logic (Matches ShopMallPreview behavior)
+                            let componentData = props;
+                            if (section.type === 'ProductGrid') {
+                                const rawIds = Array.isArray(props.productIds) ? props.productIds : [];
+                                const ids = rawIds.map(id => String(id || "").trim()).filter(Boolean);
+                                
+                                // Try to find selected products in our full inventory map
+                                const selectedProducts = ids
+                                    .map(id => productMap[id])
+                                    .filter(Boolean);
+
+                                // If user picked products, show them. 
+                                // If NO products picked (empty grid in editor), fall back to "Newest 8" (fallbackProducts)
+                                const productsForGrid = selectedProducts.length > 0 
+                                    ? selectedProducts 
+                                    : fallbackProducts;
+
+                                componentData = {
+                                    ...props,
+                                    productIds: ids,
+                                    products: productsForGrid
+                                };
+                            }
+
                             return (
                                 <div key={section.id || idx} className="mb-8">
-                                    <Component data={props} theme={theme} />
+                                    <Component data={componentData} theme={theme} />
                                 </div>
                             );
                         })
