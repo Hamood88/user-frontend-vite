@@ -249,6 +249,20 @@ export function ShopLayout({
 
                         {/* Nav Links */}
                         <nav className="flex-1 space-y-2">
+                            {/* Show All Link (Explicit, Matches Shop Preview) */}
+                            <button 
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (onSearch) onSearch('');
+                                    navigate({ search: '?showAll=true' });
+                                }}
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer hover:bg-black/10 transition-colors font-semibold border-b pb-3 mb-2 w-full text-left" 
+                                style={{ color: theme.primary, borderColor: theme.border }}
+                            >
+                                <Layout size={16} />
+                                <span>Show All Products</span>
+                            </button>
+
                             {linksToRender.map((link, i) => (
                                 <SidebarNavItem key={i} item={link} theme={theme} />
                             ))}
