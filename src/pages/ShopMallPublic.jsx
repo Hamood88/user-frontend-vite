@@ -7,7 +7,7 @@ import { apiGet } from "../api"; // Assuming apiGet is available for public rout
 // BUT in user-frontend apiGet is robust. Let's use apiGet.
 // Note: apiGet injects token effectively.
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Layout } from "lucide-react";
 
 // Helper to normalize props (Same logic as Editor/Preview)
 function resolveProps(section) {
@@ -185,13 +185,20 @@ export default function ShopMallPublic() {
             if (!hierarchy[ind]) hierarchy[ind] = new Set();
             hierarchy[ind].add(cat);
         });
-        return Object.entries(hierarchy).sort().map(([ind, cats]) => ({
+        
+        const generated = Object.entries(hierarchy).sort().map(([ind, cats]) => ({
             label: ind,
             children: Array.from(cats).sort().map(c => ({
                 label: c,
                 url: `?industry=${encodeURIComponent(ind)}&category=${encodeURIComponent(c)}`
             }))
         }));
+
+        // ✅ Return "Show All Products" (clears filters) + Categories
+        return [
+            { label: "Show All Products", url: "?", icon: Layout }, 
+            ...generated
+        ];
     }, [products]);
 
     // Section Logic

@@ -134,12 +134,14 @@ function TopNavItem({ item, theme }) {
     }
     
     // Single Link
+    const Icon = item.icon;
     return (
         <a 
             href={item.url} 
-            className="text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity" 
+            className="flex items-center gap-2 text-sm font-bold cursor-pointer hover:opacity-70 transition-opacity py-1" 
             style={{ color: theme.text }}
         >
+            {Icon && <Icon size={18} />}
             {item.label}
         </a>
     );
