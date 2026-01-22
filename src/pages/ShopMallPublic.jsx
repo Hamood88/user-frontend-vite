@@ -290,8 +290,34 @@ export default function ShopMallPublic() {
             <div className="w-full min-h-screen pb-20 flex flex-col items-center">
                 <div className="w-full max-w-6xl">
                     {visualSections.length === 0 ? (
-                        <div className="py-20 text-center opacity-50">
-                            <p>This shop hasn't set up their page yet.</p>
+                        /* ✅ Default mall page when shop hasn't customized yet */
+                        <div className="w-full">
+                            {/* Default Profile Header */}
+                            <COMPONENT_MAP.ProfileHeader 
+                                data={{ 
+                                    shopName: finalShopName, 
+                                    bio: shopInfo?.bio || "Welcome to our store",
+                                    avatarUrl: shopInfo?.logoUrl || shopInfo?.logo,
+                                }} 
+                                theme={theme} 
+                            />
+                            
+                            {/* Show all products in a grid */}
+                            {products.length > 0 ? (
+                                <div className="px-6 py-8">
+                                    <h2 className="text-2xl font-bold mb-6" style={{ color: theme.text }}>
+                                        Our Products
+                                    </h2>
+                                    <COMPONENT_MAP.ProductGrid 
+                                        data={{ products: products, title: "" }} 
+                                        theme={theme} 
+                                    />
+                                </div>
+                            ) : (
+                                <div className="py-20 text-center opacity-50" style={{ color: theme.text }}>
+                                    <p>This shop doesn't have any products yet.</p>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         visualSections.map((section, idx) => {
