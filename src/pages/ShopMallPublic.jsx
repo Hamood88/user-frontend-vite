@@ -48,17 +48,24 @@ export default function ShopMallPublic() {
         setLoading(true);
         setError(null);
 
+        console.log(`[ShopMallPublic] Fetching mall for shopId=${shopId}`);
+
         apiGet(`/public/shops/${shopId}/mall`)
             .then(res => {
-                if (!res.ok && !res.mallPage) {
+                console.log("[ShopMallPublic] API Response:", res);
+
+                if (!res.ok && !res.mallPage && !res.page) {
                     throw new Error(res.message || "Failed to load shop");
                 }
                 
-                // Normalize response
-                const mallPage = res.mallPage || res.page || {};
+                // ✅ Normalize response - backend returns { ok, shop, page }
+                const mallPage = res.page || res.mallPage || {};
                 const sections = Array.isArray(mallPage.sections) ? mallPage.sections : [];
                 setData({ ...mallPage, sections });
                 setShopInfo(res.shop || {});
+                
+                console.log(`[ShopMallPublic] Sections count: ${sections.length}`);
+                console.log(`[ShopMallPublic] Shop info:`, res.shop);
                 
                 // Helper to dedupe products from all sources
                 const prodMap = new Map();
@@ -68,16 +75,20 @@ export default function ShopMallPublic() {
                     if(id && !prodMap.has(id)) prodMap.set(id, p);
                 };
                 
+                // ✅ Check all possible product sources
                 if (Array.isArray(res.products)) res.products.forEach(collect);
                 if (Array.isArray(res.featuredProducts)) res.featuredProducts.forEach(collect);
+                if (Array.isArray(mallPage.products)) mallPage.products.forEach(collect);
                 sections.forEach(s => {
                     if (Array.isArray(s.products)) s.products.forEach(collect);
                 });
 
-                setProducts(Array.from(prodMap.values()));
+                const allProducts = Array.from(prodMap.values());
+                console.log(`[ShopMallPublic] Total products: ${allProducts.length}`);
+                setProducts(allProducts);
             })
             .catch(err => {
-                console.error("Mall load error:", err);
+                console.error("[ShopMallPublic] Mall load error:", err);
                 setError(err.message);
             })
             .finally(() => setLoading(false));
