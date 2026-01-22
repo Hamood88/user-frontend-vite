@@ -61,9 +61,15 @@ export default function ShopMallPublic() {
                 // ✅ Normalize response - backend returns { ok, shop, page }
                 const mallPage = res.page || res.mallPage || {};
                 const sections = Array.isArray(mallPage.sections) ? mallPage.sections : [];
-                setData({ ...mallPage, sections });
+                
+                // ✅ Extract theme - CRITICAL for proper styling
+                const themeId = mallPage.themeId || res.themeId || 'midnight';
+                const pageBg = mallPage.pageBg || res.pageBg || '';
+                
+                setData({ ...mallPage, sections, themeId, pageBg });
                 setShopInfo(res.shop || {});
                 
+                console.log(`[ShopMallPublic] Theme: ${themeId}`);
                 console.log(`[ShopMallPublic] Sections count: ${sections.length}`);
                 console.log(`[ShopMallPublic] Shop info:`, res.shop);
                 
