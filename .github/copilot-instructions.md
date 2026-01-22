@@ -384,6 +384,10 @@ const downloadQR = (dataUrl, filename) => {
 };
 ```
 
+**Key Referral APIs**:
+- `getReferralNetwork()`: Aggregates data from `/api/users/downline-counts` and `/api/users/earnings`.
+- `getTopInviters()`: Fetches leaderboard from `/api/top-inviters`.
+
 ## Styling & CSS
 
 - **Tailwind CSS v4** configured in `tailwind.config.js` (PostCSS pipeline)

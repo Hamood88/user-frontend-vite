@@ -48,10 +48,20 @@ export default function ShopMallPublic() {
         setLoading(true);
         setError(null);
 
-        console.log(`[ShopMallPublic] Fetching mall for shopId=${shopId}`);
+        const timestamp = Date.now();
+        console.log(`[ShopMallPublic] Fetching mall for shopId=${shopId} (cache-bust: ${timestamp})`);
 
-        apiGet(`/public/shops/${shopId}/mall`)
-            .then(res => {
+        // ✅ Fetch Mall Page AND All Products (for sidebar/search)
+        Promise.all([
+            apiGet(`/public/shops/${shopId}/mall?_t=${timestamp}`),
+            apiGet(`/public/shops/${shopId}/products?limit=200`)
+                .then(res => res.products || [])
+                .catch(err => {
+                    console.warn("Failed to load shop products:", err);
+                    return [];
+                })
+        ])
+            .then(([res, productList]) => {
                 console.log("[ShopMallPublic] API Response:", res);
 
                 if (!res.ok && !res.mallPage && !res.page) {
@@ -62,16 +72,12 @@ export default function ShopMallPublic() {
                 const mallPage = res.page || res.mallPage || {};
                 const sections = Array.isArray(mallPage.sections) ? mallPage.sections : [];
                 
-                // ✅ Extract theme - CRITICAL for proper styling
+                // ✅ Extract theme
                 const themeId = mallPage.themeId || res.themeId || 'midnight';
                 const pageBg = mallPage.pageBg || res.pageBg || '';
                 
                 setData({ ...mallPage, sections, themeId, pageBg });
                 setShopInfo(res.shop || {});
-                
-                console.log(`[ShopMallPublic] Theme: ${themeId}`);
-                console.log(`[ShopMallPublic] Sections count: ${sections.length}`);
-                console.log(`[ShopMallPublic] Shop info:`, res.shop);
                 
                 // Helper to dedupe products from all sources
                 const prodMap = new Map();
@@ -81,7 +87,10 @@ export default function ShopMallPublic() {
                     if(id && !prodMap.has(id)) prodMap.set(id, p);
                 };
                 
-                // ✅ Check all possible product sources
+                // ✅ 1. Add ALL products from inventory (so sidebar works)
+                productList.forEach(collect);
+
+                // ✅ 2. Add products pinned in sections
                 if (Array.isArray(res.products)) res.products.forEach(collect);
                 if (Array.isArray(res.featuredProducts)) res.featuredProducts.forEach(collect);
                 if (Array.isArray(mallPage.products)) mallPage.products.forEach(collect);
