@@ -225,7 +225,7 @@ const SHOP_APP_URL =
   "http://localhost:3000";
 
 // set to true if you want the button visible
-const SHOW_OPEN_SHOP_APP = true;
+const SHOW_OPEN_SHOP_APP = false;
 
 /* =========================
    ✅ Helper for Shop App URL
