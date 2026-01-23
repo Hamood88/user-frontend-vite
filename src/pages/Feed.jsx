@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams, Link as RouterLink } from "react-router-dom";
+import { useParams, Link as RouterLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Heart,
@@ -187,6 +187,7 @@ async function createPostFlexible({ text, file } = {}) {
 
 export default function Feed() {
   const { userId } = useParams(); // Get userId from URL if viewing another user's feed
+  const navigate = useNavigate();
   const [me, setMe] = useState(() => getUserSession()); // Keep session fresh
   const [profileUser, setProfileUser] = useState(null); // User profile when viewing another user
   const [posts, setPosts] = useState([]);
@@ -194,6 +195,7 @@ export default function Feed() {
   const [newPostText, setNewPostText] = useState("");
   const [posting, setPosting] = useState(false);
   const [err, setErr] = useState("");
+  const [friendRequestSentToProfile, setFriendRequestSentToProfile] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
   const fileRef = useRef(null);
@@ -378,6 +380,37 @@ export default function Feed() {
       setErr(e?.message || "Failed to post.");
     } finally {
       setPosting(false);
+    }
+  }
+
+  // Add Friend Handler
+  async function handleAddFriend() {
+    if (!profileUser?._id) return;
+    try {
+      const { sendFriendRequest } = await import('../api.jsx');
+      await sendFriendRequest(profileUser._id, `Hi ${userName(profileUser)}, I'd like to connect with you on Moondala!`);
+      setFriendRequestSentToProfile(true);
+      setErr("");
+    } catch (e) {
+      console.error('Add friend error:', e);
+      setErr(e?.message || "Failed to send friend request");
+    }
+  }
+
+  // Message Handler
+  async function handleMessage() {
+    if (!profileUser?._id) return;
+    try {
+      const { getOrCreateConversation } = await import('../api.jsx');
+      const { _id: conversationId } = await getOrCreateConversation({
+        participantType: 'user',
+        participantId: profileUser._id,
+        topic: 'general'
+      });
+      navigate(`/messages/${conversationId}`);
+    } catch (e) {
+      console.error('Message error:', e);
+      setErr(e?.message || "Failed to start conversation");
     }
   }
 
@@ -807,6 +840,42 @@ export default function Feed() {
                 )}
                 {profileUser.referralCode && (
                   <p className="text-xs text-muted-foreground/60 mb-3">Code: {profileUser.referralCode}</p>
+                )}
+                
+                {/* Action Buttons for Public Profiles */}
+                {!isPrivateFeed && userId !== me?._id && (
+                  <div className="flex gap-3 mt-4">
+                    <button
+                      onClick={handleAddFriend}
+                      disabled={friendRequestSentToProfile}
+                      className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                    >
+                      {friendRequestSentToProfile ? (
+                        <>
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          Friend Request Sent
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                          </svg>
+                          Add Friend
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={handleMessage}
+                      className="flex-1 px-4 py-2 bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                      Message
+                    </button>
+                  </div>
                 )}
                 
                 {/* Add Friend Button for Private Accounts */}
