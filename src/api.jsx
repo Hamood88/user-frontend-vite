@@ -1117,6 +1117,32 @@ export async function checkShopFollowStatus(shopId) {
 }
 
 /* ================================
+   ✅ PUBLIC SHOP FEED INTERACTIONS
+   ================================ */
+export async function likeShopPost(shopId, postId) {
+  if (!shopId) throw new Error("Missing shopId");
+  if (!postId) throw new Error("Missing postId");
+  return apiPost(`/api/public/shops/${encodeURIComponent(shopId)}/feed/${encodeURIComponent(postId)}/like`, {});
+}
+
+export async function addShopPostComment(shopId, postId, { text, parentComment = null } = {}) {
+  if (!shopId) throw new Error("Missing shopId");
+  if (!postId) throw new Error("Missing postId");
+  if (!text) throw new Error("Missing comment text");
+  return apiPost(`/api/public/shops/${encodeURIComponent(shopId)}/feed/${encodeURIComponent(postId)}/comment`, {
+    text: String(text || "").trim(),
+    parentComment: parentComment || null
+  });
+}
+
+export async function likeShopPostComment(shopId, postId, commentId) {
+  if (!shopId) throw new Error("Missing shopId");
+  if (!postId) throw new Error("Missing postId");
+  if (!commentId) throw new Error("Missing commentId");
+  return apiPost(`/api/public/shops/${encodeURIComponent(shopId)}/feed/${encodeURIComponent(postId)}/comments/${encodeURIComponent(commentId)}/like`, {});
+}
+
+/* ================================
    ✅ SMALL HELPERS
    ================================ */
 export function pickId(x) {

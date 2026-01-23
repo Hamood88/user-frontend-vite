@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_BASE, likePost, addComment, followShop, unfollowShop, checkShopFollowStatus } from "../api.jsx";
+import { API_BASE, likeShopPost, addShopPostComment, likeShopPostComment, followShop, unfollowShop, checkShopFollowStatus } from "../api.jsx";
 import { Heart } from "lucide-react";
 import "../styles/shopFeedPublic.css";
 
@@ -353,30 +353,35 @@ export default function ShopFeedPublic() {
     return roots;
   }
 
-  function CommentNode({ node, depth = 0, onReply }) {
+  function CommentNode({ node, depth = 0, onReply, onLike }) {
     if (!node) return null;
     const commenter = node?.author || node?.user || {};
     const name = commenter?.displayName || commenter?.name || commenter?.username || "User";
+    const likesCount = Array.isArray(node?.likes) ? node.likes.length : 0;
+    
     return (
-      <div style={{ marginLeft: depth * 12, marginTop: 8 }}>
-        <div style={{ fontSize: 13, fontWeight: 700 }}>{name}</div>
-        <div style={{ fontSize: 13 }}>{node.text}</div>
-        <div style={{ marginTop: 6 }}>
+      <div style={{ marginLeft: depth * 12, marginTop: 8, paddingBottom: 8, borderBottom: depth === 0 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{name}</div>
+        <div style={{ fontSize: 13, marginTop: 4, color: "rgba(255,255,255,0.8)" }}>{node.text}</div>
+        <div style={{ marginTop: 6, display: "flex", gap: 8 }}>
+          <button className="sfp-miniBtn" type="button" onClick={() => onLike(node._id || node.id)}>
+            👍 {likesCount > 0 ? `(${likesCount})` : "Like"}
+          </button>
           <button className="sfp-miniBtn" type="button" onClick={() => onReply(node._id || node.id)}>
-            Reply
+            💬 Reply
           </button>
         </div>
         {Array.isArray(node.children) && node.children.length > 0
-          ? node.children.map((c) => <CommentNode key={String(c._id || c.id || Math.random())} node={c} depth={depth + 1} onReply={onReply} />)
+          ? node.children.map((c) => <CommentNode key={String(c._id || c.id || Math.random())} node={c} depth={depth + 1} onReply={onReply} onLike={onLike} />)
           : null}
       </div>
     );
   }
 
   async function handleLike(postId) {
-    if (!postId) return;
+    if (!postId || !safeShopId) return;
     try {
-      await likePost(postId);
+      await likeShopPost(safeShopId, postId);
       // refresh list
       await load();
     } catch (e) {
@@ -385,17 +390,28 @@ export default function ShopFeedPublic() {
   }
 
   async function handleAddComment(postId) {
-    if (!postId) return;
+    if (!postId || !safeShopId) return;
     const text = String(commentText || "").trim();
     if (!text) return;
     try {
-      await addComment(postId, { text, parentComment: replyTo || null });
+      await addShopPostComment(safeShopId, postId, { text, parentComment: replyTo || null });
       setCommentText("");
       setReplyTo(null);
       setOpenCommentsFor(null);
       await load();
     } catch (e) {
       setErr(e?.message || "Failed to add comment");
+    }
+  }
+
+  async function handleLikeComment(postId, commentId) {
+    if (!postId || !commentId || !safeShopId) return;
+    try {
+      await likeShopPostComment(safeShopId, postId, commentId);
+      // refresh list
+      await load();
+    } catch (e) {
+      setErr(e?.message || "Failed to like comment");
     }
   }
 
@@ -594,11 +610,16 @@ export default function ShopFeedPublic() {
                       <div style={{ fontWeight: 700 }}>Comments</div>
 
                       {commentTree.length === 0 ? (
-                        <div style={{ marginTop: 8 }}>No comments yet.</div>
+                        <div style={{ marginTop: 8, color: "rgba(255,255,255,0.5)" }}>No comments yet.</div>
                       ) : (
                         <div style={{ marginTop: 8 }}>
                           {commentTree.map((c) => (
-                            <CommentNode key={String(c._id || c.id || Math.random())} node={c} onReply={(id) => setReplyTo(id)} />
+                            <CommentNode 
+                              key={String(c._id || c.id || Math.random())} 
+                              node={c} 
+                              onReply={(id) => setReplyTo(id)} 
+                              onLike={(commentId) => handleLikeComment(postId, commentId)}
+                            />
                           ))}
                         </div>
                       )}
