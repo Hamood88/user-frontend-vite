@@ -1,16 +1,86 @@
-# React + Vite
+# Moondala User Frontend (Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Active customer marketplace** for the Moondala e-commerce platform.
 
-Currently, two official plugins are available:
+## Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm install
+npm run dev  # Opens http://localhost:5173
+```
 
-## React Compiler
+## Environment Setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Create a `.env` file in this directory:
 
-## Expanding the ESLint configuration
+```env
+REACT_APP_API_BASE=http://localhost:5000
+# Production: https://moondala-backend.onrender.com
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Architecture
+
+- **Stack**: React 18 (Vite), React Router v6, Tailwind CSS v4
+- **Auth**: `userToken` in localStorage (strict isolation from shop/admin)
+- **API**: Centralized in `src/api.jsx` (1000+ lines, 50+ functions)
+- **Deployment**: Vercel → https://moondala.one
+
+## Key Features
+
+- Product browsing & search (Mall)
+- Shopping cart & checkout
+- Order tracking & returns
+- User-to-user messaging
+- Ask previous buyers (product Q&A)
+- Referral system (multi-level)
+- Social feed & friends
+
+## Important Patterns
+
+### Always Use API Helpers
+```javascript
+import { apiGet, apiPost, toAbsUrl } from './api.jsx';
+
+// ✅ Correct
+const data = await apiGet('/products/123');
+const imgUrl = toAbsUrl(product.image);
+
+// ❌ Wrong
+const res = await fetch(`${API_BASE}/api/products/123`); // NO!
+```
+
+### Image URLs Must Use toAbsUrl()
+```javascript
+// ✅ Handles /uploads/..., Cloudinary, localhost conversions
+<img src={toAbsUrl(user.avatarUrl)} />
+
+// ❌ Will break in production
+<img src={user.avatarUrl} />
+```
+
+### Token Management
+```javascript
+// ✅ Use session helpers (never manual localStorage access)
+setUserSession({ token, user });
+const token = getToken();
+clearUserSession();
+
+// ❌ Never mix with shop/admin tokens
+localStorage.getItem('shopToken'); // WRONG FRONTEND!
+```
+
+## Documentation
+
+For detailed development guidance, see:
+- [.github/copilot-instructions.md](./.github/copilot-instructions.md) - **Full developer guide**
+- [backend/.github/copilot-instructions.md](../backend/.github/copilot-instructions.md) - Backend patterns
+
+## Available Scripts
+
+- `npm run dev` - Start dev server (port 5173)
+- `npm run build` - Build for production (outputs to `dist/`)
+- `npm run preview` - Preview production build locally
+
+---
+
+**Note**: This is the **active** user frontend. Do not use the legacy `user-frontend/` directory.

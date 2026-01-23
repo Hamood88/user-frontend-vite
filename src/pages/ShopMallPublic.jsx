@@ -9,6 +9,15 @@ import { apiGet } from "../api"; // Assuming apiGet is available for public rout
 
 import { Loader2, Layout } from "lucide-react";
 
+// Helper: Normalize strings for consistent comparison (Title Case)
+const normalize = (str) => {
+    if (!str) return '';
+    return String(str).trim()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+};
+
 // Helper to normalize props (Same logic as Editor/Preview)
 function resolveProps(section) {
     if (!section) return {};
