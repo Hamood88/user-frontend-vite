@@ -357,13 +357,47 @@ export default function ShopFeedPublic() {
     if (!node) return null;
     const commenter = node?.author || node?.user || {};
     const name = commenter?.displayName || commenter?.name || commenter?.username || "User";
+    const avatarUrl = commenter?.avatarUrl || "";
     const likesCount = Array.isArray(node?.likes) ? node.likes.length : 0;
     
     return (
       <div style={{ marginLeft: depth * 12, marginTop: 8, paddingBottom: 8, borderBottom: depth === 0 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{name}</div>
-        <div style={{ fontSize: 13, marginTop: 4, color: "rgba(255,255,255,0.8)" }}>{node.text}</div>
-        <div style={{ marginTop: 6, display: "flex", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+          {avatarUrl ? (
+            <img 
+              src={assetUrl(avatarUrl)} 
+              alt={name}
+              style={{ 
+                width: 32, 
+                height: 32, 
+                borderRadius: "50%", 
+                objectFit: "cover",
+                border: "2px solid rgba(255,255,255,0.1)"
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          ) : (
+            <div style={{ 
+              width: 32, 
+              height: 32, 
+              borderRadius: "50%", 
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 14,
+              fontWeight: 700,
+              color: "#fff"
+            }}>
+              {name.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{name}</div>
+        </div>
+        <div style={{ fontSize: 13, marginTop: 4, marginLeft: 40, color: "rgba(255,255,255,0.8)" }}>{node.text}</div>
+        <div style={{ marginTop: 6, marginLeft: 40, display: "flex", gap: 8 }}>
           <button className="sfp-miniBtn" type="button" onClick={() => onLike(node._id || node.id)}>
             👍 {likesCount > 0 ? `(${likesCount})` : "Like"}
           </button>
@@ -604,12 +638,50 @@ export default function ShopFeedPublic() {
               const commentCount = commentsFlat.length;
 
               const commentTree = buildCommentTree(commentsFlat);
+              
+              const shopLogo = shop?.logoUrl || shop?.logo || "";
+              const shopName = shop?.shopName || shop?.name || "Shop";
 
               return (
                 <div key={postId} className="sfp-card">
                   <div className="sfp-head">
-                    <div className="sfp-name">{shop?.shopName || "Shop"}</div>
-                    <div className="sfp-meta">{timeAgo(p.createdAt)}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      {shopLogo ? (
+                        <img 
+                          src={assetUrl(shopLogo)} 
+                          alt={shopName}
+                          style={{ 
+                            width: 40, 
+                            height: 40, 
+                            borderRadius: "50%", 
+                            objectFit: "cover",
+                            border: "2px solid rgba(255,255,255,0.1)"
+                          }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                          }}
+                        />
+                      ) : (
+                        <div style={{ 
+                          width: 40, 
+                          height: 40, 
+                          borderRadius: "50%", 
+                          background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 16,
+                          fontWeight: 700,
+                          color: "#fff"
+                        }}>
+                          {shopName.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <div className="sfp-name">{shopName}</div>
+                        <div className="sfp-meta">{timeAgo(p.createdAt)}</div>
+                      </div>
+                    </div>
                   </div>
 
                   {p.text ? <div className="sfp-text">{p.text}</div> : null}

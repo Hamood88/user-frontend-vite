@@ -588,7 +588,40 @@ export default function MyOrders() {
                       {o.productTitle || "Product"}
                     </div>
                     <div style={S.meta}>
-                      Sold by {o.shopName || "Shop"} · Qty: {o.quantity || 1}
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        {o.shopLogoUrl ? (
+                          <img 
+                            src={fullImg(o.shopLogoUrl)} 
+                            alt={o.shopName || "Shop"}
+                            style={{ 
+                              width: 20, 
+                              height: 20, 
+                              borderRadius: "50%", 
+                              objectFit: "cover",
+                              border: "1px solid rgba(255,255,255,0.1)"
+                            }}
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                        ) : (
+                          <div style={{ 
+                            width: 20, 
+                            height: 20, 
+                            borderRadius: "50%", 
+                            background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: 10,
+                            fontWeight: 700,
+                            color: "#fff"
+                          }}>
+                            {(o.shopName || "S").charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <span>Sold by {o.shopName || "Shop"} · Qty: {o.quantity || 1}</span>
+                      </div>
                     </div>
 
                     {/* Returns line */}

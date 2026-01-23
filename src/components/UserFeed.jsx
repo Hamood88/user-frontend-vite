@@ -85,6 +85,28 @@ function pickActorName(post, mode, headerName) {
   );
 }
 
+function pickActorAvatar(post, mode, header) {
+  if (mode === "shop") {
+    return (
+      post?.author?.logoUrl ||
+      post?.shopId?.logoUrl ||
+      post?.shop?.logoUrl ||
+      post?.shopLogoUrl ||
+      header?.logoUrl ||
+      header?.logo ||
+      ""
+    );
+  }
+
+  return (
+    post?.user?.avatarUrl ||
+    post?.authorAvatarUrl ||
+    post?.author?.avatarUrl ||
+    header?.avatarUrl ||
+    ""
+  );
+}
+
 export default function UserFeed() {
   const nav = useNavigate();
   const { userId, shopId } = useParams();
@@ -210,15 +232,42 @@ export default function UserFeed() {
           gap: 12,
         }}
       >
-        <div
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: 999,
-            background: "rgba(255,255,255,0.08)",
-            border: "1px solid rgba(255,255,255,0.12)",
-          }}
-        />
+        {header?.avatarUrl || header?.logoUrl ? (
+          <img
+            src={toAbsUrl(header.avatarUrl || header.logoUrl)}
+            alt={title}
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 999,
+              objectFit: "cover",
+              border: "1px solid rgba(255,255,255,0.12)",
+            }}
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 999,
+              background: mode === "shop" 
+                ? "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+                : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 18,
+              fontWeight: 700,
+              color: "#fff",
+            }}
+          >
+            {title.charAt(0).toUpperCase()}
+          </div>
+        )}
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 900, fontSize: 18, lineHeight: 1.1 }}>
             {title}
@@ -279,6 +328,7 @@ export default function UserFeed() {
             const text = pickPostText(post);
             const { image, video } = pickPostMedia(post);
             const name = pickActorName(post, mode, title);
+            const avatarUrl = pickActorAvatar(post, mode, header);
             const when = timeAgo(post?.createdAt || post?.timestamp);
 
             const likesCount = Array.isArray(post?.likes)
@@ -300,9 +350,46 @@ export default function UserFeed() {
                 }}
               >
                 <div style={{ padding: 14 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
-                    <div style={{ fontWeight: 900 }}>{name}</div>
-                    <div style={{ opacity: 0.7, fontWeight: 800 }}>{when}</div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                    {avatarUrl ? (
+                      <img
+                        src={toAbsUrl(avatarUrl)}
+                        alt={name}
+                        style={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          border: "1px solid rgba(255,255,255,0.12)",
+                        }}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: "50%",
+                          background: mode === "shop"
+                            ? "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+                            : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 14,
+                          fontWeight: 700,
+                          color: "#fff",
+                        }}
+                      >
+                        {name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 900 }}>{name}</div>
+                      <div style={{ opacity: 0.7, fontWeight: 800, fontSize: 12 }}>{when}</div>
+                    </div>
                   </div>
 
                   {text ? (
