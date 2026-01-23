@@ -7,6 +7,9 @@ import {
   getPublicShopFeed,
   getPublicShopMall,
   getPublicShopProducts,
+  followShop,
+  unfollowShop,
+  checkShopFollowStatus,
 } from "../api.jsx";
 
 function useQuery() {
@@ -66,6 +69,10 @@ export default function ShopPublicPage() {
   const [err, setErr] = useState("");
 
   const [shop, setShop] = useState(null);
+  
+  // ✅ Follow state
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
 
   // feed
   const [feedLoading, setFeedLoading] = useState(false);
@@ -112,6 +119,14 @@ export default function ShopPublicPage() {
         setFeed(Array.isArray(feedRes?.items) ? feedRes.items : []);
         setFeedPage(Number(feedRes?.page || 1));
         setFeedHasMore(!!feedRes?.hasMore);
+        
+        // ✅ Check if user is following this shop
+        try {
+          const followStatus = await checkShopFollowStatus(sid);
+          if (alive) setIsFollowing(followStatus?.following === true);
+        } catch {
+          // Not logged in or error - ignore
+        }
       } catch (e) {
         if (!alive) return;
         setErr(String(e?.response?.data?.message || e?.message || e));
@@ -186,6 +201,29 @@ export default function ShopPublicPage() {
     nav(`/checkout/${encodeURIComponent(String(productId))}`);
   }
 
+  // ✅ Handle Follow/Unfollow Shop
+  async function handleFollowToggle() {
+    const sid = String(shopId || "").replace(/^:/, "").trim();
+    if (!sid || followLoading) return;
+
+    try {
+      setFollowLoading(true);
+      
+      if (isFollowing) {
+        await unfollowShop(sid);
+        setIsFollowing(false);
+      } else {
+        await followShop(sid);
+        setIsFollowing(true);
+      }
+    } catch (e) {
+      console.error("Follow toggle error", e);
+      alert(e?.message || "Failed to update follow status");
+    } finally {
+      setFollowLoading(false);
+    }
+  }
+
   function goTab(nextTab) {
     const sid = String(shopId || "").replace(/^:/, "").trim();
     const t = nextTab === "feed" ? "feed" : "mall";
@@ -255,6 +293,24 @@ export default function ShopPublicPage() {
           </div>
 
           <div style={{ display: "flex", gap: 8 }}>
+            {/* ✅ Follow Button */}
+            <button
+              onClick={handleFollowToggle}
+              disabled={followLoading}
+              style={{
+                padding: "10px 16px",
+                borderRadius: 12,
+                border: isFollowing ? "1px solid #9333ea" : "1px solid rgba(255,255,255,0.12)",
+                background: isFollowing ? "rgba(147,51,234,0.15)" : "rgba(147,51,234,0.8)",
+                color: "white",
+                cursor: followLoading ? "wait" : "pointer",
+                fontWeight: 800,
+                opacity: followLoading ? 0.6 : 1,
+              }}
+            >
+              {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+            </button>
+            
             <button
               onClick={() => goTab("mall")}
               style={{
