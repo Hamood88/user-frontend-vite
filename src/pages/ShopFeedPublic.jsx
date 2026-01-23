@@ -214,6 +214,13 @@ async function loadPublicShopFeed(shopId) {
     throw new Error(data?.message || data?.error || `Failed to load shop feed (${res.status})`);
   }
 
+  // Debug logging
+  console.log('[ShopFeed] API Response:', data);
+  if (data?.posts?.length > 0) {
+    console.log('[ShopFeed] First post author:', data.posts[0].author);
+    console.log('[ShopFeed] First post comments:', data.posts[0].comments?.slice(0, 2));
+  }
+
   return data;
 }
 
@@ -359,6 +366,9 @@ export default function ShopFeedPublic() {
     const name = commenter?.displayName || commenter?.name || commenter?.username || "User";
     const avatarUrl = commenter?.avatarUrl || "";
     const likesCount = Array.isArray(node?.likes) ? node.likes.length : 0;
+    
+    // Debug log to see what we're getting
+    if (depth === 0) console.log('[CommentNode] author data:', commenter, 'avatarUrl:', avatarUrl);
     
     return (
       <div style={{ marginLeft: depth * 12, marginTop: 8, paddingBottom: 8, borderBottom: depth === 0 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
@@ -641,6 +651,9 @@ export default function ShopFeedPublic() {
               
               const shopLogo = shop?.logoUrl || shop?.logo || "";
               const shopName = shop?.shopName || shop?.name || "Shop";
+              
+              // Debug log to see shop data
+              if (posts.indexOf(p) === 0) console.log('[ShopFeed] shop data:', shop, 'shopLogo:', shopLogo);
 
               return (
                 <div key={postId} className="sfp-card">
