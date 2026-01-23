@@ -1089,6 +1089,34 @@ export async function getTopInviters(limit = 5) {
 }
 
 /* ================================
+   ✅ SHOP FOLLOWING
+   ================================ */
+export async function followShop(shopId) {
+  if (!shopId) throw new Error("Missing shopId");
+  return apiPost(`/api/users/follow-shop/${encodeURIComponent(shopId)}`, {});
+}
+
+export async function unfollowShop(shopId) {
+  if (!shopId) throw new Error("Missing shopId");
+  return apiPost(`/api/users/unfollow-shop/${encodeURIComponent(shopId)}`, {});
+}
+
+export async function getFollowedShops() {
+  const data = await apiGet("/api/users/followed-shops");
+  return Array.isArray(data?.shops) ? data.shops : [];
+}
+
+export async function checkShopFollowStatus(shopId) {
+  if (!shopId) return { following: false };
+  try {
+    const data = await apiGet(`/api/users/follow-status/${encodeURIComponent(shopId)}`);
+    return { following: data?.following === true };
+  } catch {
+    return { following: false };
+  }
+}
+
+/* ================================
    ✅ SMALL HELPERS
    ================================ */
 export function pickId(x) {

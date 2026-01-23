@@ -15,6 +15,7 @@ import {
   sendFriendRequest,
   getFriendRequests,
   respondFriendRequest,
+  getFollowedShops,
 } from "../api.jsx";
 
 import "../styles/friendsModern.css";
@@ -44,11 +45,12 @@ export default function Friends() {
   const nav = useNavigate();
 
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState("all"); // all | requests | suggestions
+  const [tab, setTab] = useState("all"); // all | requests | suggestions | shops
 
   const [friends, setFriends] = useState([]);
   const [incoming, setIncoming] = useState([]);
   const [suggestions, setSuggestions] = useState([]); // optional if backend supports
+  const [shops, setShops] = useState([]); // followed shops
 
   const [q, setQ] = useState("");
   const [msg, setMsg] = useState("");
@@ -97,6 +99,14 @@ export default function Friends() {
       } catch {
         setSuggestions([]);
       }
+
+      // ✅ Followed shops
+      try {
+        const shopList = await getFollowedShops();
+        setShops(Array.isArray(shopList) ? shopList : []);
+      } catch {
+        setShops([]);
+      }
     } catch (e) {
       setMsg(e?.message || "Failed to load friends.");
       setFriends([]);
@@ -118,6 +128,8 @@ export default function Friends() {
         ? incoming.map((r) => r?.fromUser || r?.from || r?.sender || r).filter(Boolean)
         : tab === "suggestions"
         ? suggestions
+        : tab === "shops"
+        ? shops
         : friends;
 
     if (!query) return list;
@@ -207,6 +219,7 @@ export default function Friends() {
           { id: "all", label: `All Friends (${friends.length})` },
           { id: "requests", label: `Requests (${incoming.length})` },
           { id: "suggestions", label: `Suggestions (${suggestions.length})` },
+          { id: "shops", label: `Shops (${shops.length})` },
         ].map((t) => {
           const isActive = tab === t.id;
           return (
@@ -252,6 +265,63 @@ export default function Friends() {
         >
           {filtered.map((u, idx) => {
             const id = pickId(u);
+            
+            // Check if this is a shop or user
+            const isShop = tab === "shops";
+            
+            if (isShop) {
+              // Shop card
+              const shopName = u?.shopName || u?.name || "Shop";
+              const shopLogo = s(u?.logoUrl || u?.logo || "");
+              
+              return (
+                <motion.div
+                  key={`shop-${id || shopName}-${idx}`}
+                  variants={item}
+                  className="glass-card p-6 rounded-2xl group relative overflow-hidden cursor-pointer hover:border-primary/50 transition-all"
+                  onClick={() => nav(`/shop/${id}/feed`)}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+
+                  <div className="relative flex flex-col items-center text-center">
+                    <div className="md-avatarRing">
+                      {shopLogo ? (
+                        <img
+                          src={shopLogo}
+                          alt={shopName}
+                          className="md-avatarImg object-cover"
+                          onError={(e) => (e.currentTarget.style.display = "none")}
+                        />
+                      ) : (
+                        <div className="md-avatarFallback">
+                          {shopName.slice(0, 1).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+
+                    <h3 className="font-bold text-lg text-white mb-1">{shopName}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {u?.bio || "Visit our shop"}
+                    </p>
+
+                    <div className="flex gap-3 w-full">
+                      <button
+                        type="button"
+                        className="md-btn md-btn-primary flex-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          nav(`/shop/${id}/feed`);
+                        }}
+                      >
+                        Visit Shop
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            }
+            
+            // User card (existing logic)
             const name = displayName(u);
             const handle = s(u?.handle || (u?.email ? "@" + u.email.split("@")[0] : ""));
             const av = avatarUrl(u);

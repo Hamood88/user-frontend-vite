@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_BASE, likePost, addComment } from "../api.jsx";
+import { API_BASE, likePost, addComment, followShop, unfollowShop, checkShopFollowStatus } from "../api.jsx";
+import { Heart } from "lucide-react";
 import "../styles/shopFeedPublic.css";
 
 /* =========================
@@ -258,6 +259,8 @@ export default function ShopFeedPublic() {
   const [openCommentsFor, setOpenCommentsFor] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [replyTo, setReplyTo] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
 
   async function load() {
     if (!safeShopId) return;
@@ -398,6 +401,18 @@ export default function ShopFeedPublic() {
 
   useEffect(() => {
     load();
+    
+    // Load follow status
+    async function loadFollowStatus() {
+      if (!safeShopId) return;
+      try {
+        const { following } = await checkShopFollowStatus(safeShopId);
+        setIsFollowing(following);
+      } catch (err) {
+        console.error("Failed to check follow status:", err);
+      }
+    }
+    loadFollowStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [safeShopId]);
 
@@ -420,6 +435,24 @@ export default function ShopFeedPublic() {
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
+  async function handleToggleFollow() {
+    if (!safeShopId) return;
+    setFollowLoading(true);
+    try {
+      if (isFollowing) {
+        await unfollowShop(safeShopId);
+        setIsFollowing(false);
+      } else {
+        await followShop(safeShopId);
+        setIsFollowing(true);
+      }
+    } catch (err) {
+      alert(err.message || "Failed to update follow status");
+    } finally {
+      setFollowLoading(false);
+    }
+  }
+
   return (
     <div className="sfp-page">
       <div className="sfp-surface">
@@ -428,7 +461,30 @@ export default function ShopFeedPublic() {
             ← Back
           </button>
 
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+            <button
+              className={`sfp-btn ${isFollowing ? "sfp-btn-following" : "sfp-btn-follow"}`}
+              onClick={handleToggleFollow}
+              disabled={followLoading}
+              type="button"
+              title={isFollowing ? "Unfollow shop" : "Follow shop"}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                background: isFollowing ? "#dc2626" : "#10b981",
+                color: "#fff",
+                border: "none"
+              }}
+            >
+              <Heart 
+                size={16} 
+                fill={isFollowing ? "#fff" : "none"}
+                strokeWidth={isFollowing ? 0 : 2}
+              />
+              {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+            </button>
+
             <button
               className="sfp-btn sfp-btn-primary"
               onClick={goToShopMallPreview}
