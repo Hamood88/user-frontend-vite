@@ -149,6 +149,7 @@ export default function Sidebar({ collapsed = false, onToggle }) {
         <NavItem to="/search" label="Search" collapsed={collapsed} />
         <NavItem to="/friends" label="Friends" collapsed={collapsed} />
         <NavItem to="/messages" label="Messages" collapsed={collapsed} />
+        <NavItem to="/notifications" label="🔔 Notifications" collapsed={collapsed} />
         <NavItem to="/orders" label="Orders" collapsed={collapsed} />
         <NavItem to="/mall" label="Mall" collapsed={collapsed} />
         <NavItem to="/cart" label="🛒 Cart" collapsed={collapsed} />
