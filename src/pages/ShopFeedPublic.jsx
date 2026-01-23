@@ -381,9 +381,19 @@ export default function ShopFeedPublic() {
   async function handleLike(postId) {
     if (!postId || !safeShopId) return;
     try {
-      await likeShopPost(safeShopId, postId);
-      // refresh list
-      await load();
+      const result = await likeShopPost(safeShopId, postId);
+      // Update local state without reloading
+      setPosts(posts.map(p => {
+        if ((p._id || p.id) === postId) {
+          return {
+            ...p,
+            likes: result.liked 
+              ? [...(p.likes || []), 'current-user'] 
+              : (p.likes || []).filter((_, i) => i < (p.likes || []).length - 1)
+          };
+        }
+        return p;
+      }));
     } catch (e) {
       setErr(e?.message || "Failed to like post");
     }
@@ -394,11 +404,19 @@ export default function ShopFeedPublic() {
     const text = String(commentText || "").trim();
     if (!text) return;
     try {
-      await addShopPostComment(safeShopId, postId, { text, parentComment: replyTo || null });
+      const result = await addShopPostComment(safeShopId, postId, { text, parentComment: replyTo || null });
+      // Update local state without reloading
+      setPosts(posts.map(p => {
+        if ((p._id || p.id) === postId) {
+          return {
+            ...p,
+            comments: [...(p.comments || []), result.comment]
+          };
+        }
+        return p;
+      }));
       setCommentText("");
       setReplyTo(null);
-      setOpenCommentsFor(null);
-      await load();
     } catch (e) {
       setErr(e?.message || "Failed to add comment");
     }
@@ -407,9 +425,28 @@ export default function ShopFeedPublic() {
   async function handleLikeComment(postId, commentId) {
     if (!postId || !commentId || !safeShopId) return;
     try {
-      await likeShopPostComment(safeShopId, postId, commentId);
-      // refresh list
-      await load();
+      const result = await likeShopPostComment(safeShopId, postId, commentId);
+      // Update local state without reloading
+      setPosts(posts.map(p => {
+        if ((p._id || p.id) === postId) {
+          return {
+            ...p,
+            comments: (p.comments || []).map(c => {
+              const cid = String(c._id || c.id);
+              if (cid === String(commentId)) {
+                return {
+                  ...c,
+                  likes: result.liked 
+                    ? [...(c.likes || []), 'current-user']
+                    : (c.likes || []).filter((_, i) => i < (c.likes || []).length - 1)
+                };
+              }
+              return c;
+            })
+          };
+        }
+        return p;
+      }));
     } catch (e) {
       setErr(e?.message || "Failed to like comment");
     }
