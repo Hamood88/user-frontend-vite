@@ -28,6 +28,7 @@ import {
 import {
   apiUpload,
   getMyFeed,
+  getPost,
   getPostsByUser,
   likePost,
   addComment,
@@ -186,7 +187,7 @@ async function createPostFlexible({ text, file } = {}) {
 }
 
 export default function Feed() {
-  const { userId } = useParams(); // Get userId from URL if viewing another user's feed
+  const { userId, postId } = useParams(); // Get params
   const navigate = useNavigate();
   const [me, setMe] = useState(() => getUserSession()); // Keep session fresh
   const [profileUser, setProfileUser] = useState(null); // User profile when viewing another user
@@ -258,14 +259,27 @@ export default function Feed() {
     try {
       let data;
       
-      // If userId is in params, fetch that user's posts AND profile
-      if (userId) {
+      // ✅ 1. Single Post View
+      if (postId) {
+        const res = await getPost(postId);
+        data = res.post ? [res.post] : [];
+      }
+      // ✅ 2. User Profile Feed
+      else if (userId) {
         // Fetch user profile first
         try {
           const { getUserProfile } = await import('../api.jsx');
           const profileData = await getUserProfile(userId);
-          if (profileData?.ok && profileData?.user) {
+          
+          // ✅ Set profile user (even if private/403, we get basic info)
+          if (profileData?.user) {
             setProfileUser(profileData.user);
+            
+            // ✅ Check for pending friend request
+            if (profileData.user.hasPendingRequest) {
+              setFriendRequestSentToProfile(true); 
+              setFriendRequestSent(true);
+            }
           }
         } catch (profileErr) {
           console.warn('Failed to load profile:', profileErr);
@@ -288,14 +302,14 @@ export default function Feed() {
       
       // ✅ Handle 403 (private feed) - check status code first, then backend message
       if (e?.status === 403) {
-        setErr("This user's feed is private.");
-        setIsPrivateFeed(true);
+        setErr(postId ? "This post is private." : "This user's feed is private.");
+        if (!postId) setIsPrivateFeed(true);
       } else if (e?.message?.includes("private") || e?.data?.message?.includes("private")) {
         // Backend returns message like "This user's feed is private (friends only)."
-        setErr(e?.data?.message || e?.message || "This user's feed is private.");
-        setIsPrivateFeed(true);
+        setErr(e?.data?.message || e?.message || (postId ? "This post is private." : "This user's feed is private."));
+        if (!postId) setIsPrivateFeed(true);
       } else if (e?.status === 404) {
-        setErr("User not found.");
+        setErr(postId ? "Post not found." : "User not found.");
       } else {
         setErr(e?.message || "Failed to load feed.");
       }
@@ -329,7 +343,7 @@ export default function Feed() {
 
   useEffect(() => {
     loadFeed();
-  }, [userId]);
+  }, [userId, postId]);
 
   // Load top inviters on mount
   useEffect(() => {
@@ -391,37 +405,30 @@ export default function Feed() {
     }
     
     try {
-      console.log("Sending friend request to:", profileUser._id);
       const { sendFriendRequest } = await import('../api.jsx');
-      const res = await sendFriendRequest(profileUser._id, `Hi ${userName(profileUser)}, I'd like to connect with you on Moondala!`);
-      console.log("Friend request result:", res);
+      await sendFriendRequest(profileUser._id, `Hi ${userName(profileUser)}, I'd like to connect with you on Moondala!`);
       
       setFriendRequestSentToProfile(true);
-      setErr("");
-      alert("Friend request sent successfully!");
+      setErr("Friend request sent successfully!");
     } catch (e) {
       console.error('Add friend error:', e);
       setErr(e?.message || "Failed to send friend request");
-      alert("Error sending friend request: " + (e?.message || String(e)));
     }
   }
 
   // Message Handler
   async function handleMessage() {
     if (!profileUser?._id) {
-       console.error("handleMessage: No profileUser._id");
        return;
     }
 
     try {
-      console.log("Starting conversation with:", profileUser._id);
       const { getOrCreateConversation } = await import('../api.jsx');
       const result = await getOrCreateConversation({
         participantType: 'user',
         participantId: profileUser._id,
         topic: 'general'
       });
-      console.log("Conversation result:", result);
       
       const conversationId = result._id || result.id; // handle varying formats
       if (!conversationId) throw new Error("No conversation ID returned");
@@ -430,7 +437,6 @@ export default function Feed() {
     } catch (e) {
       console.error('Message error:', e);
       setErr(e?.message || "Failed to start conversation");
-       alert("Error starting conversation: " + (e?.message || String(e)));
     }
   }
 
@@ -657,11 +663,14 @@ export default function Feed() {
     setShareDropdownOpen(shareDropdownOpen === postId ? "" : postId);
   }
 
+  function getPostPermaLink(post) {
+    if (!post?._id) return window.location.href;
+    return `${window.location.origin}/feed/post/${post._id}`;
+  }
+
   async function copyPostLink(post) {
     try {
-      const shareUrl = userId 
-        ? `${window.location.origin}/feed/user/${userId}` 
-        : `${window.location.origin}/feed`;
+      const shareUrl = getPostPermaLink(post);
       
       await navigator.clipboard.writeText(shareUrl);
       
@@ -690,9 +699,7 @@ export default function Feed() {
 
   function shareToTwitter(post) {
     const text = `Check out this post by ${userName(post.user)} on Moondala: "${post.text}"`;
-    const shareUrl = userId 
-      ? `${window.location.origin}/feed/user/${userId}` 
-      : `${window.location.origin}/feed`;
+    const shareUrl = getPostPermaLink(post);
     
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(twitterUrl, '_blank');
@@ -701,7 +708,7 @@ export default function Feed() {
 
   function shareViaEmail(post) {
     const subject = `Check out this post from Moondala`;
-    const body = `I wanted to share this post with you:\n\n"${post.text}"\n\nBy ${userName(post.user)} on Moondala\n\nCheck it out: ${userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`}`;
+    const body = `I wanted to share this post with you:\n\n"${post.text}"\n\nBy ${userName(post.user)} on Moondala\n\nCheck it out: ${getPostPermaLink(post)}`;
     
     const emailUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = emailUrl;
@@ -709,21 +716,21 @@ export default function Feed() {
   }
 
   function shareToWhatsApp(post) {
-    const text = `Check out this post by ${userName(post.user)}: "${post.text}"\n\n${userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`}`;
+    const text = `Check out this post by ${userName(post.user)}: "${post.text}"\n\n${getPostPermaLink(post)}`;
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
     window.open(whatsappUrl, '_blank');
     setShareDropdownOpen("");
   }
 
   function shareToFacebook(post) {
-    const shareUrl = userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`;
+    const shareUrl = getPostPermaLink(post);
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(post.text)}`;
     window.open(facebookUrl, '_blank');
     setShareDropdownOpen("");
   }
 
   function shareToLinkedIn(post) {
-    const shareUrl = userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`;
+    const shareUrl = getPostPermaLink(post);
     const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
     window.open(linkedInUrl, '_blank');
     setShareDropdownOpen("");
@@ -731,21 +738,21 @@ export default function Feed() {
 
   function shareToTelegram(post) {
     const text = `${post.text}\n\nBy ${userName(post.user)} on Moondala`;
-    const shareUrl = userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`;
+    const shareUrl = getPostPermaLink(post);
     const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`;
     window.open(telegramUrl, '_blank');
     setShareDropdownOpen("");
   }
 
   function shareToReddit(post) {
-    const shareUrl = userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`;
+    const shareUrl = getPostPermaLink(post);
     const redditUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(post.text)}`;
     window.open(redditUrl, '_blank');
     setShareDropdownOpen("");
   }
 
   function shareViaSMS(post) {
-    const text = `Check out this post: "${post.text}" - ${userName(post.user)} on Moondala\n${userId ? `${window.location.origin}/feed/user/${userId}` : `${window.location.origin}/feed`}`;
+    const text = `Check out this post: "${post.text}" - ${userName(post.user)} on Moondala\n${getPostPermaLink(post)}`;
     const smsUrl = `sms:?&body=${encodeURIComponent(text)}`;
     window.location.href = smsUrl;
     setShareDropdownOpen("");

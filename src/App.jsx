@@ -248,6 +248,7 @@ export default function App() {
             <Route path="/dashboard" element={<UserDashboard />} />
 
             <Route path="/feed" element={<Feed />} />
+            <Route path="/feed/post/:postId" element={<Feed />} />
             <Route path="/feed/user/:userId" element={<Feed />} />
             <Route path="/feed/:userId" element={<Feed />} />
 

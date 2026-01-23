@@ -525,6 +525,12 @@ export function getMyUserProfile() {
   return apiGet("/api/users/profile");
 }
 
+export function getPost(postId) {
+  const id = String(postId || "").trim();
+  if (!id) throw new Error("Missing postId");
+  return apiGet(`/api/posts/${encodeURIComponent(id)}`);
+}
+
 export function getPostsByUser(userId) {
   const id = String(userId || "").trim();
   if (!id) throw new Error("Missing userId");

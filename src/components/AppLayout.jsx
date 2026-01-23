@@ -14,6 +14,7 @@ import {
   ShoppingBag,
   MessageSquare,
   Zap,
+  Package,
 } from "lucide-react";
 
 import { clearUserSession, getUserSession, absUrl, safeImageUrl } from "../api.jsx";
@@ -88,7 +89,7 @@ export default function AppLayout() {
     { label: "Friends", icon: Users, to: "/friends" },
     { label: "Messages", icon: MessageSquare, to: "/messages" },
     { label: "Mall", icon: ShoppingBag, to: "/mall" },
-    { label: "Orders", icon: ShoppingCart, to: "/orders" },
+    { label: "Orders", icon: Package, to: "/orders" },
     { label: "Cart", icon: ShoppingCart, to: "/cart" },
     { label: "Settings", icon: Settings, to: "/settings" },
   ];
