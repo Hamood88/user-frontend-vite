@@ -437,16 +437,22 @@ export default function ShopFeedPublic() {
 
   async function handleToggleFollow() {
     if (!safeShopId) return;
+    console.log("🔵 Toggle follow - current state:", isFollowing, "shopId:", safeShopId);
     setFollowLoading(true);
     try {
       if (isFollowing) {
+        console.log("📤 Unfollowing shop...");
         await unfollowShop(safeShopId);
         setIsFollowing(false);
+        console.log("✅ Unfollowed successfully");
       } else {
+        console.log("📤 Following shop...");
         await followShop(safeShopId);
         setIsFollowing(true);
+        console.log("✅ Followed successfully");
       }
     } catch (err) {
+      console.error("❌ Follow/unfollow error:", err);
       alert(err.message || "Failed to update follow status");
     } finally {
       setFollowLoading(false);

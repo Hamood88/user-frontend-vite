@@ -102,9 +102,12 @@ export default function Friends() {
 
       // ✅ Followed shops
       try {
+        console.log("🔵 Fetching followed shops...");
         const shopList = await getFollowedShops();
+        console.log("✅ Received followed shops:", shopList);
         setShops(Array.isArray(shopList) ? shopList : []);
-      } catch {
+      } catch (err) {
+        console.error("❌ Failed to fetch followed shops:", err);
         setShops([]);
       }
     } catch (e) {
