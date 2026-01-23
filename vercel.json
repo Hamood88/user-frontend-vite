@@ -13,6 +13,14 @@
         "cache-control": "public, max-age=31536000, immutable"
       }
     },
+    {
+      "src": "/service-worker.js",
+      "dest": "/service-worker.js",
+      "headers": {
+        "Service-Worker-Allowed": "/",
+        "Content-Type": "application/javascript"
+      }
+    },
     { "handle": "filesystem" },
     {
       "src": "/(.*)",

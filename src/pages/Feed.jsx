@@ -188,6 +188,7 @@ async function createPostFlexible({ text, file } = {}) {
 export default function Feed() {
   const { userId } = useParams(); // Get userId from URL if viewing another user's feed
   const [me, setMe] = useState(() => getUserSession()); // Keep session fresh
+  const [profileUser, setProfileUser] = useState(null); // User profile when viewing another user
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newPostText, setNewPostText] = useState("");
@@ -251,11 +252,23 @@ export default function Feed() {
     setErr("");
     setIsPrivateFeed(false);
     setFriendRequestSent(false);
+    setProfileUser(null);
     try {
       let data;
       
-      // If userId is in params, fetch that user's posts
+      // If userId is in params, fetch that user's posts AND profile
       if (userId) {
+        // Fetch user profile first
+        try {
+          const { getUserProfile } = await import('../api.jsx');
+          const profileData = await getUserProfile(userId);
+          if (profileData?.ok && profileData?.user) {
+            setProfileUser(profileData.user);
+          }
+        } catch (profileErr) {
+          console.warn('Failed to load profile:', profileErr);
+        }
+        
         data = await getPostsByUser(userId);
       } else {
         // Otherwise fetch my feed
@@ -764,6 +777,69 @@ export default function Feed() {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Main Feed Column */}
       <div className="lg:col-span-2 space-y-6">
+        {/* User Profile Header - Show when viewing another user */}
+        {userId && profileUser && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass-card rounded-2xl p-6"
+          >
+            <div className="flex items-start gap-6">
+              <div className="md-avatarRingLg flex-shrink-0">
+                {avatarUrl(profileUser) ? (
+                  <img
+                    src={avatarUrl(profileUser)}
+                    alt={userName(profileUser)}
+                    className="md-avatarImgLg"
+                  />
+                ) : (
+                  <div className="md-avatarFallbackLg">
+                    {(userName(profileUser) || "U").slice(0, 1).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <div className="flex-1">
+                <h1 className="text-2xl font-bold text-white mb-2">
+                  {userName(profileUser)}
+                </h1>
+                {profileUser.email && (
+                  <p className="text-sm text-muted-foreground mb-3">{profileUser.email}</p>
+                )}
+                {profileUser.referralCode && (
+                  <p className="text-xs text-muted-foreground/60 mb-3">Code: {profileUser.referralCode}</p>
+                )}
+                
+                {/* Add Friend Button for Private Accounts */}
+                {isPrivateFeed && (
+                  <div className="mt-4 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                    <p className="text-sm text-yellow-400 mb-3">This account is private</p>
+                    {!friendRequestSent ? (
+                      <div className="space-y-3">
+                        <textarea
+                          value={friendRequestMessage}
+                          onChange={(e) => setFriendRequestMessage(e.target.value)}
+                          placeholder="Include a message with your friend request..."
+                          className="w-full bg-zinc-900 border border-zinc-700 rounded p-3 text-sm text-white resize-none"
+                          rows={3}
+                        />
+                        <button
+                          onClick={sendFriendRequestToUser}
+                          disabled={sendingFriendRequest}
+                          className="w-full md-btnPrimary"
+                        >
+                          {sendingFriendRequest ? "Sending..." : "Send Friend Request"}
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-green-400">✓ Friend request sent!</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Create Post Widget - Only show if viewing own feed */}
         {!userId && (
           <div className="glass-card rounded-2xl p-4">
