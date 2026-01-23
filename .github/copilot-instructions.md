@@ -216,7 +216,28 @@ const handleSearch = async (query) => {
   }
 };
 ```
+### Follow/Unfollow Shop
+```javascript
+import { followShop, unfollowShop, checkShopFollowStatus } from '../api';
 
+// Follow a shop from public shop page
+const handleFollowShop = async (shopId) => {
+  try {
+    await followShop(shopId);
+    setIsFollowing(true);
+    // Shop now appears in user's friends list (type: "shop")
+    // User appears in shop's followers list (visible in shop dashboard)
+  } catch (err) {
+    setError(err.message);
+  }
+};
+
+// Check if user follows a shop
+const checkStatus = async (shopId) => {
+  const { following } = await checkShopFollowStatus(shopId);
+  setIsFollowing(following);
+};
+```
 ### Upload user avatar
 ```javascript
 import { apiPostFormData } from '../api';
