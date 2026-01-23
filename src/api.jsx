@@ -500,6 +500,11 @@ export async function getFriendRequests() {
   return { incoming: Array.isArray(data?.incoming) ? data.incoming : [] };
 }
 
+export async function getOutgoingFriendRequests() {
+  const data = await apiGet("/api/friends/outgoing");
+  return { outgoing: Array.isArray(data?.outgoing) ? data.outgoing : [] };
+}
+
 export function respondFriendRequest(requestId, action) {
   const a = String(action || "").trim().toLowerCase();
   const finalAction = a === "accept" ? "accept" : "decline";

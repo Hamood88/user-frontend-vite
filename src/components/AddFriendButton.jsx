@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { sendFriendRequest, getFriendRequests } from "../api.jsx";
+import { sendFriendRequest, getOutgoingFriendRequests } from "../api.jsx";
 
 function idStr(v) {
   return String(v?._id || v?.id || v || "").trim();
@@ -30,14 +30,14 @@ export default function AddFriendButton({ targetUserId }) {
   }, []);
 
   useEffect(() => {
-    // Check if there is already an outgoing pending request to this user
+    // Check if there is already an outgoing pending request TO this user
     async function checkPending() {
       if (!cleanTargetId) return;
       try {
-        const data = await getFriendRequests();
+        const data = await getOutgoingFriendRequests();
         const outgoing = Array.isArray(data?.outgoing) ? data.outgoing : [];
         const exists = outgoing.some(
-          (r) => idStr(r?.to?._id || r?.to) === cleanTargetId
+          (r) => idStr(r?.toUser?._id || r?.toUser?.id || r?.toUser) === cleanTargetId
         );
         if (exists) setSent(true);
       } catch {
