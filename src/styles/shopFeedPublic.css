@@ -126,8 +126,9 @@
 .sfp-media {
   width: 100%;
   display: block;
-  object-fit: cover;
-  max-height: 520px;
+  object-fit: contain;
+  max-height: 400px;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 /* =========================================================
