@@ -214,6 +214,7 @@ export default function Feed() {
   const [sendingFriendRequest, setSendingFriendRequest] = useState(false);
   const [friendRequestSent, setFriendRequestSent] = useState(false);
   const [isPrivateFeed, setIsPrivateFeed] = useState(false);
+  const [friendRequestMessage, setFriendRequestMessage] = useState("");
 
   // top inviters
   const [topInviters, setTopInviters] = useState([]);
@@ -293,10 +294,13 @@ export default function Feed() {
   async function sendFriendRequestToUser() {
     if (!userId || sendingFriendRequest || friendRequestSent) return;
 
+    const message = s(friendRequestMessage) || "I'd like to be friends!";
+
     setSendingFriendRequest(true);
     try {
-      await sendFriendRequest(userId, "I'd like to be friends!");
+      await sendFriendRequest(userId, message);
       setFriendRequestSent(true);
+      setFriendRequestMessage("");
       // ✅ Show success message while keeping the private feed message
       setErr("Friend request sent! Waiting for acceptance to view this feed.");
     } catch (e) {
@@ -867,14 +871,30 @@ export default function Feed() {
                 )}
               </div>
               {isPrivateFeed && userId && !friendRequestSent && (
-                <div className="mt-4 pt-4 border-t border-blue-500/20">
+                <div className="mt-4 pt-4 border-t border-blue-500/20 space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-blue-200 mb-2">
+                      Send a message (optional):
+                    </label>
+                    <textarea
+                      value={friendRequestMessage}
+                      onChange={(e) => setFriendRequestMessage(e.target.value)}
+                      placeholder="Hi! I'd like to connect with you..."
+                      rows={3}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-blue-500/50 resize-none"
+                      maxLength={200}
+                    />
+                    <div className="text-xs text-blue-300/60 mt-1">
+                      {friendRequestMessage.length}/200 characters
+                    </div>
+                  </div>
                   <button
                     type="button"
-                    className="md-btnPrimary"
+                    className="md-btnPrimary w-full"
                     disabled={sendingFriendRequest}
                     onClick={sendFriendRequestToUser}
                   >
-                    {sendingFriendRequest ? "Sending..." : "Send Friend Request"}
+                    {sendingFriendRequest ? "Sending Request..." : "Send Friend Request"}
                   </button>
                 </div>
               )}
