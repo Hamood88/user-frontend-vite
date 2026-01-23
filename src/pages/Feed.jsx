@@ -385,32 +385,52 @@ export default function Feed() {
 
   // Add Friend Handler
   async function handleAddFriend() {
-    if (!profileUser?._id) return;
+    if (!profileUser?._id) {
+      console.error("handleAddFriend: No profileUser._id");
+      return;
+    }
+    
     try {
+      console.log("Sending friend request to:", profileUser._id);
       const { sendFriendRequest } = await import('../api.jsx');
-      await sendFriendRequest(profileUser._id, `Hi ${userName(profileUser)}, I'd like to connect with you on Moondala!`);
+      const res = await sendFriendRequest(profileUser._id, `Hi ${userName(profileUser)}, I'd like to connect with you on Moondala!`);
+      console.log("Friend request result:", res);
+      
       setFriendRequestSentToProfile(true);
       setErr("");
+      alert("Friend request sent successfully!");
     } catch (e) {
       console.error('Add friend error:', e);
       setErr(e?.message || "Failed to send friend request");
+      alert("Error sending friend request: " + (e?.message || String(e)));
     }
   }
 
   // Message Handler
   async function handleMessage() {
-    if (!profileUser?._id) return;
+    if (!profileUser?._id) {
+       console.error("handleMessage: No profileUser._id");
+       return;
+    }
+
     try {
+      console.log("Starting conversation with:", profileUser._id);
       const { getOrCreateConversation } = await import('../api.jsx');
-      const { _id: conversationId } = await getOrCreateConversation({
+      const result = await getOrCreateConversation({
         participantType: 'user',
         participantId: profileUser._id,
         topic: 'general'
       });
+      console.log("Conversation result:", result);
+      
+      const conversationId = result._id || result.id; // handle varying formats
+      if (!conversationId) throw new Error("No conversation ID returned");
+
       navigate(`/messages/${conversationId}`);
     } catch (e) {
       console.error('Message error:', e);
       setErr(e?.message || "Failed to start conversation");
+       alert("Error starting conversation: " + (e?.message || String(e)));
     }
   }
 
