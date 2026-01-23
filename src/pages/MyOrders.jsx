@@ -688,9 +688,6 @@ export default function MyOrders() {
 
                 {/* Actions */}
                 <div style={S.actionsRow}>
-                  <button style={S.proofBtn} onClick={() => openProof(o)}>
-                    View Proof (Commission)
-                  </button>
 
                   <button
                     style={{

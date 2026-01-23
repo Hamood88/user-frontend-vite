@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { apiGet, getMe, getMyFriends, pickId } from "../api.jsx";
+import TopInvitersList from "../components/TopInvitersList";
 import "../styles/dashboardModern.css";
 
 /* =========================
@@ -483,6 +484,11 @@ export default function UserDashboard() {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Right Sidebar */}
+        <div className="space-y-6">
+          <TopInvitersList limit={5} compact={true} title="Leaderboard" />
         </div>
       </div>
     </div>

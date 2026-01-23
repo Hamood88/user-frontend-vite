@@ -618,6 +618,24 @@ export function markConversationMessageNotificationsRead(conversationId) {
   );
 }
 
+export function deleteNotification(id) {
+  const nid = String(id || "").trim();
+  if (!nid) throw new Error("Missing notification id");
+  return apiDelete(`/api/notifications/${encodeURIComponent(nid)}`);
+}
+
+export function deleteNotifications(ids) {
+  if (!Array.isArray(ids)) throw new Error("ids must be an array");
+  // If empty array, do nothing to avoid accidental delete-all if backend logic is loose
+  if (ids.length === 0) return Promise.resolve();
+  return apiDelete("/api/notifications", { body: { ids } });
+}
+
+export function deleteAllNotifications() {
+  // Call with no ids to trigger delete-all
+  return apiDelete("/api/notifications");
+}
+
 /* ================================
    ✅ ORDERS
    ================================ */

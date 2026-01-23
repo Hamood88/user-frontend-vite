@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   Home,
   LayoutDashboard,
@@ -17,7 +17,8 @@ import {
   Package,
 } from "lucide-react";
 
-import { clearUserSession, getUserSession, absUrl, safeImageUrl } from "../api.jsx";
+import { clearUserSession, getUserSession, safeImageUrl, getMyNotifications } from "../api.jsx";
+import NotificationDropdown from "./NotificationDropdown";
 import "../styles/appLayoutModern.css";
 
 /* =========================
@@ -48,6 +49,12 @@ export default function AppLayout() {
   const me = getUserSession(); // Get fresh session data each time
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Notification state
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifs, setShowNotifs] = useState(false);
+  const notifRef = useRef(null);
+
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     try {
       const saved = localStorage.getItem("sidebarCollapsed");
@@ -56,6 +63,42 @@ export default function AppLayout() {
       return false;
     }
   });
+
+  // Poll notifications for unread count
+  useEffect(() => {
+    let mounted = true;
+    const fetchNotifs = async () => {
+      try {
+        // Fetch 1 notification just to get the unreadCount from metadata
+        const res = await getMyNotifications(1, 0);
+        if (mounted) setUnreadCount(res.unreadCount || 0);
+      } catch (e) {
+        // quiet error
+      }
+    };
+
+    fetchNotifs();
+    const interval = setInterval(fetchNotifs, 30000); // 30s poll
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setShowNotifs(false);
+      }
+    }
+    if (showNotifs) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showNotifs]);
 
   function toggleSidebar() {
     setSidebarCollapsed(prev => {
@@ -68,7 +111,7 @@ export default function AppLayout() {
   }
 
   function handleNotificationClick() {
-    nav("/notifications");
+    setShowNotifs((prev) => !prev);
   }
 
   function handleSearch(e) {
@@ -89,7 +132,7 @@ export default function AppLayout() {
     { label: "Friends", icon: Users, to: "/friends" },
     { label: "Messages", icon: MessageSquare, to: "/messages" },
     { label: "Mall", icon: ShoppingBag, to: "/mall" },
-    { label: "Orders", icon: Package, to: "/orders" },
+    { label: "My Orders", icon: Package, to: "/orders" },
     { label: "Cart", icon: ShoppingCart, to: "/cart" },
     { label: "Settings", icon: Settings, to: "/settings" },
   ];
@@ -189,15 +232,22 @@ export default function AppLayout() {
             />
           </div>
 
-          <button 
-            type="button" 
-            className="md-iconBtn" 
-            onClick={handleNotificationClick}
-            title="Notifications"
-          >
-            <Bell className="w-5 h-5" />
-            <span className="md-dot" />
-          </button>
+          <div className="relative" ref={notifRef}>
+            <button 
+              type="button" 
+              className="md-iconBtn" 
+              onClick={handleNotificationClick}
+              title="Notifications"
+            >
+              <Bell className="w-5 h-5" />
+              {unreadCount > 0 && <span className="md-dot" />}
+            </button>
+            {showNotifs && (
+              <NotificationDropdown 
+                onClose={() => setShowNotifs(false)} 
+              />
+            )}
+          </div>
         </header>
 
         <div className="md-content">
