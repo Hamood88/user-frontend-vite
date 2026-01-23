@@ -68,6 +68,10 @@ export function UserAuthForm({ mode }) {
   const [favoriteSport, setFavoriteSport] = useState("");
   const [interests, setInterests] = useState([]);
   
+  // Verification State
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [otp, setOtp] = useState("");
+  
   // Get inviter code from URL params first, then fallback to localStorage
   const [inviterCode, setInviterCode] = useState(() => {
     const urlInviter = searchParams.get("inviter");
@@ -85,6 +89,43 @@ export function UserAuthForm({ mode }) {
         ? prev.filter(i => i !== interest)
         : [...prev, interest]
     );
+  };
+
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+    try {
+      const res = await apiPost("/auth/verify-phone", { email: email.trim(), code: otp });
+      if (res.success) {
+        // Need to log in - ideally we got the token from register response.
+        // But since we didn't store it in state, we might need to rely on the user being created.
+        // However, register returned the token. We should have stored it?
+        // Actually, just redirect to login or auto-login. 
+        // For security, if we already have the token from the register call, we should use it.
+        // Let's modify handleSubmit to save the temporary token if needed.
+        // OR better: Just auto-login using the credentials we have in state (email/password).
+        
+        // Simpler flow: Auto-login with the credentials we still have in state.
+        const loginData = await apiPost("/auth/login", { email: email.trim(), password });
+        setUserSession({ token: loginData.token, user: loginData.user });
+        setSuccess(true);
+        setTimeout(() => navigate("/feed"), 500);
+      }
+    } catch (err) {
+      setError(err.message || "Verification failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    try {
+      await apiPost("/auth/resend-verification", { email: email.trim() });
+      alert("Verification code resent to your phone!");
+    } catch (err) {
+      alert(err.message || "Failed to resend code");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -164,6 +205,16 @@ export function UserAuthForm({ mode }) {
         if (inviterCode.trim()) registerData.invitedByCode = inviterCode.trim().toUpperCase();
 
         const data = await apiPost("/auth/register", registerData);
+        
+        // Handle Verification
+        if (data.requirePhoneVerification) {
+          setIsVerifying(true);
+          setSuccess(false); // don't show success generic message yet
+          // Token is in data.token, but we wait to verify
+          // we can store it temporarily or just use email to verify
+          return; 
+        }
+
         setSuccess(true);
         setUserSession({ token: data.token, user: data.user });
         // Clear referral data after successful registration
@@ -179,6 +230,57 @@ export function UserAuthForm({ mode }) {
       setIsLoading(false);
     }
   };
+
+  if (isVerifying) {
+    return (
+      <form onSubmit={handleVerify} className="space-y-6">
+        <div className="text-center space-y-2">
+            <div className="w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center mx-auto text-teal-400">
+                <Phone size={24} />
+            </div>
+            <h3 className="text-lg font-medium text-white">Verify Phone Number</h3>
+            <p className="text-sm text-gray-400">
+                We sent a 6-digit code to <b>{phone}</b>.
+            </p>
+            <p className="text-xs text-yellow-500/80">
+                (Check backend console log for Mock SMS)
+            </p>
+        </div>
+
+        {error && (
+            <div className="flex items-start gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-red-300">{error}</p>
+            </div>
+        )}
+
+        <div>
+            <Label htmlFor="otp" className="mb-2 block">Verification Code</Label>
+            <Input
+                id="otp"
+                type="text"
+                placeholder="123456"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                className="text-center tracking-widest text-xl"
+                maxLength={6}
+                required
+            />
+        </div>
+
+        <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+            Verify & Login
+        </Button>
+        
+        <div className="text-center">
+            <button type="button" onClick={handleResend} className="text-sm text-teal-400 hover:text-teal-300">
+                Resend Code
+            </button>
+        </div>
+      </form>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-h-[600px] overflow-y-auto pr-2">
