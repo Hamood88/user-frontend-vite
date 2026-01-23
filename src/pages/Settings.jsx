@@ -128,6 +128,7 @@ export default function Settings() {
         privacy: {
           availability: privateProfile ? "friends_only" : "everyone",
           profileVisibility: privateProfile ? "friends" : "everyone",
+          feedVisibility: privateProfile ? "friends" : "everyone",
         }
       };
       
