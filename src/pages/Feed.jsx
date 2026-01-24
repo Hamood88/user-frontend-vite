@@ -305,16 +305,21 @@ export default function Feed() {
         console.warn("Feed loading error:", e?.message || e);
       }
       
-      // ✅ Handle 403 (private feed) - check status code first, then backend message
-      if (e?.status === 403) {
+      // ✅ Handle 403 (private feed) - BUT NOT if users are friends!
+      const areFriends = profileUser?.isFriend || profileUser?.areFriends || profileUser?.friendship?.status === 'accepted';
+      
+      if (e?.status === 403 && !areFriends) {
         setErr(postId ? "This post is private." : "This user's feed is private.");
         if (!postId) setIsPrivateFeed(true);
-      } else if (e?.message?.includes("private") || e?.data?.message?.includes("private")) {
+      } else if ((e?.message?.includes("private") || e?.data?.message?.includes("private")) && !areFriends) {
         // Backend returns message like "This user's feed is private (friends only)."
         setErr(e?.data?.message || e?.message || (postId ? "This post is private." : "This user's feed is private."));
         if (!postId) setIsPrivateFeed(true);
       } else if (e?.status === 404) {
         setErr(postId ? "Post not found." : "User not found.");
+      } else if (areFriends) {
+        // If they're friends but still got an error, show a different message
+        setErr("Unable to load feed. Please try again.");
       } else {
         setErr(e?.message || "Failed to load feed.");
       }
