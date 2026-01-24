@@ -528,12 +528,12 @@ const ReferralLanding = ({ type: propType }) => {
   const { i18n } = useTranslation();
   
   const [selectedLang, setSelectedLang] = useState(i18n.language || 'en');
-  const [videoSrc, setVideoSrc] = useState('https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/v1/moondala/videos/intro-en.mp4');
+  const [videoSrc, setVideoSrc] = useState('https://res.cloudinary.com/dohetomaw/video/upload/intro-en.mp4');
   const [step, setStep] = useState(1);
   const [lightboxImg, setLightboxImg] = useState(null);
 
-  // Video base URL - replace YOUR_CLOUD_NAME with your actual Cloudinary cloud name
-  const CLOUDINARY_VIDEO_BASE = 'https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/v1/moondala/videos';
+  // Video base URL using your Cloudinary account
+  const CLOUDINARY_VIDEO_BASE = 'https://res.cloudinary.com/dohetomaw/video/upload';
 
   // Persist language choice and handle direction/video
   useEffect(() => {
