@@ -522,10 +522,13 @@ export async function getTopInviters(limit = 10) {
     const data = await apiGet(`/api/users/top-inviters?limit=${limit}`);
     return Array.isArray(data?.topInviters) ? data.topInviters : Array.isArray(data) ? data : [];
   } catch (err) {
-    console.warn("Failed to load top inviters:", err);
+    console.error("Failed to load top inviters:", err);
     return [];
   }
 }
+
+// Alias for backwards compatibility
+export { getTopInviters as fetchTopInviters };
 
 /* ================================
    ✅ POSTS
