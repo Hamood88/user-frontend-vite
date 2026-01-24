@@ -400,7 +400,7 @@ export default function Friends() {
                       <button
                         type="button"
                         className="md-btn md-btn-ghost h-8 w-8 p-0"
-                        onClick={() => id && nav(`/feed/${encodeURIComponent(id)}`)}
+                        onClick={() => id && nav(`/feed/user/${encodeURIComponent(id)}`)}
                         title="View"
                       >
                         <MoreHorizontal className="w-4 h-4" />
@@ -411,7 +411,7 @@ export default function Friends() {
                       <button
                         type="button"
                         className="md-btn md-btn-ghost flex-1 text-xs py-2 h-8"
-                        onClick={() => id && nav(`/messages?userId=${encodeURIComponent(id)}`)}
+                        onClick={() => id && nav(`/messages/user/${encodeURIComponent(id)}`)}
                       >
                         <MessageCircle className="w-3 h-3" />
                         Message
@@ -419,7 +419,7 @@ export default function Friends() {
                       <button
                         type="button"
                         className="md-btn md-btn-ghost h-8 w-8 p-0"
-                        onClick={() => id && nav(`/feed/${encodeURIComponent(id)}`)}
+                        onClick={() => id && nav(`/feed/user/${encodeURIComponent(id)}`)}
                         title="More"
                       >
                         <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
