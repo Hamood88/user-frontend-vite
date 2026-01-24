@@ -1100,7 +1100,7 @@ export default function Feed() {
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex gap-3">
                       <RouterLink 
-                        to={`/feed/user/${post.user._id}`}
+                        to={pickId(post.user) === pickId(me) ? '/feed' : `/feed/user/${post.user._id}`}
                         className="w-10 h-10 rounded-full bg-white/5 overflow-hidden border border-white/10 flex items-center justify-center hover:opacity-80 transition-opacity"
                       >
                         {avatarUrl(post.user) ? (
@@ -1120,7 +1120,7 @@ export default function Feed() {
                         )}
                       </RouterLink>
                       <div>
-                        <RouterLink to={`/feed/user/${post.user._id}`}>
+                        <RouterLink to={pickId(post.user) === pickId(me) ? '/feed' : `/feed/user/${post.user._id}`}>
                           <h3 className="font-bold text-foreground hover:underline cursor-pointer">
                             {userName(post.user)}
                           </h3>
