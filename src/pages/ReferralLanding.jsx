@@ -528,12 +528,32 @@ const ReferralLanding = ({ type: propType }) => {
   const { i18n } = useTranslation();
   
   const [selectedLang, setSelectedLang] = useState(i18n.language || 'en');
-  const [videoSrc, setVideoSrc] = useState('https://res.cloudinary.com/dohetomaw/video/upload/v1/intro-en.mp4');
   const [step, setStep] = useState(1);
   const [lightboxImg, setLightboxImg] = useState(null);
 
-  // Video base URL using your Cloudinary account with version auto-fetch
-  const CLOUDINARY_VIDEO_BASE = 'https://res.cloudinary.com/dohetomaw/video/upload/v1';
+  // Video URL mapping for each language (Cloudinary public IDs)
+  const VIDEO_URLS = {
+    en: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276231/intro-en.mp4_pyxi0j.mp4',
+    ar: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276218/intro-ar.mp4_k7cash.mp4',
+    es: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276212/intro-es.mp4_el1224.mp4',
+    pt: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276213/intro-pt.mp4_gq30hi.mp4',
+    ja: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276213/intro-ja.mp4_ufxihc.mp4',
+    ko: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276211/intro-ko.mp4_twmqeh.mp4',
+    hi: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276219/intro-hi.mp4_rtdwzh.mp4',
+    fr: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276219/intro-fr.mp4_srtiij.mp4',
+    de: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276219/intro-de.mp4_ki9skn.mp4',
+    ru: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276217/intro-ru.mp4_dnl65j.mp4',
+    id: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276207/intro-id.mp4_jly2n1.mp4',
+    tr: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276217/intro-tr.mp4_fdoot5.mp4',
+    fil: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276209/intro-fil.mp4_bnh9aq.mp4',
+    am: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276207/intro-am.mp4_nzurtc.mp4',
+    ur: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276211/intro-ur.mp4_sbsw47.mp4',
+    so: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276212/intro-so.mp4_heja4l.mp4',
+    it: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276221/intro-it.mp4_yqq4my.mp4',
+    zh: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276231/intro-en.mp4_pyxi0j.mp4' // Fallback to English for Chinese
+  };
+
+  const [videoSrc, setVideoSrc] = useState(VIDEO_URLS.en);
 
   // Persist language choice and handle direction/video
   useEffect(() => {
@@ -543,8 +563,8 @@ const ReferralLanding = ({ type: propType }) => {
       document.documentElement.dir = ['ar', 'ur'].includes(selectedLang) ? 'rtl' : 'ltr';
       document.documentElement.lang = selectedLang;
       
-      // Update video source when language changes - Cloudinary auto-detects .mp4
-      setVideoSrc(`${CLOUDINARY_VIDEO_BASE}/intro-${selectedLang}.mp4`);
+      // Update video source when language changes - use mapped URLs
+      setVideoSrc(VIDEO_URLS[selectedLang] || VIDEO_URLS.en);
     } catch (error) {
       console.error('Error updating language:', error);
     }
@@ -553,10 +573,9 @@ const ReferralLanding = ({ type: propType }) => {
   const handleVideoError = (e) => {
     console.error('Video error:', e, 'Current src:', videoSrc);
     // If the language-specific video fails to load, fallback to English
-    const englishVideo = `${CLOUDINARY_VIDEO_BASE}/intro-en.mp4`;
-    if (videoSrc !== englishVideo) {
+    if (videoSrc !== VIDEO_URLS.en) {
       console.log(`Video for ${selectedLang} missing, falling back to English.`);
-      setVideoSrc(englishVideo);
+      setVideoSrc(VIDEO_URLS.en);
     }
   };
 
