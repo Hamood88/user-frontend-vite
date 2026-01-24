@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Users, TrendingUp } from "lucide-react";
-import { getTopInviters, toAbsUrl } from "../api";
+import { toAbsUrl } from "../api";
+import { getTopInviters } from "../api.jsx";
 
 export default function TopInvitersList({ 
   limit = 5, 
@@ -13,12 +14,26 @@ export default function TopInvitersList({
 
   useEffect(() => {
     let mounted = true;
-    getTopInviters(limit).then((data) => {
-      if (mounted) {
-        setList(data || []);
-        setLoading(false);
+    
+    async function loadInviters() {
+      try {
+        if (typeof getTopInviters !== 'function') {
+          console.error('getTopInviters is not a function:', getTopInviters);
+          setLoading(false);
+          return;
+        }
+        const data = await getTopInviters(limit);
+        if (mounted) {
+          setList(data || []);
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('TopInvitersList error:', err);
+        if (mounted) setLoading(false);
       }
-    });
+    }
+    
+    loadInviters();
     return () => { mounted = false; };
   }, [limit]);
 
