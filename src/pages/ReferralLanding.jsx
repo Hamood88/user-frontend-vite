@@ -550,7 +550,7 @@ const ReferralLanding = ({ type: propType }) => {
     ur: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276211/intro-ur.mp4_sbsw47.mp4',
     so: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276212/intro-so.mp4_heja4l.mp4',
     it: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276221/intro-it.mp4_yqq4my.mp4',
-    zh: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276231/intro-en.mp4_pyxi0j.mp4' // Fallback to English for Chinese
+    zh: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769278377/intro-zh.mp4_b4hlge.mp4'
   };
 
   const [videoSrc, setVideoSrc] = useState(VIDEO_URLS.en);
