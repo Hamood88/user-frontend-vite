@@ -85,7 +85,11 @@ function userName(u) {
 function avatarUrl(u) {
   // Check ALL possible fields
   const url = u?.avatarUrl || u?.avatar || u?.photoUrl || u?.profilePic || u?.image || "";
-  return url ? safeImageUrl(url, 'null', u) : null;
+  
+  // ✅ Filter out Moondala logo - it's not a user avatar!
+  if (url && url.includes('moondala-logo')) return null;
+  
+  return url ? safeImageUrl(url, 'avatar', u) : null;
 }
 
 function normalizePost(p) {
