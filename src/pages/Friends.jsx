@@ -8,6 +8,7 @@ import {
   MoreHorizontal,
   Check,
   X,
+  Eye,
 } from "lucide-react";
 
 import {
@@ -420,9 +421,9 @@ export default function Friends() {
                         type="button"
                         className="md-btn md-btn-ghost h-8 w-8 p-0"
                         onClick={() => id && nav(`/feed/user/${encodeURIComponent(id)}`)}
-                        title="More"
+                        title="View Feed"
                       >
-                        <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
+                        <Eye className="w-4 h-4 text-muted-foreground" />
                       </button>
                     </div>
                   )}
