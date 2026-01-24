@@ -515,7 +515,7 @@ export function respondFriendRequest(requestId, action) {
 }
 
 /* ================================
-   ✅ REFERRALS & LEADERBOARD
+   ✅ REFERRALS & LEADERBOARD (v1.1)
    ================================ */
 export async function getTopInviters(limit = 10) {
   try {
@@ -526,9 +526,6 @@ export async function getTopInviters(limit = 10) {
     return [];
   }
 }
-
-// Alias for backwards compatibility
-export { getTopInviters as fetchTopInviters };
 
 /* ================================
    ✅ POSTS
