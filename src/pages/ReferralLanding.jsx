@@ -528,9 +528,12 @@ const ReferralLanding = ({ type: propType }) => {
   const { i18n } = useTranslation();
   
   const [selectedLang, setSelectedLang] = useState(i18n.language || 'en');
-  const [videoSrc, setVideoSrc] = useState('/videos/intro-en.mp4');
+  const [videoSrc, setVideoSrc] = useState('https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/v1/moondala/videos/intro-en.mp4');
   const [step, setStep] = useState(1);
   const [lightboxImg, setLightboxImg] = useState(null);
+
+  // Video base URL - replace YOUR_CLOUD_NAME with your actual Cloudinary cloud name
+  const CLOUDINARY_VIDEO_BASE = 'https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/v1/moondala/videos';
 
   // Persist language choice and handle direction/video
   useEffect(() => {
@@ -539,16 +542,16 @@ const ReferralLanding = ({ type: propType }) => {
     document.documentElement.dir = ['ar', 'ur'].includes(selectedLang) ? 'rtl' : 'ltr';
     document.documentElement.lang = selectedLang;
     
-    // Update video source when language changes
-    const suffix = selectedLang === 'en' ? '.mp4.mp4' : '.mp4';
-    setVideoSrc(`/videos/intro-${selectedLang}${suffix}`);
+    // Update video source when language changes - use Cloudinary URLs
+    setVideoSrc(`${CLOUDINARY_VIDEO_BASE}/intro-${selectedLang}.mp4`);
   }, [selectedLang, i18n]);
 
   const handleVideoError = () => {
     // If the language-specific video fails to load, fallback to English
-    if (videoSrc !== '/videos/intro-en.mp4.mp4') {
+    const englishVideo = `${CLOUDINARY_VIDEO_BASE}/intro-en.mp4`;
+    if (videoSrc !== englishVideo) {
       console.log(`Video for ${selectedLang} missing, falling back to English.`);
-      setVideoSrc('/videos/intro-en.mp4.mp4');
+      setVideoSrc(englishVideo);
     }
   };
 
