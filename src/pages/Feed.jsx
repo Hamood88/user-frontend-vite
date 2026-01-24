@@ -882,8 +882,8 @@ export default function Feed() {
                 {/* Action Buttons */}
                 {userId !== me?._id && (
                   <div className="flex gap-3 mt-4">
-                    {/* Show Add Friend button only if NOT friends and NOT private feed */}
-                    {!profileUser.isFriend && !profileUser.areFriends && !isPrivateFeed && (
+                    {/* Show Add Friend button if NOT already friends (even for private accounts) */}
+                    {!profileUser.isFriend && !profileUser.areFriends && (
                       <button
                         onClick={handleAddFriend}
                         disabled={friendRequestSentToProfile}
