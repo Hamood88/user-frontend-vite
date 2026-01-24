@@ -254,17 +254,6 @@ const CONTENT = {
     pillar3Title: "🤝 Conecta con Amigos",
     pillar3Desc: "Comprar es mejor cuando se hace juntos. Chatea directamente con los vendedores o pide la opinión de tus amigos sobre los productos antes de comprar.",
     pillar4Title: "💰 Comparte y Gana",
-    pillar4Desc: "Cada vez que compartes un producto que te gusta o invitas a un nuevo amigo, estás construyendo una red que te recompensa.",
-    shopTitle: "Una App. Todo tu Mundo Social.",
-    shopSubtitle: "Gana, Comparte, Compra y Participa — todo en un solo lugar.",
-    shopIntro: "Moondala une a tus amigos y tus tiendas favoritas. Es la primera plataforma donde tu feed social y tu carrito de compras conviven en perfecta armonía. Sigue a tus amigos para ver qué están comprando, descubre productos tendencia en el Mall y aumenta tus ganancias simplemente siendo social.",
-    pillar1Title: "🛒 Compra en el Mall",
-    pillar1Desc: "Explora miles de tiendas únicas. Desde alta moda hasta tecnología, todo lo que necesitas está organizado y listo para ti.",
-    pillar2Title: "📱 Participa en los Feeds",
-    pillar2Desc: "¡Es una red social! Publica actualizaciones, sigue a amigos y mira un feed en vivo de lo que es tendencia en tu comunidad.",
-    pillar3Title: "🤝 Conecta con Amigos",
-    pillar3Desc: "Comprar es mejor cuando se hace juntos. Chatea directamente con los vendedores o pide la opinión de tus amigos sobre los productos antes de comprar.",
-    pillar4Title: "💰 Comparte y Gana",
     pillar4Desc: "Cada vez que compartes un producto que te gusta o invitas a un nuevo amigo, estás construyendo una red que te recompensa."
   },
   ja: {
