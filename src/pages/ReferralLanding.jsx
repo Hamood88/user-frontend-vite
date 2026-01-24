@@ -543,12 +543,12 @@ const ReferralLanding = ({ type: propType }) => {
     fr: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276219/intro-fr.mp4_srtiij.mp4',
     de: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276219/intro-de.mp4_ki9skn.mp4',
     ru: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276217/intro-ru.mp4_dnl65j.mp4',
-    id: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276207/intro-id.mp4_jly2n1.mp4',
+    id: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769280176/intro-id.mp4_nynhrg.mov',
     tr: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276217/intro-tr.mp4_fdoot5.mp4',
-    fil: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276209/intro-fil.mp4_bnh9aq.mp4',
-    am: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276207/intro-am.mp4_nzurtc.mp4',
+    fil: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769280175/intro-fil.mp4_ypicjp.mov',
+    am: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769280178/intro-am.mp4_hmqpin.mp4',
     ur: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276211/intro-ur.mp4_sbsw47.mp4',
-    so: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276212/intro-so.mp4_heja4l.mp4',
+    so: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769280175/intro-so.mp4_ymlird.mov',
     it: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769276221/intro-it.mp4_yqq4my.mp4',
     zh: 'https://res.cloudinary.com/dohetomaw/video/upload/v1769278377/intro-zh.mp4_b4hlge.mp4'
   };
