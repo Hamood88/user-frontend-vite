@@ -650,11 +650,11 @@ const ReferralLanding = ({ type: propType }) => {
           {/* Logo with Glow */}
           <div className="relative mb-10">
             <div className="absolute inset-0 bg-purple-500/20 blur-2xl rounded-full"></div>
-            <div className="relative w-24 h-24 bg-slate-800 rounded-3xl flex items-center justify-center shadow-2xl border border-slate-700 rotate-3 transform">
+            <div className="relative w-32 h-32 bg-slate-800 rounded-3xl flex items-center justify-center shadow-2xl border border-slate-700 rotate-3 transform">
               <img 
                 src="/moondala-logo.png" 
                 alt="Moondala" 
-                className="w-16 h-16 object-contain -rotate-3"
+                className="w-24 h-24 object-contain -rotate-3"
               />
             </div>
           </div>
