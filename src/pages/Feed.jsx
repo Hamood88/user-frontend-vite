@@ -276,6 +276,11 @@ export default function Feed() {
           const { getUserProfile } = await import('../api.jsx');
           const profileData = await getUserProfile(userId);
           
+          // ✅ Debug: Log the profile data
+          console.log('Profile data received:', profileData);
+          console.log('isFriend flag:', profileData?.user?.isFriend);
+          console.log('areFriends flag:', profileData?.user?.areFriends);
+          
           // ✅ Set profile user (even if private/403, we get basic info)
           if (profileData?.user) {
             setProfileUser(profileData.user);
@@ -882,8 +887,11 @@ export default function Feed() {
                 {/* Action Buttons */}
                 {userId !== me?._id && (
                   <div className="flex gap-3 mt-4">
+                    {/* Debug log */}
+                    {console.log('Rendering buttons - isFriend:', profileUser?.isFriend, 'areFriends:', profileUser?.areFriends, 'profileUser:', profileUser)}
+                    
                     {/* Show Add Friend button if NOT already friends (even for private accounts) */}
-                    {!profileUser.isFriend && !profileUser.areFriends && (
+                    {!profileUser?.isFriend && !profileUser?.areFriends && (
                       <button
                         onClick={handleAddFriend}
                         disabled={friendRequestSentToProfile}
@@ -905,7 +913,7 @@ export default function Feed() {
                           </>
                         )}
                       </button>
-                    )}
+                    )}?.isFriend || profileUser?
                     
                     {/* Show "Friends" badge if already friends */}
                     {(profileUser.isFriend || profileUser.areFriends) && (
