@@ -699,11 +699,14 @@ const ReferralLanding = ({ type: propType }) => {
             <div className="absolute -inset-1 bg-gradient-to-b from-purple-600 to-transparent rounded-[2rem] blur-xl opacity-20 transition-opacity group-hover:opacity-40"></div>
             <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 border-slate-900 bg-black aspect-[9/16]">
               <video
+                key={videoSrc}
                 src={videoSrc}
                 controls
                 className="w-full h-full object-cover"
                 onError={handleVideoError}
                 playsInline
+                preload="metadata"
+                controlsList="nodownload"
               >
                 Your browser does not support the video tag.
               </video>
