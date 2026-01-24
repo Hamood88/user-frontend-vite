@@ -515,6 +515,19 @@ export function respondFriendRequest(requestId, action) {
 }
 
 /* ================================
+   ✅ REFERRALS & LEADERBOARD
+   ================================ */
+export async function getTopInviters(limit = 10) {
+  try {
+    const data = await apiGet(`/api/users/top-inviters?limit=${limit}`);
+    return Array.isArray(data?.topInviters) ? data.topInviters : Array.isArray(data) ? data : [];
+  } catch (err) {
+    console.warn("Failed to load top inviters:", err);
+    return [];
+  }
+}
+
+/* ================================
    ✅ POSTS
    ================================ */
 
