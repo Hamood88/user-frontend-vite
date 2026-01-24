@@ -247,17 +247,10 @@ export function UserAuthForm({ mode }) {
             </div>
             <h3 className="text-lg font-medium text-white">Verify Phone Number</h3>
             <p className="text-sm text-gray-400">
-<<<<<<< HEAD
                 We sent a 6-digit code to <b>{phone}</b>.
             </p>
             <p className="text-xs text-yellow-500/80">
-                (Check backend console log for Mock SMS)
-=======
-                We sent a code to {phone}
-            </p>
-            <p className="text-xs text-yellow-500/80">
                 (Dev: Check backend logs for OTP)
->>>>>>> 3ba0490 (feat: Redesigned Referral Landing (excluding videos for now due to size limits))
             </p>
         </div>
 
@@ -269,19 +262,11 @@ export function UserAuthForm({ mode }) {
         )}
 
         <div>
-<<<<<<< HEAD
-            <Label htmlFor="otp" className="mb-2 block">Verification Code</Label>
-            <Input
-                id="otp"
-                type="text"
-                placeholder="123456"
-=======
             <Label htmlFor="otp" className="mb-2 block">Enter 6-digit Code</Label>
             <Input
                 id="otp"
                 type="text"
                 placeholder="000000"
->>>>>>> 3ba0490 (feat: Redesigned Referral Landing (excluding videos for now due to size limits))
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 className="text-center tracking-widest text-xl"
@@ -292,11 +277,7 @@ export function UserAuthForm({ mode }) {
 
         <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-<<<<<<< HEAD
-            Verify & Login
-=======
             Submit
->>>>>>> 3ba0490 (feat: Redesigned Referral Landing (excluding videos for now due to size limits))
         </Button>
         
         <div className="text-center">
