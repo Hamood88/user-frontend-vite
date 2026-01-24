@@ -290,7 +290,7 @@ export default function UserDashboard() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-display font-bold text-white mb-2">
-            Financial Overview
+            Welcome back,
           </h1>
           <p className="text-muted-foreground">
             Track your commissions and network growth.
@@ -299,7 +299,7 @@ export default function UserDashboard() {
 
         {referralCode ? (
           <div className="glass-card px-4 py-2 rounded-full flex items-center gap-3 border-primary/20 bg-primary/5">
-            <span className="text-sm font-medium text-primary">Referral Code:</span>
+            <span className="text-sm font-medium text-primary">Share Link</span>
             <code className="font-mono font-bold text-white">{referralCode}</code>
             <button
               onClick={copyCode}
@@ -323,7 +323,7 @@ export default function UserDashboard() {
           color="violet"
         />
         <KpiCard
-          title="Available Balance"
+          title="Available"
           value={money.available}
           icon={Wallet}
           subValue="Ready to withdraw"
@@ -350,7 +350,7 @@ export default function UserDashboard() {
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-display font-bold text-white">
-              Recent Transactions
+              Recent Activity
             </h2>
             <button
               type="button"
@@ -488,7 +488,7 @@ export default function UserDashboard() {
 
         {/* Right Sidebar */}
         <div className="space-y-6">
-          <TopInvitersList limit={5} compact={true} title="Leaderboard" />
+          <TopInvitersList limit={5} compact={true} title="Top Inviters" />
         </div>
       </div>
     </div>

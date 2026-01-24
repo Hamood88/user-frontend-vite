@@ -149,7 +149,7 @@ export default function AppLayout() {
         <div className="md-sideHeader">
           {!sidebarCollapsed && (
             <div className="md-brand">
-              <div className="md-logoText">Moondala</div>
+              <img src="/moondala-logo.png" alt="Moondala" className="h-8 w-auto object-contain" />
             </div>
           )}
           <button
@@ -183,7 +183,9 @@ export default function AppLayout() {
 
       {/* Mobile Header */}
       <div className="md-mHeader">
-        <div className="md-mBrand">Moondala</div>
+        <div className="md-mBrand">
+          <img src="/moondala-logo.png" alt="Moondala" className="h-8 w-auto object-contain" />
+        </div>
         <button
           type="button"
           className="md-iconBtn"

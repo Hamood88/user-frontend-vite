@@ -26,8 +26,7 @@ import Cart from "./pages/Cart";
 import ProductDetailsUnified from "./pages/ProductDetailsUnified";
 import PublicShareRedirect from "./pages/PublicShareRedirect";
 import EarnMore from "./pages/EarnMore";
-import UserReferralSignup from "./pages/UserReferralSignup";
-import ShopReferralSignup from "./pages/ShopReferralSignup";
+import ReferralLanding from "./pages/ReferralLanding";
 
 /* ✅ PUBLIC SHOP PAGES */
 import ShopFeedPublic from "./pages/ShopFeedPublic";
@@ -216,6 +215,11 @@ export default function App() {
         {/* ✅ These now go to SplitAuthPage */}
         <Route path="/login" element={<AuthRedirect mode="login" side="user" />} />
         <Route path="/register" element={<AuthRedirect mode="register" side="user" />} />
+        
+        {/* Referral System */}
+        <Route path="/refer/landing/:type/:code" element={<ReferralLanding />} />
+        <Route path="/refer/user/:code" element={<ReferralLanding type="user" />} />
+        <Route path="/refer/shop/:code" element={<ReferralLanding type="shop" />} />
 
         {/* Optional: shop auth shortcuts */}
         <Route path="/shop/login" element={<AuthRedirect mode="login" side="shop" />} />
@@ -223,10 +227,6 @@ export default function App() {
 
         {/* Public product share */}
         <Route path="/p/:shareId" element={<PublicShareRedirect />} />
-
-        {/* Referral signup routes */}
-        <Route path="/refer/user/:referralCode" element={<UserReferralSignup />} />
-        <Route path="/refer/shop/:referralCode" element={<ShopReferralSignup />} />
 
         {/* Public user redirect - go directly to their feed */}
         <Route path="/u/:userId" element={<UserFeedRedirect />} />

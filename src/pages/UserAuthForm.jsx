@@ -122,7 +122,7 @@ export function UserAuthForm({ mode }) {
   const handleResend = async () => {
     try {
       await apiPost("/auth/resend-verification", { email: email.trim() });
-      alert("Verification code resent to your phone!");
+      alert("Verification code resent!");
     } catch (err) {
       alert(err.message || "Failed to resend code");
     }
@@ -137,7 +137,7 @@ export function UserAuthForm({ mode }) {
     try {
       if (mode === "login") {
         if (!validateEmail(email)) {
-          throw new Error("Please enter a valid email address");
+          throw new Error('Invalid email address');
         }
         
         const data = await apiPost("/auth/login", { email: email.trim(), password });
@@ -147,46 +147,46 @@ export function UserAuthForm({ mode }) {
       } else if (mode === "signup") {
         // Validate required fields
         if (!firstName.trim() || !lastName.trim() || !email.trim() || !password) {
-          throw new Error("Please fill in all required fields");
+          throw new Error('All fields are required');
         }
 
         if (!validateEmail(email)) {
-          throw new Error("Please enter a valid email address");
+          throw new Error('Invalid email address');
         }
 
         if (!validatePassword(password)) {
-          throw new Error("Password must be at least 8 characters with uppercase, lowercase, and numbers");
+          throw new Error('Password must meet requirements');
         }
 
         // Validate phone (required)
         if (!phone.trim()) {
-          throw new Error("Phone number is required");
+          throw new Error('Phone number is required');
         }
 
         // Validate gender (required)
         if (!gender) {
-          throw new Error("Gender is required");
+          throw new Error('Gender is required');
         }
 
         // Validate DOB (required)
         if (!dobDay || !dobMonth || !dobYear) {
-          throw new Error("Date of birth is required");
+          throw new Error('Date of birth is required');
         }
         
         const dateStr = `${dobYear}-${String(dobMonth).padStart(2, '0')}-${String(dobDay).padStart(2, '0')}`;
         const age = calculateAge(dateStr);
         if (age < 10) {
-          throw new Error("You must be at least 10 years old to register");
+          throw new Error('You must be at least 10 years old');
         }
 
         // Validate country (required)
         if (!country) {
-          throw new Error("Country is required");
+          throw new Error('Country is required');
         }
 
         // Validate interests (required - at least 1)
         if (interests.length < 1) {
-          throw new Error("Please select at least 1 interest");
+          throw new Error('Select at least one interest');
         }
 
         const registerData = {
@@ -200,6 +200,13 @@ export function UserAuthForm({ mode }) {
           country: country,
           interests: interests,
         };
+
+        // Add language preference from URL or localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const langPref = urlParams.get('lang') || localStorage.getItem('userLanguage');
+        if (langPref) {
+           registerData.language = langPref;
+        }
 
         if (favoriteSport) registerData.favoriteSport = favoriteSport;
         if (inviterCode.trim()) registerData.invitedByCode = inviterCode.trim().toUpperCase();
@@ -225,7 +232,7 @@ export function UserAuthForm({ mode }) {
         setTimeout(() => navigate("/feed"), 500);
       }
     } catch (err) {
-      setError(err.message || "An error occurred. Please try again.");
+      setError(err.message || 'Authentication failed');
     } finally {
       setIsLoading(false);
     }
@@ -240,10 +247,17 @@ export function UserAuthForm({ mode }) {
             </div>
             <h3 className="text-lg font-medium text-white">Verify Phone Number</h3>
             <p className="text-sm text-gray-400">
+<<<<<<< HEAD
                 We sent a 6-digit code to <b>{phone}</b>.
             </p>
             <p className="text-xs text-yellow-500/80">
                 (Check backend console log for Mock SMS)
+=======
+                We sent a code to {phone}
+            </p>
+            <p className="text-xs text-yellow-500/80">
+                (Dev: Check backend logs for OTP)
+>>>>>>> 3ba0490 (feat: Redesigned Referral Landing (excluding videos for now due to size limits))
             </p>
         </div>
 
@@ -255,11 +269,19 @@ export function UserAuthForm({ mode }) {
         )}
 
         <div>
+<<<<<<< HEAD
             <Label htmlFor="otp" className="mb-2 block">Verification Code</Label>
             <Input
                 id="otp"
                 type="text"
                 placeholder="123456"
+=======
+            <Label htmlFor="otp" className="mb-2 block">Enter 6-digit Code</Label>
+            <Input
+                id="otp"
+                type="text"
+                placeholder="000000"
+>>>>>>> 3ba0490 (feat: Redesigned Referral Landing (excluding videos for now due to size limits))
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 className="text-center tracking-widest text-xl"
@@ -270,7 +292,11 @@ export function UserAuthForm({ mode }) {
 
         <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+<<<<<<< HEAD
             Verify & Login
+=======
+            Submit
+>>>>>>> 3ba0490 (feat: Redesigned Referral Landing (excluding videos for now due to size limits))
         </Button>
         
         <div className="text-center">
@@ -296,7 +322,7 @@ export function UserAuthForm({ mode }) {
       {mode === "login" ? (
         <>
           <div>
-            <Label htmlFor="email" className="mb-2 block">Email *</Label>
+            <Label htmlFor="email" className="mb-2 block">Email Address</Label>
             <Input
               id="email"
               icon={Mail}
@@ -309,7 +335,7 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label htmlFor="password" className="mb-2 block">Password *</Label>
+            <Label htmlFor="password" className="mb-2 block">Password</Label>
             <Input
               id="password"
               icon={Lock}
@@ -333,7 +359,7 @@ export function UserAuthForm({ mode }) {
         <>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label htmlFor="firstName" className="mb-2 block text-xs">First Name *</Label>
+              <Label htmlFor="firstName" className="mb-2 block text-xs">First Name</Label>
               <Input
                 id="firstName"
                 icon={User}
@@ -345,7 +371,7 @@ export function UserAuthForm({ mode }) {
               />
             </div>
             <div>
-              <Label htmlFor="lastName" className="mb-2 block text-xs">Last Name *</Label>
+              <Label htmlFor="lastName" className="mb-2 block text-xs">Last Name</Label>
               <Input
                 id="lastName"
                 icon={User}
@@ -359,7 +385,7 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label htmlFor="email" className="mb-2 block text-xs">Email *</Label>
+            <Label htmlFor="email" className="mb-2 block text-xs">Email Address</Label>
             <Input
               id="email"
               icon={Mail}
@@ -373,7 +399,7 @@ export function UserAuthForm({ mode }) {
 
           <div>
             <Label htmlFor="password" className="mb-2 block text-xs">
-              Password * <span className="text-gray-500 text-xs ml-1">(8+ chars, uppercase, lowercase, number)</span>
+              Password <span className="text-gray-500 text-xs ml-1">(8+ chars, uppercase, number)</span>
             </Label>
             <Input
               id="password"
@@ -387,19 +413,19 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label htmlFor="phone" className="mb-2 block text-xs">Phone Number *</Label>
+            <Label htmlFor="phone" className="mb-2 block text-xs">Phone Number</Label>
             <Input
               id="phone"
               icon={Phone}
               type="tel"
-              placeholder="+1 (555) 123-4567"
+              placeholder="+1 234 567 8900"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
 
           <div>
-            <Label htmlFor="gender" className="mb-2 block text-xs">Gender *</Label>
+            <Label htmlFor="gender" className="mb-2 block text-xs">Gender</Label>
             <Select
               id="gender"
               value={gender}
@@ -414,7 +440,7 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label className="mb-2 block text-xs">Date of Birth *</Label>
+            <Label className="mb-2 block text-xs">Date of Birth</Label>
             <div className="grid grid-cols-3 gap-2">
               <Select
                 value={dobDay}
@@ -457,7 +483,7 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label htmlFor="country" className="mb-2 block text-xs">Country *</Label>
+            <Label htmlFor="country" className="mb-2 block text-xs">Country</Label>
             <Select
               id="country"
               icon={Globe}
@@ -469,18 +495,18 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label htmlFor="sport" className="mb-2 block text-xs">Favorite Sport</Label>
+            <Label htmlFor="sport" className="mb-2 block text-xs">Favorite Sport (Optional)</Label>
             <Select
               id="sport"
               value={favoriteSport}
               onChange={(e) => setFavoriteSport(e.target.value)}
               options={SPORTS.map(s => ({ value: s, label: s }))}
-              placeholder="Select sport"
+              placeholder="Select a sport"
             />
           </div>
 
           <div>
-            <Label className="mb-3 block text-xs">Interests *</Label>
+            <Label className="mb-3 block text-xs">Interests</Label>
             <div className="interests-grid">
               {INTERESTS.map(interest => (
                 <label
@@ -500,12 +526,12 @@ export function UserAuthForm({ mode }) {
 
           <div>
             <Label htmlFor="inviterCode" className="mb-2 block text-xs">
-              Invited By Code {inviterCode && <span className="text-green-400">(Auto-filled from your referral link)</span>}
+              Invitation Code <span className="text-gray-500">(Optional)</span> {inviterCode && <span className="text-green-400">(Auto-filled)</span>}
             </Label>
             <Input
               id="inviterCode"
               type="text"
-              placeholder="Enter inviter code if you have one"
+              placeholder="ABC12345"
               value={inviterCode}
               onChange={(e) => setInviterCode(e.target.value)}
               disabled={!!inviterCode}
@@ -524,10 +550,10 @@ export function UserAuthForm({ mode }) {
         {isLoading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
-            {mode === "login" ? "Signing in..." : "Creating account..."}
+            {mode === "login" ? 'Logging in...' : 'Creating Account...'}
           </>
         ) : (
-          mode === "login" ? "Log In" : "Sign Up"
+          mode === "login" ? 'Log In' : 'Create Account'
         )}
       </Button>
     </form>

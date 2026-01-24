@@ -1,11 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import UserAuthForm from "./UserAuthForm";
 import ShopAuthForm from "./ShopAuthForm";
 import "../styles/splitAuthPage.css";
 
 export default function SplitAuthPage() {
+  const [searchParams] = useSearchParams();
   const [activeRole, setActiveRole] = useState("user");
   const [activeMode, setActiveMode] = useState("login");
+
+  useEffect(() => {
+    // 1. Check URL first
+    const roleParam = searchParams.get("role");
+    if (roleParam === "shop") {
+      setActiveRole("shop");
+      setActiveMode("signup"); // Assume signup if coming via referral link usually
+    } else if (roleParam === "user") {
+      setActiveRole("user");
+      setActiveMode("signup");
+    }
+
+    // 2. Check localStorage (legacy support or no-url flow)
+    if (!roleParam) {
+      const storedShopRef = localStorage.getItem("shopReferralCode");
+      const storedUserRef = localStorage.getItem("referralCode");
+      
+      if (storedShopRef) {
+        setActiveRole("shop");
+        setActiveMode("signup");
+      } else if (storedUserRef) {
+        setActiveRole("user");
+        setActiveMode("signup");
+      }
+    }
+  }, [searchParams]);
 
   return (
     <div className={`auth-page ${activeRole}-theme`}>
@@ -24,7 +52,7 @@ export default function SplitAuthPage() {
       <div className="auth-card">
         {/* Logo Section */}
         <div className="auth-header">
-          <h1 className="auth-title">Moondala</h1>
+          <img src="/moondala-logo.png" alt="Moondala" className="w-16 h-16 mb-4 object-contain" />
           <p className="auth-subtitle">
             {activeRole === "user" ? "Your marketplace universe awaits" : "Grow your business with us"}
           </p>

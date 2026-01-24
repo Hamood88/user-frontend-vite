@@ -1,0 +1,59 @@
+{
+  "welcome": "Welcome",
+  "login": "Sign In",
+  "register": "Create Account",
+  "email": "Email",
+  "password": "Password",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "phone": "Phone Number",
+  "dob": "Date of Birth",
+  "country": "Country",
+  "gender": "Gender",
+  "submit": "Submit",
+  "auth": {
+    "login": {
+      "submit": "Sign In",
+      "forgotPassword": "Forgot Password?",
+      "rememberMe": "Remember me"
+    },
+    "signup": {
+      "submit": "Create Account",
+      "agreeTerms": "I agree to the Terms & Conditions"
+    },
+    "verify": {
+      "title": "Verify Your Phone",
+      "desc": "We sent a code to",
+      "submit": "Verify",
+      "resend": "Resend Code"
+    },
+    "email": {
+        "label": "Email",
+        "placeholder": "Enter your email"
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "feed": "Feed",
+    "friends": "Friends",
+    "mall": "Mall",
+    "orders": "My Orders",
+    "earned": "💰 Earn More",
+    "messages": "Messages",
+    "settings": "Settings",
+    "logout": "Log out",
+    "search": "Search",
+    "cart": "Cart",
+    "searchPlaceholder": "Search Moondala..."
+  },
+  "dashboard": {
+    "welcomeBack": "Welcome back,",
+    "totalEarnings": "Total Earnings",
+    "pending": "Pending",
+    "available": "Available",
+    "withdraw": "Withdraw",
+    "shareLink": "Share Link",
+    "topInviters": "Top Inviters",
+    "recentActivity": "Recent Activity"
+  }
+}

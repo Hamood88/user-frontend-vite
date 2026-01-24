@@ -117,9 +117,12 @@ export default function EarnMore() {
     if (me) fetchStats();
   }, [me]);
 
-  const levels = useMemo(() => {
+  const allLevels = useMemo(() => {
     const obj = stats?.levels || {};
-    return Object.entries(obj).sort((a, b) => Number(a[0]) - Number(b[0]));
+    return [1, 2, 3, 4, 5].map(lvl => ({
+      level: lvl,
+      count: obj[lvl] || 0
+    }));
   }, [stats]);
 
   const copyToClipboard = (text) => {
@@ -193,7 +196,7 @@ export default function EarnMore() {
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-20">
           <StatCard 
             label="Total Invited" 
             value={stats.totalInvited} 
@@ -217,6 +220,79 @@ export default function EarnMore() {
             isCode
           />
         </div>
+
+        {/* Brand New "How It Works" Section from the Design */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="grid md:grid-cols-2 gap-12 items-center mb-24 bg-slate-900/40 rounded-[3rem] p-8 md:p-12 border border-white/5 backdrop-blur-md"
+        >
+          {/* Left: Network Visual Card */}
+          <div className="bg-[#0B1221] border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden group">
+             <div className="flex items-center gap-3 mb-8">
+                <div className="p-2 bg-green-500/10 rounded-lg">
+                  <TrendingUp className="w-5 h-5 text-green-400" />
+                </div>
+                <h3 className="font-bold text-white text-xl">Your Network</h3>
+              </div>
+              
+              <div className="space-y-6">
+                {allLevels.map(({ level, count }) => (
+                  <NetworkLevelRow key={level} level={level} count={count} />
+                ))}
+              </div>
+
+              {/* Decorative accent */}
+              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl group-hover:bg-purple-600/20 transition-colors" />
+          </div>
+
+          {/* Right: Explainer Content */}
+          <div className="space-y-8">
+            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-sm font-medium">
+              Como funciona
+            </div>
+            
+            <div className="space-y-4">
+              <h2 className="text-4xl md:text-5xl font-black text-white leading-tight">
+                Construa Sua Rede de 5 Níveis
+              </h2>
+              <p className="text-slate-400 text-lg md:text-xl leading-relaxed">
+                Ganhe com seus convites diretos e a rede estendida deles.
+              </p>
+            </div>
+            
+            <div className="space-y-4 pt-4">
+               {/* Level 1 Card */}
+               <motion.div 
+                 whileHover={{ x: 10 }}
+                 className="flex items-center gap-6 p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-default"
+               >
+                  <div className="w-12 h-12 flex-shrink-0 rounded-full bg-indigo-600 flex items-center justify-center text-xl font-bold text-white shadow-lg shadow-indigo-500/20">
+                    1
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-lg">Nível 1: Amigos Diretos</h4>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-slate-600 ml-auto" />
+               </motion.div>
+
+               {/* Levels 2-5 Card */}
+               <motion.div 
+                 whileHover={{ x: 10 }}
+                 className="flex items-center gap-6 p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-default"
+               >
+                  <div className="w-12 h-12 flex-shrink-0 rounded-full bg-indigo-900/50 border border-indigo-500/30 flex items-center justify-center text-xl font-bold text-white shadow-lg shadow-indigo-500/10">
+                    5
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-lg">Níveis 2-5: Amigos de Amigos</h4>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-slate-600 ml-auto" />
+               </motion.div>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Main Interface */}
         <div className="grid md:grid-cols-12 gap-8">
@@ -301,51 +377,51 @@ export default function EarnMore() {
             </AnimatePresence>
           </div>
 
-          {/* Right Column: QR & Network */}
+          {/* Right Column: QR & Onboarding */}
           <div className="md:col-span-5 space-y-6">
             {/* QR Card */}
-            <div className="bg-white rounded-3xl p-6 shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500" />
+            <div className="bg-white rounded-[2rem] p-8 shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
               <div className="text-center">
-                <h3 className="text-slate-900 font-bold text-lg mb-4">Scan to Join</h3>
-                <div className="relative mx-auto w-48 h-48 bg-gray-100 rounded-xl p-2 mb-4 group-hover:scale-105 transition-transform duration-300 shadow-inner">
-                  {qrCode && <img src={qrCode} alt="QR Code" className="w-full h-full object-contain rounded-lg" />}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-lg">
+                <div className="mb-4">
+                  <h3 className="text-slate-900 font-black text-2xl tracking-tight">Personal QR Code</h3>
+                  <p className="text-slate-500 text-sm">Download and share in person</p>
+                </div>
+
+                <div className="relative mx-auto w-56 h-56 bg-gray-50 rounded-2xl p-4 mb-6 group-hover:scale-105 transition-transform duration-500 shadow-inner border border-gray-100">
+                  {qrCode && <img src={qrCode} alt="QR Code" className="w-full h-full object-contain" />}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/40 backdrop-blur-[2px] rounded-2xl">
+                     <Download className="w-10 h-10 text-slate-900 animate-bounce" />
                   </div>
                 </div>
+
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={downloadQRCode}
-                  className="w-full py-3 bg-slate-900 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors shadow-lg"
+                  className="w-full py-4 bg-slate-950 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-xl"
                 >
-                  <Download className="w-4 h-4" />
-                  Save Image
+                  <DownloadIcon className="w-5 h-5" />
+                  Save to Gallery
                 </motion.button>
               </div>
             </div>
 
-            {/* Network Widget */}
-            <div className="bg-slate-900/50 border border-white/10 rounded-3xl p-6 backdrop-blur-sm">
-              <div className="flex items-center gap-2 mb-6">
-                <TrendingUp className="w-5 h-5 text-green-400" />
-                <h3 className="font-bold text-white">Your Network</h3>
-              </div>
-              
-              <div className="space-y-4">
-                {levels.length === 0 ? (
-                  <div className="text-center py-8">
-                     <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-3">
-                       <Users className="w-6 h-6 text-slate-500" />
-                     </div>
-                     <p className="text-slate-500 text-sm">No referrals yet.<br/>Start inviting!</p>
-                  </div>
-                ) : (
-                  levels.map(([lvl, count]) => (
-                    <NetworkLevelRow key={lvl} level={lvl} count={count} />
-                  ))
-                )}
-              </div>
+            {/* Quick Tips or Small Info */}
+            <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[2rem] p-8 text-white shadow-xl relative overflow-hidden">
+               <div className="relative z-10">
+                 <h4 className="font-bold text-xl mb-2">Pro Tip 💡</h4>
+                 <p className="text-indigo-100 text-sm leading-relaxed mb-4">
+                   Shops you invite generate higher commissions. Focus on local merchants to grow your revenue faster!
+                 </p>
+                 <button 
+                  onClick={() => setActiveTab("shops")}
+                  className="text-white text-sm font-bold flex items-center gap-1 hover:underline"
+                 >
+                   Learn more about shop referrals <ChevronRight className="w-4 h-4" />
+                 </button>
+               </div>
+               <Globe className="absolute -bottom-8 -right-8 w-32 h-32 opacity-10" />
             </div>
           </div>
         </div>
