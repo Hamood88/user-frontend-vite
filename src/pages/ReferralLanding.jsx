@@ -649,14 +649,12 @@ const ReferralLanding = ({ type: propType }) => {
         <div className="bg-slate-900/50 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] shadow-2xl flex flex-col items-center max-w-sm w-full border border-slate-800 animate-in fade-in zoom-in duration-700">
           {/* Logo with Glow */}
           <div className="relative mb-10">
-            <div className="absolute inset-0 bg-purple-500/20 blur-2xl rounded-full"></div>
-            <div className="relative w-32 h-32 bg-slate-800 rounded-3xl flex items-center justify-center shadow-2xl border border-slate-700 rotate-3 transform">
-              <img 
-                src="/moondala-logo.png" 
-                alt="Moondala" 
-                className="w-24 h-24 object-contain -rotate-3"
-              />
-            </div>
+            <div className="absolute inset-0 bg-purple-500/30 blur-3xl rounded-full"></div>
+            <img 
+              src="/moondala-logo.png" 
+              alt="Moondala" 
+              className="relative w-32 h-32 object-contain drop-shadow-2xl"
+            />
           </div>
           
           <h2 className="text-2xl font-bold mb-2 text-center text-white">Moondala</h2>
