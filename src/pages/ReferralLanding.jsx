@@ -639,14 +639,6 @@ const ReferralLanding = ({ type: propType }) => {
       </div>
     );
   }
-        
-        {/* Footer Links */}
-        <div className="mt-8 text-slate-500 text-sm">
-          © {new Date().getFullYear()} Moondala
-        </div>
-      </div>
-    );
-  }
 
   // STEP 2: MAIN CONTENT
   return (
