@@ -528,27 +528,32 @@ const ReferralLanding = ({ type: propType }) => {
   const { i18n } = useTranslation();
   
   const [selectedLang, setSelectedLang] = useState(i18n.language || 'en');
-  const [videoSrc, setVideoSrc] = useState('https://res.cloudinary.com/dohetomaw/video/upload/intro-en.mp4');
+  const [videoSrc, setVideoSrc] = useState('https://res.cloudinary.com/dohetomaw/video/upload/intro-en');
   const [step, setStep] = useState(1);
   const [lightboxImg, setLightboxImg] = useState(null);
 
-  // Video base URL using your Cloudinary account
+  // Video base URL using your Cloudinary account (no .mp4 extension - Cloudinary adds it)
   const CLOUDINARY_VIDEO_BASE = 'https://res.cloudinary.com/dohetomaw/video/upload';
 
   // Persist language choice and handle direction/video
   useEffect(() => {
-    localStorage.setItem('userLanguage', selectedLang);
-    i18n.changeLanguage(selectedLang);
-    document.documentElement.dir = ['ar', 'ur'].includes(selectedLang) ? 'rtl' : 'ltr';
-    document.documentElement.lang = selectedLang;
-    
-    // Update video source when language changes - use Cloudinary URLs
-    setVideoSrc(`${CLOUDINARY_VIDEO_BASE}/intro-${selectedLang}.mp4`);
+    try {
+      localStorage.setItem('userLanguage', selectedLang);
+      i18n.changeLanguage(selectedLang);
+      document.documentElement.dir = ['ar', 'ur'].includes(selectedLang) ? 'rtl' : 'ltr';
+      document.documentElement.lang = selectedLang;
+      
+      // Update video source when language changes - Cloudinary auto-detects .mp4
+      setVideoSrc(`${CLOUDINARY_VIDEO_BASE}/intro-${selectedLang}`);
+    } catch (error) {
+      console.error('Error updating language:', error);
+    }
   }, [selectedLang, i18n]);
 
-  const handleVideoError = () => {
+  const handleVideoError = (e) => {
+    console.error('Video error:', e, 'Current src:', videoSrc);
     // If the language-specific video fails to load, fallback to English
-    const englishVideo = `${CLOUDINARY_VIDEO_BASE}/intro-en.mp4`;
+    const englishVideo = `${CLOUDINARY_VIDEO_BASE}/intro-en`;
     if (videoSrc !== englishVideo) {
       console.log(`Video for ${selectedLang} missing, falling back to English.`);
       setVideoSrc(englishVideo);
