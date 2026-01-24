@@ -69,7 +69,18 @@ const CONTENT = {
     level1: "ደረጃ 1: ቀጥተኛ ጓደኞች",
     level2_5: "ደረጃ 2-5: የጓደኞች ጓደኞች",
     dashboardTitle: "ስኬትዎን ይከታተሉ",
-    dashboardDesc: "ገቢዎን እና የአውታረ መረብ እድገትዎን በተጨባጭ ጊዜ ይመልከቱ።"
+    dashboardDesc: "ገቢዎን እና የአውታረ መረብ እድገትዎን በተጨባጭ ጊዜ ይመልከቱ።",
+    shopTitle: "አንድ መተግበሪያ። ሙሉ ማህበራዊ አለምዎ።",
+    shopSubtitle: "ያግኙ፣ ያጋሩ፣ ይግዙ እና ይሳተፉ—ሁሉም በአንድ ቦታ።",
+    shopIntro: "Moondala ጓደኞችዎን እና ተወዳጅ መደብሮችዎን አንድ ላይ ያመጣል። የማህበራዊ ምግቦችዎ እና የግዢ ጋሪዎ በፍጹም ስምምነት የሚኖሩበት የመጀመሪያው መድረክ ነው።",
+    pillar1Title: "🛒 ከሞል ይግዙ",
+    pillar1Desc: "በሺዎች የሚቆጠሩ ልዩ መደብሮችን ያስሱ። ከከፍተኛ ፋሽን እስከ ቴክኖሎጂ ድረስ የሚፈልጉት ሁሉ የተደራጀ እና ዝግጁ ነው።",
+    pillar2Title: "📱 በፊድስ ውስጥ ይሳተፉ",
+    pillar2Desc: "ማህበራዊ አውታረ መረብ ነው! ማሻሻያዎችን ያስነሱ፣ ጓደኞችን ይከተሉ እና በማህበረሰብዎ ውስጥ ምን እየታየ እንደሆነ ይመልከቱ።",
+    pillar3Title: "🤝 ከጓደኞች ጋር ይገናኙ",
+    pillar3Desc: "ግዢ አብረን ሲሆን የተሻለ ነው። ከሻጮች ጋር በቀጥታ ይወያዩ ወይም ከመግዛትዎ በፊት የጓደኞችዎን አስተያየት ያግኙ።",
+    pillar4Title: "💰 ያጋሩ እና ያግኙ",
+    pillar4Desc: "የሚወዱትን ምርት በሚያጋሩበት ጊዜ ወይም አዲስ ጓደኛ በሚጋብዙበት ጊዜ ሁሉ ለእርስዎ የሚከፍል አውታረ መረብ እየገነቡ ነው።"
   },
   fil: {
     enterBtn: "Enter Site",
@@ -87,7 +98,18 @@ const CONTENT = {
     level1: "Antas 1: Mga Direktang Kaibigan",
     level2_5: "Antas 2-5: Mga Kaibigan ng mga Kaibigan",
     dashboardTitle: "Subaybayan ang Iyong Tagumpay",
-    dashboardDesc: "Makita ang iyong kita at paglago ng network sa real-time."
+    dashboardDesc: "Makita ang iyong kita at paglago ng network sa real-time.",
+    shopTitle: "Isang App. Ang Iyong Buong Social World.",
+    shopSubtitle: "Kumita, Magbahagi, Mamili, at Makipag-ugnayan—lahat sa isang lugar.",
+    shopIntro: "Pinagsasama ng Moondala ang iyong mga kaibigan at paboritong tindahan. Ito ang unang platform kung saan ang iyong social feed at shopping cart ay naninirahan sa perpektong harmonya.",
+    pillar1Title: "🛒 Mamili sa Mall",
+    pillar1Desc: "Tuklasin ang libu-libong natatanging tindahan. Mula sa high-fashion hanggang tech, ang lahat ng kailangan mo ay organisado at handa para sa iyo.",
+    pillar2Title: "📱 Makiisa sa mga Feed",
+    pillar2Desc: "Ito ay isang social network! Mag-post ng mga update, i-follow ang mga kaibigan, at tingnan ang live feed ng kung ano ang trending sa iyong komunidad.",
+    pillar3Title: "🤝 Kumonekta sa mga Kaibigan",
+    pillar3Desc: "Ang pamimili ay mas maganda kapag magkasama. Makipag-chat nang direkta sa mga nagbebenta o kumuha ng opinyon ng iyong mga kaibigan sa mga produkto bago bumili.",
+    pillar4Title: "💰 Magbahagi at Kumita",
+    pillar4Desc: "Sa bawat pagkakataon na nagbabahagi ka ng produktong mahal mo o nag-imbita ng bagong kaibigan, bumubuo ka ng network na nagbabayad sa iyo."
   },
   ko: {
     enterBtn: "Enter Site",
@@ -134,7 +156,18 @@ const CONTENT = {
     level1: "Tingkat 1: Teman Langsung",
     level2_5: "Tingkat 2-5: Teman dari Teman",
     dashboardTitle: "Lacak Kesuksesan Anda",
-    dashboardDesc: "Lihat penghasilan dan pertumbuhan jaringan Anda secara real-time."
+    dashboardDesc: "Lihat penghasilan dan pertumbuhan jaringan Anda secara real-time.",
+    shopTitle: "Satu Aplikasi. Seluruh Dunia Sosial Anda.",
+    shopSubtitle: "Dapatkan, Bagikan, Belanja, dan Berinteraksi—semuanya di satu tempat.",
+    shopIntro: "Moondala menyatukan teman-teman Anda dan toko favorit Anda. Ini adalah platform pertama di mana feed sosial Anda dan keranjang belanja Anda hidup dalam harmoni sempurna.",
+    pillar1Title: "🛒 Belanja di Mall",
+    pillar1Desc: "Jelajahi ribuan toko unik. Dari mode tinggi hingga teknologi, semua yang Anda butuhkan terorganisir dan siap untuk Anda.",
+    pillar2Title: "📱 Terlibat dalam Feed",
+    pillar2Desc: "Ini adalah jaringan sosial! Posting pembaruan, ikuti teman, dan lihat feed langsung tentang apa yang sedang tren di komunitas Anda.",
+    pillar3Title: "🤝 Terhubung dengan Teman",
+    pillar3Desc: "Belanja lebih baik saat bersama. Chat langsung dengan penjual atau dapatkan pendapat teman Anda tentang produk sebelum Anda membeli.",
+    pillar4Title: "💰 Bagikan & Dapatkan",
+    pillar4Desc: "Setiap kali Anda membagikan produk yang Anda sukai atau mengundang teman baru, Anda membangun jaringan yang memberi Anda kembali."
   },
   so: {
     enterBtn: "Enter Site",
@@ -152,7 +185,18 @@ const CONTENT = {
     level1: "Heerka 1: Asxaabta Tooska ah",
     level2_5: "Heerarka 2-5: Asxaabta Asxaabta",
     dashboardTitle: "La Soco Guushaada",
-    dashboardDesc: "Arag dakhligaaga iyo koritaanka shabakadda waqtiga dhabta ah."
+    dashboardDesc: "Arag dakhligaaga iyo koritaanka shabakadda waqtiga dhabta ah.",
+    shopTitle: "Hal App. Dunidaada Bulshada oo Dhan.",
+    shopSubtitle: "Kasbo, Wadaag, Iibso, oo Ku Qayb gal—dhammaantoodna hal meel.",
+    shopIntro: "Moondala waxay isku dirtaa asxaabtaada iyo dukaamadaada jecel. Waa madal ugu horreeya oo ay wada noolaadaan feed-kaaga bulshada iyo gaadhi-iibsigaaga si wanaagsan.",
+    pillar1Title: "🛒 Ka Iibso Mall-ka",
+    pillar1Desc: "Baadh kumanyaal dukaan oo gaar ah. Moda sare ilaa teknoolajiyada, wax kasta oo aad u baahan tahay ayaa diyaar oo kuu sugaya.",
+    pillar2Title: "📱 Ka Qayb qaado Feed-yada",
+    pillar2Desc: "Waa shabakad bulsheed! Soo dhig cusboonaysiinta, raac asxaabta, oo arag feed toos ah oo sheegaya waxa trending ee bulshadaada.",
+    pillar3Title: "🤝 Kula Xiriir Asxaabta",
+    pillar3Desc: "Wax-iibsinta way fiicantahay marka la wada socdo. La sheekeyso iibiyaha tooska ah ama hel ra'yiga asxaabtaada alaabta ka hor inta aad iibsanayso.",
+    pillar4Title: "💰 Wadaag oo Kasbo",
+    pillar4Desc: "Mar kasta oo aad wadaajiso alaab aad jeceshahay ama aad casuurto saaxiib cusub, waxaad dhisaysaa shabakad kuu celisa lacag."
   },
   ur: {
     enterBtn: "سائٹ میں داخل ہوں",
