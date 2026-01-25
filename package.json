@@ -15,6 +15,7 @@
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^1.41.3",
     "clsx": "^2.1.1",
+    "firebase": "^12.8.0",
     "framer-motion": "^12.27.4",
     "i18next": "^25.8.0",
     "i18next-browser-languagedetector": "^8.2.0",

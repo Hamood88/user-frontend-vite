@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { Loader2, Mail, Lock, User, Phone, Globe, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { apiPost, setUserSession } from "../api";
 import { Button, Input, Alert, Label, Select, Checkbox } from "../components/ui";
 import { countries } from "../utils/countries";
+import { 
+  setupRecaptcha, 
+  sendVerificationCode, 
+  verifyCode, 
+  resendVerificationCode,
+  cleanupFirebaseAuth,
+  formatPhoneNumber 
+} from "../utils/firebasePhoneAuth";
 
 // Validation utilities from Figma
 const generateReferralCode = () => {
@@ -73,6 +81,7 @@ export function UserAuthForm({ mode }) {
   // Verification State
   const [isVerifying, setIsVerifying] = useState(false);
   const [otp, setOtp] = useState("");
+  const [verificationInProgress, setVerificationInProgress] = useState(false);
   
   // Terms Agreement
   const [termsAgreed, setTermsAgreed] = useState(false);
@@ -88,6 +97,18 @@ export function UserAuthForm({ mode }) {
     }
   });
 
+  // Setup reCAPTCHA on component mount
+  useEffect(() => {
+    if (mode === "signup") {
+      setupRecaptcha();
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      cleanupFirebaseAuth();
+    };
+  }, [mode]);
+
   const handleInterestChange = (interest) => {
     setInterests(prev =>
       prev.includes(interest)
@@ -100,35 +121,52 @@ export function UserAuthForm({ mode }) {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
+    setVerificationInProgress(true);
+    
     try {
-      const res = await apiPost("/auth/verify-phone", { email: email.trim(), code: otp });
+      // Verify code with Firebase
+      const result = await verifyCode(otp);
+      
+      // Firebase verification successful, get phone number
+      const verifiedPhone = result.user.phoneNumber;
+      
+      // Now tell backend the phone is verified
+      const res = await apiPost("/auth/verify-phone", { 
+        email: email.trim(), 
+        phoneNumber: verifiedPhone 
+      });
+      
       if (res.success) {
-        // Need to log in - ideally we got the token from register response.
-        // But since we didn't store it in state, we might need to rely on the user being created.
-        // However, register returned the token. We should have stored it?
-        // Actually, just redirect to login or auto-login. 
-        // For security, if we already have the token from the register call, we should use it.
-        // Let's modify handleSubmit to save the temporary token if needed.
-        // OR better: Just auto-login using the credentials we have in state (email/password).
-        
-        // Simpler flow: Auto-login with the credentials we still have in state.
+        // Auto-login with credentials
         const loginData = await apiPost("/auth/login", { email: email.trim(), password });
         setUserSession({ token: loginData.token, user: loginData.user });
         setSuccess(true);
+        
+        // Clear referral data
+        try {
+          localStorage.removeItem("referralCode");
+          localStorage.removeItem("referralMessage");
+        } catch {}
+        
         setTimeout(() => navigate("/feed"), 500);
       }
     } catch (err) {
-      setError(err.message || "Verification failed");
+      console.error("Verification error:", err);
+      setError(err.message || "Verification failed. Please check the code and try again.");
     } finally {
       setIsLoading(false);
+      setVerificationInProgress(false);
     }
   };
 
   const handleResend = async () => {
+    setError(null);
     try {
-      await apiPost("/auth/resend-verification", { email: email.trim() });
+      const formattedPhone = formatPhoneNumber(phone, country === "United States" ? "1" : "1");
+      await resendVerificationCode(formattedPhone);
       alert("Verification code resent!");
     } catch (err) {
+      console.error("Resend error:", err);
       alert(err.message || "Failed to resend code");
     }
   };
@@ -218,23 +256,21 @@ export function UserAuthForm({ mode }) {
 
         const data = await apiPost("/auth/register", registerData);
         
-        // Handle Verification
-        if (data.requirePhoneVerification) {
-          setIsVerifying(true);
-          setSuccess(false); // don't show success generic message yet
-          // Token is in data.token, but we wait to verify
-          // we can store it temporarily or just use email to verify
-          return; 
-        }
-
-        setSuccess(true);
-        setUserSession({ token: data.token, user: data.user });
-        // Clear referral data after successful registration
+        // After successful registration, send Firebase verification code
+        setSuccess(false);
+        setIsVerifying(true);
+        
+        // Send verification code via Firebase
         try {
-          localStorage.removeItem("referralCode");
-          localStorage.removeItem("referralMessage");
-        } catch {}
-        setTimeout(() => navigate("/feed"), 500);
+          const formattedPhone = formatPhoneNumber(phone, country === "United States" ? "1" : "1");
+          await sendVerificationCode(formattedPhone);
+          // Show verification UI
+        } catch (firebaseErr) {
+          console.error("Firebase error:", firebaseErr);
+          setError("Failed to send verification code. Please try again.");
+          setIsVerifying(false);
+          return;
+        }
       }
     } catch (err) {
       setError(err.message || 'Authentication failed');
@@ -246,16 +282,19 @@ export function UserAuthForm({ mode }) {
   if (isVerifying) {
     return (
       <form onSubmit={handleVerify} className="space-y-6">
+        {/* reCAPTCHA container (invisible) */}
+        <div id="recaptcha-container"></div>
+        
         <div className="text-center space-y-2">
             <div className="w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center mx-auto text-teal-400">
                 <Phone size={24} />
             </div>
             <h3 className="text-lg font-medium text-white">Verify Phone Number</h3>
             <p className="text-sm text-gray-400">
-                We sent a 6-digit code to <b>{phone}</b>.
+                We sent a 6-digit code to <b>{phone}</b> via SMS.
             </p>
-            <p className="text-xs text-yellow-500/80">
-                (Dev: Check backend logs for OTP)
+            <p className="text-xs text-gray-500">
+                Please enter the code to verify your phone number.
             </p>
         </div>
 
@@ -273,21 +312,27 @@ export function UserAuthForm({ mode }) {
                 type="text"
                 placeholder="000000"
                 value={otp}
-                onChange={(e) => setOtp(e.target.value)}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                 className="text-center tracking-widest text-xl"
                 maxLength={6}
                 required
+                disabled={verificationInProgress}
             />
         </div>
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" className="w-full" disabled={isLoading || otp.length !== 6}>
             {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-            Submit
+            Verify Code
         </Button>
         
         <div className="text-center">
-            <button type="button" onClick={handleResend} className="text-sm text-teal-400 hover:text-teal-300">
-                Resend Code
+            <button 
+              type="button" 
+              onClick={handleResend} 
+              className="text-sm text-teal-400 hover:text-teal-300 disabled:opacity-50"
+              disabled={verificationInProgress}
+            >
+                Didn't receive code? Resend
             </button>
         </div>
       </form>
@@ -296,6 +341,9 @@ export function UserAuthForm({ mode }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-h-[600px] overflow-y-auto pr-2">
+      {/* reCAPTCHA container (invisible) */}
+      <div id="recaptcha-container"></div>
+      
       {success && <Alert type="success" message="Success! Redirecting..." />}
 
       {error && (
