@@ -13,20 +13,32 @@ import {
  * @returns {RecaptchaVerifier}
  */
 export function setupRecaptcha(containerId = 'recaptcha-container') {
-  // Clear any existing recaptcha
+  // Check if already initialized
   if (window.recaptchaVerifier) {
-    window.recaptchaVerifier.clear();
+    console.log('♻️ reCAPTCHA already initialized, reusing...');
+    return window.recaptchaVerifier;
   }
 
+  // Check if container exists
+  const container = document.getElementById(containerId);
+  if (!container) {
+    console.error('❌ reCAPTCHA container not found:', containerId);
+    throw new Error('reCAPTCHA container not found');
+  }
+
+  // Clear container content if it has any
+  container.innerHTML = '';
+
+  console.log('🔧 Initializing new reCAPTCHA...');
   window.recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
     size: 'invisible',
     callback: (response) => {
       // reCAPTCHA solved, allow signInWithPhoneNumber
-      console.log('reCAPTCHA verified');
+      console.log('✅ reCAPTCHA verified');
     },
     'expired-callback': () => {
       // Response expired. Ask user to solve reCAPTCHA again.
-      console.log('reCAPTCHA expired');
+      console.log('⏰ reCAPTCHA expired');
     }
   });
 
