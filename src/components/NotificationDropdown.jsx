@@ -164,12 +164,37 @@ export default function NotificationDropdown({ onClose }) {
   function handleNavigate(n) {
     handleMarkRead(n);
     onClose();
-    // Simplified navigation logic
-    // You might want to copy robust logic from Notifications.jsx if needed
-    if (n.type === "friend_request") nav("/friends");
-    else if (n.type === "message_user") nav(`/messages/user/${n.actor?._id}`);
-    else if (n.meta?.postId) nav(`/feed/post/${n.meta.postId}`);
-    else nav("/notifications");
+    
+    const t = String(n?.type || "").trim().toLowerCase();
+    
+    // System messages (Admin DMs) -> Messages
+    if (t === 'system' || t === 'system_message' || t.includes('system')) {
+      const target = n?.meta?.link || "/messages";
+      return nav(target);
+    }
+    
+    // Message notifications -> Messages with conversationId
+    const isMessage = t === "message_user" || t === "message_shop" || t === "message_unified";
+    if (isMessage) {
+      const convoId = n?.meta?.conversationId || n?.meta?.threadId || n?.conversationId;
+      if (convoId) return nav(`/messages?conversationId=${convoId}`);
+      return nav("/messages");
+    }
+    
+    // Friend requests -> Friends page
+    if (t === "friend_request") return nav("/friends");
+    
+    // Post/Comment notifications -> Feed
+    const postId = n?.postId?._id || n?.postId || n?.meta?.postId;
+    const commentId = n?.commentId?._id || n?.commentId || n?.meta?.commentId;
+    if (postId) {
+      return commentId 
+        ? nav(`/feed?postId=${postId}&commentId=${commentId}`)
+        : nav(`/feed?postId=${postId}`);
+    }
+    
+    // Default fallback
+    nav("/notifications");
   }
 
   return (
