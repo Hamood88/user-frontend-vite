@@ -263,16 +263,33 @@ export function UserAuthForm({ mode }) {
         
         // After successful registration, send Firebase verification code
         setSuccess(false);
-        setIsVerifying(true);
         
         // Send verification code via Firebase
         try {
           const formattedPhone = formatPhoneNumber(phone, country === "United States" ? "1" : "1");
-          await sendVerificationCode(formattedPhone);
-          // Show verification UI
+          console.log('📱 Sending verification code to:', formattedPhone);
+          
+          const confirmationResult = await sendVerificationCode(formattedPhone);
+          console.log('✅ Verification code sent successfully');
+          
+          // Now show verification UI
+          setIsVerifying(true);
         } catch (firebaseErr) {
           console.error("Firebase error:", firebaseErr);
-          setError("Failed to send verification code. Please try again.");
+          
+          // Provide more specific error messages
+          let errorMessage = "Failed to send verification code. ";
+          if (firebaseErr.code === 'auth/invalid-phone-number') {
+            errorMessage += "Invalid phone number format.";
+          } else if (firebaseErr.code === 'auth/too-many-requests') {
+            errorMessage += "Too many requests. Please try again later.";
+          } else if (firebaseErr.code === 'auth/quota-exceeded') {
+            errorMessage += "SMS quota exceeded. Please try again later.";
+          } else {
+            errorMessage += firebaseErr.message || "Please try again.";
+          }
+          
+          setError(errorMessage);
           setIsVerifying(false);
           return;
         }

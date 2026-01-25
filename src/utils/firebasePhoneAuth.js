@@ -42,17 +42,27 @@ export async function sendVerificationCode(phoneNumber) {
   try {
     // Ensure phone number is in E.164 format
     const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : `+${phoneNumber}`;
+    console.log('📱 Sending SMS to:', formattedPhone);
     
-    const appVerifier = window.recaptchaVerifier || setupRecaptcha();
+    // Ensure reCAPTCHA is set up
+    let appVerifier = window.recaptchaVerifier;
+    if (!appVerifier) {
+      console.log('⚠️ reCAPTCHA not found, initializing...');
+      appVerifier = setupRecaptcha();
+    }
     
+    console.log('🔐 reCAPTCHA ready, requesting Firebase SMS...');
     const confirmationResult = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
     
     // Save confirmation result for later verification
     window.confirmationResult = confirmationResult;
+    console.log('✅ SMS sent! Confirmation result saved to window object');
     
     return confirmationResult;
   } catch (error) {
-    console.error('Error sending verification code:', error);
+    console.error('❌ Error sending verification code:', error);
+    console.error('Error code:', error.code);
+    console.error('Error message:', error.message);
     
     // Clear recaptcha on error
     if (window.recaptchaVerifier) {
@@ -72,14 +82,28 @@ export async function sendVerificationCode(phoneNumber) {
 export async function verifyCode(code) {
   try {
     if (!window.confirmationResult) {
-      throw new Error('No confirmation result found. Please request a new code.');
+      console.error('❌ No confirmation result found in window object');
+      throw new Error('No confirmation result found. Please request a new code by clicking "Resend".');
     }
     
+    console.log('🔍 Verifying code:', code);
     const result = await window.confirmationResult.confirm(code);
+    console.log('✅ Code verified successfully');
+    
     return result;
   } catch (error) {
-    console.error('Error verifying code:', error);
-    throw error;
+    console.error('❌ Error verifying code:', error);
+    
+    // Provide user-friendly error messages
+    if (error.code === 'auth/invalid-verification-code') {
+      throw new Error('Invalid verification code. Please check and try again.');
+    } else if (error.code === 'auth/code-expired') {
+      throw new Error('Verification code expired. Please request a new code.');
+    } else if (error.message.includes('No confirmation result')) {
+      throw error; // Re-throw our custom error
+    }
+    
+    throw new Error(error.message || 'Verification failed. Please try again.');
   }
 }
 
