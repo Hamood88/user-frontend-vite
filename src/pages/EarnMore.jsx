@@ -226,11 +226,11 @@ export default function EarnMore() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex justify-center mb-24 bg-slate-900/40 rounded-[3rem] p-8 md:p-12 border border-white/5 backdrop-blur-md"
+          className="flex justify-center mb-12 md:mb-24 bg-slate-900/40 rounded-3xl md:rounded-[3rem] p-4 md:p-12 border border-white/5 backdrop-blur-md"
         >
           {/* Network Visual Card */}
-          <div className="bg-[#0B1221] border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden group w-full max-w-md">
-             <div className="flex items-center gap-3 mb-8">
+          <div className="bg-[#0B1221] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden group w-full max-w-md">
+             <div className="flex items-center gap-3 mb-6 md:mb-8">
                 <div className="p-2 bg-green-500/10 rounded-lg">
                   <TrendingUp className="w-5 h-5 text-green-400" />
                 </div>
