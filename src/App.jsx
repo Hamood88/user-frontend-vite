@@ -32,6 +32,13 @@ import ReferralLanding from "./pages/ReferralLanding";
 import ShopFeedPublic from "./pages/ShopFeedPublic";
 import ShopMallPublic from "./pages/ShopMallPublic";
 
+/* ✅ LEGAL PAGES */
+import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
+import TermsOfService from "./pages/legal/TermsOfService";
+import CommunityGuidelines from "./pages/legal/CommunityGuidelines";
+import ReferralPolicy from "./pages/legal/ReferralPolicy";
+import RefundPolicy from "./pages/legal/RefundPolicy";
+
 /* ✅ LAYOUT / GUARDS */
 import AppLayout from "./components/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -245,6 +252,13 @@ export default function App() {
 
         {/* ✅ Unified product page (public) */}
         <Route path="/product/:id" element={<ProductDetailsUnified appName="user" />} />
+
+        {/* ✅ LEGAL PAGES (public) */}
+        <Route path="/legal/privacy" element={<PrivacyPolicy />} />
+        <Route path="/legal/terms" element={<TermsOfService />} />
+        <Route path="/legal/guidelines" element={<CommunityGuidelines />} />
+        <Route path="/legal/referrals" element={<ReferralPolicy />} />
+        <Route path="/legal/refunds" element={<RefundPolicy />} />
 
         {/* ✅ PRIVATE APP (logged-in) */}
         <Route element={<ProtectedRoute />}>

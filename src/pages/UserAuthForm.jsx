@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { Loader2, Mail, Lock, User, Phone, Globe, AlertCircle } from "lucide-react";
 import { apiPost, setUserSession } from "../api";
 import { Button, Input, Alert, Label, Select, Checkbox } from "../components/ui";
@@ -520,6 +520,25 @@ export function UserAuthForm({ mode }) {
             />
           </div>
         </>
+      )}
+
+      {mode === "signup" && (
+        <p style={{ 
+          fontSize: '13px', 
+          opacity: 0.8, 
+          textAlign: 'center', 
+          marginTop: '16px',
+          lineHeight: 1.5
+        }}>
+          By creating an account, you agree to our{' '}
+          <Link to="/legal/terms" target="_blank" style={{ color: '#3b82f6', textDecoration: 'underline' }}>
+            Terms of Service
+          </Link>
+          {' '}and{' '}
+          <Link to="/legal/privacy" target="_blank" style={{ color: '#3b82f6', textDecoration: 'underline' }}>
+            Privacy Policy
+          </Link>.
+        </p>
       )}
 
       <Button 

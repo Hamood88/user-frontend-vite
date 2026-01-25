@@ -75,14 +75,12 @@ VITE_API_BASE=http://localhost:5000
 3.  Add navigation link in `src/components/AppLayout.jsx` or specialized navs.
 
 ## Critical Rules
-1.  **Directory Awareness**: Confirm you are in `user-frontend-vite-temp/`.
-2.  **No Vendor/Admin Access**: Never call `/api/shop/*` or `/api/admin/*`.
-3.  **Token Hygiene**: Use `setUserSession({ token, user })` to update auth state atomically.
-4.  **Legacy Warning**: Ignore the `user-frontend/` directory completely.
-5.  **Referral Logic**: QR codes are generated client-side; referral codes are tracked via `referredBy` in the `User` model on the backend.
-6.  **Image FAQs**:
-    - If images 404 on `moondala-backend.onrender.com`: Check `toAbsUrl` logic.
-    - Backend serving logic: `uploads/` dir is served statically.
+1.  **Directory Awareness**: Confirm you are in `user-frontend-vite-temp/`, not the legacy `user-frontend/` folder.
+2.  **No Vendor/Admin Access**: Never call `/api/shop/*` or `/api/admin/*`. User frontend strictly uses `/api/users/*` and `/api/public/*`.
+3.  **Token Hygiene**: Use `setUserSession({ token, user })` to update auth state atomically; use `clearUserSession()` to clear both.
+4.  **Referral Logic**: QR codes are generated client-side; referral codes are tracked via `referredBy` in the `User` model on the backend.
+5.  **Image Resolution**: Use `toAbsUrl()` for ALL image/video sources. It handles localhost→backend URL replacement and Cloudinary paths automatically.
+6.  **Vite vs CRA**: This project uses `import.meta.env.VITE_*` (NOT `process.env`). env files: `.env`, `.env.local`.
 
 ## Deployment
 - **Platform**: Vercel (https://moondala.one)
@@ -128,3 +126,20 @@ import { toAbsUrl } from '../api';
 <img src={toAbsUrl(user.avatarUrl)} />
 <video src={toAbsUrl(post.videoUrl)} />
 ```
+
+## Advanced Patterns
+
+### Protected Routes
+- `ProtectedRoute` component checks `localStorage.getItem('userToken')` on every render
+- If missing: redirects to `/login` automatically
+- Use inside `<Route>`: `<Route element={<ProtectedRoute><MyPage /></ProtectedRoute>} />`
+
+### Error Boundaries & Crash Recovery
+- `App.jsx` has a top-level `ErrorBoundary` that catches React errors
+- Displays error details for debugging; offers link to `/_probe` health check
+- Helps developers debug crashes without blank white screens
+
+### API Error Handling
+- 401/403 responses automatically trigger `clearUserSession()` and redirect to login
+- No manual logout needed in components — API layer handles it
+- Catch network errors: Check browser console, verify backend running, verify CORS in `backend/app.js`

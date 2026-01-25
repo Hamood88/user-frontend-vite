@@ -1,0 +1,82 @@
+.legalWrap {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 28px 18px 60px;
+}
+
+.legalTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.legalTitle {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.legalMeta {
+  margin: 6px 0 0;
+  opacity: 0.75;
+  font-size: 13px;
+}
+
+.legalCard {
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.legalCard h2 {
+  margin: 18px 0 10px;
+  font-size: 18px;
+}
+.legalCard h3 {
+  margin: 14px 0 8px;
+  font-size: 16px;
+  opacity: 0.95;
+}
+
+.legalCard p, .legalCard li {
+  line-height: 1.6;
+  opacity: 0.92;
+}
+
+.legalCard ul {
+  margin: 10px 0 12px 18px;
+}
+
+.legalNotice {
+  border-left: 3px solid rgba(255,255,255,0.35);
+  padding-left: 12px;
+  margin: 12px 0;
+  opacity: 0.9;
+}
+
+.legalLinksRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0 0;
+}
+
+.legalPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.95;
+}
+.legalPill:hover {
+  opacity: 1;
+  background: rgba(255,255,255,0.06);
+}
