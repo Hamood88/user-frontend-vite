@@ -89,8 +89,8 @@ export default function EarnMore() {
   useEffect(() => {
     if (referralCode) {
       const link = activeTab === "users" 
-        ? `${window.location.origin}/refer/user/${referralCode}`
-        : `${window.location.origin}/refer/shop/${referralCode}`;
+        ? `${window.location.origin}/r/${referralCode}`
+        : `${window.location.origin}/b/${referralCode}`;
         
       QRCode.toDataURL(link, {
         errorCorrectionLevel: "H",
@@ -141,8 +141,9 @@ export default function EarnMore() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const userReferralLink = `${window.location.origin}/refer/user/${referralCode}`;
-  const shopReferralLink = `${window.location.origin}/refer/shop/${referralCode}`;
+  // Short referral links
+  const userReferralLink = `${window.location.origin}/r/${referralCode}`;
+  const shopReferralLink = `${window.location.origin}/b/${referralCode}`;
 
   const shareOnSocial = (platform) => {
     const isUser = activeTab === "users";

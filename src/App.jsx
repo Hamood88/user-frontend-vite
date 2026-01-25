@@ -218,8 +218,12 @@ export default function App() {
         
         {/* Referral System */}
         <Route path="/refer/landing/:type/:code" element={<ReferralLanding />} />
+        {/* Long paths (Backward compat) */}
         <Route path="/refer/user/:code" element={<ReferralLanding type="user" />} />
         <Route path="/refer/shop/:code" element={<ReferralLanding type="shop" />} />
+        {/* Short paths */}
+        <Route path="/r/:code" element={<ReferralLanding type="user" />} />
+        <Route path="/b/:code" element={<ReferralLanding type="shop" />} />
 
         {/* Optional: shop auth shortcuts */}
         <Route path="/shop/login" element={<AuthRedirect mode="login" side="shop" />} />
