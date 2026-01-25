@@ -71,11 +71,15 @@ export function toAbsUrl(url) {
   if (!url) return "";
   const s = String(url);
   
-  // Fix localhost URLs to use production API_BASE
-  if (s.includes("localhost:5000")) return s.replace(/http:\/\/localhost:5000/g, API_BASE);
-  if (s.includes("127.0.0.1:5000")) return s.replace(/http:\/\/127\.0\.0\.1:5000/g, API_BASE);
+  // ✅ CRITICAL: Fix localhost URLs FIRST (before checking for http://)
+  if (s.includes("localhost:5000") || s.includes("localhost:3000")) {
+    return s.replace(/http:\/\/localhost:\d+/g, API_BASE);
+  }
+  if (s.includes("127.0.0.1:5000") || s.includes("127.0.0.1")) {
+    return s.replace(/http:\/\/127\.0\.0\.1:\d+/g, API_BASE);
+  }
   
-  // Already absolute URL
+  // Already absolute URL (non-localhost)
   if (s.startsWith("http://") || s.startsWith("https://")) return s;
 
   // ROBUST CLOUDINARY DETECTION (Fixes /uploads/cloudname/... paths)
