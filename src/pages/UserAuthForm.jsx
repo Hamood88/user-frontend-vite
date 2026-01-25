@@ -11,7 +11,8 @@ import {
   verifyCode, 
   resendVerificationCode,
   cleanupFirebaseAuth,
-  formatPhoneNumber 
+  formatPhoneNumber,
+  getFirebaseIdToken
 } from "../utils/firebasePhoneAuth";
 
 // Validation utilities from Figma
@@ -124,19 +125,23 @@ export function UserAuthForm({ mode }) {
     setVerificationInProgress(true);
     
     try {
-      // Verify code with Firebase
+      // Step 1: Verify code with Firebase
       const result = await verifyCode(otp);
+      console.log('✅ Firebase verification successful');
       
-      // Firebase verification successful, get phone number
-      const verifiedPhone = result.user.phoneNumber;
+      // Step 2: Get Firebase ID token (this proves verification happened)
+      const firebaseToken = await getFirebaseIdToken();
+      console.log('✅ Got Firebase ID token');
       
-      // Now tell backend the phone is verified
+      // Step 3: Send token to backend for server-side verification
       const res = await apiPost("/auth/verify-phone", { 
         email: email.trim(), 
-        phoneNumber: verifiedPhone 
+        firebaseToken: firebaseToken
       });
       
       if (res.success) {
+        console.log('✅ Backend verified Firebase token');
+        
         // Auto-login with credentials
         const loginData = await apiPost("/auth/login", { email: email.trim(), password });
         setUserSession({ token: loginData.token, user: loginData.user });

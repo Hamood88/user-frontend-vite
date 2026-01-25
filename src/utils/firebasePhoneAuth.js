@@ -134,12 +134,16 @@ export function formatPhoneNumber(phoneNumber, countryCode = '1') {
 
 /**
  * Get Firebase ID token for backend verification
+ * This token proves the user has been authenticated by Firebase
  * @returns {Promise<string>}
  */
-export async function getFirebaseToken() {
+export async function getFirebaseIdToken() {
   const user = auth.currentUser;
   if (!user) {
     throw new Error('No authenticated user');
   }
-  return user.getIdToken();
+  
+  // Get fresh ID token (force refresh to ensure it's valid)
+  const idToken = await user.getIdToken(true);
+  return idToken;
 }
