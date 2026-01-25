@@ -863,16 +863,16 @@ export default function Feed() {
             animate={{ opacity: 1, y: 0 }}
             className="glass-card rounded-2xl p-6"
           >
-            <div className="flex items-start gap-6">
-              <div className="md-avatarRingLg flex-shrink-0">
+            <div className="flex items-center gap-4">
+              <div className="w-20 h-20 rounded-full border-4 border-white/10 bg-slate-800 flex items-center justify-center overflow-hidden shadow-md">
                 {avatarUrl(profileUser) ? (
                   <img
                     src={avatarUrl(profileUser)}
                     alt={userName(profileUser)}
-                    className="md-avatarImgLg"
+                    className="w-full h-full object-cover rounded-full"
                   />
                 ) : (
-                  <div className="md-avatarFallbackLg">
+                  <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-white/80">
                     {(userName(profileUser) || "U").slice(0, 1).toUpperCase()}
                   </div>
                 )}
