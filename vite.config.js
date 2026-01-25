@@ -122,4 +122,13 @@ export default defineConfig({
   server: {
     middlewareMode: false,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'api-vendor': ['./src/api.jsx']
+        }
+      }
+    }
+  }
 });
