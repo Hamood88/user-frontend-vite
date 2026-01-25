@@ -387,12 +387,6 @@ export default function EarnMore() {
                  <p className="text-indigo-100 text-sm leading-snug mb-3">
                    Shops generate higher commissions. Focus on local merchants to grow faster!
                  </p>
-                 <button 
-                  onClick={() => setActiveTab("shops")}
-                  className="text-white text-xs font-bold flex items-center gap-1 hover:underline bg-white/10 px-3 py-1.5 rounded-full w-fit"
-                 >
-                   Learn about shop referrals <ChevronRight className="w-3 h-3" />
-                 </button>
                </div>
             </div>
           </div>
