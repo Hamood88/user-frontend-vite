@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import { 
   Share2, Copy, Facebook, Twitter, Mail, Zap, Gift, 
   Users, MessageCircle, Send, Smartphone, Download, 
-  ChevronRight, Award, TrendingUp, Sparkles, Globe
+  ChevronRight, Award, TrendingUp, Sparkles, Globe, Check
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "qrcode";
@@ -249,9 +249,9 @@ export default function EarnMore() {
         </motion.div>
 
         {/* Main Interface */}
-        <div className="grid md:grid-cols-12 gap-8">
-          {/* Left Column: Controls */}
-          <div className="md:col-span-7 space-y-6">
+        <div className="max-w-2xl mx-auto space-y-8">
+          {/* Top Section: Tab Switcher & Invite Card */}
+          <div className="space-y-6">
             
             {/* Tab Switcher */}
             <div className="bg-slate-900/50 p-1.5 rounded-2xl border border-white/10 flex relative backdrop-blur-sm">
@@ -275,107 +275,103 @@ export default function EarnMore() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
-                className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 md:p-8 border border-white/10 shadow-xl"
+                className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 border border-white/10 shadow-xl"
               >
-                <div className="flex items-start justify-between mb-6">
-                  <div>
-                    <h2 className="text-2xl font-bold text-white mb-2">
-                      {activeTab === "users" ? "Invite New Users" : "Onboard Merchants"}
-                    </h2>
-                    <p className="text-slate-400 text-sm">
-                      {activeTab === "users" 
-                        ? "They get rewards, you get lifetime commissions." 
-                        : "Help shops sell online and earn from their revenue."}
-                    </p>
-                  </div>
-                  <div className={`p-3 rounded-xl bg-gradient-to-br shadow-inner ${activeTab === 'users' ? 'from-blue-500 to-indigo-600' : 'from-purple-500 to-pink-600'}`}>
-                    {activeTab === 'users' ? <Users className="w-6 h-6 text-white" /> : <Gift className="w-6 h-6 text-white" />}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-xl bg-gradient-to-br shadow-inner ${activeTab === 'users' ? 'from-blue-500 to-indigo-600' : 'from-purple-500 to-pink-600'}`}>
+                      {activeTab === 'users' ? <Users className="w-5 h-5 text-white" /> : <Gift className="w-5 h-5 text-white" />}
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-white leading-none mb-1">
+                        {activeTab === "users" ? "Invite New Users" : "Onboard Merchants"}
+                      </h2>
+                      <p className="text-slate-400 text-xs text-balance">
+                        {activeTab === "users" 
+                          ? "Earn lifetime commissions." 
+                          : "Earn from their revenue."}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Link Copy Section */}
-                <div className="bg-black/40 rounded-xl p-4 mb-6 border border-white/5 group relative overflow-hidden">
-                   <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"/>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Referral Link</span>
-                    {copied && <span className="text-xs text-green-400 font-bold animate-pulse">Copied!</span>}
-                  </div>
-                  <div className="flex gap-3 items-center relative z-10">
-                    <code className="text-slate-200 text-sm flex-1 truncate font-mono select-all p-1">
-                      {activeTab === "users" ? userReferralLink : shopReferralLink}
-                    </code>
-                    <motion.button
+                {/* Link Copy Section - Compact */}
+                <div className="bg-black/40 rounded-xl p-3 mb-4 border border-white/5 relative overflow-hidden flex items-center gap-3">
+                   <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Referral Link</p>
+                      <code className="text-slate-200 text-sm block truncate font-mono select-all">
+                        {activeTab === "users" ? userReferralLink : shopReferralLink}
+                      </code>
+                   </div>
+                   <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => copyToClipboard(activeTab === "users" ? userReferralLink : shopReferralLink)}
-                      className="bg-white/10 hover:bg-white/20 p-2 rounded-lg text-white transition-colors border border-white/10"
+                      className="bg-white/10 hover:bg-white/20 p-2.5 rounded-lg text-white transition-colors border border-white/10 flex-shrink-0"
                     >
-                      <Copy className="w-5 h-5" />
-                    </motion.button>
-                  </div>
+                      {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
+                   </motion.button>
                 </div>
 
-                {/* Social Grid */}
+                {/* Social Grid - Compact */}
                 <div>
-                   <h3 className="text-sm font-semibold text-slate-400 mb-4">Share instantly via</h3>
-                   <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
-                      <SocialBtn icon={FacebookIcon} color="bg-[#1877F2]" onClick={() => shareOnSocial("facebook")} />
-                      <SocialBtn icon={XIcon} color="bg-black border border-white/20" onClick={() => shareOnSocial("twitter")} />
-                      <SocialBtn icon={WhatsAppIcon} color="bg-[#25D366]" onClick={() => shareOnSocial("whatsapp")} />
-                      <SocialBtn icon={TelegramIcon} color="bg-[#229ED9]" onClick={() => shareOnSocial("telegram")} />
-                      <SocialBtn icon={Mail} color="bg-rose-500" onClick={() => shareOnSocial("email")} />
-                      <SocialBtn icon={LinkedInIcon} color="bg-[#0A66C2]" onClick={() => shareOnSocial("linkedin")} />
+                   <h3 className="text-xs font-semibold text-slate-500 mb-3 uppercase tracking-wider">Share instantly</h3>
+                   <div className="flex gap-2 justify-between">
+                      <SocialBtn icon={FacebookIcon} color="bg-[#1877F2]" onClick={() => shareOnSocial("facebook")} compact />
+                      <SocialBtn icon={XIcon} color="bg-black border border-white/20" onClick={() => shareOnSocial("twitter")} compact />
+                      <SocialBtn icon={WhatsAppIcon} color="bg-[#25D366]" onClick={() => shareOnSocial("whatsapp")} compact />
+                      <SocialBtn icon={TelegramIcon} color="bg-[#229ED9]" onClick={() => shareOnSocial("telegram")} compact />
+                      <SocialBtn icon={Mail} color="bg-rose-500" onClick={() => shareOnSocial("email")} compact />
                    </div>
                 </div>
               </motion.div>
             </AnimatePresence>
           </div>
 
-          {/* Right Column: QR & Onboarding */}
-          <div className="md:col-span-5 space-y-6">
-            {/* QR Card */}
-            <div className="bg-white rounded-[2rem] p-8 shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
-              <div className="text-center">
+          {/* Bottom Section: QR & Onboarding (Now Stacked Below) */}
+          <div className="space-y-6">
+            {/* QR Card - Compact */}
+            <div className="bg-white rounded-3xl p-6 shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
+              <div className="text-center flex flex-col items-center">
                 <div className="mb-4">
-                  <h3 className="text-slate-900 font-black text-2xl tracking-tight">Personal QR Code</h3>
-                  <p className="text-slate-500 text-sm">Download and share in person</p>
+                  <h3 className="text-slate-900 font-black text-xl tracking-tight">Personal QR Code</h3>
+                  <p className="text-slate-500 text-xs">Scan to join your network</p>
                 </div>
 
-                <div className="relative mx-auto w-56 h-56 bg-gray-50 rounded-2xl p-4 mb-6 group-hover:scale-105 transition-transform duration-500 shadow-inner border border-gray-100">
+                <div className="w-48 h-48 bg-gray-50 rounded-xl p-3 mb-4 shadow-inner border border-gray-100">
                   {qrCode && <img src={qrCode} alt="QR Code" className="w-full h-full object-contain" />}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/40 backdrop-blur-[2px] rounded-2xl">
-                     <Download className="w-10 h-10 text-slate-900 animate-bounce" />
-                  </div>
                 </div>
 
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={downloadQRCode}
-                  className="w-full py-4 bg-slate-950 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-xl"
+                  className="w-full max-w-xs py-3 bg-slate-950 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-md text-sm"
                 >
-                  <DownloadIcon className="w-5 h-5" />
+                  <DownloadIcon className="w-4 h-4" />
                   Save to Gallery
                 </motion.button>
               </div>
             </div>
 
-            {/* Quick Tips or Small Info */}
-            <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[2rem] p-8 text-white shadow-xl relative overflow-hidden">
+            {/* Quick Tips - Compact */}
+            <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
                <div className="relative z-10">
-                 <h4 className="font-bold text-xl mb-2">Pro Tip 💡</h4>
-                 <p className="text-indigo-100 text-sm leading-relaxed mb-4">
-                   Shops you invite generate higher commissions. Focus on local merchants to grow your revenue faster!
+                 <h4 className="font-bold text-lg mb-1 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-yellow-300" />
+                    Pro Tip
+                 </h4>
+                 <p className="text-indigo-100 text-sm leading-snug mb-3">
+                   Shops generate higher commissions. Focus on local merchants to grow faster!
                  </p>
                  <button 
                   onClick={() => setActiveTab("shops")}
-                  className="text-white text-sm font-bold flex items-center gap-1 hover:underline"
+                  className="text-white text-xs font-bold flex items-center gap-1 hover:underline bg-white/10 px-3 py-1.5 rounded-full w-fit"
                  >
-                   Learn more about shop referrals <ChevronRight className="w-4 h-4" />
+                   Learn about shop referrals <ChevronRight className="w-3 h-3" />
                  </button>
                </div>
-               <Globe className="absolute -bottom-8 -right-8 w-32 h-32 opacity-10" />
             </div>
           </div>
         </div>
