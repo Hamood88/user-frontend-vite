@@ -1145,45 +1145,6 @@ export async function checkShopFollowStatus(shopId) {
 }
 
 /* ================================
-   ✅ ORDERS & RETURNS
-   ================================ */
-export async function getMyOrders() {
-  return apiGet("/api/orders/mine");
-}
-
-export async function getOrderCommissionProof(orderId) {
-  if (!orderId) throw new Error("Missing orderId");
-  return apiGet(`/api/orders/${encodeURIComponent(orderId)}/commission-proof`);
-}
-
-export async function setOrderAskConsent(orderId, { allowQuestions, anonymousQuestions } = {}) {
-  if (!orderId) throw new Error("Missing orderId");
-  return apiPost(`/api/orders/${encodeURIComponent(orderId)}/ask-consent`, {
-    allowQuestions: !!allowQuestions,
-    anonymousQuestions: !!anonymousQuestions
-  });
-}
-
-export async function getMyReturns(status = "") {
-  const statusParam = String(status || "").trim();
-  const url = statusParam ? `/api/returns?status=${encodeURIComponent(statusParam)}` : "/api/returns";
-  return apiGet(url);
-}
-
-export async function createReturnRequest({ orderId, productId, reason, note } = {}) {
-  if (!orderId) throw new Error("Missing orderId");
-  if (!productId) throw new Error("Missing productId");
-  if (!reason) throw new Error("Missing reason");
-  
-  return apiPost("/api/returns/request", {
-    orderId: String(orderId).trim(),
-    productId: String(productId).trim(),
-    reason: String(reason).trim(),
-    note: String(note || "").trim()
-  });
-}
-
-/* ================================
    ✅ PUBLIC SHOP FEED INTERACTIONS
    ================================ */
 export async function likeShopPost(shopId, postId) {
