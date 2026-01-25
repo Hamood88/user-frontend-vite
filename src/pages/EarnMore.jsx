@@ -59,6 +59,7 @@ export default function EarnMore() {
   const [stats, setStats] = useState({ totalInvited: 0, totalEarned: 0 });
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("users");
+  const [customMessage, setCustomMessage] = useState("");
   const qrRef = useRef(null);
 
   // Get user from localStorage
@@ -74,6 +75,15 @@ export default function EarnMore() {
       console.error("Failed to parse user", e);
     }
   }, []);
+
+  // Update default message when tab changes
+  useEffect(() => {
+    const isUser = activeTab === "users";
+    const defaultMsg = isUser 
+      ? "Join me on Moondala and let's earn rewards together! 🚀" 
+      : "Grow your business on Moondala! 📈";
+    setCustomMessage(defaultMsg);
+  }, [activeTab]);
 
   // Generate QR code
   useEffect(() => {
@@ -137,20 +147,18 @@ export default function EarnMore() {
   const shareOnSocial = (platform) => {
     const isUser = activeTab === "users";
     const link = isUser ? userReferralLink : shopReferralLink;
-    const desc = isUser 
-      ? "Join me on Moondala and let's earn rewards together! 🚀" 
-      : "Grow your business on Moondala! 📈";
     
-    const message = `${desc}\n\nUse my code: ${referralCode}\n${link}`;
+    // Use custom message if available, otherwise fallback (though customMessage should always be set)
+    const finalMessage = `${customMessage}\n\nUse my code: ${referralCode}\n${link}`;
     
     // Updated simple share logic
     const urls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`,
-      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`,
-      whatsapp: `https://wa.me/?text=${encodeURIComponent(message)}`,
-      telegram: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(message)}`,
+      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(finalMessage)}`,
+      whatsapp: `https://wa.me/?text=${encodeURIComponent(finalMessage)}`,
+      telegram: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(finalMessage)}`,
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`,
-      email: `mailto:?subject=Join Moondala!&body=${encodeURIComponent(message)}`,
+      email: `mailto:?subject=Join Moondala!&body=${encodeURIComponent(finalMessage)}`,
     };
 
     if (urls[platform]) {
@@ -311,6 +319,18 @@ export default function EarnMore() {
                     >
                       {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
                    </motion.button>
+                </div>
+
+                {/* Message Editor */}
+                <div className="mb-4">
+                  <h3 className="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wider">Customize Message</h3>
+                  <textarea
+                    value={customMessage}
+                    onChange={(e) => setCustomMessage(e.target.value)}
+                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-slate-200 focus:outline-none focus:border-indigo-500/50 resize-none"
+                    rows={2}
+                    placeholder="Write a message to share..."
+                  />
                 </div>
 
                 {/* Social Grid - Compact */}
