@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { Loader2, Mail, Lock, User, Phone, Globe, AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { apiPost, setUserSession } from "../api";
 import { Button, Input, Alert, Label, Select, Checkbox } from "../components/ui";
 import { countries } from "../utils/countries";
@@ -51,6 +52,7 @@ const INTERESTS = [
 export function UserAuthForm({ mode }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -535,17 +537,17 @@ export function UserAuthForm({ mode }) {
             className="mt-1 w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
           />
           <label htmlFor="termsAgreement" className="text-sm leading-relaxed cursor-pointer">
-            I agree to Moondala's{' '}
+            {t('legal.agreeToTerms')}{' '}
             <Link to="/legal/terms" target="_blank" className="text-blue-400 underline hover:text-blue-300">
-              Terms of Service
+              {t('legal.termsLink')}
             </Link>
             {', '}
             <Link to="/legal/privacy" target="_blank" className="text-blue-400 underline hover:text-blue-300">
-              Privacy Policy
+              {t('legal.privacyLink')}
             </Link>
-            {', and '}
+            {', '}{t('legal.and')}{' '}
             <Link to="/legal/referrals" target="_blank" className="text-blue-400 underline hover:text-blue-300">
-              Referral Policy
+              {t('legal.referralPolicyLink')}
             </Link>
             .
           </label>

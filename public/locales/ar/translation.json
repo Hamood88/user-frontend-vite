@@ -55,5 +55,19 @@
     "shareLink": "شارك الرابط",
     "topInviters": "أفضل الداعين",
     "recentActivity": "النشاط الأخير"
+  },
+  "legal": {
+    "privacy": "الخصوصية",
+    "terms": "الشروط",
+    "guidelines": "الإرشادات",
+    "referrals": "الإحالات",
+    "refunds": "الاسترجاع",
+    "back": "رجوع",
+    "lastUpdated": "آخر تحديث",
+    "agreeToTerms": "أوافق على",
+    "and": "و",
+    "privacyLink": "سياسة الخصوصية",
+    "termsLink": "شروط الخدمة",
+    "referralPolicyLink": "سياسة الإحالة"
   }
 }

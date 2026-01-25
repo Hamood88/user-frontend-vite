@@ -55,5 +55,19 @@
     "shareLink": "Share Link",
     "topInviters": "Top Inviters",
     "recentActivity": "Recent Activity"
+  },
+  "legal": {
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "guidelines": "Guidelines",
+    "referrals": "Referrals",
+    "refunds": "Refunds",
+    "back": "Back",
+    "lastUpdated": "Last updated",
+    "agreeToTerms": "I agree to Moondala's",
+    "and": "and",
+    "privacyLink": "Privacy Policy",
+    "termsLink": "Terms of Service",
+    "referralPolicyLink": "Referral Policy"
   }
 }
