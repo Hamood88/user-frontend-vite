@@ -27,6 +27,7 @@ import {
 
 import {
   apiUpload,
+  apiGet,
   getMyFeed,
   getPost,
   getPostsByUser,
@@ -365,7 +366,10 @@ export default function Feed() {
     async function loadInviters() {
       setLoadingInviters(true);
       try {
-        const data = await getTopInviters(5);
+        // Fix: Use direct API call to avoid bundling issues
+        // const data = await getTopInviters(5);
+        const res = await apiGet(`/api/users/top-inviters?limit=5`);
+        const data = Array.isArray(res?.topInviters) ? res.topInviters : [];
         setTopInviters(data);
       } catch (e) {
         console.error("Failed to load top inviters:", e);
