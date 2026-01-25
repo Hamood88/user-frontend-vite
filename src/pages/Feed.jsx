@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 
 import {
+  apiPost,
   apiUpload,
   apiGet,
   getMyFeed,
@@ -841,8 +842,7 @@ export default function Feed() {
     const reportReason = reasons[reason] || 'Other';
     
     try {
-      // TODO: Implement backend API call to report post
-      // await apiPost(`/posts/${post._id}/report`, { reason: reportReason });
+      await apiPost(`/posts/${post._id}/report`, { reason: reportReason });
       
       const originalErr = err;
       setErr(`Post reported for: ${reportReason}. Thank you for helping keep Moondala safe.`);
