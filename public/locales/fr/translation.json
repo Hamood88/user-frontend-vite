@@ -1,0 +1,34 @@
+{
+  "legal": {
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "guidelines": "Directives",
+    "referrals": "Parrainages",
+    "refunds": "Remboursements",
+    "back": "Retour",
+    "lastUpdated": "Dernière mise à jour",
+    "agreeToTerms": "J'accepte les",
+    "and": "et",
+    "privacyLink": "Politique de Confidentialité",
+    "termsLink": "Conditions de Service",
+    "referralPolicyLink": "Politique de Parrainage",
+    "pages": {
+      "referralPolicy": {
+        "title": "Politique de Parrainage et Récompenses",
+        "intro": "Les parrainages sont destinés aux vraies personnes qui invitent de vraies personnes. La fraude détruit la confiance — nous l'appliquons strictement.",
+        "section1Title": "1) Comment fonctionnent les récompenses",
+        "section1Content": ["Les récompenses peuvent être gagnées à partir de transactions éligibles dans votre chaîne de parrainage.", "Les niveaux, pourcentages et durées des récompenses peuvent être configurables par Moondala et peuvent changer avec le temps.", "Certaines transactions peuvent être exclues (remboursements, rétrofacturations, fraude, articles restreints)."],
+        "section2Title": "2) Fraude et abus (tolérance zéro)",
+        "section2Intro": "Vous serez banni définitivement si vous :",
+        "section2Content": ["Créez des comptes en double ou faux pour obtenir des récompenses (y compris les comptes de famille/amis utilisés frauduleusement).", "Exploitez des \"fermes de parrainage\" en utilisant des bots, des scripts ou des outils de création de comptes automatisés.", "Vous auto-parrainez (utiliser un autre compte pour vous parrainer vous-même).", "Achetez, vendez, échangez ou partagez des codes de parrainage ou des comptes contre de l'argent ou des avantages.", "Utilisez Moondala pour promouvoir de manière spam des programmes de parrainage concurrents ou des programmes MLM.", "Manipulez le suivi des parrainages, les données de commande ou les calculs de récompenses par des exploits techniques.", "Vous faites passer pour Moondala ou volez notre contenu/code/marque.", "Faites des affirmations trompeuses comme \"revenu garanti\" ou \"profit sans risque\"."],
+        "section2Detection": "Détection : Nous utilisons la détection automatique de fraude, les examens manuels et l'analyse des modèles. Une activité suspecte déclenche une enquête immédiate.",
+        "section3Title": "3) Retenues, annulations et enquêtes",
+        "section3Content": ["Nous pouvons retenir les récompenses jusqu'à ce qu'une commande soit terminée ou que la fenêtre de retour soit passée.", "Si un remboursement/rétrofacturation se produit, les récompenses associées peuvent être annulées.", "Nous pouvons suspendre les paiements pendant les enquêtes de fraude."],
+        "section4Title": "4) Application et conséquences",
+        "section4Intro": "Pour les violations de fraude et d'abus :",
+        "section4Content": ["Suspension immédiate : Compte désactivé en attente d'enquête.", "Interdiction permanente : Les récidivistes ou les cas graves de fraude perdent tout accès.", "Confiscation des récompenses : Toutes les récompenses en attente et gagnées sont annulées et non remboursables.", "Récupération : Les récompenses déjà payées peuvent être récupérées si elles ont été obtenues frauduleusement.", "Action en justice : Nous nous réservons le droit de poursuivre des recours juridiques pour fraude ou vol.", "Blocages d'appareil/IP : Les utilisateurs bannis peuvent être empêchés de créer de nouveaux comptes sur le même appareil ou réseau."],
+        "section4Minor": "Pour les violations mineures : Avertissements, restrictions temporaires de fonctionnalités ou retenues de récompenses."
+      }
+    }
+  }
+}

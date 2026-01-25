@@ -1,0 +1,34 @@
+{
+  "legal": {
+    "privacy": "Privasi",
+    "terms": "Ketentuan",
+    "guidelines": "Pedoman",
+    "referrals": "Rujukan",
+    "refunds": "Pengembalian Dana",
+    "back": "Kembali",
+    "lastUpdated": "Terakhir diperbarui",
+    "agreeToTerms": "Saya setuju dengan",
+    "and": "dan",
+    "privacyLink": "Kebijakan Privasi",
+    "termsLink": "Ketentuan Layanan",
+    "referralPolicyLink": "Kebijakan Rujukan",
+    "pages": {
+      "referralPolicy": {
+        "title": "Kebijakan Rujukan & Hadiah",
+        "intro": "Rujukan dimaksudkan untuk orang nyata yang mengundang orang nyata. Penipuan merusak kepercayaan — kami menerapkannya dengan ketat.",
+        "section1Title": "1) Cara kerja hadiah",
+        "section1Content": ["Hadiah dapat diperoleh dari transaksi yang memenuhi syarat dalam rantai rujukan Anda.", "Tingkat hadiah, persentase, dan durasi dapat dikonfigurasi oleh Moondala dan dapat berubah seiring waktu.", "Beberapa transaksi mungkin dikecualikan (pengembalian dana, chargeback, penipuan, item terbatas)."],
+        "section2Title": "2) Penipuan dan penyalahgunaan (toleransi nol)",
+        "section2Intro": "Anda akan dilarang secara permanen jika Anda:",
+        "section2Content": ["Membuat akun duplikat atau palsu untuk mengumpulkan hadiah (termasuk akun keluarga/teman yang digunakan secara curang).", "Menjalankan \"peternakan rujukan\" menggunakan bot, skrip, atau alat pembuatan akun otomatis.", "Merujuk diri sendiri (menggunakan akun lain untuk merujuk diri sendiri).", "Membeli, menjual, menukar, atau membagikan kode rujukan atau akun untuk uang atau manfaat.", "Menggunakan Moondala untuk mempromosikan skema rujukan pesaing atau program MLM secara spam.", "Memanipulasi pelacakan rujukan, data pesanan, atau perhitungan hadiah melalui eksploitasi teknis.", "Menyamar sebagai Moondala atau mencuri konten/kode/merek kami.", "Membuat klaim menyesatkan seperti \"penghasilan terjamin\" atau \"keuntungan tanpa risiko\"."],
+        "section2Detection": "Deteksi: Kami menggunakan deteksi penipuan otomatis, tinjauan manual, dan analisis pola. Aktivitas mencurigakan memicu penyelidikan segera.",
+        "section3Title": "3) Penahanan, pembalikan, dan penyelidikan",
+        "section3Content": ["Kami dapat menahan hadiah sampai pesanan selesai atau jendela pengembalian berlalu.", "Jika terjadi pengembalian dana/chargeback, hadiah terkait dapat dibalik.", "Kami dapat menjeda pembayaran selama penyelidikan penipuan."],
+        "section4Title": "4) Penegakan dan konsekuensi",
+        "section4Intro": "Untuk pelanggaran penipuan dan penyalahgunaan:",
+        "section4Content": ["Penangguhan segera: Akun dinonaktifkan menunggu penyelidikan.", "Larangan permanen: Pelanggar berulang atau kasus penipuan parah kehilangan semua akses.", "Penyitaan hadiah: Semua hadiah tertunda dan yang diperoleh dibatalkan dan tidak dapat dikembalikan.", "Penarikan kembali: Hadiah yang sudah dibayar dapat ditarik kembali jika diperoleh secara curang.", "Tindakan hukum: Kami berhak untuk mengejar upaya hukum untuk penipuan atau pencurian.", "Pemblokiran perangkat/IP: Pengguna yang dilarang dapat diblokir dari membuat akun baru di perangkat atau jaringan yang sama."],
+        "section4Minor": "Untuk pelanggaran kecil: Peringatan, pembatasan fitur sementara, atau penahanan hadiah."
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "legal": {
+    "privacy": "Gizlilik",
+    "terms": "Şartlar",
+    "guidelines": "Kurallar",
+    "referrals": "Yönlendirmeler",
+    "refunds": "İadeler",
+    "back": "Geri",
+    "lastUpdated": "Son güncelleme",
+    "agreeToTerms": "Kabul ediyorum",
+    "and": "ve",
+    "privacyLink": "Gizlilik Politikası",
+    "termsLink": "Hizmet Şartları",
+    "referralPolicyLink": "Yönlendirme Politikası",
+    "pages": {
+      "referralPolicy": {
+        "title": "Yönlendirme ve Ödül Politikası",
+        "intro": "Yönlendirmeler gerçek insanların gerçek insanları davet etmesi içindir. Dolandırıcılık güveni yok eder — bunu sıkı bir şekilde uygularız.",
+        "section1Title": "1) Ödüller nasıl çalışır",
+        "section1Content": ["Yönlendirme zincirinizde uygun işlemlerden ödüller kazanılabilir.", "Ödül seviyeleri, yüzdeleri ve süreleri Moondala tarafından yapılandırılabilir ve zaman içinde değişebilir.", "Bazı işlemler hariç tutulabilir (iadeler, ters ibrazlar, dolandırıcılık, kısıtlı öğeler)."],
+        "section2Title": "2) Dolandırıcılık ve kötüye kullanım (sıfır tolerans)",
+        "section2Intro": "Kalıcı olarak yasaklanırsınız eğer:",
+        "section2Content": ["Ödül toplamak için yinelenen veya sahte hesaplar oluşturursanız (aile/arkadaş hesaplarının hileli kullanımı dahil).", "Botlar, komut dosyaları veya otomatik hesap oluşturma araçlarını kullanarak \"yönlendirme çiftlikleri\" işletirseniz.", "Kendinize yönlendirme yaparsanız (kendinize yönlendirme yapmak için başka bir hesap kullanmak).", "Para veya faydalar için yönlendirme kodlarını veya hesapları satın alır, satar, takas eder veya paylaşırsanız.", "Rakip yönlendirme programlarını veya MLM programlarını spam ile tanıtmak için Moondala'yı kullanırsanız.", "Teknik istismarlar yoluyla yönlendirme takibini, sipariş verilerini veya ödül hesaplamalarını manipüle ederseniz.", "Moondala'yı taklit eder veya içeriğimizi/kodumuzu/markamızı çalarsanız.", "\"Garantili gelir\" veya \"risksiz kâr\" gibi yanıltıcı iddialar yaparsanız."],
+        "section2Detection": "Tespit: Otomatik dolandırıcılık tespiti, manuel incelemeler ve desen analizi kullanırız. Şüpheli aktivite anında soruşturma başlatır.",
+        "section3Title": "3) Askıya almalar, geri almalar ve soruşturmalar",
+        "section3Content": ["Bir sipariş tamamlanana veya iade penceresi geçene kadar ödülleri tutabiliriz.", "Bir iade/ters ibraz gerçekleşirse, ilgili ödüller geri alınabilir.", "Dolandırıcılık soruşturmaları sırasında ödemeleri duraklaatabiliriz."],
+        "section4Title": "4) Uygulama ve sonuçlar",
+        "section4Intro": "Dolandırıcılık ve kötüye kullanım ihlalleri için:",
+        "section4Content": ["Anında askıya alma: Soruşturma beklerken hesap devre dışı bırakılır.", "Kalıcı yasak: Tekrar eden suçlular veya ciddi dolandırıcılık vakaları tüm erişimi kaybeder.", "Ödül el koyma: Bekleyen ve kazanılan tüm ödüller iptal edilir ve iade edilemez.", "Geri alma: Hileli olarak elde edilirse zaten ödenmiş ödüller geri alınabilir.", "Yasal işlem: Dolandırıcılık veya hırsızlık için yasal çözümler arama hakkını saklı tutarız.", "Cihaz/IP blokları: Yasaklanan kullanıcılar aynı cihazda veya ağda yeni hesap oluşturmaktan engellenebilir."],
+        "section4Minor": "Küçük ihlaller için: Uyarılar, geçici özellik kısıtlamaları veya ödül tutmaları."
+      }
+    }
+  }
+}

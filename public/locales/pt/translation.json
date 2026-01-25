@@ -1,0 +1,34 @@
+{
+  "legal": {
+    "privacy": "Privacidade",
+    "terms": "Termos",
+    "guidelines": "Diretrizes",
+    "referrals": "Indicações",
+    "refunds": "Reembolsos",
+    "back": "Voltar",
+    "lastUpdated": "Última atualização",
+    "agreeToTerms": "Concordo com os",
+    "and": "e",
+    "privacyLink": "Política de Privacidade",
+    "termsLink": "Termos de Serviço",
+    "referralPolicyLink": "Política de Indicações",
+    "pages": {
+      "referralPolicy": {
+        "title": "Política de Indicações e Recompensas",
+        "intro": "As indicações são para pessoas reais convidando pessoas reais. A fraude destrói a confiança — aplicamos isso rigorosamente.",
+        "section1Title": "1) Como funcionam as recompensas",
+        "section1Content": ["As recompensas podem ser ganhas de transações elegíveis em sua cadeia de indicações.", "Níveis, porcentagens e durações de recompensas podem ser configuráveis pela Moondala e podem mudar ao longo do tempo.", "Algumas transações podem ser excluídas (reembolsos, estornos, fraude, itens restritos)."],
+        "section2Title": "2) Fraude e abuso (tolerância zero)",
+        "section2Intro": "Você será banido permanentemente se:",
+        "section2Content": ["Criar contas duplicadas ou falsas para coletar recompensas (incluindo contas de família/amigos usadas fraudulentamente).", "Executar \"fazendas de indicação\" usando bots, scripts ou ferramentas de criação automática de contas.", "Auto-indicar-se (usar outra conta para se indicar).", "Comprar, vender, trocar ou compartilhar códigos de indicação ou contas por dinheiro ou benefícios.", "Usar Moondala para promover esquemas de indicação concorrentes ou programas de MLM com spam.", "Manipular rastreamento de indicações, dados de pedidos ou cálculos de recompensas através de explorações técnicas.", "Personificar Moondala ou roubar nosso conteúdo/código/marca.", "Fazer alegações enganosas como \"renda garantida\" ou \"lucro sem risco\"."],
+        "section2Detection": "Detecção: Usamos detecção automática de fraude, revisões manuais e análise de padrões. Atividade suspeita desencadeia investigação imediata.",
+        "section3Title": "3) Retenções, reversões e investigações",
+        "section3Content": ["Podemos reter recompensas até que um pedido seja concluído ou a janela de devolução passe.", "Se ocorrer um reembolso/estorno, as recompensas relacionadas podem ser revertidas.", "Podemos pausar os pagamentos durante investigações de fraude."],
+        "section4Title": "4) Aplicação e consequências",
+        "section4Intro": "Para violações de fraude e abuso:",
+        "section4Content": ["Suspensão imediata: Conta desabilitada pendente de investigação.", "Banimento permanente: Reincidentes ou casos graves de fraude perdem todo o acesso.", "Confisco de recompensas: Todas as recompensas pendentes e ganhas são canceladas e não reembolsáveis.", "Recuperação: Recompensas já pagas podem ser recuperadas se obtidas fraudulentamente.", "Ação legal: Reservamo-nos o direito de buscar medidas legais por fraude ou roubo.", "Bloqueios de dispositivo/IP: Usuários banidos podem ser bloqueados de criar novas contas no mesmo dispositivo ou rede."],
+        "section4Minor": "Para violações menores: Avisos, restrições temporárias de recursos ou retenções de recompensas."
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "legal": {
+    "privacy": "Paglihim",
+    "terms": "Mga Tuntunin",
+    "guidelines": "Mga Alituntunin",
+    "referrals": "Mga Referral",
+    "refunds": "Mga Refund",
+    "back": "Bumalik",
+    "lastUpdated": "Huling na-update",
+    "agreeToTerms": "Sumasang-ayon ako sa",
+    "and": "at",
+    "privacyLink": "Patakaran sa Privacy",
+    "termsLink": "Mga Tuntunin ng Serbisyo",
+    "referralPolicyLink": "Patakaran sa Referral",
+    "pages": {
+      "referralPolicy": {
+        "title": "Patakaran sa Referral at Rewards",
+        "intro": "Ang mga referral ay para sa tunay na tao na nag-iimbita ng tunay na tao. Ang panlilinlang ay sumisira ng tiwala — ipinapatupad namin ito nang mahigpit.",
+        "section1Title": "1) Paano gumagana ang mga rewards",
+        "section1Content": ["Ang mga rewards ay maaaring makuha mula sa mga kwalipikadong transaksyon sa iyong referral chain.", "Ang mga lebel, porsyento, at tagal ng mga rewards ay maaaring ma-configure ng Moondala at maaaring magbago sa paglipas ng panahon.", "Ang ilang transaksyon ay maaaring hindi kasama (refund, chargeback, panlilinlang, restricted items)."],
+        "section2Title": "2) Panlilinlang at pang-aabuso (zero tolerance)",
+        "section2Intro": "Permanente kang iba-ban kung:",
+        "section2Content": ["Lumikha ng duplicate o pekeng account para mangolekta ng rewards (kabilang ang mga account ng pamilya/kaibigan na ginamit nang mapanlinlang).", "Magpatakbo ng \"referral farms\" gamit ang mga bot, script, o automated account creation tools.", "Mag-self-refer (gumamit ng ibang account para i-refer ang sarili).", "Bumili, magbenta, mag-trade, o magbahagi ng referral codes o accounts para sa pera o benepisyo.", "Gumamit ng Moondala para mag-spam-promote ng competing referral schemes o MLM programs.", "Manipulahin ang referral tracking, order data, o reward calculations sa pamamagitan ng technical exploits.", "Magpanggap bilang Moondala o magnakaw ng aming content/code/branding.", "Gumawa ng nakakalinlang na mga pahayag tulad ng \"guaranteed income\" o \"risk-free profit\"."],
+        "section2Detection": "Detection: Gumagamit kami ng automated fraud detection, manual reviews, at pattern analysis. Ang kahina-hinalang aktibidad ay nagti-trigger ng agarang imbestigasyon.",
+        "section3Title": "3) Holds, reversals, at investigations",
+        "section3Content": ["Maaari naming i-hold ang mga rewards hanggang makumpleto ang order o makalipas ang return window.", "Kung may refund/chargeback, ang related rewards ay maaaring i-reverse.", "Maaari naming i-pause ang mga pagbabayad sa panahon ng fraud investigations."],
+        "section4Title": "4) Enforcement at mga kahihinatnan",
+        "section4Intro": "Para sa mga paglabag sa panlilinlang at pang-aabuso:",
+        "section4Content": ["Agarang suspension: Account ay naka-disable habang naghihintay ng imbestigasyon.", "Permanenteng ban: Ang mga paulit-ulit na nanlabag o malalang kaso ng panlilinlang ay nawawalan ng lahat ng access.", "Forfeiture ng rewards: Ang lahat ng pending at nakuhang rewards ay kinakansela at hindi maibabalik.", "Clawback: Ang mga rewards na nabayaran na ay maaaring makuha kung nakuha nang mapanlinlang.", "Legal action: Nakalaan namin ang karapatan na maghabol ng legal remedies para sa panlilinlang o pagnanakaw.", "Device/IP blocks: Ang mga na-ban na users ay maaaring ma-block sa paggawa ng bagong accounts sa parehong device o network."],
+        "section4Minor": "Para sa mga minor violations: Mga babala, pansamantalang feature restrictions, o reward holds."
+      }
+    }
+  }
+}

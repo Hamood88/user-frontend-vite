@@ -1,0 +1,34 @@
+{
+  "legal": {
+    "privacy": "Khasoosiyat",
+    "terms": "Shartain",
+    "guidelines": "Hidaayaat",
+    "referrals": "Tawsiyat",
+    "refunds": "Wapsi",
+    "back": "Wapas",
+    "lastUpdated": "Aakhri taaza kaari",
+    "agreeToTerms": "Main razi hoon",
+    "and": "aur",
+    "privacyLink": "Khasoosiyat Ki Policy",
+    "termsLink": "Service Ki Shartain",
+    "referralPolicyLink": "Tawsiya Policy",
+    "pages": {
+      "referralPolicy": {
+        "title": "Tawsiya Aur Inaamaat Ki Policy",
+        "intro": "Tawsiyat haqeeqi logon ke liye hain jo haqeeqi logon ko dawat dete hain. Dhokeybazi aitmad ko khatam karti hai — hum isay sakhtai se nafiz karte hain.",
+        "section1Title": "1) Inaamaat kaise kaam karte hain",
+        "section1Content": ["Aapki tawsiya chain mein qaabil-e-qubool muamalaat se inaamaat hasil kiye ja sakte hain.", "Inamaaat ki satahain, faiz aur muddat Moondala dwara configure kiye ja sakte hain aur waqt ke saath badal sakte hain.", "Kuch muamalaat ko mustasna kiya ja sakta hai (wapsi, chargeback, dhokeybazi, mahddod saaman)."],
+        "section2Title": "2) Dhokeybazi aur najaiz istemaal (sifr bardasht)",
+        "section2Intro": "Aap hamaysha ke liye ban ho jayenge agar aap:",
+        "section2Content": ["Inaamaat hasil karne ke liye naqal ya jhoote account banayen (khaandaan/doston ke accounts ko dhokeybazi se istemaal karna shamil hai).", "Bot, script ya automatic account banane ke tools istemaal karke \"tawsiya farms\" chalayen.", "Khud ko tawsiya karen (apne aap ko refer karne ke liye dusra account istemaal karna).", "Paisay ya faayday ke liye tawsiya codes ya accounts khareedna, bechna, tabadla karna ya share karna.", "Muqabla tawsiya schemes ya MLM programs ko spam promote karne ke liye Moondala istemaal karen.", "Technical exploits ke zariye tawsiya tracking, order data, ya inamaaat ki ganana mein herpher karen.", "Moondala ki namaindgi karen ya hamari content/code/branding churayen.", "Ghalat bayanaat den jaise \"guaranteed income\" ya \"risk-free profit\"."],
+        "section2Detection": "Tashkhees: Hum automatic dhokeybazi detection, manual jaiza aur pattern analysis istemaal karte hain. Shakkuk harkat fauran tahqeeqaat shuru kar deti hai.",
+        "section3Title": "3) Rokna, mansookh karna aur tahqeeqaat",
+        "section3Content": ["Hum inaamaat ko rok sakte hain jab tak order mukammal nahi ho jata ya wapsi ka darya guzar nahi jata.", "Agar wapsi/chargeback hoti hai toh mutalqa inaamaat mansookh kiye ja sakte hain.", "Hum dhokeybazi ki tahqeeqaat ke dauran adaigiyaan rok sakte hain."],
+        "section4Title": "4) Nafaaz aur nataij",
+        "section4Intro": "Dhokeybazi aur najaiz istemaal ki khilaaf warzi ke liye:",
+        "section4Content": ["Fauran tameel: Tahqeeqaat ke liye account band kar diya jata hai.", "Hamaysha ke liye pabandi: Dohra khilaaf warz ya sakht dhokeybazi ke cases tamam access kho dete hain.", "Inaamaat zabti: Tamam muntazir aur hasil shuda inaamaat mansookh aur naaqabil-e-wapsi hain.", "Wapsi: Agar dhokeybazi se hasil kiye gaye hon toh pehle se ada kiye gaye inaamaat wapis liye ja sakte hain.", "Qanooni kaarwahi: Hum dhokeybazi ya chori ke liye qanooni raastay talash karne ka haq mahfooz rakhte hain.", "Device/IP block: Band kiye gaye users ko usi device ya network par naye accounts banane se roka ja sakta hai."],
+        "section4Minor": "Chhoti khilaaf warziyon ke liye: Aagahi, waqti feature limitations, ya inaamaat rokna."
+      }
+    }
+  }
+}

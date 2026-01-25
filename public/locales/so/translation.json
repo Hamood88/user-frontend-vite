@@ -1,0 +1,34 @@
+{
+  "legal": {
+    "privacy": "Xasaasi",
+    "terms": "Shuruudaha",
+    "guidelines": "Tilmaamaha",
+    "referrals": "Tixraacyada",
+    "refunds": "Lacag celinta",
+    "back": "Dib u noqo",
+    "lastUpdated": "Wixii ugu dambeeyay",
+    "agreeToTerms": "Waan ku oggolahay",
+    "and": "iyo",
+    "privacyLink": "Qaanuunka Sirta",
+    "termsLink": "Shuruudaha Adeegga",
+    "referralPolicyLink": "Qaanuunka Tixraaca",
+    "pages": {
+      "referralPolicy": {
+        "title": "Qaanuunka Tixraaca iyo Abaalmariinta",
+        "intro": "Tixraacyadu waxay loogu talagalay dadka dhabta ah ee martiqaada ah dadka dhabta ah. Khiyaanadu waxay baabbi'isaa kalsoonida — waxaynu aad ugu adkaysan doonaa.",
+        "section1Title": "1) Sida abaalmariintu u shaqeyso",
+        "section1Content": ["Abaalmariintu waxaa laga kasbi karaa macaamilada u qalma silsiladda tixraacyadaada.", "Heerarrada abaalmariinta, boqolkiiba iyo muddadu waxay ahaanayaan kuwo Moondala ku habeyn karto waxayna ku beddeli karaan waqti ka dib.", "Macaamilada qaarkood waa laga yaabaa in laga reebo (lacag celinta, lacag celinta ka dib, khiyaano, alaabta xaddidan)."],
+        "section2Title": "2) Khiyaano iyo isticmaalka xumo (dulqaad la'aan)",
+        "section2Intro": "Weligaa waa lagaa mamnuuci doonaa haddii aad:",
+        "section2Content": ["Abaalmarin u soo ururin koontooyin nuqul ah ama been ah sameyso (oo ay ku jiraan koontooyin qoyska/saaxiibada ah oo si khiyaano ah loo isticmaalo).", "\"Beeraha tixraaca\" maamulin iyadoo la adeegsanayo bots, qoraalo ama qalabka abuuritaanka koontada otomaatig ah.", "Is-tixraac (koonto kale u adeegsashada in aad nafta is tixraacdo).", "Iibsashada, iibinta, is beddelka ama wadaagga koodhka tixraaca ama koontooyin lacag ama faa'iido.", "Moondala u isticmaasha si spam ah ugu deeqaan nidaamyada tixraaca tartan ah ama barnaamijyada MLM.", "Ku fara gal raadinta tixraaca, xogta dalbashada ama xisaabinta abaalmariinta iyada oo la adeegsanayo farsamooyinka farsamada.", "U adeegsashada Moondala ama ku xadgudbida nuxurkeenna/koodhka/calaamadayada.", "Samee sheegatooyin been ah sida \"dakhli la hubo\" ama \"faa'iido aan khatar lahayn\"."],
+        "section2Detection": "Ogaanshaha: Waxaan adeegsannaa ogaanshaha khiyaanada otomaatig ah, dib u eegista gacanta iyo falanqaynta qaabka. Waxqabadka la shakiyo wuxuu bilaabaa baaritaan degdeg ah.",
+        "section3Title": "3) Joojinta, dib u celinta iyo baaritaannada",
+        "section3Content": ["Waxaan joojin karnaa abaalmariinta ilaa dalbashadu dhammeyso ama daaqadda celinta ay dhaafto.", "Haddii lacag celinta/lacag celinta dhacdo, abaalmariinta la xidhiidha waa la celin karaa.", "Waxaan joojin karnaa lacag bixinta inta lagu jiro baaritaannada khiyaanada."],
+        "section4Title": "4) Fulinta iyo cawaaqib",
+        "section4Intro": "Khilaaf ku dhaca khiyaano iyo isticmaalka xumaha:",
+        "section4Content": ["Joojin degdeg ah: Koonto la joojiyo oo baaritaan sugayso.", "Mamnuuc joogto ah: Kuwa dib u soo celbista ah ama kiisaska khiyaanada daran ayaa wax kasta waayay.", "Abaalmariinta qaadista: Dhammaan abaalmariinta sugaysa iyo kuwa la helay waa la joojiyey oo aan dib loo celin karin.", "Dib u qaadista: Abaalmariinta hore loo bixiyey waa laga dib qaadi karaa haddii si khiyaano ah loo helay.", "Tallaabo sharci: Waxaynu haysannaa xuquuqda in aan raadino xalal sharci ah khiyaano ama tuugnimo.", "Joojinta qalabka/IP: Isticmaalayaasha la mamnuucay waxaa laga yaabaa in laga joojiyay in ay koontooyin cusub ku abuuraan qalabka isku mid ah ama shabakada."],
+        "section4Minor": "Khilaafyada yaryar: Digniin, xannibaadyo muddooyinka ah oo astaamo ah ama joojinta abaalmariinta."
+      }
+    }
+  }
+}

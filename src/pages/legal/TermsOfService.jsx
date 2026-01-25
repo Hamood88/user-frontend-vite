@@ -1,85 +1,71 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import LegalLayout from "./LegalLayout";
 
 export default function TermsOfService() {
+  const { t } = useTranslation();
+  const content = t('legal.pages.termsOfService', { returnObjects: true });
+
   return (
-    <LegalLayout title="Terms of Service" updated="January 25, 2026">
-      <p className="legalNotice">
-        By using Moondala, you agree to follow these Terms. If you don't agree, don't use the app.
-      </p>
+    <LegalLayout title={content.title} updated="January 25, 2026">
+      <p className="legalNotice">{content.intro}</p>
 
-      <h2>1) Accounts</h2>
+      <h2>{content.section1Title}</h2>
       <ul>
-        <li>You must provide accurate information and keep your account secure.</li>
-        <li>You're responsible for activity under your account.</li>
-        <li>We may suspend accounts involved in fraud, abuse, or rule violations.</li>
+        {content.section1Content.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
       </ul>
 
-      <h2>2) What you can't do</h2>
+      <h2>{content.section2Title}</h2>
       <ul>
-        <li>Scams, impersonation, fraud, or misleading referral behavior.</li>
-        <li>Harassment, hate, threats, or illegal content.</li>
-        <li>Trying to exploit bugs or reverse engineer the platform.</li>
+        {content.section2Content.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
       </ul>
 
-      <h2>3) Fraud and abuse</h2>
-      <p>
-        We have zero tolerance for fraud and abuse. You will be banned if you:
-      </p>
+      <h2>{content.section3Title}</h2>
+      <p>{content.section3Intro}</p>
       <ul>
-        <li>Create duplicate or fake accounts to farm rewards or manipulate referrals.</li>
-        <li>Run "referral farms" using bots, scripts, or automated account creation.</li>
-        <li>Sell, buy, trade, or share referral codes or accounts for profit.</li>
-        <li>Use Moondala to promote competitor referral schemes in a spammy way.</li>
-        <li>Steal Moondala content, code, branding, or impersonate Moondala.</li>
-        <li>Attempt to manipulate referral tracking, order systems, or reward calculations.</li>
+        {content.section3Content.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
       </ul>
 
-      <h2>4) Transactions</h2>
+      <h2>{content.section4Title}</h2>
       <ul>
-        <li>Orders, returns, and refunds follow our Refund Policy.</li>
-        <li>Some items may be non-refundable if clearly labeled.</li>
-        <li>We may hold or reverse rewards when refunds/chargebacks happen.</li>
+        {content.section4Content.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
       </ul>
 
-      <h2>5) Referral rewards</h2>
-      <p>
-        Rewards are governed by the Referral & Rewards Policy. We may pause or deny rewards
-        for suspected abuse or fake accounts.
-      </p>
+      <h2>{content.section5Title}</h2>
+      <p>{content.section5Content}</p>
 
-      <h2>6) Content you post</h2>
+      <h2>{content.section6Title}</h2>
       <ul>
-        <li>You own your content, but you give Moondala permission to display it in the app.</li>
-        <li>Don't post content you don't have rights to.</li>
+        {content.section6Content.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
       </ul>
 
-      <h2>7) Suspension and termination</h2>
-      <p>
-        We reserve the right to suspend or permanently ban accounts that:
-      </p>
+      <h2>{content.section7Title}</h2>
+      <p>{content.section7Intro}</p>
       <ul>
-        <li>Violate these Terms, especially fraud and abuse provisions.</li>
-        <li>Engage in behavior that harms other users or the platform.</li>
-        <li>Are involved in repeated rule violations or ignore warnings.</li>
+        {content.section7Content.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
       </ul>
-      <p>
-        Banned users forfeit all pending rewards and may be blocked from creating new accounts.
-      </p>
+      <p>{content.section7Note}</p>
 
-      <h2>8) Service changes</h2>
-      <p>
-        We may update features, fees, and policies as Moondala grows. We'll update the "Last updated" date.
-      </p>
+      <h2>{content.section8Title}</h2>
+      <p>{content.section8Content}</p>
 
-      <h2>9) Liability</h2>
-      <p>
-        Moondala is provided "as is." To the fullest extent permitted by law, we're not liable for indirect damages
-        (lost profits, data loss, etc.).
-      </p>
+      <h2>{content.section9Title}</h2>
+      <p>{content.section9Content}</p>
 
-      <h2>10) Contact</h2>
-      <p>Support contact will be listed here (example: support@moondala.one).</p>
+      <h2>{content.section10Title}</h2>
+      <p>{content.section10Content}</p>
     </LegalLayout>
   );
 }

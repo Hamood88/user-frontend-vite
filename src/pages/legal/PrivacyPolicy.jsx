@@ -1,69 +1,59 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import LegalLayout from "./LegalLayout";
 
 export default function PrivacyPolicy() {
+  const { t } = useTranslation();
+  const content = t('legal.pages.privacyPolicy', { returnObjects: true });
+
   return (
-    <LegalLayout title="Privacy Policy" updated="January 25, 2026">
-      <p className="legalNotice">
-        <strong>Moondala does not sell your personal data.</strong> We make money from
-        transactions and services — not from advertising that exploits user data.
-      </p>
+    <LegalLayout title={content.title} updated="January 25, 2026">
+      <p className="legalNotice" dangerouslySetInnerHTML={{ __html: content.intro }} />
 
-      <h2>1) What we collect</h2>
+      <h2>{content.section1Title}</h2>
       <ul>
-        <li><strong>Account info:</strong> name, email, phone (if you add it), country, basic profile details.</li>
-        <li><strong>App activity:</strong> actions like follows, likes, comments, messages, referrals (to prevent fraud).</li>
-        <li><strong>Purchase & transaction info:</strong> orders, payments status, refunds/returns history.</li>
-        <li><strong>Device & log data:</strong> IP address, browser/device type, app errors, security logs.</li>
+        {content.section1Content.map((item, i) => (
+          <li key={i} dangerouslySetInnerHTML={{ __html: item }} />
+        ))}
       </ul>
 
-      <h2>2) How we use your data</h2>
+      <h2>{content.section2Title}</h2>
       <ul>
-        <li>To create and secure your account (login, fraud prevention, abuse detection).</li>
-        <li>To process orders, returns, refunds, and customer support.</li>
-        <li>To power core product features (feed, messaging, shop pages, referrals).</li>
-        <li>To improve reliability and performance (crash logs, bug fixing, analytics).</li>
+        {content.section2Content.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
       </ul>
 
-      <h2>3) What we do NOT do</h2>
+      <h2>{content.section3Title}</h2>
       <ul>
-        <li>We do <strong>not</strong> sell your personal data.</li>
-        <li>We do <strong>not</strong> allow third-party advertisers to target you using your private profile data.</li>
+        {content.section3Content.map((item, i) => (
+          <li key={i} dangerouslySetInnerHTML={{ __html: item }} />
+        ))}
       </ul>
 
-      <h2>4) Sharing</h2>
-      <p>
-        We may share limited data only when needed to run the service, such as:
-      </p>
+      <h2>{content.section4Title}</h2>
+      <p>{content.section4Intro}</p>
       <ul>
-        <li><strong>Payment processors</strong> (to complete transactions).</li>
-        <li><strong>Infrastructure providers</strong> (hosting, database, email/SMS sending).</li>
-        <li><strong>Legal</strong> (if required by law, or to protect users and prevent fraud).</li>
+        {content.section4Content.map((item, i) => (
+          <li key={i} dangerouslySetInnerHTML={{ __html: item }} />
+        ))}
       </ul>
 
-      <h2>5) Cookies & analytics</h2>
-      <p>
-        We may use cookies/local storage for login sessions and basic analytics to improve the app.
-        You can restrict cookies in your browser, but some features may not work.
-      </p>
+      <h2>{content.section5Title}</h2>
+      <p>{content.section5Content}</p>
 
-      <h2>6) Your choices</h2>
+      <h2>{content.section6Title}</h2>
       <ul>
-        <li>Update your profile from Settings.</li>
-        <li>Request account deletion (removes or anonymizes data where possible).</li>
-        <li>Control privacy features (profile visibility, who can message you) if available in your Settings.</li>
+        {content.section6Content.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
       </ul>
 
-      <h2>7) Data security</h2>
-      <p>
-        We use reasonable security practices (encryption in transit, access controls, monitoring),
-        but no system is 100% secure.
-      </p>
+      <h2>{content.section7Title}</h2>
+      <p>{content.section7Content}</p>
 
-      <h2>8) Contact</h2>
-      <p>
-        Add a support email when ready (example: <strong>support@moondala.one</strong>).
-      </p>
+      <h2>{content.section8Title}</h2>
+      <p dangerouslySetInnerHTML={{ __html: content.section8Content }} />
     </LegalLayout>
   );
 }

@@ -1,0 +1,34 @@
+{
+  "legal": {
+    "privacy": "Datenschutz",
+    "terms": "Bedingungen",
+    "guidelines": "Richtlinien",
+    "referrals": "Empfehlungen",
+    "refunds": "Rückerstattungen",
+    "back": "Zurück",
+    "lastUpdated": "Zuletzt aktualisiert",
+    "agreeToTerms": "Ich stimme zu",
+    "and": "und",
+    "privacyLink": "Datenschutzrichtlinie",
+    "termsLink": "Nutzungsbedingungen",
+    "referralPolicyLink": "Empfehlungsrichtlinie",
+    "pages": {
+      "referralPolicy": {
+        "title": "Empfehlungs- und Belohnungsrichtlinie",
+        "intro": "Empfehlungen sind für echte Menschen gedacht, die echte Menschen einladen. Betrug zerstört Vertrauen — wir setzen dies streng durch.",
+        "section1Title": "1) Wie Belohnungen funktionieren",
+        "section1Content": ["Belohnungen können aus berechtigten Transaktionen in Ihrer Empfehlungskette verdient werden.", "Belohnungsstufen, Prozentsätze und Laufzeiten können von Moondala konfiguriert werden und sich im Laufe der Zeit ändern.", "Einige Transaktionen können ausgeschlossen werden (Rückerstattungen, Rückbuchungen, Betrug, eingeschränkte Artikel)."],
+        "section2Title": "2) Betrug und Missbrauch (Null-Toleranz)",
+        "section2Intro": "Sie werden dauerhaft gesperrt, wenn Sie:",
+        "section2Content": ["Doppelte oder gefälschte Konten erstellen, um Belohnungen zu sammeln (einschließlich Familien-/Freundeskonten, die betrügerisch verwendet werden).", "\"Empfehlungsfarmen\" mit Bots, Skripten oder automatisierten Kontoerstellungstools betreiben.", "Sich selbst empfehlen (ein anderes Konto verwenden, um sich selbst zu empfehlen).", "Empfehlungscodes oder Konten gegen Geld oder Vorteile kaufen, verkaufen, tauschen oder teilen.", "Moondala nutzen, um konkurrierende Empfehlungsprogramme oder MLM-Programme mit Spam zu bewerben.", "Empfehlungsverfolgung, Bestelldaten oder Belohnungsberechnungen durch technische Exploits manipulieren.", "Moondala imitieren oder unsere Inhalte/Code/Marke stehlen.", "Irreführende Behauptungen wie \"garantiertes Einkommen\" oder \"risikofreier Gewinn\" aufstellen."],
+        "section2Detection": "Erkennung: Wir verwenden automatisierte Betrugserkennung, manuelle Überprüfungen und Musteranalyse. Verdächtige Aktivitäten lösen sofortige Untersuchungen aus.",
+        "section3Title": "3) Einbehaltungen, Stornierungen und Untersuchungen",
+        "section3Content": ["Wir können Belohnungen einbehalten, bis eine Bestellung abgeschlossen ist oder das Rückgabefenster abgelaufen ist.", "Bei einer Rückerstattung/Rückbuchung können zugehörige Belohnungen storniert werden.", "Wir können Auszahlungen während Betrugsuntersuchungen pausieren."],
+        "section4Title": "4) Durchsetzung und Konsequenzen",
+        "section4Intro": "Für Betrugs- und Missbrauchsverstöße:",
+        "section4Content": ["Sofortige Sperrung: Konto deaktiviert bis zur Untersuchung.", "Dauerhafte Sperre: Wiederholungstäter oder schwere Betrugsfälle verlieren den gesamten Zugang.", "Belohnungseinbehaltung: Alle ausstehenden und verdienten Belohnungen werden storniert und sind nicht erstattungsfähig.", "Rückforderung: Bereits ausgezahlte Belohnungen können zurückgefordert werden, wenn sie betrügerisch erlangt wurden.", "Rechtliche Schritte: Wir behalten uns das Recht vor, rechtliche Schritte wegen Betrugs oder Diebstahls einzuleiten.", "Geräte-/IP-Sperren: Gesperrte Benutzer können daran gehindert werden, neue Konten auf demselben Gerät oder Netzwerk zu erstellen."],
+        "section4Minor": "Für geringfügige Verstöße: Warnungen, vorübergehende Funktionseinschränkungen oder Belohnungseinbehaltungen."
+      }
+    }
+  }
+}

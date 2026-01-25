@@ -1,0 +1,34 @@
+{
+  "legal": {
+    "privacy": "Privacy",
+    "terms": "Termini",
+    "guidelines": "Linee guida",
+    "referrals": "Referenze",
+    "refunds": "Rimborsi",
+    "back": "Indietro",
+    "lastUpdated": "Ultimo aggiornamento",
+    "agreeToTerms": "Accetto i",
+    "and": "e",
+    "privacyLink": "Politica sulla Privacy",
+    "termsLink": "Termini di Servizio",
+    "referralPolicyLink": "Politica di Riferimento",
+    "pages": {
+      "referralPolicy": {
+        "title": "Politica di Riferimento e Ricompense",
+        "intro": "I riferimenti sono destinati a persone reali che invitano persone reali. La frode distrugge la fiducia — la applichiamo rigorosamente.",
+        "section1Title": "1) Come funzionano le ricompense",
+        "section1Content": ["Le ricompense possono essere guadagnate da transazioni idonee nella tua catena di riferimento.", "I livelli, le percentuali e le durate delle ricompense possono essere configurabili da Moondala e possono cambiare nel tempo.", "Alcune transazioni possono essere escluse (rimborsi, storni di addebito, frode, articoli limitati)."],
+        "section2Title": "2) Frode e abuso (tolleranza zero)",
+        "section2Intro": "Sarai bannato permanentemente se:",
+        "section2Content": ["Crei account duplicati o falsi per raccogliere ricompense (inclusi account di familiari/amici usati fraudolentemente).", "Gestisci \"fattorie di riferimento\" usando bot, script o strumenti di creazione account automatizzati.", "Ti auto-riferisci (usare un altro account per riferirti a te stesso).", "Acquisti, vendi, scambi o condividi codici di riferimento o account per denaro o benefici.", "Usi Moondala per promuovere in modo spam schemi di riferimento concorrenti o programmi MLM.", "Manipoli il tracciamento dei riferimenti, i dati degli ordini o i calcoli delle ricompense attraverso exploit tecnici.", "Impersoni Moondala o rubi i nostri contenuti/codice/branding.", "Fai affermazioni fuorvianti come \"reddito garantito\" o \"profitto senza rischi\"."],
+        "section2Detection": "Rilevamento: Utilizziamo il rilevamento automatico delle frodi, revisioni manuali e analisi dei modelli. L'attività sospetta innesca un'indagine immediata.",
+        "section3Title": "3) Sospensioni, inversioni e indagini",
+        "section3Content": ["Possiamo trattenere le ricompense fino a quando un ordine non è completato o la finestra di reso non è passata.", "Se si verifica un rimborso/storno di addebito, le ricompense correlate possono essere invertite.", "Possiamo sospendere i pagamenti durante le indagini antifrode."],
+        "section4Title": "4) Applicazione e conseguenze",
+        "section4Intro": "Per violazioni di frode e abuso:",
+        "section4Content": ["Sospensione immediata: Account disabilitato in attesa di indagine.", "Divieto permanente: I recidivi o i casi gravi di frode perdono tutto l'accesso.", "Confisca delle ricompense: Tutte le ricompense in sospeso e guadagnate vengono annullate e non rimborsabili.", "Recupero: Le ricompense già pagate possono essere recuperate se ottenute fraudolentemente.", "Azione legale: Ci riserviamo il diritto di perseguire rimedi legali per frode o furto.", "Blocchi di dispositivo/IP: Gli utenti bannati possono essere bloccati dalla creazione di nuovi account sullo stesso dispositivo o rete."],
+        "section4Minor": "Per violazioni minori: Avvisi, restrizioni temporanee delle funzionalità o sospensioni delle ricompense."
+      }
+    }
+  }
+}
