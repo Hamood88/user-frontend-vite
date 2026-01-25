@@ -14,7 +14,7 @@ import {
 
   // ✅ generic api helper (already used across your app)
   apiPost,
-  API_BASE,
+  toAbsUrl,
 } from "../api.jsx";
 
 /* =========================
@@ -75,14 +75,6 @@ function pickProductImage(order) {
     "";
 
   return String(img || "").trim();
-}
-
-function fullImg(u) {
-  const s = String(u || "").trim();
-  if (!s) return "";
-  if (s.startsWith("http://") || s.startsWith("https://")) return s;
-  const base = String(API_BASE || "https://moondala-backend.onrender.com").replace(/\/$/, "");
-  return `${base}${s.startsWith("/") ? "" : "/"}${s}`;
 }
 
 function hasAskedConsentAlready(orderId) {
@@ -527,7 +519,7 @@ export default function MyOrders() {
             const currency = (o.currency || "USD").toUpperCase();
             const total = Number(o.total || 0);
 
-            const productImg = fullImg(pickProductImage(o));
+            const productImg = toAbsUrl(pickProductImage(o));
             const isCompleted = isTransactionComplete(o);
 
             return (
@@ -591,7 +583,7 @@ export default function MyOrders() {
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         {o.shopLogoUrl ? (
                           <img 
-                            src={fullImg(o.shopLogoUrl)} 
+                            src={toAbsUrl(o.shopLogoUrl)} 
                             alt={o.shopName || "Shop"}
                             style={{ 
                               width: 20, 
