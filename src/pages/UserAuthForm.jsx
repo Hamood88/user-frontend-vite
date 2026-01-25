@@ -494,18 +494,10 @@ export function UserAuthForm({ mode }) {
 
           <div>
             <Label htmlFor="phone" className="mb-2 block text-xs">Phone Number</Label>
-            <div className="flex gap-2">
-              <select
-                value={phoneCode}
-                onChange={(e) => setPhoneCode(e.target.value)}
-                className="w-32 px-3 py-2 bg-gray-900/40 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
-              >
-                {countryCodes.map(({ code, country, flag }) => (
-                  <option key={code + country} value={code}>
-                    {flag} {code}
-                  </option>
-                ))}
-              </select>
+            <div className="flex gap-2 items-center">
+              <div className="px-4 py-2 bg-gray-800/60 border border-gray-700 rounded-lg text-sm text-gray-300 font-medium min-w-[80px] text-center">
+                {phoneCode}
+              </div>
               <Input
                 id="phone"
                 icon={Phone}
