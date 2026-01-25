@@ -3,24 +3,24 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 const SUPPORTED_LANGUAGES = [
-  { code: 'en', name: 'English' },
   { code: 'am', name: 'Amharic (Ethiopia)' },
+  { code: 'ar', name: 'Arabic' },
+  { code: 'en', name: 'English' },
   { code: 'fil', name: 'Filipino' },
-  { code: 'ko', name: 'Korean' },
+  { code: 'fr', name: 'French' },
+  { code: 'de', name: 'German' },
+  { code: 'hi', name: 'Hindi' },
   { code: 'id', name: 'Indonesian' },
-  { code: 'so', name: 'Somali (Somalia)' },
-  { code: 'ur', name: 'Urdu (Pakistan)' },
-  { code: 'es', name: 'Spanish' },
+  { code: 'it', name: 'Italian' },
   { code: 'ja', name: 'Japanese' },
+  { code: 'ko', name: 'Korean' },
+  { code: 'zh', name: 'Mandarin' },
   { code: 'pt', name: 'Portuguese' },
   { code: 'ru', name: 'Russian' },
+  { code: 'so', name: 'Somali (Somalia)' },
+  { code: 'es', name: 'Spanish' },
   { code: 'tr', name: 'Turkish' },
-  { code: 'ar', name: 'Arabic' },
-  { code: 'de', name: 'German' },
-  { code: 'fr', name: 'French' },
-  { code: 'hi', name: 'Hindi' },
-  { code: 'it', name: 'Italian' },
-  { code: 'zh', name: 'Mandarin' }
+  { code: 'ur', name: 'Urdu (Pakistan)' }
 ];
 
 const CONTENT = {
