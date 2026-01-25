@@ -72,6 +72,9 @@ export function UserAuthForm({ mode }) {
   const [isVerifying, setIsVerifying] = useState(false);
   const [otp, setOtp] = useState("");
   
+  // Terms Agreement
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  
   // Get inviter code from URL params first, then fallback to localStorage
   const [inviterCode, setInviterCode] = useState(() => {
     const urlInviter = searchParams.get("inviter");
@@ -523,29 +526,37 @@ export function UserAuthForm({ mode }) {
       )}
 
       {mode === "signup" && (
-        <p style={{ 
-          fontSize: '13px', 
-          opacity: 0.8, 
-          textAlign: 'center', 
-          marginTop: '16px',
-          lineHeight: 1.5
-        }}>
-          By creating an account, you agree to our{' '}
-          <Link to="/legal/terms" target="_blank" style={{ color: '#3b82f6', textDecoration: 'underline' }}>
-            Terms of Service
-          </Link>
-          {' '}and{' '}
-          <Link to="/legal/privacy" target="_blank" style={{ color: '#3b82f6', textDecoration: 'underline' }}>
-            Privacy Policy
-          </Link>.
-        </p>
+        <div className="flex items-start gap-3 mt-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+          <input
+            type="checkbox"
+            id="termsAgreement"
+            checked={termsAgreed}
+            onChange={(e) => setTermsAgreed(e.target.checked)}
+            className="mt-1 w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+          />
+          <label htmlFor="termsAgreement" className="text-sm leading-relaxed cursor-pointer">
+            I agree to Moondala's{' '}
+            <Link to="/legal/terms" target="_blank" className="text-blue-400 underline hover:text-blue-300">
+              Terms of Service
+            </Link>
+            {', '}
+            <Link to="/legal/privacy" target="_blank" className="text-blue-400 underline hover:text-blue-300">
+              Privacy Policy
+            </Link>
+            {', and '}
+            <Link to="/legal/referrals" target="_blank" className="text-blue-400 underline hover:text-blue-300">
+              Referral Policy
+            </Link>
+            .
+          </label>
+        </div>
       )}
 
       <Button 
         type="submit" 
         variant="default" 
         className="w-full mt-6"
-        disabled={isLoading}
+        disabled={isLoading || (mode === "signup" && !termsAgreed)}
       >
         {isLoading ? (
           <>
