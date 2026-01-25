@@ -68,6 +68,24 @@
     "and": "and",
     "privacyLink": "Privacy Policy",
     "termsLink": "Terms of Service",
-    "referralPolicyLink": "Referral Policy"
+    "referralPolicyLink": "Referral Policy",
+    "pages": {
+      "referralPolicy": {
+        "title": "Referral & Rewards Policy",
+        "intro": "Referrals are meant for real people inviting real people. Fraud kills trust — we enforce this strictly.",
+        "section1Title": "1) How rewards work",
+        "section1Content": ["Rewards may be earned from eligible transactions in your referral chain.", "Reward levels, percentages, and durations may be configurable by Moondala and can change over time.", "Some transactions may be excluded (refunds, chargebacks, fraud, restricted items)."],
+        "section2Title": "2) Fraud and abuse (zero tolerance)",
+        "section2Intro": "You will be permanently banned if you:",
+        "section2Content": ["Create duplicate or fake accounts to farm rewards (including family/friend accounts used fraudulently).", "Run \"referral farms\" using bots, scripts, or automated account creation tools.", "Self-refer (using another account to refer yourself).", "Buy, sell, trade, or share referral codes or accounts for money or benefits.", "Use Moondala to spam-promote competitor referral schemes or MLM programs.", "Manipulate referral tracking, order data, or reward calculations through technical exploits.", "Impersonate Moondala or steal our content/code/branding.", "Make misleading claims like \"guaranteed income\" or \"risk-free profit\"."],
+        "section2Detection": "Detection: We use automated fraud detection, manual reviews, and pattern analysis. Suspicious activity triggers immediate investigation.",
+        "section3Title": "3) Holds, reversals, and investigations",
+        "section3Content": ["We may hold rewards until an order is completed or a return window passes.", "If a refund/chargeback happens, related rewards can be reversed.", "We may pause payouts during fraud investigations."],
+        "section4Title": "4) Enforcement and consequences",
+        "section4Intro": "For fraud and abuse violations:",
+        "section4Content": ["Immediate suspension: Account disabled pending investigation.", "Permanent ban: Repeat offenders or severe fraud cases lose all access.", "Reward forfeiture: All pending and earned rewards are cancelled and non-refundable.", "Clawback: Already-paid rewards may be reclaimed if obtained fraudulently.", "Legal action: We reserve the right to pursue legal remedies for fraud or theft.", "Device/IP blocks: Banned users may be blocked from creating new accounts on the same device or network."],
+        "section4Minor": "For minor violations: Warnings, temporary feature restrictions, or reward holds."
+      }
+    }
   }
 }
