@@ -221,15 +221,15 @@ export default function EarnMore() {
           />
         </div>
 
-        {/* Brand New "How It Works" Section from the Design */}
+        {/* Brand New "How It Works" Section from the Design - Simplified to just Network Stats */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 gap-12 items-center mb-24 bg-slate-900/40 rounded-[3rem] p-8 md:p-12 border border-white/5 backdrop-blur-md"
+          className="flex justify-center mb-24 bg-slate-900/40 rounded-[3rem] p-8 md:p-12 border border-white/5 backdrop-blur-md"
         >
-          {/* Left: Network Visual Card */}
-          <div className="bg-[#0B1221] border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden group">
+          {/* Network Visual Card */}
+          <div className="bg-[#0B1221] border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden group w-full max-w-md">
              <div className="flex items-center gap-3 mb-8">
                 <div className="p-2 bg-green-500/10 rounded-lg">
                   <TrendingUp className="w-5 h-5 text-green-400" />
@@ -245,52 +245,6 @@ export default function EarnMore() {
 
               {/* Decorative accent */}
               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl group-hover:bg-purple-600/20 transition-colors" />
-          </div>
-
-          {/* Right: Explainer Content */}
-          <div className="space-y-8">
-            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-sm font-medium">
-              Como funciona
-            </div>
-            
-            <div className="space-y-4">
-              <h2 className="text-4xl md:text-5xl font-black text-white leading-tight">
-                Construa Sua Rede de 5 Níveis
-              </h2>
-              <p className="text-slate-400 text-lg md:text-xl leading-relaxed">
-                Ganhe com seus convites diretos e a rede estendida deles.
-              </p>
-            </div>
-            
-            <div className="space-y-4 pt-4">
-               {/* Level 1 Card */}
-               <motion.div 
-                 whileHover={{ x: 10 }}
-                 className="flex items-center gap-6 p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-default"
-               >
-                  <div className="w-12 h-12 flex-shrink-0 rounded-full bg-indigo-600 flex items-center justify-center text-xl font-bold text-white shadow-lg shadow-indigo-500/20">
-                    1
-                  </div>
-                  <div>
-                    <h4 className="text-white font-bold text-lg">Nível 1: Amigos Diretos</h4>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-slate-600 ml-auto" />
-               </motion.div>
-
-               {/* Levels 2-5 Card */}
-               <motion.div 
-                 whileHover={{ x: 10 }}
-                 className="flex items-center gap-6 p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-default"
-               >
-                  <div className="w-12 h-12 flex-shrink-0 rounded-full bg-indigo-900/50 border border-indigo-500/30 flex items-center justify-center text-xl font-bold text-white shadow-lg shadow-indigo-500/10">
-                    5
-                  </div>
-                  <div>
-                    <h4 className="text-white font-bold text-lg">Níveis 2-5: Amigos de Amigos</h4>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-slate-600 ml-auto" />
-               </motion.div>
-            </div>
           </div>
         </motion.div>
 
