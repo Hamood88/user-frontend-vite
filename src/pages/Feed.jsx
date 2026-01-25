@@ -1390,37 +1390,35 @@ export default function Feed() {
                             </button>
                           </div>
                           
-                          <div className="border-t border-white/10 my-3"></div>
+                          <div className="border-t border-white/10 my-2"></div>
+
+                          {/* Extra Actions */}
+                          <div className="space-y-1">
+                            <button
+                              onClick={() => downloadPostAsImage(post)}
+                              className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors text-xs"
+                            >
+                              <Download className="w-4 h-4 text-gray-400" />
+                              Download Image
+                            </button>
+                            
+                            <button
+                              onClick={() => printPost(post)}
+                              className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors text-xs"
+                            >
+                              <Printer className="w-4 h-4 text-gray-400" />
+                              Print Post
+                            </button>
+
+                            <button
+                              onClick={() => reportPost(post)}
+                              className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-400/10 transition-colors text-xs"
+                            >
+                              <Flag className="w-4 h-4" />
+                              Report Post
+                            </button>
+                          </div>
                       </div>
-                          
-                          <div className="border-t border-white/10 my-1"></div>
-                          
-                          <button
-                            onClick={() => downloadPostAsImage(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <Download className="w-4 h-4" />
-                            Download
-                          </button>
-                          
-                          <button
-                            onClick={() => printPost(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <Printer className="w-4 h-4" />
-                            Print
-                          </button>
-                          
-                          <div className="border-t border-white/10 my-1"></div>
-                          
-                          <button
-                            onClick={() => reportPost(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-red-400 hover:bg-red-400/10 transition-colors"
-                          >
-                            <Flag className="w-4 h-4" />
-                            Report Post
-                          </button>
-                        </div>
                       )}
                     </div>
                   </div>
