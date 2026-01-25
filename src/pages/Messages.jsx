@@ -117,10 +117,14 @@ function normalizeConversation(c, meId) {
   }
 
   const otherName =
-    c?.otherName || c?.otherParticipantName || c?.other?.name || c?.title || "Conversation";
+    otherType === "admin"
+      ? "Moondala Admin"
+      : (c?.otherName || c?.otherParticipantName || c?.other?.name || c?.title || "Conversation");
 
   const otherAvatarUrl =
-    c?.otherAvatarUrl || c?.otherAvatar || c?.other?.avatarUrl || c?.other?.avatar || "";
+    otherType === "admin"
+      ? ""
+      : (c?.otherAvatarUrl || c?.otherAvatar || c?.other?.avatarUrl || c?.other?.avatar || "");
 
   const lastText =
     c?.lastText ||
@@ -841,6 +845,7 @@ export default function Messages() {
     const st = String(m?.senderType || "").toLowerCase().trim();
     const sid = extractId(m?.senderEntityId || "");
 
+    if (st === "admin") return { text: "ADMIN", kind: "admin" };
     if (st === "shop") return { text: "SHOP", kind: "shop" };
     if (st === "user")
       return friendSet.has(String(sid))
@@ -1126,6 +1131,7 @@ export default function Messages() {
             <div style={styles.chatBody(theme)}>
               {messages.map((m, idx) => {
                 const mine = mineMessage(m);
+                const isAdmin = String(m?.senderType || "").toLowerCase() === "admin";
                 const atts = Array.isArray(m?.attachments) ? m.attachments : [];
                 const badge = messageSenderBadge(m);
 
@@ -1165,13 +1171,13 @@ export default function Messages() {
                           />
                         ) : (
                           <span style={{ fontSize: 14, fontWeight: 600, color: theme.text }}>
-                            {(m?.sender?.firstName?.[0] || "U").toUpperCase()}
+                            {(m?.sender?.firstName?.[0] || (isAdmin ? "A" : "U")).toUpperCase()}
                           </span>
                         )}
                       </div>
                     )}
 
-                    <div style={styles.bubble(theme, mine)}>
+                    <div style={styles.bubble(theme, mine, isAdmin)}>
                       <div style={{ display: "flex", justifyContent: mine ? "flex-end" : "flex-start" }}>
                         <span style={styles.senderBadge(theme, badge.kind)}>{badge.text}</span>
                       </div>
@@ -1612,15 +1618,15 @@ const styles = {
 
   bubbleRow: { display: "flex", marginBottom: 10 },
 
-  bubble: (t, mine) => ({
+  bubble: (t, mine, admin) => ({
     maxWidth: "78%",
     padding: "10px 12px",
     borderRadius: 14,
     fontWeight: 700,
     lineHeight: 1.35,
-    background: mine ? t.accent : "rgba(255,255,255,0.08)",
+    background: admin ? "rgba(234, 179, 8, 0.15)" : (mine ? t.accent : "rgba(255,255,255,0.08)"), 
     color: mine ? "#fff" : t.text,
-    border: mine ? "none" : `1px solid ${t.border}`,
+    border: admin ? "2px solid rgba(234, 179, 8, 0.5)" : (mine ? "none" : `1px solid ${t.border}`),
   }),
 
   senderBadge: (t, kind) => {
@@ -1636,6 +1642,8 @@ const styles = {
 
     if (kind === "me")
       return { ...base, background: t.badgeMeBg, border: `1px solid ${t.badgeMeBd}`, color: t.text };
+    if (kind === "admin")
+      return { ...base, background: "rgba(234, 179, 8, 0.2)", border: "1px solid rgba(234, 179, 8, 0.5)", color: "#facc15" };
     if (kind === "shop")
       return { ...base, background: t.badgeShopBg, border: `1px solid ${t.badgeShopBd}`, color: t.text };
     if (kind === "friend")

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+// Removed headlessui to avoid dependency issues
 import {
   getMyNotifications,
   markAllNotificationsRead,
@@ -60,6 +60,16 @@ function buildMessage(n) {
   const a = actorName(n);
   const t = getType(n);
 
+  console.log(`[DEBUG] buildMessage id=${n._id} type="${t}" rawType="${n.type}"`);
+
+  // ✅ System messages: display directly without actor
+  if (t === 'system' || t === 'system_message' || t.includes('system')) {
+    const title = String(n?.title || "").trim();
+    const msg = String(n?.message || "").trim();
+    if (title && msg) return `${title}: ${msg}`;
+    return title || msg || "System Notification";
+  }
+
   // ✅ your model uses title + message
   const title = String(n?.title || "").trim();
   const msg = String(n?.message || "").trim();
@@ -101,6 +111,10 @@ export default function Notifications() {
   const [err, setErr] = useState("");
   const [items, setItems] = useState([]);
   const [unread, setUnread] = useState(0);
+
+  // System Message Modal
+  const [systemMsgOpen, setSystemMsgOpen] = useState(false);
+  const [selectedSystemMsg, setSelectedSystemMsg] = useState(null);
 
   const incomingCount = useMemo(() => incoming.length, [incoming]);
 
@@ -173,6 +187,11 @@ export default function Notifications() {
     // ✅ friend requests
     if (t === "friend_request") return "/notifications";
 
+    // ✅ system messages (Admin DMs)
+    if (t === 'system' || t === 'system_message' || t.includes('system')) {
+      return n?.meta?.link || "/messages";
+    }
+
     return "/feed";
   }
 
@@ -188,6 +207,22 @@ export default function Notifications() {
       // optimistic update
       setItems((prev) => prev.map((x) => (x._id === n._id ? { ...x, read: true } : x)));
       setUnread((u) => Math.max(0, Number(u || 0) - (n?.read ? 0 : 1)));
+
+      const t = getType(n);
+      console.log(`[DEBUG] openNotification type="${t}"`);
+
+      // ✅ Handle System Messages (Admin DMs) - Force navigation to Messages
+      if (t === 'system' || t === 'system_message' || t.includes('system')) {
+        const target = n?.meta?.link || "/messages";
+        return nav(target);
+      }
+      
+      // ✅ Handle Friend Requests (stay on page)
+      
+      // ✅ Handle Friend Requests (stay on page)
+      if (t === 'friend_request') {
+        return; 
+      }
 
       return nav(buildTargetUrl(n));
     } catch (e) {
@@ -441,6 +476,51 @@ export default function Notifications() {
               </div>
             );
           })}
+        </div>
+      )}
+      {/* System Message Modal (Custom CSS) */}
+      {systemMsgOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0, left: 0,
+          width: '100%', height: '100%',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999
+        }} onClick={() => setSystemMsgOpen(false)}>
+          <div style={{
+            background: 'white',
+            padding: '24px',
+            borderRadius: '16px',
+            maxWidth: '480px',
+            width: '90%',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+          }} onClick={e => e.stopPropagation()}>
+            <h3 style={{ margin: '0 0 12px 0', fontSize: '20px', fontWeight: 'bold', color: '#111' }}>
+              {selectedSystemMsg?.title || "System Message"}
+            </h3>
+            <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', color: '#444', marginBottom: '20px' }}>
+              {selectedSystemMsg?.message}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button 
+                onClick={() => setSystemMsgOpen(false)}
+                style={{
+                  background: '#0f172a',
+                  color: 'white',
+                  padding: '10px 20px',
+                  borderRadius: '10px',
+                  border: 'none',
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
