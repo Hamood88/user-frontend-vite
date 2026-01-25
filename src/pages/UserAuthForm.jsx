@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { apiPost, setUserSession } from "../api";
 import { Button, Input, Alert, Label, Select, Checkbox } from "../components/ui";
 import { countries } from "../utils/countries";
+import { countryCodes } from "../utils/countryCodes";
 import { 
   setupRecaptcha, 
   sendVerificationCode, 
@@ -71,6 +72,7 @@ export function UserAuthForm({ mode }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
+  const [phoneCode, setPhoneCode] = useState("+1");
   const [gender, setGender] = useState("");
   const [dobDay, setDobDay] = useState("");
   const [dobMonth, setDobMonth] = useState("");
@@ -167,7 +169,7 @@ export function UserAuthForm({ mode }) {
   const handleResend = async () => {
     setError(null);
     try {
-      const formattedPhone = formatPhoneNumber(phone, country === "United States" ? "1" : "1");
+      const formattedPhone = `${phoneCode}${phone.trim()}`;
       await resendVerificationCode(formattedPhone);
       alert("Verification code resent!");
     } catch (err) {
@@ -237,12 +239,15 @@ export function UserAuthForm({ mode }) {
           throw new Error('Select at least one interest');
         }
 
+        // Combine phone code and phone number
+        const fullPhoneNumber = `${phoneCode}${phone.trim()}`;
+
         const registerData = {
           firstName: firstName.trim(),
           lastName: lastName.trim(),
           email: email.trim(),
           password,
-          phoneNumber: phone.trim(),
+          phoneNumber: fullPhoneNumber,
           gender: gender.toLowerCase(), // Convert M/F/Other to male/female/other
           dateOfBirth: dateStr, // Format: YYYY-MM-DD
           country: country,
@@ -266,7 +271,7 @@ export function UserAuthForm({ mode }) {
         
         // Send verification code via Firebase
         try {
-          const formattedPhone = formatPhoneNumber(phone, country === "United States" ? "1" : "1");
+          const formattedPhone = `${phoneCode}${phone.trim()}`;
           console.log('📱 Sending verification code to:', formattedPhone);
           
           const confirmationResult = await sendVerificationCode(formattedPhone);
@@ -313,7 +318,7 @@ export function UserAuthForm({ mode }) {
             </div>
             <h3 className="text-lg font-medium text-white">Verify Phone Number</h3>
             <p className="text-sm text-gray-400">
-                We sent a 6-digit code to <b>{phone}</b> via SMS.
+                We sent a 6-digit code to <b>{phoneCode} {phone}</b> via SMS.
             </p>
             <p className="text-xs text-gray-500">
                 Please enter the code to verify your phone number.
@@ -469,15 +474,48 @@ export function UserAuthForm({ mode }) {
           </div>
 
           <div>
-            <Label htmlFor="phone" className="mb-2 block text-xs">Phone Number</Label>
-            <Input
-              id="phone"
-              icon={Phone}
-              type="tel"
-              placeholder="+1 234 567 8900"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+            <Label htmlFor="country" className="mb-2 block text-xs">Country</Label>
+            <Select
+              id="country"
+              icon={Globe}
+              value={country}
+              onChange={(e) => {
+                setCountry(e.target.value);
+                // Auto-set phone code based on country
+                const countryData = countryCodes.find(c => c.country === e.target.value);
+                if (countryData) {
+                  setPhoneCode(countryData.code);
+                }
+              }}
+              options={countries.map(c => ({ value: c, label: c }))}
+              placeholder="Select country"
             />
+          </div>
+
+          <div>
+            <Label htmlFor="phone" className="mb-2 block text-xs">Phone Number</Label>
+            <div className="flex gap-2">
+              <select
+                value={phoneCode}
+                onChange={(e) => setPhoneCode(e.target.value)}
+                className="w-32 px-3 py-2 bg-gray-900/40 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+              >
+                {countryCodes.map(({ code, country, flag }) => (
+                  <option key={code + country} value={code}>
+                    {flag} {code}
+                  </option>
+                ))}
+              </select>
+              <Input
+                id="phone"
+                icon={Phone}
+                type="tel"
+                placeholder="234567890"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+                className="flex-1"
+              />
+            </div>
           </div>
 
           <div>
@@ -536,18 +574,6 @@ export function UserAuthForm({ mode }) {
                 placeholder="Year"
               />
             </div>
-          </div>
-
-          <div>
-            <Label htmlFor="country" className="mb-2 block text-xs">Country</Label>
-            <Select
-              id="country"
-              icon={Globe}
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              options={countries.map(c => ({ value: c, label: c }))}
-              placeholder="Select country"
-            />
           </div>
 
           <div>
