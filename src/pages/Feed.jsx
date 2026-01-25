@@ -678,7 +678,8 @@ export default function Feed() {
     setEditText("");
   }
 
-  function toggleShareDropdown(postId) {
+  function toggleShareDropdown(e, postId) {
+    e.stopPropagation();
     setShareDropdownOpen(shareDropdownOpen === postId ? "" : postId);
   }
 
@@ -1284,7 +1285,7 @@ export default function Feed() {
                       <button
                         type="button"
                         className="md-actionBtn hover-green group"
-                        onClick={() => toggleShareDropdown(post._id)}
+                        onClick={(e) => toggleShareDropdown(e, post._id)}
                         title="Share"
                       >
                         <span className="md-actionIconWrap group-hover:bg-green-400/10">
@@ -1294,7 +1295,10 @@ export default function Feed() {
                       
                       {/* Share Dropdown */}
                       {shareDropdownOpen === post._id && (
-                        <div className="absolute right-0 top-12 bg-slate-900 border border-white/10 rounded-xl p-2 z-50 min-w-[220px] shadow-2xl">
+                        <div 
+                          className="absolute right-0 top-12 bg-slate-900 border border-white/10 rounded-xl p-2 z-50 min-w-[220px] shadow-2xl"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <div className="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
                             Share Post
                           </div>
