@@ -13,6 +13,7 @@ export default function TopInvitersList({
 
   useEffect(() => {
     let mounted = true;
+    console.log("TopInvitersList v2.0 mounting - inline API fix active");
     
     async function loadInviters() {
       try {
