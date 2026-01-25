@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Users, TrendingUp } from "lucide-react";
-import { toAbsUrl } from "../api";
-import { getTopInviters } from "../api.jsx";
+import { toAbsUrl, apiGet } from "../api";
 
 export default function TopInvitersList({ 
   limit = 5, 
@@ -17,14 +16,12 @@ export default function TopInvitersList({
     
     async function loadInviters() {
       try {
-        if (typeof getTopInviters !== 'function') {
-          console.error('getTopInviters is not a function:', getTopInviters);
-          setLoading(false);
-          return;
-        }
-        const data = await getTopInviters(limit);
+        // Direct API call to avoid import bundling issues with getTopInviters
+        const data = await apiGet(`/api/users/top-inviters?limit=${limit}`);
+        const result = Array.isArray(data?.topInviters) ? data.topInviters : Array.isArray(data) ? data : [];
+        
         if (mounted) {
-          setList(data || []);
+          setList(result);
           setLoading(false);
         }
       } catch (err) {
