@@ -1,11 +1,12 @@
-# Copilot Instructions: User Frontend (Vite)
+﻿# Copilot Instructions: User Frontend (Vite)
 
 **Context**: This is the ACTIVE User Frontend (`user-frontend-vite-temp`).
 **Status**: The folder `user-frontend` is LEGACY/DEPRECATED. Do not edit it.
 
 ## Architecture
 
-- **Stack**: React 18, Vite, Tailwind v4, Framer Motion, Lucide React.
+- **Stack**: React 18, Vite 7, Tailwind v4.
+- **Router**: React Router v6 (`react-router-dom`).
 - **Port**: `5173`.
 - **Auth**: `userToken` (LocalStorage).
 - **Backend Reference**: See `../backend/.github/copilot-instructions.md`.
@@ -35,62 +36,59 @@ VITE_API_BASE=http://localhost:5000
 
 ### 2. Unified Product Details
 - **Page**: `ProductDetailsUnified.jsx` (`/product/:id`).
-- **Core Integrations**:
-    - **Messaging**: "Ask Previous Buyer" feature.
-    - **Reviews**: Aggregated rating display.
-    - **Shop**: Auto-follow logic on purchase (optional).
+- **CSS**: `src/styles/productDetailsUnified.css` + Tailwind.
+- **Features**: Chat with buyer ("Ask Previous Buyer"), Aggregated ratings, Shop auto-follow logic.
 
 ### 3. Messaging Implementation
 - **Context**: `ShopNotificationsContext` creates polling for unread counts.
-- **API**: `/api/messages`.
+- **API**: `/api/messages` & `/api/conversations`.
 - **Route**: `/messages` (Thread list) -> `/messages/:conversationId`.
 
 ### 4. Internationalization (i18n)
 - **Library**: `i18next`, `react-i18next`
 - **Languages**: English, Arabic (RTL support)
-- **Translation Files**: `public/locales/{lang}/translation.json`
-- **Usage**: `import { useTranslation } from 'react-i18next';` then `const { t } = useTranslation();`
+- **Files**: `public/locales/{en,ar}/translation.json`
+- **Usage**: `const { t } = useTranslation();`
 
 ## Developer Workflows
 
 ### API Interaction (`src/api.jsx`)
+- **No Axios**: Use `apiGet`, `apiPost`, `apiPut`, `apiDelete` wrappers (built on `fetch`).
 - **Base URL**: Auto-resolved from `VITE_API_BASE`.
-- **Production Fallback**: Built-in logic `detectProdApiBaseFallback()` sets base to `moondala-backend.onrender.com` if hosted on `moondala.one`.
-- **Wrappers**: Use `apiGet`, `apiPost`, `apiPut`, `apiDelete`.
-    - Automatically attaches `Authorization: Bearer <userToken>`.
-    - Throws consistent error objects.
+- **Production Fallback**: `detectProdApiBaseFallback()` logic hardcodes `moondala-backend.onrender.com` if hostname is `moondala.one`.
 - **Images**: **MANDATORY**: Use `toAbsUrl(path)` for `src`.
-    - Automatically fixes `localhost` vs `cloudinary` vs relative paths.
-    - Resolves `/uploads/cloudname/...` to Cloudinary absolute URLs.
-    - Cloud name for Moondala: `dohetomaw`
+    - Handles `localhost:5000` -> backend URL replacement.
+    - Handles `cloudinary` paths (e.g. `dohetomaw/video/...`).
+    - Cloud name for Moondala: `dohetomaw`.
 
-### Styling
-- **Tailwind**: Primary styling method (utility classes). Uses Tailwind v4.
-- **Custom CSS**: `src/styles/` for specific animations or complex layouts.
-- **Icons**: Import from `lucide-react`.
-- **Animations**: Framer Motion for complex animations.
+### Styling Strategy
+- **Primary**: Tailwind CSS v4 (No `tailwind.config.js` needed for v4 defaults, but check `src/index.css` for `@theme`).
+- **Custom**: CSS files in `src/styles/*.css` (e.g. `appLayoutModern.css`) for complex animations/layouts.
+- **Icons**: `lucide-react`.
+- **Animations**: `framer-motion` v12.
 
 ### Adding a New Page
 1.  Create `src/pages/NewPage.jsx`.
-2.  Add route in `src/App.jsx` (inside or outside `ProtectedRoute` wrapper).
-3.  Add navigation link in `src/components/AppLayout.jsx` or other navigation component.
+2.  Add route in `src/App.jsx`.
+    - Protected: Inside `<ProtectedRoute>`.
+    - Public: Outside wrapper.
+3.  Add navigation link in `src/components/AppLayout.jsx` or specialized navs.
 
 ## Critical Rules
-1.  **Work Directory**: Ensure you are in `user-frontend-vite-temp/`.
+1.  **Directory Awareness**: Confirm you are in `user-frontend-vite-temp/`.
 2.  **No Vendor/Admin Access**: Never call `/api/shop/*` or `/api/admin/*`.
-3.  **Token Hygiene**: Use `setUserSession({ token, user })` to update auth state atomically. Never touch `shopToken` or `adminToken`.
-4.  **Legacy Warning**: Ignore the `user-frontend/` directory completely. It uses old API patterns.
+3.  **Token Hygiene**: Use `setUserSession({ token, user })` to update auth state atomically.
+4.  **Legacy Warning**: Ignore the `user-frontend/` directory completely.
 5.  **Referral Logic**: QR codes are generated client-side; referral codes are tracked via `referredBy` in the `User` model on the backend.
-6.  **Image URLs**: Always use `toAbsUrl()` for all image sources to handle localhost/Cloudinary conversion.
+6.  **Image FAQs**:
+    - If images 404 on `moondala-backend.onrender.com`: Check `toAbsUrl` logic.
+    - Backend serving logic: `uploads/` dir is served statically.
 
 ## Deployment
 - **Platform**: Vercel (https://moondala.one)
 - **Build Command**: `npm run build` (outputs to `dist/`)
-- **Environment Variables**: Set in `vercel.json` or Vercel dashboard
-    - `VITE_API_BASE=https://moondala-backend.onrender.com`
-    - `VITE_USER_APP_URL=https://moondala.one`
-    - `VITE_SHOP_APP_URL=https://shop.moondala.one`
-- **Routing**: SPA routing configured in `vercel.json` (all routes → `index.html`)
+- **Environment Variables**: Set in `vercel.json` or Vercel dashboard.
+- **Error Boundary**: `App.jsx` contains a top-level `ErrorBoundary` to catch crashes and direct users to `/_probe`.
 
 ## Common Patterns
 
@@ -100,28 +98,22 @@ VITE_API_BASE=http://localhost:5000
 const { token, user } = await loginUser(email, password);
 setUserSession({ token, user });
 
-// Check auth status
-const token = getToken();
-if (!token) redirectToLogin();
-
 // Logout
-clearUserSession();
+clearUserSession(); // Atomically removes token & user data
 ```
 
 ### Data Fetching
 ```javascript
-import { apiGet, apiPost } from '../api';
+import { apiGet } from '../api';
 
 useEffect(() => {
   async function fetchData() {
     try {
       setLoading(true);
-      const data = await apiGet('/products');
+      const data = await apiGet('/products'); // auto-attaches token
       setProducts(data);
     } catch (err) {
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
   }
   fetchData();
@@ -132,12 +124,7 @@ useEffect(() => {
 ```javascript
 import { toAbsUrl } from '../api';
 
-// Product images
-<img src={toAbsUrl(product.image)} alt={product.name} />
-
-// User avatars
-<img src={toAbsUrl(user.avatarUrl)} alt={user.name} />
-
-// Cloudinary videos (auto-detected)
+// ALWAYS use wrapper
+<img src={toAbsUrl(user.avatarUrl)} />
 <video src={toAbsUrl(post.videoUrl)} />
 ```

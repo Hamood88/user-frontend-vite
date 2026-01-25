@@ -73,6 +73,10 @@ export function toAbsUrl(url) {
   
   // ✅ CRITICAL: Fix localhost URLs FIRST (before checking for http://)
   if (s.includes("localhost:5000") || s.includes("localhost:3000")) {
+    // If we are in production (HTTPS), FORCE production backend to avoid Mixed Content errors
+    if (typeof window !== "undefined" && window.location.protocol === "https:") {
+      return s.replace(/http:\/\/localhost:\d+/g, "https://moondala-backend.onrender.com");
+    }
     return s.replace(/http:\/\/localhost:\d+/g, API_BASE);
   }
   if (s.includes("127.0.0.1:5000") || s.includes("127.0.0.1")) {
