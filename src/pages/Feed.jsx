@@ -1328,7 +1328,7 @@ export default function Feed() {
                             onClick={() => shareToFacebook(post)}
                             className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
                           >
-                            <Share2 className="w-4 h-4" />
+                            <Share className="w-4 h-4" />
                             Facebook
                           </button>
                           
@@ -1352,7 +1352,7 @@ export default function Feed() {
                             onClick={() => shareToReddit(post)}
                             className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
                           >
-                            <Share2 className="w-4 h-4" />
+                            <Share className="w-4 h-4" />
                             Reddit
                           </button>
                           
