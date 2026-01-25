@@ -1296,93 +1296,102 @@ export default function Feed() {
                       {/* Share Dropdown */}
                       {shareDropdownOpen === post._id && (
                         <div 
-                          className="absolute right-0 top-12 bg-slate-900 border border-white/10 rounded-xl p-2 z-50 min-w-[220px] shadow-2xl"
+                          className="absolute right-0 top-12 bg-slate-900 border border-white/10 rounded-xl p-3 z-50 w-[280px] shadow-2xl"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <div className="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                          <div className="px-1 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                             Share Post
                           </div>
-                          <button
-                            onClick={() => copyPostLink(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <Link className="w-4 h-4" />
-                            Copy Link
-                          </button>
+
+                          {/* Copy Actions Row */}
+                          <div className="flex gap-2 mb-3">
+                            <button
+                              onClick={() => copyPostLink(post)}
+                              className="flex-1 flex flex-col items-center justify-center gap-1.5 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-white text-xs font-medium"
+                            >
+                              <Link className="w-4 h-4 text-purple-400" />
+                              Copy Link
+                            </button>
+                            <button
+                              onClick={() => copyPostContent(post)}
+                              className="flex-1 flex flex-col items-center justify-center gap-1.5 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-white text-xs font-medium"
+                            >
+                              <Copy className="w-4 h-4 text-blue-400" />
+                              Copy Text
+                            </button>
+                          </div>
                           
-                          <button
-                            onClick={() => copyPostContent(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <Copy className="w-4 h-4" />
-                            Copy Content
-                          </button>
+                          <div className="border-t border-white/10 mb-3"></div>
                           
-                          <div className="border-t border-white/10 my-1"></div>
+                          {/* Social Grid */}
+                          <div className="grid grid-cols-2 gap-2">
+                            <button
+                              onClick={() => shareToWhatsApp(post)}
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                            >
+                              <MessageCircleWarning className="w-4 h-4 text-green-500 shrink-0" />
+                              WhatsApp
+                            </button>
+                            
+                            <button
+                              onClick={() => shareToFacebook(post)}
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                            >
+                              <Share className="w-4 h-4 text-blue-500 shrink-0" />
+                              Facebook
+                            </button>
+                            
+                            <button
+                              onClick={() => shareToLinkedIn(post)}
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                            >
+                              <Users className="w-4 h-4 text-blue-400 shrink-0" />
+                              LinkedIn
+                            </button>
+                            
+                            <button
+                              onClick={() => shareToTelegram(post)}
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                            >
+                              <Send className="w-4 h-4 text-sky-400 shrink-0" />
+                              Telegram
+                            </button>
+                            
+                            <button
+                              onClick={() => shareToTwitter(post)}
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                            >
+                              <Twitter className="w-4 h-4 text-white shrink-0" />
+                              Twitter
+                            </button>
+
+                            <button
+                              onClick={() => shareToReddit(post)}
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                            >
+                              <Share className="w-4 h-4 text-orange-500 shrink-0" />
+                              Reddit
+                            </button>
+                            
+                            <button
+                              onClick={() => shareViaEmail(post)}
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                            >
+                              <Mail className="w-4 h-4 text-slate-300 shrink-0" />
+                              Email
+                            </button>
+                            
+                            <button
+                              onClick={() => shareViaSMS(post)}
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                            >
+                              <MessageCircle className="w-4 h-4 text-green-400 shrink-0" />
+                              SMS
+                            </button>
+                          </div>
                           
-                          <button
-                            onClick={() => shareToWhatsApp(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <MessageCircleWarning className="w-4 h-4" />
-                            WhatsApp
-                          </button>
-                          
-                          <button
-                            onClick={() => shareToFacebook(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <Share className="w-4 h-4" />
-                            Facebook
-                          </button>
-                          
-                          <button
-                            onClick={() => shareToLinkedIn(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <Users className="w-4 h-4" />
-                            LinkedIn
-                          </button>
-                          
-                          <button
-                            onClick={() => shareToTelegram(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <Send className="w-4 h-4" />
-                            Telegram
-                          </button>
-                          
-                          <button
-                            onClick={() => shareToReddit(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <Share className="w-4 h-4" />
-                            Reddit
-                          </button>
-                          
-                          <button
-                            onClick={() => shareToTwitter(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <Twitter className="w-4 h-4" />
-                            Twitter
-                          </button>
-                          
-                          <button
-                            onClick={() => shareViaEmail(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <Mail className="w-4 h-4" />
-                            Email
-                          </button>
-                          
-                          <button
-                            onClick={() => shareViaSMS(post)}
-                            className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                          >
-                            <MessageCircle className="w-4 h-4" />
-                            SMS/Text
-                          </button>
+                          <div className="border-t border-white/10 my-3"></div>
+                      </div>
                           
                           <div className="border-t border-white/10 my-1"></div>
                           
