@@ -15,13 +15,24 @@ export default function ReferralPolicy() {
         <li>Some transactions may be excluded (refunds, chargebacks, fraud, restricted items).</li>
       </ul>
 
-      <h2>2) What's not allowed</h2>
+      <h2>2) Fraud and abuse (zero tolerance)</h2>
+      <p>
+        <strong>You will be permanently banned if you:</strong>
+      </p>
       <ul>
-        <li>Creating fake accounts to farm rewards.</li>
-        <li>Self-referrals (you referring yourself using another account).</li>
-        <li>Buying/selling accounts, referral codes, or automated/bot signups.</li>
-        <li>Misleading claims like "guaranteed income" or "risk-free profit."</li>
+        <li>Create duplicate or fake accounts to farm rewards (including family/friend accounts used fraudulently).</li>
+        <li>Run "referral farms" using bots, scripts, or automated account creation tools.</li>
+        <li>Self-refer (using another account to refer yourself).</li>
+        <li>Buy, sell, trade, or share referral codes or accounts for money or benefits.</li>
+        <li>Use Moondala to spam-promote competitor referral schemes or MLM programs.</li>
+        <li>Manipulate referral tracking, order data, or reward calculations through technical exploits.</li>
+        <li>Impersonate Moondala or steal our content/code/branding.</li>
+        <li>Make misleading claims like "guaranteed income" or "risk-free profit."</li>
       </ul>
+      <p className="legalNotice">
+        <strong>Detection:</strong> We use automated fraud detection, manual reviews, and pattern analysis.
+        Suspicious activity triggers immediate investigation.
+      </p>
 
       <h2>3) Holds, reversals, and investigations</h2>
       <ul>
@@ -30,9 +41,20 @@ export default function ReferralPolicy() {
         <li>We may pause payouts during fraud investigations.</li>
       </ul>
 
-      <h2>4) Enforcement</h2>
+      <h2>4) Enforcement and consequences</h2>
       <p>
-        Abuse can lead to reward cancellation, feature restriction, or account suspension.
+        <strong>For fraud and abuse violations:</strong>
+      </p>
+      <ul>
+        <li><strong>Immediate suspension:</strong> Account disabled pending investigation.</li>
+        <li><strong>Permanent ban:</strong> Repeat offenders or severe fraud cases lose all access.</li>
+        <li><strong>Reward forfeiture:</strong> All pending and earned rewards are cancelled and non-refundable.</li>
+        <li><strong>Clawback:</strong> Already-paid rewards may be reclaimed if obtained fraudulently.</li>
+        <li><strong>Legal action:</strong> We reserve the right to pursue legal remedies for fraud or theft.</li>
+        <li><strong>Device/IP blocks:</strong> Banned users may be blocked from creating new accounts on the same device or network.</li>
+      </ul>
+      <p>
+        <strong>For minor violations:</strong> Warnings, temporary feature restrictions, or reward holds.
       </p>
     </LegalLayout>
   );

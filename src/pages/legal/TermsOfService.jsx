@@ -22,37 +22,63 @@ export default function TermsOfService() {
         <li>Trying to exploit bugs or reverse engineer the platform.</li>
       </ul>
 
-      <h2>3) Transactions</h2>
+      <h2>3) Fraud and abuse</h2>
+      <p>
+        We have zero tolerance for fraud and abuse. You will be banned if you:
+      </p>
+      <ul>
+        <li>Create duplicate or fake accounts to farm rewards or manipulate referrals.</li>
+        <li>Run "referral farms" using bots, scripts, or automated account creation.</li>
+        <li>Sell, buy, trade, or share referral codes or accounts for profit.</li>
+        <li>Use Moondala to promote competitor referral schemes in a spammy way.</li>
+        <li>Steal Moondala content, code, branding, or impersonate Moondala.</li>
+        <li>Attempt to manipulate referral tracking, order systems, or reward calculations.</li>
+      </ul>
+
+      <h2>4) Transactions</h2>
       <ul>
         <li>Orders, returns, and refunds follow our Refund Policy.</li>
         <li>Some items may be non-refundable if clearly labeled.</li>
         <li>We may hold or reverse rewards when refunds/chargebacks happen.</li>
       </ul>
 
-      <h2>4) Referral rewards</h2>
+      <h2>5) Referral rewards</h2>
       <p>
         Rewards are governed by the Referral & Rewards Policy. We may pause or deny rewards
         for suspected abuse or fake accounts.
       </p>
 
-      <h2>5) Content you post</h2>
+      <h2>6) Content you post</h2>
       <ul>
         <li>You own your content, but you give Moondala permission to display it in the app.</li>
         <li>Don't post content you don't have rights to.</li>
       </ul>
 
-      <h2>6) Service changes</h2>
+      <h2>7) Suspension and termination</h2>
+      <p>
+        We reserve the right to suspend or permanently ban accounts that:
+      </p>
+      <ul>
+        <li>Violate these Terms, especially fraud and abuse provisions.</li>
+        <li>Engage in behavior that harms other users or the platform.</li>
+        <li>Are involved in repeated rule violations or ignore warnings.</li>
+      </ul>
+      <p>
+        Banned users forfeit all pending rewards and may be blocked from creating new accounts.
+      </p>
+
+      <h2>8) Service changes</h2>
       <p>
         We may update features, fees, and policies as Moondala grows. We'll update the "Last updated" date.
       </p>
 
-      <h2>7) Liability</h2>
+      <h2>9) Liability</h2>
       <p>
         Moondala is provided "as is." To the fullest extent permitted by law, we're not liable for indirect damages
         (lost profits, data loss, etc.).
       </p>
 
-      <h2>8) Contact</h2>
+      <h2>10) Contact</h2>
       <p>Support contact will be listed here (example: support@moondala.one).</p>
     </LegalLayout>
   );
