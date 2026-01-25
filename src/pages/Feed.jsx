@@ -881,61 +881,55 @@ export default function Feed() {
                 <h1 className="text-2xl font-bold text-white mb-2">
                   {userName(profileUser)}
                 </h1>
-                {profileUser.email && (
+
+                {/* Email - Only visible to self */}
+                {userId === me?._id && profileUser.email && (
                   <p className="text-sm text-muted-foreground mb-3">{profileUser.email}</p>
                 )}
-                {profileUser.referralCode && (
+
+                {/* Referral Code - Visible if self OR non-friends (so strangers can copy it) */}
+                {(userId === me?._id || (!profileUser.isFriend && !profileUser.areFriends)) && profileUser.referralCode && (
                   <p className="text-xs text-muted-foreground/60 mb-3">Code: {profileUser.referralCode}</p>
                 )}
                 
                 {/* Action Buttons */}
                 {userId !== me?._id && (
-                  <div className="flex gap-3 mt-4">
-                    {/* Debug log */}
-                    {console.log('Rendering buttons - isFriend:', profileUser?.isFriend, 'areFriends:', profileUser?.areFriends, 'profileUser:', profileUser)}
+                  <div className="flex gap-3 mt-3 items-center">
                     
-                    {/* Show Add Friend button if NOT already friends (even for private accounts) */}
+                    {/* Show Add Friend button if NOT already friends */}
                     {!profileUser?.isFriend && !profileUser?.areFriends && (
                       <button
                         onClick={handleAddFriend}
                         disabled={friendRequestSentToProfile}
-                        className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                        className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                       >
                         {friendRequestSentToProfile ? (
                           <>
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                            Friend Request Sent
+                            <Check className="w-4 h-4" />
+                            Request Sent
                           </>
                         ) : (
                           <>
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                            </svg>
+                            <Users className="w-4 h-4" />
                             Add Friend
                           </>
                         )}
                       </button>
-                    )}?.isFriend || profileUser?
+                    )}
                     
                     {/* Show "Friends" badge if already friends */}
                     {(profileUser.isFriend || profileUser.areFriends) && (
-                      <div className="flex-1 px-4 py-2 bg-green-600/20 border border-green-500/30 text-green-400 rounded-lg font-medium flex items-center justify-center gap-2">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
+                      <div className="px-3 py-1 bg-green-500/20 text-green-400 text-sm rounded-full font-medium flex items-center gap-1 border border-green-500/30">
+                        <Check className="w-3 h-3" />
                         Friends
                       </div>
                     )}
                     
                     <button
                       onClick={handleMessage}
-                      className="flex-1 px-4 py-2 bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                      className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                      </svg>
+                      <MessageCircle className="w-4 h-4" />
                       Message
                     </button>
                   </div>
