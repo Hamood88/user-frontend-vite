@@ -408,22 +408,23 @@ export default function Friends() {
                       </button>
                     </div>
                   ) : (
-                    <div className="flex gap-2 w-full">
+                    <div className="flex w-full gap-2">
                       <button
                         type="button"
-                        className="md-btn md-btn-ghost flex-1 text-xs py-2 h-8"
+                        className="flex-1 text-xs py-3 h-12 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold flex items-center justify-center gap-2 transition-colors shadow-md"
                         onClick={() => id && nav(`/messages/user/${encodeURIComponent(id)}`)}
                       >
-                        <MessageCircle className="w-3 h-3" />
+                        <MessageCircle className="w-4 h-4" />
                         Message
                       </button>
                       <button
                         type="button"
-                        className="md-btn md-btn-ghost h-8 w-8 p-0"
+                        className="flex-1 text-xs py-3 h-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold flex items-center justify-center gap-2 transition-colors shadow-md"
                         onClick={() => id && nav(`/feed/user/${encodeURIComponent(id)}`)}
-                        title="View Feed"
+                        title="Visit Feed"
                       >
-                        <Eye className="w-4 h-4 text-muted-foreground" />
+                        <Eye className="w-4 h-4" />
+                        Visit
                       </button>
                     </div>
                   )}
