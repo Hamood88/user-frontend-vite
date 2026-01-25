@@ -149,7 +149,8 @@ export default function EarnMore() {
     const link = isUser ? userReferralLink : shopReferralLink;
     
     // Use custom message if available, otherwise fallback (though customMessage should always be set)
-    const finalMessage = `${customMessage}\n\nUse my code: ${referralCode}\n${link}`;
+    // Removed explicit code from message as requested, link already has it
+    const finalMessage = `${customMessage}\n\n${link}`;
     
     // Updated simple share logic
     const urls = {
