@@ -40,7 +40,7 @@ export default function TopInvitersList({
 
   return (
     <div className={`glass-card rounded-2xl ${compact ? "p-4" : "p-5"}`}>
-      <h2 className={`font-display font-bold text-white flex items-center gap-2 ${compact ? "text-base mb-3" : "text-lg mb-4"}`}>
+      <h2 className={`font-display font-bold text-foreground flex items-center gap-2 ${compact ? "text-base mb-3" : "text-lg mb-4"}`}>
         <Users className={compact ? "w-4 h-4" : "w-5 h-5"} />
         {title}
       </h2>
@@ -55,7 +55,7 @@ export default function TopInvitersList({
             <Link
               to={`/feed/user/${inviter._id}`}
               key={inviter._id}
-              className={`flex items-center gap-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group ${compact ? "p-2" : "p-3"}`}
+              className={`flex items-center gap-3 rounded-xl bg-muted/40 hover:bg-muted/80 ring-1 ring-border/10 transition-all cursor-pointer group ${compact ? "p-2" : "p-3"}`}
             >
               <div className="relative">
                 <div className={`rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity ${compact ? "w-10 h-10" : "w-12 h-12"}`}>
@@ -71,13 +71,13 @@ export default function TopInvitersList({
                     </span>
                   )}
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-[10px] font-bold text-black border border-[#0f172a]">
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-[10px] font-bold text-black border-2 border-background">
                   {index + 1}
                 </div>
               </div>
               
               <div className="flex-1 min-w-0">
-                <div className={`font-semibold text-white truncate group-hover:underline ${compact ? "text-sm" : "text-base"}`}>
+                <div className={`font-semibold text-foreground truncate group-hover:underline ${compact ? "text-sm" : "text-base"}`}>
                   {inviter.displayName}
                 </div>
                 <div className="text-[10px] text-muted-foreground uppercase tracking-wide">
@@ -86,7 +86,7 @@ export default function TopInvitersList({
               </div>
 
               <div className="flex items-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
-                <TrendingUp className="w-3.5 h-3.5 text-green-400" />
+                <TrendingUp className="w-3.5 h-3.5 text-green-500" />
               </div>
             </Link>
           ))}

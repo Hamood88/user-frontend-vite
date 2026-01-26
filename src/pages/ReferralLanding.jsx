@@ -672,8 +672,8 @@ const ReferralLanding = ({ type: propType }) => {
   // STEP 1: SPLASH SCREEN (PWA Optimized)
   if (step === 1) {
     return (
-      <div className="fixed inset-0 min-h-screen bg-black flex flex-col items-center justify-center p-6 text-white overflow-hidden">
-        <div className="bg-slate-900/50 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] shadow-2xl flex flex-col items-center max-w-sm w-full border border-slate-800 animate-in fade-in zoom-in duration-700">
+      <div className="fixed inset-0 min-h-screen bg-background flex flex-col items-center justify-center p-6 text-foreground overflow-hidden">
+        <div className="bg-card/50 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] shadow-2xl flex flex-col items-center max-w-sm w-full border border-border animate-in fade-in zoom-in duration-700">
           {/* Logo with Glow */}
           <div className="relative mb-10">
             <div className="absolute inset-0 bg-purple-500/30 blur-3xl rounded-full"></div>
@@ -684,17 +684,17 @@ const ReferralLanding = ({ type: propType }) => {
             />
           </div>
           
-          <h2 className="text-2xl font-bold mb-2 text-center text-white">Moondala</h2>
-          <p className="text-slate-400 mb-10 text-center text-sm leading-relaxed">{t.subtitle}</p>
+          <h2 className="text-2xl font-bold mb-2 text-center text-foreground">Moondala</h2>
+          <p className="text-muted-foreground mb-10 text-center text-sm leading-relaxed">{t.subtitle}</p>
 
           {/* Large Language Selector */}
           <div className="w-full mb-8 space-y-3">
-            <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest block text-center">Language / 言語 / لغة</label>
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest block text-center">Language / 言語 / لغة</label>
             <div className="relative">
               <select
                 value={selectedLang}
                 onChange={(e) => setSelectedLang(e.target.value)}
-                className="w-full bg-slate-800/80 border border-slate-700 text-white py-4 px-6 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all text-center appearance-none cursor-pointer hover:bg-slate-700 font-medium"
+                className="w-full bg-input/80 border border-border text-foreground py-4 px-6 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all text-center appearance-none cursor-pointer hover:bg-input font-medium"
               >
                 {SUPPORTED_LANGUAGES.map(lang => (
                   <option key={lang.code} value={lang.code}>
@@ -727,10 +727,10 @@ const ReferralLanding = ({ type: propType }) => {
 
   // STEP 2: MAIN CONTENT
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col animate-in slide-in-from-bottom-4 duration-500">
+    <div className="min-h-screen bg-background text-foreground flex flex-col animate-in slide-in-from-bottom-4 duration-500">
       
       {/* PWA Friendly Sticky Header */}
-      <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-lg border-b border-slate-900/50 safe-top">
+      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50 safe-top">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img src="/moondala-logo.png" alt="Logo" className="h-8 w-8 object-contain" />
@@ -750,14 +750,14 @@ const ReferralLanding = ({ type: propType }) => {
         {/* HERO SECTION (Video + Welcome) */}
         <section className="w-full max-w-4xl mx-auto px-6 py-16 md:py-24 flex flex-col items-center text-center">
           <div className="mb-12 space-y-6">
-            <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tight">
+            <h1 className="text-5xl md:text-7xl font-black text-foreground leading-[1.1] tracking-tight">
               {t.welcome}
             </h1>
             <div className="space-y-4">
               <p className="text-xl md:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 font-bold leading-tight">
                 {t.subtitle}
               </p>
-              <p className="text-base md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                 {t.introText}
               </p>
             </div>
@@ -766,7 +766,7 @@ const ReferralLanding = ({ type: propType }) => {
           {/* Video Container - App Like Frame */}
           <div className="relative group mb-12 w-full max-w-[320px] md:max-w-md mx-auto">
             <div className="absolute -inset-1 bg-gradient-to-b from-purple-600 to-transparent rounded-[2rem] blur-xl opacity-20 transition-opacity group-hover:opacity-40"></div>
-            <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 border-slate-900 bg-black aspect-[9/16]">
+            <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 border-muted bg-black aspect-[9/16]">
               <video
                 key={videoSrc}
                 src={videoSrc}
@@ -784,21 +784,21 @@ const ReferralLanding = ({ type: propType }) => {
         </section>
 
         {/* FEATURE: HOW MOONDALA WORKS (New) */}
-        <section className="w-full bg-slate-950 py-16 px-4 border-b border-slate-900">
+        <section className="w-full bg-secondary/10 py-16 px-4 border-b border-border">
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
              <div className="order-2 md:order-1">
                 <img 
                   src="/images/moondala-network-levels.png" 
                   alt="Network Levels" 
-                  className="w-full h-auto object-contain rounded-xl shadow-2xl border border-slate-800"
+                  className="w-full h-auto object-contain rounded-xl shadow-2xl border border-border"
                   onClick={() => setLightboxImg('/images/moondala-network-levels.png')}
                 />
              </div>
              <div className="order-1 md:order-2">
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
                    {t.howItWorksNewTitle || t.howItWorks}
                 </h2>
-                <p className="text-lg text-slate-400 whitespace-pre-line leading-relaxed">
+                <p className="text-lg text-muted-foreground whitespace-pre-line leading-relaxed">
                    {t.howItWorksNewDesc || "Big platforms profit from every order — you get nothing. Moondala changes that.\n\nInstead of keeping the transaction fees, Moondala shares them with users through the referral tree.\n\nLife is hard and expensive, so Moondala helps you turn your network into extra income."}
                 </p>
              </div>
@@ -806,10 +806,10 @@ const ReferralLanding = ({ type: propType }) => {
         </section>
 
         {/* FEATURE: REFERRAL TREE (Restored) */}
-        <section className="w-full bg-slate-900 py-16 px-4">
+        <section className="w-full bg-secondary/5 py-16 px-4">
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <div className="order-2 md:order-1">
-              <div className="bg-slate-800 p-2 rounded-2xl shadow-xl transform rotate-1 transition-transform hover:rotate-0">
+              <div className="bg-card p-2 rounded-2xl shadow-xl transform rotate-1 transition-transform hover:rotate-0">
                 <img 
                   src="/images/referral-tree.png" 
                   alt="Referral Tree Structure" 
@@ -819,27 +819,27 @@ const ReferralLanding = ({ type: propType }) => {
               </div>
             </div>
             <div className="order-1 md:order-2 space-y-6">
-              <div className="inline-block px-3 py-1 bg-indigo-900 text-indigo-300 rounded-full text-sm font-semibold mb-2">
+              <div className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-semibold mb-2">
                 {t.howItWorks}
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
                 {t.networkTitle}
               </h2>
-              <p className="text-lg text-slate-400">
+              <p className="text-lg text-muted-foreground">
                 {t.networkDesc}
               </p>
               
               <div className="space-y-4 pt-4">
-                <div className="flex items-center gap-4 bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-700">
-                  <div className="w-10 h-10 rounded-full bg-purple-900 flex items-center justify-center text-purple-300 font-bold">1</div>
+                <div className="flex items-center gap-4 bg-card p-4 rounded-lg shadow-sm border border-border">
+                  <div className="w-10 h-10 rounded-full bg-purple-600/20 flex items-center justify-center text-purple-600 font-bold">1</div>
                   <div>
-                    <h3 className="font-bold text-white">{t.level1}</h3>
+                    <h3 className="font-bold text-foreground">{t.level1}</h3>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-700">
-                  <div className="w-10 h-10 rounded-full bg-indigo-900 flex items-center justify-center text-indigo-300 font-bold">5</div>
+                <div className="flex items-center gap-4 bg-card p-4 rounded-lg shadow-sm border border-border">
+                  <div className="w-10 h-10 rounded-full bg-indigo-600/20 flex items-center justify-center text-indigo-600 font-bold">5</div>
                   <div>
-                    <h3 className="font-bold text-white">{t.level2_5}</h3>
+                    <h3 className="font-bold text-foreground">{t.level2_5}</h3>
                   </div>
                 </div>
               </div>
@@ -848,20 +848,20 @@ const ReferralLanding = ({ type: propType }) => {
         </section>
 
         {/* FEATURE: DASHBOARD */}
-        <section className="w-full bg-black py-16 px-4">
+        <section className="w-full bg-background py-16 px-4">
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold text-white">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
                 {t.dashboardTitle}
               </h2>
-              <p className="text-lg text-slate-400 leading-relaxed">
+              <p className="text-lg text-muted-foreground leading-relaxed">
                 {t.dashboardDesc}
               </p>
               <ul className="space-y-3 pt-2">
                 {[t.benefit1, t.benefit2, t.benefit3].map((benefit, i) => (
-                  <li key={i} className="flex items-center gap-3 text-slate-300">
-                    <div className="w-5 h-5 rounded-full bg-green-900 flex items-center justify-center">
-                      <svg className="w-3 h-3 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+                  <li key={i} className="flex items-center gap-3 text-foreground/80">
+                    <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                      <svg className="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
                     </div>
                     {benefit}
                   </li>
@@ -870,18 +870,18 @@ const ReferralLanding = ({ type: propType }) => {
               <div className="pt-6">
                  <button
                   onClick={handleRegister}
-                  className="bg-white text-black px-8 py-4 rounded-xl text-lg font-semibold hover:bg-slate-200 transition-all shadow-lg hover:shadow-xl w-full md:w-auto"
+                  className="bg-foreground text-background px-8 py-4 rounded-xl text-lg font-semibold hover:opacity-90 transition-all shadow-lg hover:shadow-xl w-full md:w-auto"
                 >
                   {t.cta}
                 </button>
               </div>
             </div>
             <div className="relative">
-               <div className="absolute -inset-4 bg-gradient-to-r from-purple-900 to-indigo-900 rounded-full blur-2xl opacity-30"></div>
+               <div className="absolute -inset-4 bg-gradient-to-r from-purple-900/50 to-indigo-900/50 rounded-full blur-2xl opacity-30"></div>
                <img 
                   src="/images/dashboard-preview.png" 
                   alt="Dashboard Preview" 
-                  className="relative w-full rounded-xl shadow-2xl border border-slate-800 cursor-pointer hover:scale-[1.02] transition-transform"
+                  className="relative w-full rounded-xl shadow-2xl border border-border cursor-pointer hover:scale-[1.02] transition-transform"
                   onClick={() => setLightboxImg('/images/dashboard-preview.png')}
                 />
             </div>
@@ -894,14 +894,14 @@ const ReferralLanding = ({ type: propType }) => {
             
             <div className="grid lg:grid-cols-2 gap-20 items-center mb-24">
               <div className="text-left order-2 lg:order-1 space-y-8">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 text-emerald-400 rounded-full text-xs font-bold uppercase tracking-widest">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-full text-xs font-bold uppercase tracking-widest">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                   {t.shopSubtitle}
                 </div>
-                <h2 className="text-5xl md:text-7xl font-black text-white leading-tight tracking-tighter">
+                <h2 className="text-5xl md:text-7xl font-black text-foreground leading-tight tracking-tighter">
                   {t.shopTitle}
                 </h2>
-                <p className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-xl">
+                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
                   {t.shopIntro}
                 </p>
               </div>
@@ -909,7 +909,7 @@ const ReferralLanding = ({ type: propType }) => {
               <div className="order-1 lg:order-2">
                 <div className="relative group max-w-[320px] md:max-w-sm mx-auto">
                   <div className="absolute -inset-10 bg-emerald-500/10 blur-[80px] rounded-full"></div>
-                  <div className="relative bg-slate-800 p-2.5 rounded-[3rem] shadow-3xl border border-slate-700 overflow-hidden transform lg:rotate-3 hover:rotate-0 transition-all duration-700">
+                  <div className="relative bg-card p-2.5 rounded-[3rem] shadow-3xl border border-border overflow-hidden transform lg:rotate-3 hover:rotate-0 transition-all duration-700">
                     <img 
                       src="/images/shop-preview.png.png" 
                       alt="App UI" 
@@ -928,10 +928,10 @@ const ReferralLanding = ({ type: propType }) => {
                 { title: t.pillar3Title, desc: t.pillar3Desc, icon: "🤝" },
                 { title: t.pillar4Title, desc: t.pillar4Desc, icon: "💰" }
               ].map((pillar, idx) => (
-                <div key={idx} className="bg-slate-900/80 backdrop-blur-md p-6 md:p-8 rounded-[2rem] border border-slate-800/80 hover:border-slate-600 transition-all group">
+                <div key={idx} className="bg-card/80 backdrop-blur-md p-6 md:p-8 rounded-[2rem] border border-border hover:border-foreground/30 transition-all group">
                    <div className="text-3xl mb-4 group-hover:scale-125 transition-transform origin-left">{pillar.icon}</div>
-                   <h3 className="text-base md:text-lg font-black text-white mb-2 leading-tight">{pillar.title.replace(/[^\w\s]/gi, '').trim()}</h3>
-                   <p className="text-xs md:text-sm text-slate-500 leading-relaxed font-medium">{pillar.desc}</p>
+                   <h3 className="text-base md:text-lg font-black text-foreground mb-2 leading-tight">{pillar.title.replace(/[^\w\s]/gi, '').trim()}</h3>
+                   <p className="text-xs md:text-sm text-muted-foreground leading-relaxed font-medium">{pillar.desc}</p>
                 </div>
               ))}
             </div>
@@ -939,7 +939,7 @@ const ReferralLanding = ({ type: propType }) => {
             <div className="mt-20 text-center">
               <button
                 onClick={handleRegister}
-                className="w-full md:w-auto bg-white text-black px-12 py-5 rounded-2xl text-xl font-black hover:bg-slate-200 transition-all shadow-2xl active:scale-95"
+                className="w-full md:w-auto bg-foreground text-background px-12 py-5 rounded-2xl text-xl font-black hover:opacity-90 transition-all shadow-2xl active:scale-95"
               >
                 {t.cta}
               </button>
@@ -950,14 +950,14 @@ const ReferralLanding = ({ type: propType }) => {
       </main>
 
       {/* FOOTER (PWA Optimized) */}
-      <footer className="bg-black text-slate-600 w-full py-16 px-6 text-center text-xs border-t border-slate-900 pb-safe">
+      <footer className="bg-background text-muted-foreground w-full py-16 px-6 text-center text-xs border-t border-border pb-safe">
         <div className="max-w-6xl mx-auto space-y-8">
-            <div className="flex flex-wrap justify-center gap-8 font-bold uppercase tracking-widest text-[#444]">
+            <div className="flex flex-wrap justify-center gap-8 font-bold uppercase tracking-widest text-muted-foreground/70">
                 <span>App Status: Online</span>
                 <span>Region: Global</span>
                 <span>Security: SSL Encrypted</span>
             </div>
-            <div className="h-px w-20 bg-slate-900 mx-auto"></div>
+            <div className="h-px w-20 bg-border mx-auto"></div>
             <p className="font-medium tracking-tight">© {new Date().getFullYear()} MOONDALA ECOSYSTEM. ALL RIGHTS RESERVED.</p>
         </div>
       </footer>

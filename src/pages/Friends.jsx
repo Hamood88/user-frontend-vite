@@ -185,7 +185,7 @@ export default function Friends() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-display font-bold text-white mb-2">
+          <h1 className="text-3xl font-display font-bold text-foreground mb-2">
             Community
           </h1>
           <p className="text-muted-foreground">
@@ -231,7 +231,7 @@ export default function Friends() {
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`pb-3 text-sm font-medium transition-all relative ${
-                isActive ? "text-white" : "text-muted-foreground hover:text-white"
+                isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
               type="button"
             >
@@ -303,7 +303,7 @@ export default function Friends() {
                       )}
                     </div>
 
-                    <h3 className="font-bold text-base text-white mb-0.5">{shopName}</h3>
+                    <h3 className="font-bold text-base text-foreground mb-0.5">{shopName}</h3>
                     <p className="text-xs text-muted-foreground mb-3 line-clamp-1">
                       {u?.bio || "Visit our shop"}
                     </p>
@@ -361,7 +361,7 @@ export default function Friends() {
                     )}
                   </div>
 
-                  <h3 className="font-bold text-base text-white mb-0.5">{name}</h3>
+                  <h3 className="font-bold text-base text-foreground mb-0.5">{name}</h3>
                   <p className="text-xs text-muted-foreground mb-3">
                     {handle || "@" + name.toLowerCase().replace(/\s+/g, "")}
                   </p>
@@ -411,7 +411,7 @@ export default function Friends() {
                     <div className="flex w-full gap-2">
                       <button
                         type="button"
-                        className="flex-1 text-xs py-3 h-12 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold flex items-center justify-center gap-2 transition-colors shadow-md"
+                        className="flex-1 text-xs py-3 h-12 rounded-xl bg-secondary hover:bg-secondary/80 text-foreground font-semibold flex items-center justify-center gap-2 transition-colors shadow-md"
                         onClick={() => id && nav(`/messages/user/${encodeURIComponent(id)}`)}
                       >
                         <MessageCircle className="w-4 h-4" />

@@ -1,159 +1,42 @@
-﻿# Copilot Instructions: User Frontend (Vite)
+# Copilot Instructions: User Frontend (Vite)
 
-**Context**: This is the ACTIVE User Frontend (`user-frontend-vite-temp`).
-**Status**: The folder `user-frontend` is LEGACY/DEPRECATED. Do not edit it.
+**Status**: ACTIVE. (Legacy `user-frontend` is DEPRECATED).
 
-## Architecture
+## Architecture & Tech Stack
+- **Framework**: React 18, Vite 7.
+- **Styling**: Tailwind CSS v4, Framer Motion v12.
+- **Routing**: React Router v6.
+- **Port**: 5173 (Dev).
+- **Auth**: `userToken` in LocalStorage.
+- **Languages**: English (Source), Arabic (RTL). `i18next`.
 
-- **Stack**: React 18, Vite 7, Tailwind v4.
-- **Router**: React Router v6 (`react-router-dom`).
-- **Port**: `5173`.
-- **Auth**: `userToken` (LocalStorage).
-- **Backend Reference**: See `../backend/.github/copilot-instructions.md`.
+## Critical Developer Rules
 
-## Setup & Run
-```bash
-cd user-frontend-vite-temp
-npm install
-npm run dev       # Runs on http://localhost:5173
-```
+### 1. Internationalization (i18n)
+- **MANDATORY**: ALL visible text must use `t("key")`.
+- **Source**: `public/locales/en/translation.json`.
+- **Usage**: `const { t } = useTranslation(); <h1>{t("welcome_msg")}</h1>`.
 
-**.env configuration**:
-```env
-VITE_API_BASE=http://localhost:5000
-# Production: https://moondala-backend.onrender.com
-# User frontend uses import.meta.env.VITE_*
-```
+### 2. API Interaction (`src/api.jsx`)
+- **Wrapper**: Use `apiGet`, `apiPost`, `apiPut`, `apiDelete`.
+- **CORS/Env**: Uses `DEFAULT_BASE` w/ fallbacks for `moondala.one`.
+- **Path**: `/api/users/*` or `/api/public/*`. NEVER Admin/Shop APIs.
+- **Error Handling**: 401 triggers auto-logout/redirect.
 
-## Key Feature Patterns
+### 3. Image Safety (`toAbsUrl`)
+- **MANDATORY**: `src={toAbsUrl(user.avatarUrl)}`.
+- **Why**: Handles `localhost:5000` -> Backend URL, AND Cloudinary paths.
 
-### 1. Internationalization (i18n) - CRITICAL
-- **Mandatory**: ALL user-facing text must be wrapped in `t('key')`. Never use hardcoded English strings.
-- **Library**: `i18next`, `react-i18next`.
-- **Usage**: `const { t } = useTranslation();` -> `{t('welcome_message')}`.
-- **Keys**: Add new keys to `public/locales/en/translation.json` (English is source).
-- **RTL**: Automatic handling via `dir="rtl"` on body when Arabic is selected.
+### 4. Special Features
+- **Earn More**: Referral system (`EarnMore.jsx`). Uses `qrcode` (client-side). See `EARN_MORE_FEATURE.md`.
+- **Unified Product Page**: `ProductDetailsUnified.jsx`. Includes "Ask Previous Buyer".
 
-### 2. Earn More (Referrals)
-- **Docs**: See `EARN_MORE_FEATURE.md` in root for implementation details.
+## Cross-Project Context
+- **Backend**: `../backend`. Runs on Port 5000.
+- **Shop Frontend**: `../shop-frontend`.
+- **Admin Frontend**: `../admin-frontend`.
 
-- **Components**: `EarnMore.jsx` (Dual tabs for User/Shop invites).
-- **QR Codes**: Client-side generation with error correction using `qrcode` package.
-- **Routes**: `/earn-more`, `/refer/user/:code` (signup), `/refer/shop/:code`.
-- **API**: Uses `/api/users/me/referral-stats` for stats.
+## Deployment (Vercel)
+- **Repo**: `user-frontend-vite-temp` folder.
+- **Env**: `VITE_API_BASE`.
 
-### 2. Unified Product Details
-- **Page**: `ProductDetailsUnified.jsx` (`/product/:id`).
-- **CSS**: `src/styles/productDetailsUnified.css` + Tailwind.
-- **Features**: Chat with buyer ("Ask Previous Buyer"), Aggregated ratings, Shop auto-follow logic.
-
-### 3. Messaging Implementation
-- **Context**: `ShopNotificationsContext` creates polling for unread counts.
-- **API**: `/api/messages` & `/api/conversations`.
-- **Route**: `/messages` (Thread list) -> `/messages/:conversationId`.
-
-### 4. Internationalization (i18n)
-- **Library**: `i18next`, `react-i18next`
-- **Languages**: English, Arabic (RTL support)
-- **Files**: `public/locales/{en,ar}/translation.json`
-- **Usage**: `const { t } = useTranslation();`
-
-## Developer Workflows
-
-### API Interaction (`src/api.jsx`)
-- **No Axios**: Use `apiGet`, `apiPost`, `apiPut`, `apiDelete` wrappers (built on `fetch`).
-- **Base URL**: Auto-resolved from `VITE_API_BASE`.
-- **Production Fallback**: `detectProdApiBaseFallback()` logic hardcodes `moondala-backend.onrender.com` if hostname is `moondala.one`.
-- **Images**: **MANDATORY**: Use `toAbsUrl(path)` for `src`.
-    - Handles `localhost:5000` -> backend URL replacement.
-    - Handles `cloudinary` paths (e.g. `dohetomaw/video/...`).
-    - Cloud name for Moondala: `dohetomaw`.
-
-### Styling Strategy
-- **Tailwind CSS v4**: Uses `@tailwindcss/postcss`.
-- **Config**: Keeps `tailwind.config.js` for theme extensions (colors, fonts). Do not delete.
-- **Custom**: CSS files in `src/styles/*.css` (e.g. `appLayoutModern.css`) for complex animations/layouts.
-- **Icons**: `lucide-react`.
-- **Animations**: `framer-motion` v12.
-
-
-### Adding a New Page
-1.  Create `src/pages/NewPage.jsx`.
-2.  Add route in `src/App.jsx`.
-    - Protected: Inside `<ProtectedRoute>`.
-    - Public: Outside wrapper.
-3.  Add navigation link in `src/components/AppLayout.jsx` or specialized navs.
-
-## Critical Rules
-1.  **Directory Awareness**: Confirm you are in `user-frontend-vite-temp/`, not the legacy `user-frontend/` folder.
-2.  **Stack Specifics**: Use **React 18** and **React Router v6**. Do NOT use Shop Frontend's React 19/Router v7 patterns.
-3.  **No Vendor/Admin Access**: Never call `/api/shop/*` or `/api/admin/*`. User frontend strictly uses `/api/users/*` and `/api/public/*`.
-
-3.  **Token Hygiene**: Use `setUserSession({ token, user })` to update auth state atomically; use `clearUserSession()` to clear both.
-4.  **Referral Logic**: QR codes are generated client-side; referral codes are tracked via `referredBy` in the `User` model on the backend.
-5.  **Image Resolution**: Use `toAbsUrl()` for ALL image/video sources. It handles localhost→backend URL replacement and Cloudinary paths automatically.
-6.  **Vite vs CRA**: This project uses `import.meta.env.VITE_*` (NOT `process.env`). env files: `.env`, `.env.local`.
-
-## Deployment
-- **Platform**: Vercel (https://moondala.one)
-- **Build Command**: `npm run build` (outputs to `dist/`)
-- **Environment Variables**: Set in `vercel.json` or Vercel dashboard
-- **Framework Preset**: Vite
-- **Root Directory**: `user-frontend-vite-temp/` (if deploying from monorepo)
-- **Error Boundary**: `App.jsx` contains a top-level `ErrorBoundary` to catch crashes and direct users to `/_probe`
-
-## Common Patterns
-
-### Authentication Flow
-```javascript
-// Login
-const { token, user } = await loginUser(email, password);
-setUserSession({ token, user });
-
-// Logout
-clearUserSession(); // Atomically removes token & user data
-```
-
-### Data Fetching
-```javascript
-import { apiGet } from '../api';
-
-useEffect(() => {
-  async function fetchData() {
-    try {
-      setLoading(true);
-      const data = await apiGet('/products'); // auto-attaches token
-      setProducts(data);
-    } catch (err) {
-      setError(err.message);
-    }
-  }
-  fetchData();
-}, []);
-```
-
-### Image Display
-```javascript
-import { toAbsUrl } from '../api';
-
-// ALWAYS use wrapper
-<img src={toAbsUrl(user.avatarUrl)} />
-<video src={toAbsUrl(post.videoUrl)} />
-```
-
-## Advanced Patterns
-
-### Protected Routes
-- `ProtectedRoute` component checks `localStorage.getItem('userToken')` on every render
-- If missing: redirects to `/login` automatically
-- Use inside `<Route>`: `<Route element={<ProtectedRoute><MyPage /></ProtectedRoute>} />`
-
-### Error Boundaries & Crash Recovery
-- `App.jsx` has a top-level `ErrorBoundary` that catches React errors
-- Displays error details for debugging; offers link to `/_probe` health check
-- Helps developers debug crashes without blank white screens
-
-### API Error Handling
-- 401/403 responses automatically trigger `clearUserSession()` and redirect to login
-- No manual logout needed in components — API layer handles it
-- Catch network errors: Check browser console, verify backend running, verify CORS in `backend/app.js`

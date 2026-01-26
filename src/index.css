@@ -47,42 +47,43 @@
   --mdSidebarCollapsedW: 84px; /* collapsed sidebar width */
 }
 
-/* Light theme - Softer Luxury Palette */
+/* Light theme - Improved Readability & Comfort */
 [data-theme="light"],
 [data-theme="light"] body {
   color-scheme: light;
-  /* Soft Slate-50 background, not stark white */
-  --background: 210 40% 98%; 
-  --foreground: 222 47% 11%; /* Slate-900 */
+  
+  /* Warm off-white background - much easier on eyes */
+  --background: 40 20% 95%; /* Soft beige-gray, not harsh white */
+  --foreground: 222 47% 15%; /* Darker text (Slate-800) for better contrast */
 
-  /* White cards with slight off-white tint */
-  --card: 0 0% 100%; 
-  --card-foreground: 222 47% 11%;
+  /* Slightly tinted cards for depth */
+  --card: 0 0% 98%; /* Very light gray instead of pure white */
+  --card-foreground: 222 47% 15%; /* Darker text */
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
+  --popover: 0 0% 98%;
+  --popover-foreground: 222 47% 15%;
 
-  --primary: 262 83% 58%; /* violet (same) */
-  --primary-foreground: 0 0% 100%; /* Ensure white text on primary buttons */
+  --primary: 262 70% 50%; /* Slightly darker violet for better readability */
+  --primary-foreground: 0 0% 100%; /* White text on primary buttons */
 
-  /* Softer secondary backgrounds */
-  --secondary: 210 40% 96.1%; 
-  --secondary-foreground: 222 47% 11%;
+  /* Softer secondary with better contrast */
+  --secondary: 210 30% 90%; /* Subtle slate background */
+  --secondary-foreground: 222 47% 20%; /* Darker text */
 
-  /* Softer muted elements */
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215 16% 47%;
+  /* Muted elements with clear text */
+  --muted: 210 25% 92%; /* Soft gray */
+  --muted-foreground: 215 20% 40%; /* Darker for readability */
 
-  --accent: 199 89% 48%; /* cyan (same) */
-  --accent-foreground: 222 47% 11%;
+  --accent: 199 80% 45%; /* Slightly darker cyan */
+  --accent-foreground: 0 0% 100%; /* White text on accent */
 
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: 0 75% 55%; /* Slightly darker red */
+  --destructive-foreground: 0 0% 100%;
 
-  /* Softer borders */
-  --border: 214 32% 91%; 
-  --input: 214 32% 91%;
-  --ring: 262 83% 58%; /* violet ring for focus */
+  /* Visible but subtle borders */
+  --border: 214 25% 82%; /* More visible gray borders */
+  --input: 214 25% 85%; /* Clearer input borders */
+  --ring: 262 70% 50%; /* Violet ring for focus */
 }
 
 @layer base {

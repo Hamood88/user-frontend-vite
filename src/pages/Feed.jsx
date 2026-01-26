@@ -881,7 +881,7 @@ export default function Feed() {
             className="glass-card rounded-2xl p-6"
           >
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-full border-4 border-white/10 bg-slate-800 flex items-center justify-center overflow-hidden shadow-md">
+              <div className="w-20 h-20 rounded-full border-4 border-border bg-muted flex items-center justify-center overflow-hidden shadow-md">
                 {avatarUrl(profileUser) ? (
                   <img
                     src={avatarUrl(profileUser)}
@@ -889,13 +889,13 @@ export default function Feed() {
                     className="w-full h-full object-cover rounded-full"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-white/80">
+                  <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-muted-foreground">
                     {(userName(profileUser) || "U").slice(0, 1).toUpperCase()}
                   </div>
                 )}
               </div>
               <div className="flex-1">
-                <h1 className="text-2xl font-bold text-white mb-2">
+                <h1 className="text-2xl font-bold text-foreground mb-2">
                   {userName(profileUser)}
                 </h1>
 
@@ -944,7 +944,7 @@ export default function Feed() {
                     
                     <button
                       onClick={handleMessage}
-                      className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                      className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                     >
                       <MessageCircle className="w-4 h-4" />
                       Message
@@ -962,7 +962,7 @@ export default function Feed() {
                           value={friendRequestMessage}
                           onChange={(e) => setFriendRequestMessage(e.target.value)}
                           placeholder="Include a message with your friend request..."
-                          className="w-full bg-zinc-900 border border-zinc-700 rounded p-3 text-sm text-white resize-none"
+                          className="w-full bg-input border border-border rounded p-3 text-sm text-foreground resize-none"
                           rows={3}
                         />
                         <button
@@ -1037,7 +1037,7 @@ export default function Feed() {
                 </div>
               ) : null}
 
-              <div className="flex items-center justify-between border-t border-white/5 pt-3">
+              <div className="flex items-center justify-between border-t border-border pt-3">
                 <div className="flex gap-2">
                   <input
                     ref={fileRef}
@@ -1082,7 +1082,7 @@ export default function Feed() {
                 {err && (
                   <button
                     type="button"
-                    className="text-white/50 hover:text-white"
+                    className="text-muted-foreground hover:text-foreground"
                     onClick={() => setErr("")}
                   >
                     <X className="w-4 h-4" />
@@ -1100,7 +1100,7 @@ export default function Feed() {
                       onChange={(e) => setFriendRequestMessage(e.target.value)}
                       placeholder="Hi! I'd like to connect with you..."
                       rows={3}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-blue-500/50 resize-none"
+                      className="w-full bg-input/50 border border-border rounded-lg px-3 py-2 text-foreground placeholder-muted-foreground focus:outline-none focus:border-blue-500/50 resize-none"
                       maxLength={200}
                     />
                     <div className="text-xs text-blue-300/60 mt-1">
@@ -1137,13 +1137,13 @@ export default function Feed() {
                 <motion.div
                   key={post._id}
                   variants={item}
-                  className={`glass-card rounded-2xl p-5 hover:border-white/10 transition-colors ${shareDropdownOpen === post._id ? "relative z-30" : "relative z-0"}`}
+                  className={`glass-card rounded-2xl p-5 hover:border-border transition-colors ${shareDropdownOpen === post._id ? "relative z-30" : "relative z-0"}`}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex gap-3">
                       <RouterLink 
                         to={pickId(post.user) === pickId(me) ? '/feed' : `/feed/user/${post.user._id}`}
-                        className="w-10 h-10 rounded-full bg-white/5 overflow-hidden border border-white/10 flex items-center justify-center hover:opacity-80 transition-opacity"
+                        className="w-10 h-10 rounded-full bg-muted overflow-hidden border border-border flex items-center justify-center hover:opacity-80 transition-opacity"
                       >
                         {avatarUrl(post.user) ? (
                           <img
@@ -1152,11 +1152,11 @@ export default function Feed() {
                             className="w-full h-full object-cover"
                             onError={(e) => {
                               e.target.style.display = 'none';
-                              e.target.parentNode.innerHTML = `<div class="text-white text-sm font-bold">${userName(post.user).charAt(0).toUpperCase()}</div>`;
+                              e.target.parentNode.innerHTML = `<div class="text-foreground text-sm font-bold">${userName(post.user).charAt(0).toUpperCase()}</div>`;
                             }}
                           />
                         ) : (
-                          <div className="text-white text-sm font-bold">
+                          <div className="text-foreground text-sm font-bold">
                             {userName(post.user).charAt(0).toUpperCase()}
                           </div>
                         )}
@@ -1228,7 +1228,7 @@ export default function Feed() {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-base text-slate-200 mb-4 whitespace-pre-wrap leading-relaxed">
+                    <p className="text-base text-foreground mb-4 whitespace-pre-wrap leading-relaxed">
                       {post.text}
                     </p>
                   )}
@@ -1239,12 +1239,12 @@ export default function Feed() {
                       const mediaUrl = toAbsUrl(rawUrl);
                       const hasFailed = failedImages.has(mediaUrl);
                       return (
-                        <div className="mb-4 rounded-xl overflow-hidden border border-white/5 bg-black/20">
+                        <div className="mb-4 rounded-xl overflow-hidden border border-border bg-muted/20">
                           {hasFailed ? (
-                            <div className="w-full h-64 flex items-center justify-center bg-gradient-to-br from-white/5 to-white/2">
+                            <div className="w-full h-64 flex items-center justify-center bg-muted">
                               <div className="text-center">
-                                <ImageIcon className="w-12 h-12 text-white/30 mx-auto mb-2" />
-                                <p className="text-sm text-white/40">Image unavailable</p>
+                                <ImageIcon className="w-12 h-12 text-muted-foreground/30 mx-auto mb-2" />
+                                <p className="text-sm text-muted-foreground/40">Image unavailable</p>
                               </div>
                             </div>
                           ) : (
@@ -1265,7 +1265,7 @@ export default function Feed() {
                   ) : null}
 
                   {post.media && post.media.type === "video" ? (
-                    <div className="mb-4 rounded-xl overflow-hidden border border-white/5 bg-black/20">
+                    <div className="mb-4 rounded-xl overflow-hidden border border-border bg-muted">
                       <video
                         src={toAbsUrl(post.media.url)}
                         controls
@@ -1274,7 +1274,7 @@ export default function Feed() {
                     </div>
                   ) : null}
 
-                  <div className="flex items-center gap-6 pt-4 border-t border-white/5">
+                  <div className="flex items-center gap-6 pt-4 border-t border-border">
                     <button
                       type="button"
                       onClick={() => onLike(post._id)}
@@ -1312,7 +1312,7 @@ export default function Feed() {
                       {/* Share Dropdown */}
                       {shareDropdownOpen === post._id && (
                         <div 
-                          className="absolute right-0 top-12 bg-slate-900 border border-white/10 rounded-xl p-3 z-50 w-[280px] shadow-2xl"
+                          className="absolute right-0 top-12 bg-popover border border-border rounded-xl p-3 z-50 w-[280px] shadow-2xl"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <div className="px-1 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -1323,27 +1323,27 @@ export default function Feed() {
                           <div className="flex gap-2 mb-3">
                             <button
                               onClick={() => copyPostLink(post)}
-                              className="flex-1 flex flex-col items-center justify-center gap-1.5 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-white text-xs font-medium"
+                              className="flex-1 flex flex-col items-center justify-center gap-1.5 p-2 rounded-lg bg-secondary hover:bg-muted transition-colors text-foreground text-xs font-medium"
                             >
                               <Link className="w-4 h-4 text-purple-400" />
                               Copy Link
                             </button>
                             <button
                               onClick={() => copyPostContent(post)}
-                              className="flex-1 flex flex-col items-center justify-center gap-1.5 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-white text-xs font-medium"
+                              className="flex-1 flex flex-col items-center justify-center gap-1.5 p-2 rounded-lg bg-secondary hover:bg-muted transition-colors text-foreground text-xs font-medium"
                             >
                               <Copy className="w-4 h-4 text-blue-400" />
                               Copy Text
                             </button>
                           </div>
                           
-                          <div className="border-t border-white/10 mb-3"></div>
+                          <div className="border-t border-border mb-3"></div>
                           
                           {/* Social Grid */}
                           <div className="grid grid-cols-2 gap-2">
                             <button
                               onClick={() => shareToWhatsApp(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
                             >
                               <MessageCircleWarning className="w-4 h-4 text-green-500 shrink-0" />
                               WhatsApp
@@ -1351,7 +1351,7 @@ export default function Feed() {
                             
                             <button
                               onClick={() => shareToFacebook(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
                             >
                               <Share className="w-4 h-4 text-blue-500 shrink-0" />
                               Facebook
@@ -1359,7 +1359,7 @@ export default function Feed() {
                             
                             <button
                               onClick={() => shareToLinkedIn(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
                             >
                               <Users className="w-4 h-4 text-blue-400 shrink-0" />
                               LinkedIn
@@ -1367,7 +1367,7 @@ export default function Feed() {
                             
                             <button
                               onClick={() => shareToTelegram(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
                             >
                               <Send className="w-4 h-4 text-sky-400 shrink-0" />
                               Telegram
@@ -1375,15 +1375,15 @@ export default function Feed() {
                             
                             <button
                               onClick={() => shareToTwitter(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
                             >
-                              <Twitter className="w-4 h-4 text-white shrink-0" />
+                              <Twitter className="w-4 h-4 text-foreground shrink-0" />
                               Twitter
                             </button>
 
                             <button
                               onClick={() => shareToReddit(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
                             >
                               <Share className="w-4 h-4 text-orange-500 shrink-0" />
                               Reddit
@@ -1391,38 +1391,38 @@ export default function Feed() {
                             
                             <button
                               onClick={() => shareViaEmail(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
                             >
-                              <Mail className="w-4 h-4 text-slate-300 shrink-0" />
+                              <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
                               Email
                             </button>
                             
                             <button
                               onClick={() => shareViaSMS(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-xs text-left overflow-hidden"
+                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
                             >
                               <MessageCircle className="w-4 h-4 text-green-400 shrink-0" />
                               SMS
                             </button>
                           </div>
                           
-                          <div className="border-t border-white/10 my-2"></div>
+                          <div className="border-t border-border my-2"></div>
 
                           {/* Extra Actions */}
                           <div className="space-y-1">
                             <button
                               onClick={() => downloadPostAsImage(post)}
-                              className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors text-xs"
+                              className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-muted transition-colors text-xs"
                             >
-                              <Download className="w-4 h-4 text-gray-400" />
+                              <Download className="w-4 h-4 text-muted-foreground" />
                               Download Image
                             </button>
                             
                             <button
                               onClick={() => printPost(post)}
-                              className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-colors text-xs"
+                              className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-muted transition-colors text-xs"
                             >
-                              <Printer className="w-4 h-4 text-gray-400" />
+                              <Printer className="w-4 h-4 text-muted-foreground" />
                               Print Post
                             </button>
 
@@ -1443,7 +1443,7 @@ export default function Feed() {
                   {openPostId === post._id && (
                     <div className="mt-4 md-commentBox">
                       <div className="flex items-center justify-between mb-2">
-                        <div className="text-white font-bold">Add a comment</div>
+                        <div className="text-foreground font-bold">Add a comment</div>
                         <button
                           type="button"
                           className="md-iconBtn"
@@ -1462,7 +1462,7 @@ export default function Feed() {
                           </span>
                           <button
                             type="button"
-                            className="text-xs text-gray-400 hover:text-white"
+                            className="text-xs text-muted-foreground hover:text-foreground"
                             onClick={() => setReplyTo(null)}
                           >
                             ✕
@@ -1484,11 +1484,11 @@ export default function Feed() {
                               return (
                                 <div key={comment._id}>
                                   {/* Main comment */}
-                                  <div className="bg-white/5 p-3 rounded-lg">
+                                  <div className="bg-secondary p-3 rounded-lg">
                                     <div className="flex items-start gap-2">
                                       <RouterLink
                                         to={`/feed/user/${pickId(commentUser)}`}
-                                        className="w-6 h-6 rounded-full bg-white/10 flex-shrink-0 hover:opacity-80 transition-opacity"
+                                        className="w-6 h-6 rounded-full bg-muted flex-shrink-0 hover:opacity-80 transition-opacity"
                                       >
                                         {avatarUrl(commentUser) ? (
                                           <img
@@ -1506,22 +1506,22 @@ export default function Feed() {
                                         <div className="flex items-center gap-2 mb-1">
                                           <RouterLink
                                             to={`/feed/user/${pickId(commentUser)}`}
-                                            className="font-semibold text-sm text-white hover:underline"
+                                            className="font-semibold text-sm text-foreground hover:underline"
                                           >
                                             {userName(commentUser)}
                                           </RouterLink>
-                                          <span className="text-xs text-gray-400">
+                                          <span className="text-xs text-muted-foreground">
                                             {timeAgo(comment.createdAt)}
                                           </span>
                                         </div>
-                                        <p className="text-sm text-gray-200 mb-2">{comment.text}</p>
+                                        <p className="text-sm text-foreground mb-2">{comment.text}</p>
                                         <div className="flex gap-3 items-center">
                                           <button
                                             type="button"
                                             className={`text-xs flex items-center gap-1 ${
                                               (comment.likes || []).some((id) => String(id) === String(pickId(me)))
                                                 ? "text-pink-400"
-                                                : "text-gray-400 hover:text-pink-400"
+                                                : "text-muted-foregroundreground hover:text-pink-400"
                                             }`}
                                             onClick={() => handleLikeComment(post._id, comment._id)}
                                           >
@@ -1552,15 +1552,15 @@ export default function Feed() {
 
                                   {/* Replies - nested */}
                                   {replies.length > 0 && (
-                                    <div className="ml-6 mt-1 space-y-1 border-l-2 border-white/10 pl-3">
+                                    <div className="ml-6 mt-1 space-y-1 border-l-2 border-border pl-3">
                                       {replies.map((reply) => {
                                         const replyUser = reply.user || reply.authorId;
                                         return (
-                                          <div key={reply._id} className="bg-white/5 p-2 rounded-lg">
+                                          <div key={reply._id} className="bg-secondary/50 p-2 rounded-lg">
                                             <div className="flex items-start gap-2">
                                               <RouterLink
                                                 to={`/feed/user/${pickId(replyUser)}`}
-                                                className="w-5 h-5 rounded-full bg-white/10 flex-shrink-0 hover:opacity-80 transition-opacity"
+                                                className="w-5 h-5 rounded-full bg-muted flex-shrink-0 hover:opacity-80 transition-opacity"
                                               >
                                                 {avatarUrl(replyUser) ? (
                                                   <img
@@ -1578,15 +1578,15 @@ export default function Feed() {
                                                 <div className="flex items-center gap-2 mb-1">
                                                   <RouterLink
                                                     to={`/feed/user/${pickId(replyUser)}`}
-                                                    className="font-semibold text-xs text-white hover:underline"
+                                                    className="font-semibold text-xs text-foreground hover:underline"
                                                   >
                                                     {userName(replyUser)}
                                                   </RouterLink>
-                                                  <span className="text-[10px] text-gray-400">
+                                                  <span className="text-[10px] text-muted-foreground">
                                                     {timeAgo(reply.createdAt)}
                                                   </span>
                                                 </div>
-                                                <p className="text-xs text-gray-200 mb-1">{reply.text}</p>
+                                                <p className="text-xs text-foreground mb-1">{reply.text}</p>
                                                 <div className="flex gap-2 items-center">
                                                   <button
                                                     type="button"

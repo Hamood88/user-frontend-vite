@@ -270,8 +270,8 @@ export default function UserDashboard() {
 
   if (err) {
     return (
-      <div className="glass-card rounded-2xl p-6 border border-white/10">
-        <div className="text-white font-bold mb-2">Dashboard error</div>
+      <div className="glass-card rounded-2xl p-6 border border-border">
+        <div className="text-foreground font-bold mb-2">Dashboard error</div>
         <div className="text-muted-foreground">{err}</div>
       </div>
     );
@@ -279,7 +279,7 @@ export default function UserDashboard() {
 
   if (!earnings) {
     return (
-      <div className="glass-card rounded-2xl p-6 border border-white/10 text-muted-foreground">
+      <div className="glass-card rounded-2xl p-6 border border-border text-muted-foreground">
         No earnings data yet.
       </div>
     );
@@ -289,7 +289,7 @@ export default function UserDashboard() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-display font-bold text-white mb-2">
+          <h1 className="text-3xl font-display font-bold text-foreground mb-2">
             Welcome back,
           </h1>
           <p className="text-muted-foreground">
@@ -300,10 +300,10 @@ export default function UserDashboard() {
         {referralCode ? (
           <div className="glass-card px-4 py-2 rounded-full flex items-center gap-3 border-primary/20 bg-primary/5">
             <span className="text-sm font-medium text-primary">Share Link</span>
-            <code className="font-mono font-bold text-white">{referralCode}</code>
+            <code className="font-mono font-bold text-foreground">{referralCode}</code>
             <button
               onClick={copyCode}
-              className="text-muted-foreground hover:text-white transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
               type="button"
               title="Copy"
             >
@@ -349,7 +349,7 @@ export default function UserDashboard() {
         {/* Recent Transactions */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-display font-bold text-white">
+            <h2 className="text-xl font-display font-bold text-foreground">
               Recent Activity
             </h2>
             <button
@@ -362,125 +362,23 @@ export default function UserDashboard() {
           </div>
 
           <div className="glass-card rounded-2xl overflow-hidden">
-            <div className="grid grid-cols-12 gap-4 p-4 border-b border-white/5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <div className="grid grid-cols-12 gap-4 p-4 border-b border-border text-xs font-medium text-muted-foreground uppercase tracking-wider">
               <div className="col-span-6">Description</div>
               <div className="col-span-3 text-right">Date</div>
               <div className="col-span-3 text-right">Amount</div>
             </div>
 
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-border">
               {items.length === 0 && !previewTransaction ? (
                 <div className="p-6 text-muted-foreground">No transactions yet.</div>
               ) : items.length === 0 && previewTransaction ? (
                 // Show preview of last transaction when collapsed
-                (() => {
-                  const it = previewTransaction;
-                  const id = s(it?._id || it?.id || "preview");
-                  const status = s(it?.status || it?.state || "PENDING").toUpperCase();
-                  const label =
-                    s(it?.label) ||
-                    s(it?.title) ||
-                    s(it?.description) ||
-                    "Commission";
-
-                  const amount = Number(it?.amount ?? it?.value ?? 0);
-                  const createdAt = it?.createdAt || it?.date || it?.created || null;
-
-                  const isReleased = status.includes("RELEASE") || status.includes("AVAILABLE") || status === "PAID";
-                  const isLocked = status.includes("LOCK") || status.includes("PENDING") || status.includes("HOLD");
-
-                  return (
-                    <div
-                      key={id}
-                      className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-white/5 transition-colors"
-                    >
-                      <div className="col-span-6 flex items-center gap-3">
-                        <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center
-                          ${
-                            isReleased
-                              ? "bg-emerald-500/10 text-emerald-400"
-                              : isLocked
-                              ? "bg-amber-500/10 text-amber-400"
-                              : "bg-red-500/10 text-red-400"
-                          }`}
-                        >
-                          {isReleased ? (
-                            <ArrowDownLeft className="w-4 h-4" />
-                          ) : (
-                            <TrendingUp className="w-4 h-4" />
-                          )}
-                        </div>
-                        <div>
-                          <div className="font-medium text-slate-200">{label}</div>
-                          <div className="text-xs text-muted-foreground">{status}</div>
-                        </div>
-                      </div>
-
-                      <div className="col-span-3 text-right text-sm text-muted-foreground">
-                        {safeDate(createdAt) || "-"}
-                      </div>
-
-                      <div className="col-span-3 text-right font-medium font-mono text-slate-200">
-                        {formatMoney(amount, earnings.currency || "USD")}
-                      </div>
-                    </div>
-                  );
-                })()
+                <TransactionRow it={previewTransaction} earnings={earnings} />
               ) : (
-                items.map((it, idx) => {
-                  const id = s(it?._id || it?.id || idx);
-                  const status = s(it?.status || it?.state || "PENDING").toUpperCase();
-                  const label =
-                    s(it?.label) ||
-                    s(it?.title) ||
-                    s(it?.description) ||
-                    "Commission";
+                items.map((it, idx) => (
+                  <TransactionRow key={it._id || idx} it={it} earnings={earnings} />
+                ))
 
-                  const amount = Number(it?.amount ?? it?.value ?? 0);
-                  const createdAt = it?.createdAt || it?.date || it?.created || null;
-
-                  const isReleased = status.includes("RELEASE") || status.includes("AVAILABLE") || status === "PAID";
-                  const isLocked = status.includes("LOCK") || status.includes("PENDING") || status.includes("HOLD");
-
-                  return (
-                    <div
-                      key={id}
-                      className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-white/5 transition-colors"
-                    >
-                      <div className="col-span-6 flex items-center gap-3">
-                        <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center
-                          ${
-                            isReleased
-                              ? "bg-emerald-500/10 text-emerald-400"
-                              : isLocked
-                              ? "bg-amber-500/10 text-amber-400"
-                              : "bg-red-500/10 text-red-400"
-                          }`}
-                        >
-                          {isReleased ? (
-                            <ArrowDownLeft className="w-4 h-4" />
-                          ) : (
-                            <TrendingUp className="w-4 h-4" />
-                          )}
-                        </div>
-                        <div>
-                          <div className="font-medium text-slate-200">{label}</div>
-                          <div className="text-xs text-muted-foreground">{status}</div>
-                        </div>
-                      </div>
-
-                      <div className="col-span-3 text-right text-sm text-muted-foreground">
-                        {safeDate(createdAt) || "-"}
-                      </div>
-
-                      <div className="col-span-3 text-right font-medium font-mono text-slate-200">
-                        {formatMoney(amount, earnings.currency || "USD")}
-                      </div>
-                    </div>
-                  );
-                })
               )}
             </div>
           </div>
@@ -523,7 +421,7 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
 
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-4">
-          <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-white">
+          <div className="p-2 rounded-lg bg-foreground/5 border border-border/10 text-foreground">
             <Icon className="w-5 h-5" />
           </div>
           {trend ? (
@@ -536,12 +434,66 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
         <div className="text-muted-foreground text-sm font-medium mb-1">
           {title}
         </div>
-        <div className="text-2xl font-bold text-white tracking-tight">
+        <div className="text-2xl font-bold text-foreground tracking-tight">
           {display}
         </div>
         {subValue ? (
           <div className="text-xs text-muted-foreground mt-2">{subValue}</div>
         ) : null}
+      </div>
+    </div>
+  );
+}
+
+function TransactionRow({ it, earnings }) {
+  const id = s(it?._id || it?.id || "preview");
+  const status = s(it?.status || it?.state || "PENDING").toUpperCase();
+  const label =
+    s(it?.label) ||
+    s(it?.title) ||
+    s(it?.description) ||
+    "Commission";
+
+  const amount = Number(it?.amount ?? it?.value ?? 0);
+  const createdAt = it?.createdAt || it?.date || it?.created || null;
+
+  const isReleased = status.includes("RELEASE") || status.includes("AVAILABLE") || status === "PAID";
+  const isLocked = status.includes("LOCK") || status.includes("PENDING") || status.includes("HOLD");
+
+  return (
+    <div
+      key={id}
+      className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-muted/50 transition-colors"
+    >
+      <div className="col-span-6 flex items-center gap-3">
+        <div
+          className={`w-8 h-8 rounded-full flex items-center justify-center
+          ${
+            isReleased
+              ? "bg-emerald-500/10 text-emerald-400"
+              : isLocked
+              ? "bg-amber-500/10 text-amber-400"
+              : "bg-red-500/10 text-red-400"
+          }`}
+        >
+          {isReleased ? (
+            <ArrowDownLeft className="w-4 h-4" />
+          ) : (
+            <TrendingUp className="w-4 h-4" />
+          )}
+        </div>
+        <div>
+          <div className="font-medium text-foreground">{label}</div>
+          <div className="text-xs text-muted-foreground">{status}</div>
+        </div>
+      </div>
+
+      <div className="col-span-3 text-right text-sm text-muted-foreground">
+        {safeDate(createdAt) || "-"}
+      </div>
+
+      <div className="col-span-3 text-right font-medium font-mono text-foreground">
+        {formatMoney(amount, earnings.currency || "USD")}
       </div>
     </div>
   );
