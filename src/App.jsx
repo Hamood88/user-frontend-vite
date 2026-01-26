@@ -55,6 +55,27 @@ function getUserTokenOnly() {
   }
 }
 
+/* =========================
+   ✅ Theme Initialization
+   ========================= */
+function useThemeInit() {
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("theme");
+      const html = document.documentElement;
+      // Default to dark if not set, or if set to dark (to clean up attributes)
+      // BUT if 'light', we must apply it.
+      if (saved === "light") {
+        html.setAttribute("data-theme", "light");
+        html.style.colorScheme = "light";
+      } else {
+        html.removeAttribute("data-theme");
+        html.style.colorScheme = "dark";
+      }
+    } catch {}
+  }, []);
+}
+
 function cleanParam(v) {
   return String(v || "").replace(/[<>]/g, "").replace(/^:/, "").trim();
 }
