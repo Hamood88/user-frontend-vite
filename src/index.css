@@ -53,31 +53,40 @@
   color-scheme: light;
   
   /* Warm off-white background - much easier on eyes */
-  --background: 40 20% 95%; /* Soft beige-gray, not harsh white */
-  --foreground: 222 47% 15%; /* Darker text (Slate-800) for better contrast */
+  --background: 40 20% 96%; /* Soft beige-gray #F5F4F0 */
+  --foreground: 222 47% 10%; /* Almost Black (Slate-900) for sharp text */
 
-  /* Slightly tinted cards for depth */
-  --card: 0 0% 98%; /* Very light gray instead of pure white */
-  --card-foreground: 222 47% 15%; /* Darker text */
+  /* White cards for clean contrast against the beige background */
+  --card: 0 0% 100%; 
+  --card-foreground: 222 47% 10%;
 
-  --popover: 0 0% 98%;
-  --popover-foreground: 222 47% 15%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 10%;
 
-  --primary: 262 70% 50%; /* Slightly darker violet for better readability */
-  --primary-foreground: 0 0% 100%; /* White text on primary buttons */
+  --primary: 262 70% 50%; 
+  --primary-foreground: 0 0% 100%;
 
-  /* Softer secondary with better contrast */
-  --secondary: 210 30% 90%; /* Subtle slate background */
-  --secondary-foreground: 222 47% 20%; /* Darker text */
+  /* Softer secondary that isn't too dark */
+  --secondary: 210 20% 94%; /* Light Slate */
+  --secondary-foreground: 222 47% 15%; /* Slate-800 */
 
-  /* Muted elements with clear text */
-  --muted: 210 25% 92%; /* Soft gray */
-  --muted-foreground: 215 20% 40%; /* Darker for readability */
+  /* Readable muted text - CRITICAL FIX */
+  --muted: 210 20% 94%; 
+  --muted-foreground: 215 25% 45%; /* Slate-600 - Darker than before */
 
-  --accent: 199 80% 45%; /* Slightly darker cyan */
-  --accent-foreground: 0 0% 100%; /* White text on accent */
+  --accent: 199 80% 45%; 
+  --accent-foreground: 0 0% 100%; 
 
-  --destructive: 0 75% 55%; /* Slightly darker red */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 214 32% 85%; /* Slightly darker border for definition */
+  --input: 214 32% 85%;
+  --ring: 262 70% 50%;
+
+  /* High contrast specific overrides */
+  --high-contrast-text: #0f172a;
+}
   --destructive-foreground: 0 0% 100%;
 
   /* Visible but subtle borders */

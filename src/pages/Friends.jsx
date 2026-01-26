@@ -218,7 +218,7 @@ export default function Friends() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-6 border-b border-white/5">
+      <div className="flex gap-6 border-b border-border/50">
         {[
           { id: "all", label: `All Friends (${friends.length})` },
           { id: "requests", label: `Requests (${incoming.length})` },
@@ -231,7 +231,7 @@ export default function Friends() {
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`pb-3 text-sm font-medium transition-all relative ${
-                isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                isActive ? "text-foreground font-bold" : "text-muted-foreground hover:text-foreground"
               }`}
               type="button"
             >
@@ -239,7 +239,7 @@ export default function Friends() {
               {isActive && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary shadow-[0_0_10px_hsl(265_89%_66%)]"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary shadow-[0_0_10px_var(--primary)]"
                 />
               )}
             </button>

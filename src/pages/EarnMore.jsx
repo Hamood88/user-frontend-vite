@@ -179,10 +179,10 @@ export default function EarnMore() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-20 overflow-x-hidden relative">
-      {/* Background Ambience */}
+      {/* Background Ambience - Lighter in light mode */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s' }} />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/10 dark:bg-purple-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/10 dark:bg-blue-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s' }} />
       </div>
 
       <div className="max-w-5xl mx-auto px-4 pt-8 relative z-10">
@@ -193,10 +193,10 @@ export default function EarnMore() {
           className="text-center mb-10"
         >
           <div className="inline-flex items-center justify-center p-3 mb-4 rounded-full bg-yellow-500/10 border border-yellow-500/20 backdrop-blur-sm">
-            <Sparkles className="w-5 h-5 text-yellow-500 mr-2" />
-            <span className="text-yellow-600 dark:text-yellow-200 font-medium text-sm">Refer & Earn Real Cash</span>
+            <Sparkles className="w-5 h-5 text-yellow-600 dark:text-yellow-500 mr-2" />
+            <span className="text-yellow-700 dark:text-yellow-200 font-medium text-sm">Refer & Earn Real Cash</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-foreground via-purple-500 to-indigo-500 drop-shadow-sm leading-tight">
+          <h1 className="text-4xl md:text-6xl font-black mb-4 text-foreground drop-shadow-sm leading-tight">
             Grow Your Empire
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">

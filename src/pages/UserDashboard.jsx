@@ -401,11 +401,12 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
     cyan: "from-cyan-400 to-blue-500",
   };
 
-  const bgColors = {
-    violet: "bg-violet-500/10 border-violet-500/20",
-    emerald: "bg-emerald-500/10 border-emerald-500/20",
-    amber: "bg-amber-500/10 border-amber-500/20",
-    cyan: "bg-cyan-500/10 border-cyan-500/20",
+  // Cleaner look: White/Dark card background with colored border and shadow
+  const themeClasses = {
+    violet: "bg-card border-violet-500/30 shadow-sm hover:shadow-violet-500/10",
+    emerald: "bg-card border-emerald-500/30 shadow-sm hover:shadow-emerald-500/10",
+    amber: "bg-card border-amber-500/30 shadow-sm hover:shadow-amber-500/10",
+    cyan: "bg-card border-cyan-500/30 shadow-sm hover:shadow-cyan-500/10",
   };
 
   const isNumber = typeof value === "number";
@@ -413,32 +414,32 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
 
   return (
     <div
-      className={`rounded-2xl p-6 border backdrop-blur-md relative overflow-hidden group ${bgColors[color]}`}
+      className={`rounded-2xl p-6 border backdrop-blur-md relative overflow-hidden group transition-all duration-300 ${themeClasses[color]}`}
     >
       <div
-        className={`absolute -right-6 -top-6 w-24 h-24 rounded-full bg-gradient-to-br ${colors[color]} opacity-20 blur-2xl group-hover:opacity-30 transition-opacity`}
+        className={`absolute -right-6 -top-6 w-24 h-24 rounded-full bg-gradient-to-br ${colors[color]} opacity-10 group-hover:opacity-20 transition-opacity blur-2xl`}
       />
 
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-4">
-          <div className="p-2 rounded-lg bg-foreground/5 border border-border/10 text-foreground">
+          <div className="p-2.5 rounded-xl bg-secondary/50 border border-border text-foreground transition-colors group-hover:bg-secondary">
             <Icon className="w-5 h-5" />
           </div>
           {trend ? (
-            <span className="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full">
+            <span className="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
               {trend}
             </span>
           ) : null}
         </div>
 
-        <div className="text-muted-foreground text-sm font-medium mb-1">
+        <div className="text-muted-foreground text-sm font-semibold mb-1 tracking-wide">
           {title}
         </div>
-        <div className="text-2xl font-bold text-foreground tracking-tight">
+        <div className="text-3xl font-bold text-foreground tracking-tight">
           {display}
         </div>
         {subValue ? (
-          <div className="text-xs text-muted-foreground mt-2">{subValue}</div>
+          <div className="text-xs text-muted-foreground mt-2 font-medium">{subValue}</div>
         ) : null}
       </div>
     </div>
