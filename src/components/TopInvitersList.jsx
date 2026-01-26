@@ -13,13 +13,16 @@ export default function TopInvitersList({
 
   useEffect(() => {
     let mounted = true;
-    console.log("TopInvitersList v2.0 mounting - inline API fix active");
+    console.log("TopInvitersList v3.0 mounting - Enhanced debugging");
     
     async function loadInviters() {
       try {
         // Direct API call to avoid import bundling issues with getTopInviters
         const data = await apiGet(`/api/users/top-inviters?limit=${limit}`);
+        console.log("Top Inviters API Response:", data);
+        
         const result = Array.isArray(data?.topInviters) ? data.topInviters : Array.isArray(data) ? data : [];
+        console.log(`Top Inviters count: ${result.length}`, result);
         
         if (mounted) {
           setList(result);
