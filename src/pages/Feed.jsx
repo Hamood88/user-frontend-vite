@@ -1639,6 +1639,30 @@ export default function Feed() {
             })}
           </motion.div>
         )}
+
+        {/* Legal Footer - Bottom of Feed */}
+        <div className="mt-12 mb-8 glass-card rounded-2xl p-6 max-w-2xl mx-auto">
+          <div className="flex flex-wrap gap-4 justify-center text-sm text-muted-foreground mb-4">
+            <RouterLink to="/legal/privacy" className="hover:text-primary transition-colors">
+              Privacy
+            </RouterLink>
+            <RouterLink to="/legal/terms" className="hover:text-primary transition-colors">
+              Terms
+            </RouterLink>
+            <RouterLink to="/legal/guidelines" className="hover:text-primary transition-colors">
+              Guidelines
+            </RouterLink>
+            <RouterLink to="/legal/referrals" className="hover:text-primary transition-colors">
+              Referrals
+            </RouterLink>
+            <RouterLink to="/legal/refunds" className="hover:text-primary transition-colors">
+              Refunds
+            </RouterLink>
+          </div>
+          <div className="text-xs text-center text-muted-foreground/60">
+            © 2026 Moondala. All rights reserved.
+          </div>
+        </div>
       </div>
 
 

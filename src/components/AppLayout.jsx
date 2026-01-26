@@ -259,25 +259,6 @@ export default function AppLayout() {
 
         <div className="md-content">
           <Outlet />
-          
-          {/* Footer with Legal Links */}
-          <footer style={{ 
-            marginTop: '60px', 
-            paddingTop: '24px', 
-            borderTop: '1px solid rgba(255,255,255,0.1)', 
-            textAlign: 'center',
-            opacity: 0.7,
-            fontSize: '13px'
-          }}>
-            <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center", marginBottom: 12 }}>
-              <NavLink to="/legal/privacy" style={{ color: 'inherit', textDecoration: 'none' }}>{t('legal.privacy')}</NavLink>
-              <NavLink to="/legal/terms" style={{ color: 'inherit', textDecoration: 'none' }}>{t('legal.terms')}</NavLink>
-              <NavLink to="/legal/guidelines" style={{ color: 'inherit', textDecoration: 'none' }}>{t('legal.guidelines')}</NavLink>
-              <NavLink to="/legal/referrals" style={{ color: 'inherit', textDecoration: 'none' }}>{t('legal.referrals')}</NavLink>
-              <NavLink to="/legal/refunds" style={{ color: 'inherit', textDecoration: 'none' }}>{t('legal.refunds')}</NavLink>
-            </div>
-            <div style={{ opacity: 0.6 }}>© 2026 Moondala. All rights reserved.</div>
-          </footer>
         </div>
       </main>
     </div>
