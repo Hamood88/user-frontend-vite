@@ -1,8 +1,8 @@
 .glass-card {
-  border: 1px solid rgba(255,255,255,0.10);
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border: 1px solid hsl(var(--border) / 0.5);
+  background: hsl(var(--card));
   backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .md-btn {
@@ -14,21 +14,25 @@
   padding: 10px 14px;
   font-weight: 900;
   font-size: 14px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.92);
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
   cursor: pointer;
   transition: 120ms ease;
 }
-.md-btn:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.18); }
+.md-btn:hover { background: hsl(var(--secondary) / 0.8); border-color: hsl(var(--border)); }
 .md-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .md-btn-primary {
-  background: rgba(120,90,255,0.92);
-  border-color: rgba(120,90,255,0.65);
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
 }
-.md-btn-primary:hover { box-shadow: 0 0 18px rgba(120,90,255,0.35); }
+.md-btn-primary:hover { box-shadow: 0 0 18px hsl(var(--primary) / 0.35); filter: brightness(1.1); }
 
 .md-btn-ghost {
-  background: rgba(255,255,255,0.05);
+  background: transparent;
+  border-color: transparent;
+  color: hsl(var(--muted-foreground));
 }
+.md-btn-ghost:hover { background: hsl(var(--secondary)); color: hsl(var(--foreground)); }

@@ -1689,7 +1689,7 @@ export default function Feed() {
 
         {/* Trending Products */}
         <div className="glass-card rounded-2xl p-5">
-          <h2 className="font-display font-bold text-lg mb-4 text-white flex items-center gap-2">
+          <h2 className="font-display font-bold text-lg mb-4 text-foreground flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-pink-500" />
             Trending Products
           </h2>
@@ -1704,7 +1704,7 @@ export default function Feed() {
                   to={`/product/${p._id}`}
                   className="flex gap-3 group"
                 >
-                  <div className="w-16 h-16 rounded-lg bg-black/20 overflow-hidden flex-shrink-0">
+                  <div className="w-16 h-16 rounded-lg bg-muted overflow-hidden flex-shrink-0 border border-border">
                     {p.image ? (
                       <img 
                         src={toAbsUrl(p.image)} 
@@ -1718,7 +1718,7 @@ export default function Feed() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0 flex flex-col justify-center">
-                    <h3 className="font-semibold text-white text-sm truncate group-hover:text-primary transition-colors">
+                    <h3 className="font-semibold text-foreground text-sm truncate group-hover:text-primary transition-colors">
                       {p.title}
                     </h3>
                     <div className="flex items-center gap-2 mt-1">

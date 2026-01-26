@@ -27,14 +27,14 @@ const CONTENT = {
   en: {
     enterBtn: "Enter Site",
     welcome: "Welcome to Moondala 🌙",
-    subtitle: "Where shopping meets community—and your invite code becomes income.",
+    subtitle: "Moondala is the first social commerce that pays you back.",
     howItWorks: "How It Works",
     benefitsTitle: "Why Join Moondala?",
     benefit1: "Exclusive Deals & Discounts",
     benefit2: "Connect directly with Shops",
     benefit3: "Earn rewards by inviting friends",
     cta: "Register Now",
-    introText: "Discover unique shops, chat instantly, and earn rewards from your network.",
+    introText: "Shop from real stores, share your invite code, and earn from purchases in your network.",
     networkTitle: "Build Your 5-Level Network",
     networkDesc: "Earn from your direct invites and their extended network.",
     level1: "Level 1: Direct Friends",
@@ -51,7 +51,10 @@ const CONTENT = {
     pillar3Title: "🤝 Connect with Friends",
     pillar3Desc: "Shopping is better together. Chat directly with sellers or get your friends' opinions on products before you buy.",
     pillar4Title: "💰 Share & Earn",
-    pillar4Desc: "Every time you share a product you love or invite a new friend, you're building a network that pays you back."
+    pillar4Desc: "Every time you share a product you love or invite a new friend, you're building a network that pays you back.",
+    // NEW SECTION TRANSLATIONS
+    howItWorksNewTitle: "How Moondala Works",
+    howItWorksNewDesc: "Big platforms profit from every order — you get nothing. Moondala changes that.\n\nInstead of keeping the transaction fees, Moondala shares them with users through the referral tree.\n\nLife is hard and expensive, so Moondala helps you turn your network into extra income."
   },
   am: {
     enterBtn: "Enter Site", 
@@ -80,7 +83,9 @@ const CONTENT = {
     pillar3Title: "🤝 ከጓደኞች ጋር ይገናኙ",
     pillar3Desc: "ግዢ አብረን ሲሆን የተሻለ ነው። ከሻጮች ጋር በቀጥታ ይወያዩ ወይም ከመግዛትዎ በፊት የጓደኞችዎን አስተያየት ያግኙ።",
     pillar4Title: "💰 ያጋሩ እና ያግኙ",
-    pillar4Desc: "የሚወዱትን ምርት በሚያጋሩበት ጊዜ ወይም አዲስ ጓደኛ በሚጋብዙበት ጊዜ ሁሉ ለእርስዎ የሚከፍል አውታረ መረብ እየገነቡ ነው።"
+    pillar4Desc: "የሚወዱትን ምርት በሚያጋሩበት ጊዜ ወይም አዲስ ጓደኛ በሚጋብዙበት ጊዜ ሁሉ ለእርስዎ የሚከፍል አውታረ መረብ እየገነቡ ነው።",
+    howItWorksNewTitle: "Moondala እንዴት እንደሚሰራ",
+    howItWorksNewDesc: "ትላልቅ መድረኮች ከእያንዳንዱ ትዕዛዝ ያተርፋሉ — እርስዎ ምንም አያገኙም። Moondala ይህንን ይለውጣል።\n\nየግብይት ክፍያዎችን ከመያዝ ይልቅ፣ Moondala በሪፈራል ዛፍ በኩል ለተጠቃሚዎች ያካፍላል።\n\nህይወት ከባድ እና ውድ ስለሆነች፣ Moondala አውታረ መረብዎን ወደ ተጨማሪ ገቢ እንዲቀይሩ ይረዳዎታል።"
   },
   fil: {
     enterBtn: "Enter Site",
@@ -109,7 +114,9 @@ const CONTENT = {
     pillar3Title: "🤝 Kumonekta sa mga Kaibigan",
     pillar3Desc: "Ang pamimili ay mas maganda kapag magkasama. Makipag-chat nang direkta sa mga nagbebenta o kumuha ng opinyon ng iyong mga kaibigan sa mga produkto bago bumili.",
     pillar4Title: "💰 Magbahagi at Kumita",
-    pillar4Desc: "Sa bawat pagkakataon na nagbabahagi ka ng produktong mahal mo o nag-imbita ng bagong kaibigan, bumubuo ka ng network na nagbabayad sa iyo."
+    pillar4Desc: "Sa bawat pagkakataon na nagbabahagi ka ng produktong mahal mo o nag-imbita ng bagong kaibigan, bumubuo ka ng network na nagbabayad sa iyo.",
+    howItWorksNewTitle: "Paano Gumagana ang Moondala",
+    howItWorksNewDesc: "Kumikita ang malalaking platform sa bawat order — wala kang nakukuha. Babaguhin iyan ng Moondala.\n\nSa halip na itago ang mga transaction fee, ibinabahagi ito ng Moondala sa mga user sa pamamagitan ng referral tree.\n\nMahirap at mahal ang buhay, kaya tinutulungan ka ng Moondala na gawing extra income ang iyong network."
   },
   ko: {
     enterBtn: "Enter Site",
@@ -138,7 +145,9 @@ const CONTENT = {
     pillar3Title: "🤝 친구와 연결",
     pillar3Desc: "쇼핑은 함께할 때 더 좋습니다. 판매자와 직접 채팅하거나 구매하기 전에 제품에 대한 친구의 의견을 들어보세요.",
     pillar4Title: "💰 공유 및 수익 창출",
-    pillar4Desc: "좋아하는 제품을 공유하거나 새로운 친구를 초대할 때마다 보답을 받는 네트워크를 구축하게 됩니다."
+    pillar4Desc: "좋아하는 제품을 공유하거나 새로운 친구를 초대할 때마다 보답을 받는 네트워크를 구축하게 됩니다.",
+    howItWorksNewTitle: "Moondala 작동 방식",
+    howItWorksNewDesc: "거대 플랫폼들은 모든 주문에서 수익을 챙기지만, 당신은 아무것도 얻지 못합니다. Moondala는 이를 바꿉니다.\n\n거래 수수료를 독차지하는 대신, Moondala는 추천 트리를 통해 이를 사용자들과 공유합니다.\n\n살기 팍팍하고 물가도 비싼 요즘, Moondala는 당신의 인맥을 추가 소득으로 바꿀 수 있도록 돕습니다."
   },
   id: {
     enterBtn: "Enter Site",
@@ -167,7 +176,9 @@ const CONTENT = {
     pillar3Title: "🤝 Terhubung dengan Teman",
     pillar3Desc: "Belanja lebih baik saat bersama. Chat langsung dengan penjual atau dapatkan pendapat teman Anda tentang produk sebelum Anda membeli.",
     pillar4Title: "💰 Bagikan & Dapatkan",
-    pillar4Desc: "Setiap kali Anda membagikan produk yang Anda sukai atau mengundang teman baru, Anda membangun jaringan yang memberi Anda kembali."
+    pillar4Desc: "Setiap kali Anda membagikan produk yang Anda sukai atau mengundang teman baru, Anda membangun jaringan yang memberi Anda kembali.",
+    howItWorksNewTitle: "Cara Kerja Moondala",
+    howItWorksNewDesc: "Platform besar mendapat untung dari setiap pesanan — Anda tidak mendapat apa-apa. Moondala mengubahnya.\n\nAlih-alih menyimpan biaya transaksi, Moondala membaginya dengan pengguna melalui pohon rujukan.\n\nHidup itu sulit dan mahal, jadi Moondala membantu Anda mengubah jaringan Anda menjadi penghasilan tambahan."
   },
   so: {
     enterBtn: "Enter Site",
@@ -196,7 +207,9 @@ const CONTENT = {
     pillar3Title: "🤝 Kula Xiriir Asxaabta",
     pillar3Desc: "Wax-iibsinta way fiicantahay marka la wada socdo. La sheekeyso iibiyaha tooska ah ama hel ra'yiga asxaabtaada alaabta ka hor inta aad iibsanayso.",
     pillar4Title: "💰 Wadaag oo Kasbo",
-    pillar4Desc: "Mar kasta oo aad wadaajiso alaab aad jeceshahay ama aad casuurto saaxiib cusub, waxaad dhisaysaa shabakad kuu celisa lacag."
+    pillar4Desc: "Mar kasta oo aad wadaajiso alaab aad jeceshahay ama aad casuurto saaxiib cusub, waxaad dhisaysaa shabakad kuu celisa lacag.",
+    howItWorksNewTitle: "Sida Moondala u Shaqeeyo",
+    howItWorksNewDesc: "Madalalka waaweyn waxay ka faa'iidaan amar kasta — adigu waxba ma heshid. Moondala way beddeshaa taas.\n\nBedelkii ay hayn lahayd khidmadaha macaamilka, Moondala waxay la wadaagtaa isticmaalayaasha iyada oo loo marayo geedka tixraaca.\n\nNoloshu waa adag tahay oo qaali tahay, sidaa darteed Moondala waxay kaa caawineysaa inaad shabakaddaada u beddesho dakhli dheeraad ah."
   },
   ur: {
     enterBtn: "سائٹ میں داخل ہوں",
@@ -225,7 +238,9 @@ const CONTENT = {
     pillar3Title: "🤝 دوستوں سے جڑیں۔",
     pillar3Desc: "اکٹھے خریداری بہتر ہوتی ہے۔ بیچنے والوں کے ساتھ براہ راست بات چیت کریں یا خریداری سے پہلے مصنوعات پر اپنے دوستوں کی رائے حاصل کریں۔",
     pillar4Title: "💰 شیئر کریں اور کمائیں۔",
-    pillar4Desc: "جب بھی آپ اپنی پسند کی مصنوعات شیئر کرتے ہیں یا کسی نئے دوست کو مدعو کرتے ہیں، آپ ایک ایسا نیٹ ورک بنا رہے ہوتے ہیں جو آپ کو واپس ادائیگی کرتا ہے۔"
+    pillar4Desc: "جب بھی آپ اپنی پسند کی مصنوعات شیئر کرتے ہیں یا کسی نئے دوست کو مدعو کرتے ہیں، آپ ایک ایسا نیٹ ورک بنا رہے ہوتے ہیں جو آپ کو واپس ادائیگی کرتا ہے۔",
+    howItWorksNewTitle: "Moondala کیسے کام کرتا ہے",
+    howItWorksNewDesc: "بڑے پلیٹ فارمز ہر آرڈر سے منافع کماتے ہیں — آپ کو کچھ نہیں ملتا۔ Moondala اسے بدلتا ہے۔\n\nٹرانزیکشن فیس رکھنے کے بجائے، Moondala انہیں ریفرل ٹری کے ذریعے صارفین کے ساتھ شیئر کرتا ہے۔\n\nزندگی مشکل اور مہنگی ہے، اس لیے Moondala آپ کو اپنے نیٹ ورک کو اضافی آمدنی میں تبدیل کرنے میں مدد کرتا ہے۔"
   },
   es: {
     enterBtn: "Entrar al sitio",
@@ -254,7 +269,9 @@ const CONTENT = {
     pillar3Title: "🤝 Conecta con Amigos",
     pillar3Desc: "Comprar es mejor cuando se hace juntos. Chatea directamente con los vendedores o pide la opinión de tus amigos sobre los productos antes de comprar.",
     pillar4Title: "💰 Comparte y Gana",
-    pillar4Desc: "Cada vez que compartes un producto que te gusta o invitas a un nuevo amigo, estás construyendo una red que te recompensa."
+    pillar4Desc: "Cada vez que compartes un producto que te gusta o invitas a un nuevo amigo, estás construyendo una red que te recompensa.",
+    howItWorksNewTitle: "Cómo funciona Moondala",
+    howItWorksNewDesc: "Las grandes plataformas se benefician de cada pedido, tú no obtienes nada. Moondala cambia eso.\n\nEn lugar de quedarse con las tarifas de transacción, Moondala las comparte con los usuarios a través del árbol de referencias.\n\nLa vida es dura y costosa, por lo que Moondala te ayuda a convertir tu red en ingresos extra."
   },
   ja: {
     enterBtn: "Enter Site",
@@ -283,7 +300,9 @@ const CONTENT = {
     pillar3Title: "🤝 友達と繋がる",
     pillar3Desc: "ショッピングは一緒にする方が楽しいものです。売り手と直接チャットしたり、購入前に商品の感想を友達に聞いたりできます。",
     pillar4Title: "💰 共有して稼ぐ",
-    pillar4Desc: "お気に入りの商品を共有したり、新しい友達を招待したりするたびに、あなたに還元されるネットワークを構築しています。"
+    pillar4Desc: "お気に入りの商品を共有したり、新しい友達を招待したりするたびに、あなたに還元されるネットワークを構築しています。",
+    howItWorksNewTitle: "Moondalaの仕組み",
+    howItWorksNewDesc: "大手プラットフォームはすべての注文から利益を得ますが、あなたは何も得られません。Moondalaはそれを変えます。\n\n取引手数料を保持する代わりに、Moondalaは紹介ツリーを通じてユーザーと共有します。\n\n生活は大変でお金もかかるため、Moondalaはあなたのネットワークを副収入に変える手助けをします。"
   },
   pt: {
     enterBtn: "Enter Site",
@@ -312,7 +331,9 @@ const CONTENT = {
     pillar3Title: "🤝 Conecte-se com Amigos",
     pillar3Desc: "Fazer compras é melhor quando estamos juntos. Converse diretamente com os vendedores ou peça a opinião de seus amigos sobre os produtos antes de comprar.",
     pillar4Title: "💰 Compartilhe e Ganhe",
-    pillar4Desc: "Sempre que você compartilha um produto que ama ou convida um novo amigo, você está construindo uma rede que te recompensa."
+    pillar4Desc: "Sempre que você compartilha um produto que ama ou convida um novo amigo, você está construindo uma rede que te recompensa.",
+    howItWorksNewTitle: "Como o Moondala funciona",
+    howItWorksNewDesc: "Grandes plataformas lucram com cada pedido — você não ganha nada. O Moondala muda isso.\n\nEm vez de ficar com as taxas de transação, o Moondala as compartilha com os usuários por meio da árvore de referências.\n\nA vida é difícil e cara, então o Moondala ajuda você a transformar sua rede em renda extra."
   },
   ru: {
     enterBtn: "Enter Site",
@@ -341,7 +362,9 @@ const CONTENT = {
     pillar3Title: "🤝 Общайтесь с друзьями",
     pillar3Desc: "Покупать вместе веселее. Чат напрямую с продавцами или узнайте мнение друзей о товарах перед покупкой.",
     pillar4Title: "💰 Делитесь и зарабатывайте",
-    pillar4Desc: "Каждый раз, когда вы делитесь понравившимся товаром или приглашаете нового друга, вы строите сеть, которая приносит вам доход."
+    pillar4Desc: "Каждый раз, когда вы делитесь понравившимся товаром или приглашаете нового друга, вы строите сеть, которая приносит вам доход.",
+    howItWorksNewTitle: "Как работает Moondala",
+    howItWorksNewDesc: "Крупные платформы получают прибыль с каждого заказа — вы не получаете ничего. Moondala меняет это.\n\nВместо того чтобы оставлять себе комиссию за транзакции, Moondala делится ею с пользователями через реферальное дерево.\n\nЖизнь сложна и дорога, поэтому Moondala помогает вам превратить вашу сеть в дополнительный доход."
   },
   tr: {
     enterBtn: "Enter Site",
@@ -370,7 +393,9 @@ const CONTENT = {
     pillar3Title: "🤝 Arkadaşlarla Bağlantı Kurun",
     pillar3Desc: "Alışveriş birlikteyken daha güzeldir. Satıcılarla doğrudan sohbet edin veya satın almadan önce ürünler hakkında arkadaşlarınızın fikirlerini alın.",
     pillar4Title: "💰 Paylaşın ve Kazanın",
-    pillar4Desc: "Sevdiğiniz bir ürünü her paylaştığınızda veya yeni bir arkadaşınızı davet ettiğinizde, size geri ödeme yapan bir ağ kurmuş olursunuz."
+    pillar4Desc: "Sevdiğiniz bir ürünü her paylaştığınızda veya yeni bir arkadaşınızı davet ettiğinizde, size geri ödeme yapan bir ağ kurmuş olursunuz.",
+    howItWorksNewTitle: "Moondala Nasıl Çalışır",
+    howItWorksNewDesc: "Büyük platformlar her siparişten kâr eder — siz hiçbir şey almazsınız. Moondala bunu değiştiriyor.\n\nİşlem ücretlerini tutmak yerine, Moondala bunları referans ağacı aracılığıyla kullanıcılarla paylaşır.\n\nHayat zor ve pahalı, bu yüzden Moondala ağınızı ek gelire dönüştürmenize yardımcı olur."
   },
   ar: {
     enterBtn: "الدخول للموقع",
@@ -399,7 +424,10 @@ const CONTENT = {
     pillar3Title: "🤝 تواصل مع الأصدقاء",
     pillar3Desc: "التسوق يكون أفضل عندما نكون معًا. دردش مباشرة مع البائعين أو احصل على آراء أصدقائك حول المنتجات قبل الشراء.",
     pillar4Title: "💰 شارك واكسب",
-    pillar4Desc: "في كل مرة تشارك فيها منتجًا تحبه أو تدعو صديقًا جديدًا، فإنك تبني شبكة تكافئك ماديًا."
+    pillar4Desc: "في كل مرة تشارك فيها منتجًا تحبه أو تدعو صديقًا جديدًا، فإنك تبني شبكة تكافئك ماديًا.",
+    // NEW SECTION TRANSLATIONS
+    howItWorksNewTitle: "كيف تعمل موندالا",
+    howItWorksNewDesc: "المنصات الكبرى تربح من كل طلب — وأنت لا تحصل على شيء. موندالا تغير ذلك.\n\nبدلاً من الاحتفاظ برسوم المعاملات، تشاركها موندالا مع المستخدمين من خلال شجرة الإحالة.\n\nالحياة صعبة ومكلفة، لذا تساعدك موندالا على تحويل شبكتك إلى دخل إضافي."
   },
   de: {
     enterBtn: "Enter Site",
@@ -428,7 +456,9 @@ const CONTENT = {
     pillar3Title: "🤝 Verbinde dich mit Freunden",
     pillar3Desc: "Gemeinsam shoppen ist besser. Chatte direkt mit Verkäufern oder hole dir die Meinung deiner Freunde zu Produkten ein, bevor du kaufst.",
     pillar4Title: "💰 Teilen und Verdienen",
-    pillar4Desc: "Jedes Mal, wenn du ein Produkt teilst, das du liebst, oder einen neuen Freund einlädst, baust du ein Netzwerk auf, das sich für dich auszahlt."
+    pillar4Desc: "Jedes Mal, wenn du ein Produkt teilst, das du liebst, oder einen neuen Freund einlädst, baust du ein Netzwerk auf, das sich für dich auszahlt.",
+    howItWorksNewTitle: "Wie Moondala funktioniert",
+    howItWorksNewDesc: "Große Plattformen profitieren von jeder Bestellung – Sie bekommen nichts. Moondala ändert das.\n\nAnstatt die Transaktionsgebühren zu behalten, teilt Moondala sie über den Empfehlungsbaum mit den Benutzern.\n\nDas Leben ist hart und teuer, deshalb hilft Ihnen Moondala, Ihr Netzwerk in zusätzliches Einkommen zu verwandeln."
   },
   fr: {
     enterBtn: "Entrer sur le site",
@@ -457,7 +487,9 @@ const CONTENT = {
     pillar3Title: "🤝 Connectez-vous avec des amis",
     pillar3Desc: "Faire du shopping est plus agréable quand on est ensemble. Discutez directement avec les vendeurs ou demandez l'avis de vos amis sur les produits avant d'acheter.",
     pillar4Title: "💰 Partagez et gagnez",
-    pillar4Desc: "Chaque fois que vous partagez un produit que vous aimez ou que vous invitez un nouvel ami, vous construisez un réseau qui vous récompense."
+    pillar4Desc: "Chaque fois que vous partagez un produit que vous aimez ou que vous invitez un nouvel ami, vous construisez un réseau qui vous récompense.",
+    howItWorksNewTitle: "Comment fonctionne Moondala",
+    howItWorksNewDesc: "Les grandes plateformes profitent de chaque commande — vous n'obtenez rien. Moondala change cela.\n\nAu lieu de garder les frais de transaction, Moondala les partage avec les utilisateurs via l'arbre de parrainage.\n\nLa vie est dure et chère, alors Moondala vous aide à transformer votre réseau en revenu supplémentaire."
   },
   hi: {
     enterBtn: "Enter Site",
@@ -486,7 +518,9 @@ const CONTENT = {
     pillar3Title: "🤝 दोस्तों से जुड़ें",
     pillar3Desc: "साथ मिलकर खरीदारी करना बेहतर होता है। विक्रेताओं के साथ सीधे चैट करें या खरीदने से पहले उत्पादों पर अपने दोस्तों की राय लें।",
     pillar4Title: "💰 साझा करें और कमाएं",
-    pillar4Desc: "जब भी आप अपनी पसंद का उत्पाद साझा करते हैं या किसी नए मित्र को आमंत्रित करते हैं, तो आप एक ऐसा नेटवर्क बना रहे होते हैं जो आपको भुगतान करता है।"
+    pillar4Desc: "जब भी आप अपनी पसंद का उत्पाद साझा करते हैं या किसी नए मित्र को आमंत्रित करते हैं, तो आप एक ऐसा नेटवर्क बना रहे होते हैं जो आपको भुगतान करता है।",
+    howItWorksNewTitle: "Moondala कैसे काम करता है",
+    howItWorksNewDesc: "बड़े प्लेटफॉर्म हर ऑर्डर से मुनाफा कमाते हैं — आपको कुछ नहीं मिलता। Moondala इसे बदलता है।\n\nलेनदेन शुल्क रखने के बजाय, Moondala उन्हें रेफरल ट्री के माध्यम से उपयोगकर्ताओं के साथ साझा करता है।\n\nजीवन कठिन और महंगा है, इसलिए Moondala आपके नेटवर्क को अतिरिक्त आय में बदलने में आपकी मदद करता है।"
   },
   it: {
     enterBtn: "Enter Site",
@@ -515,7 +549,9 @@ const CONTENT = {
     pillar3Title: "🤝 Connettiti con gli amici",
     pillar3Desc: "Fare acquisti è meglio quando si è insieme. Chatta direttamente con i venditori o chiedi il parere dei tuoi amici sui prodotti prima di acquistarli.",
     pillar4Title: "💰 Condividi e guadagna",
-    pillar4Desc: "Ogni volta che condividi un prodotto che ami o inviti un nuovo amico, costruisci una rete che ti ripaga."
+    pillar4Desc: "Ogni volta che condividi un prodotto che ami o inviti un nuovo amico, costruisci una rete che ti ripaga.",
+    howItWorksNewTitle: "Come funziona Moondala",
+    howItWorksNewDesc: "Le grandi piattaforme traggono profitto da ogni ordine — tu non ottieni nulla. Moondala cambia tutto questo.\n\nInvece di trattenere le commissioni di transazione, Moondala le condivide con gli utenti attraverso l'albero dei riferimenti.\n\nLa vita è dura e costosa, quindi Moondala ti aiuta a trasformare la tua rete in entrate extra."
   },
   zh: {
     enterBtn: "Enter Site",
@@ -544,7 +580,9 @@ const CONTENT = {
     pillar3Title: "🤝 与朋友联系",
     pillar3Desc: "一起购物更快乐。直接与卖家沟通，或者在购买前听取朋友对产品的意见。",
     pillar4Title: "💰 分享并赚取",
-    pillar4Desc: "每当您分享自己喜欢的产品或邀请新朋友时，您都在构建一个为您带来回报的网络。"
+    pillar4Desc: "每当您分享自己喜欢的产品或邀请新朋友时，您都在构建一个为您带来回报的网络。",
+    howItWorksNewTitle: "Moondala 如何运作",
+    howItWorksNewDesc: "大平台从每笔订单中获利——而你什么也得不到。Moondala 改变了这一点。\n\nMoondala 不保留交易费，而是通过推荐树与用户分享。\n\n生活艰难且昂贵，所以 Moondala 帮助你将人脉转化为额外收入。"
   }
 };
 
@@ -558,7 +596,7 @@ const ReferralLanding = ({ type: propType }) => {
   const type = propType || params.type;
 
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { i18n, t: tGlobal } = useTranslation();
   
   const [selectedLang, setSelectedLang] = useState(i18n.language || 'en');
   const [step, setStep] = useState(1);
@@ -745,7 +783,29 @@ const ReferralLanding = ({ type: propType }) => {
           </div>
         </section>
 
-        {/* FEATURE: REFERRAL TREE */}
+        {/* FEATURE: HOW MOONDALA WORKS (New) */}
+        <section className="w-full bg-slate-950 py-16 px-4 border-b border-slate-900">
+          <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+             <div className="order-2 md:order-1">
+                <img 
+                  src="/images/moondala-network-levels.png" 
+                  alt="Network Levels" 
+                  className="w-full h-auto object-contain rounded-xl shadow-2xl border border-slate-800"
+                  onClick={() => setLightboxImg('/images/moondala-network-levels.png')}
+                />
+             </div>
+             <div className="order-1 md:order-2">
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                   {t.howItWorksNewTitle || t.howItWorks}
+                </h2>
+                <p className="text-lg text-slate-400 whitespace-pre-line leading-relaxed">
+                   {t.howItWorksNewDesc || "Big platforms profit from every order — you get nothing. Moondala changes that.\n\nInstead of keeping the transaction fees, Moondala shares them with users through the referral tree.\n\nLife is hard and expensive, so Moondala helps you turn your network into extra income."}
+                </p>
+             </div>
+          </div>
+        </section>
+
+        {/* FEATURE: REFERRAL TREE (Restored) */}
         <section className="w-full bg-slate-900 py-16 px-4">
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <div className="order-2 md:order-1">

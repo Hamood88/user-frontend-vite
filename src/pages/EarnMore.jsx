@@ -178,7 +178,7 @@ export default function EarnMore() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white pb-20 overflow-x-hidden relative">
+    <div className="min-h-screen bg-background text-foreground pb-20 overflow-x-hidden relative">
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
@@ -193,13 +193,13 @@ export default function EarnMore() {
           className="text-center mb-10"
         >
           <div className="inline-flex items-center justify-center p-3 mb-4 rounded-full bg-yellow-500/10 border border-yellow-500/20 backdrop-blur-sm">
-            <Sparkles className="w-5 h-5 text-yellow-400 mr-2" />
-            <span className="text-yellow-200 font-medium text-sm">Refer & Earn Real Cash</span>
+            <Sparkles className="w-5 h-5 text-yellow-500 mr-2" />
+            <span className="text-yellow-600 dark:text-yellow-200 font-medium text-sm">Refer & Earn Real Cash</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-indigo-200 drop-shadow-sm leading-tight">
+          <h1 className="text-4xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-foreground via-purple-500 to-indigo-500 drop-shadow-sm leading-tight">
             Grow Your Empire
           </h1>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
             Invite friends and shops to Moondala. 
             Build your network and earn passive income every time they trade.
           </p>
@@ -231,20 +231,20 @@ export default function EarnMore() {
           />
         </div>
 
-        {/* Brand New "How It Works" Section from the Design - Simplified to just Network Stats */}
+        {/* Network Graph Section */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex justify-center mb-12 md:mb-24 bg-slate-900/40 rounded-3xl md:rounded-[3rem] p-4 md:p-12 border border-white/5 backdrop-blur-md"
+          className="flex justify-center mb-12 md:mb-24 bg-card/60 rounded-3xl md:rounded-[3rem] p-4 md:p-12 border border-border backdrop-blur-md"
         >
           {/* Network Visual Card */}
-          <div className="bg-[#0B1221] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden group w-full max-w-md">
+          <div className="bg-card border border-border rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden group w-full max-w-md">
              <div className="flex items-center gap-3 mb-6 md:mb-8">
                 <div className="p-2 bg-green-500/10 rounded-lg">
-                  <TrendingUp className="w-5 h-5 text-green-400" />
+                  <TrendingUp className="w-5 h-5 text-green-500" />
                 </div>
-                <h3 className="font-bold text-white text-xl">Your Network</h3>
+                <h3 className="font-bold text-card-foreground text-xl">Your Network</h3>
               </div>
               
               <div className="space-y-6">
@@ -264,7 +264,7 @@ export default function EarnMore() {
           <div className="space-y-6">
             
             {/* Tab Switcher */}
-            <div className="bg-slate-900/50 p-1.5 rounded-2xl border border-white/10 flex relative backdrop-blur-sm">
+            <div className="bg-muted p-1.5 rounded-2xl border border-border flex relative backdrop-blur-sm">
               <TabButton 
                 isActive={activeTab === "users"} 
                 onClick={() => setActiveTab("users")}
@@ -285,7 +285,7 @@ export default function EarnMore() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
-                className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 border border-white/10 shadow-xl"
+                className="bg-card rounded-3xl p-6 border border-border shadow-xl"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
@@ -293,10 +293,10 @@ export default function EarnMore() {
                       {activeTab === 'users' ? <Users className="w-5 h-5 text-white" /> : <Gift className="w-5 h-5 text-white" />}
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-white leading-none mb-1">
+                      <h2 className="text-xl font-bold text-card-foreground leading-none mb-1">
                         {activeTab === "users" ? "Invite New Users" : "Onboard Merchants"}
                       </h2>
-                      <p className="text-slate-400 text-xs text-balance">
+                      <p className="text-muted-foreground text-xs text-balance">
                         {activeTab === "users" 
                           ? "Earn lifetime commissions." 
                           : "Earn from their revenue."}
@@ -306,10 +306,10 @@ export default function EarnMore() {
                 </div>
 
                 {/* Link Copy Section - Compact */}
-                <div className="bg-black/40 rounded-xl p-3 mb-4 border border-white/5 relative overflow-hidden flex items-center gap-3">
+                <div className="bg-muted/50 rounded-xl p-3 mb-4 border border-border relative overflow-hidden flex items-center gap-3">
                    <div className="flex-1 min-w-0">
-                      <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Referral Link</p>
-                      <code className="text-slate-200 text-sm block truncate font-mono select-all">
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Referral Link</p>
+                      <code className="text-foreground text-sm block truncate font-mono select-all">
                         {activeTab === "users" ? userReferralLink : shopReferralLink}
                       </code>
                    </div>
@@ -317,19 +317,19 @@ export default function EarnMore() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => copyToClipboard(activeTab === "users" ? userReferralLink : shopReferralLink)}
-                      className="bg-white/10 hover:bg-white/20 p-2.5 rounded-lg text-white transition-colors border border-white/10 flex-shrink-0"
+                      className="bg-background hover:bg-muted p-2.5 rounded-lg text-foreground transition-colors border border-border flex-shrink-0"
                     >
-                      {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
+                      {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5" />}
                    </motion.button>
                 </div>
 
                 {/* Message Editor */}
                 <div className="mb-4">
-                  <h3 className="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wider">Customize Message</h3>
+                  <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Customize Message</h3>
                   <textarea
                     value={customMessage}
                     onChange={(e) => setCustomMessage(e.target.value)}
-                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-slate-200 focus:outline-none focus:border-indigo-500/50 resize-none"
+                    className="w-full bg-input border border-input rounded-xl p-3 text-sm text-foreground focus:outline-none focus:border-ring resize-none placeholder:text-muted-foreground"
                     rows={2}
                     placeholder="Write a message to share..."
                   />
@@ -337,10 +337,10 @@ export default function EarnMore() {
 
                 {/* Social Grid - Compact */}
                 <div>
-                   <h3 className="text-xs font-semibold text-slate-500 mb-3 uppercase tracking-wider">Share instantly</h3>
+                   <h3 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">Share instantly</h3>
                    <div className="flex gap-2 justify-between">
                       <SocialBtn icon={FacebookIcon} color="bg-[#1877F2]" onClick={() => shareOnSocial("facebook")} compact />
-                      <SocialBtn icon={XIcon} color="bg-black border border-white/20" onClick={() => shareOnSocial("twitter")} compact />
+                      <SocialBtn icon={XIcon} color="bg-black text-white dark:bg-black dark:border-white/20 border-border" onClick={() => shareOnSocial("twitter")} compact />
                       <SocialBtn icon={WhatsAppIcon} color="bg-[#25D366]" onClick={() => shareOnSocial("whatsapp")} compact />
                       <SocialBtn icon={TelegramIcon} color="bg-[#229ED9]" onClick={() => shareOnSocial("telegram")} compact />
                       <SocialBtn icon={Mail} color="bg-rose-500" onClick={() => shareOnSocial("email")} compact />
@@ -353,15 +353,15 @@ export default function EarnMore() {
           {/* Bottom Section: QR & Onboarding (Now Stacked Below) */}
           <div className="space-y-6">
             {/* QR Card - Compact */}
-            <div className="bg-white rounded-3xl p-6 shadow-2xl relative overflow-hidden group">
+            <div className="bg-card rounded-3xl p-6 shadow-xl border border-border relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
               <div className="text-center flex flex-col items-center">
                 <div className="mb-4">
-                  <h3 className="text-slate-900 font-black text-xl tracking-tight">Personal QR Code</h3>
-                  <p className="text-slate-500 text-xs">Scan to join your network</p>
+                  <h3 className="text-card-foreground font-black text-xl tracking-tight">Personal QR Code</h3>
+                  <p className="text-muted-foreground text-xs">Scan to join your network</p>
                 </div>
 
-                <div className="w-48 h-48 bg-gray-50 rounded-xl p-3 mb-4 shadow-inner border border-gray-100">
+                <div className="w-48 h-48 bg-white rounded-xl p-3 mb-4 shadow-inner border border-gray-100">
                   {qrCode && <img src={qrCode} alt="QR Code" className="w-full h-full object-contain" />}
                 </div>
 
@@ -369,7 +369,7 @@ export default function EarnMore() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={downloadQRCode}
-                  className="w-full max-w-xs py-3 bg-slate-950 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-md text-sm"
+                  className="w-full max-w-xs py-3 bg-primary text-primary-foreground rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-md text-sm"
                 >
                   <DownloadIcon className="w-4 h-4" />
                   Save to Gallery
@@ -404,18 +404,18 @@ function StatCard({ label, value, icon: Icon, color, delay, isCode }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="bg-slate-800/40 backdrop-blur-md border border-white/5 p-5 rounded-2xl relative overflow-hidden group hover:border-white/10 transition-colors hover:bg-slate-800/60"
+      className="bg-card/50 backdrop-blur-md border border-border p-5 rounded-2xl relative overflow-hidden group hover:border-border/80 transition-colors hover:bg-card/70"
     >
       <div className={`absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity`}>
-        <Icon className="w-16 h-16" />
+        <Icon className="w-16 h-16 text-foreground" />
       </div>
       <div className="flex items-center gap-4 relative z-10">
         <div className={`w-12 h-12 rounded-xl ${color} flex items-center justify-center shadow-lg shadow-black/20`}>
           <Icon className="w-6 h-6 text-white" />
         </div>
         <div>
-          <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-0.5">{label}</p>
-          <p className={`text-2xl font-bold ${isCode ? 'font-mono tracking-wider text-purple-200' : 'text-white'}`}>
+          <p className="text-muted-foreground text-xs font-semibold uppercase tracking-wider mb-0.5">{label}</p>
+          <p className={`text-2xl font-bold ${isCode ? 'font-mono tracking-wider text-purple-600 dark:text-purple-300' : 'text-foreground'}`}>
             {value}
           </p>
         </div>
@@ -429,13 +429,13 @@ function TabButton({ isActive, onClick, icon: Icon, label }) {
     <button
       onClick={onClick}
       className={`relative flex-1 py-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-colors z-10 ${
-        isActive ? "text-white" : "text-slate-400 hover:text-slate-200"
+        isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
       }`}
     >
       {isActive && (
         <motion.div
           layoutId="tab-bg"
-          className="absolute inset-0 bg-slate-700 rounded-xl shadow-lg z-[-1]"
+          className="absolute inset-0 bg-background rounded-xl shadow-sm border border-border z-[-1]"
           transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
         />
       )}
@@ -451,7 +451,7 @@ function SocialBtn({ icon: Icon, color, onClick }) {
       whileHover={{ y: -3, scale: 1.05 }}
       whileTap={{ scale: 0.9 }}
       onClick={onClick}
-      className={`${color} hover:brightness-110 h-10 w-full rounded-lg flex items-center justify-center text-white transition-all shadow-lg shadow-black/20`}
+      className={`${color} hover:brightness-110 h-10 w-full rounded-lg flex items-center justify-center text-white transition-all shadow-sm`}
     >
       <Icon className="w-5 h-5" />
     </motion.button>
@@ -466,10 +466,10 @@ function NetworkLevelRow({ level, count }) {
   return (
     <div className="group">
       <div className="flex justify-between items-end mb-1">
-        <span className="text-xs font-medium text-slate-400 group-hover:text-slate-200 transition-colors">Level {level}</span>
-        <span className="text-sm font-bold text-white">{count}</span>
+        <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">Level {level}</span>
+        <span className="text-sm font-bold text-foreground">{count}</span>
       </div>
-      <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+      <div className="h-2 bg-secondary rounded-full overflow-hidden">
         <motion.div 
           initial={{ width: 0 }}
           animate={{ width: `${percent}%` }}

@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import UserAuthForm from "./UserAuthForm";
 import ShopAuthForm from "./ShopAuthForm";
 import "../styles/splitAuthPage.css";
 
 export default function SplitAuthPage() {
+  const { t, i18n } = useTranslation();
   const [searchParams] = useSearchParams();
+  
   const [activeRole, setActiveRole] = useState("user");
   const [activeMode, setActiveMode] = useState("login");
+
 
   useEffect(() => {
     // 1. Check URL first
@@ -35,6 +39,7 @@ export default function SplitAuthPage() {
     }
   }, [searchParams]);
 
+
   return (
     <div className={`auth-page ${activeRole}-theme`}>
       {/* Animated Background */}
@@ -50,17 +55,19 @@ export default function SplitAuthPage() {
 
       {/* Main Content */}
       <div className="auth-card">
-        {/* Logo Section */}
-        <div className="auth-header">
-          <img src="/moondala-logo.png" alt="Moondala" className="w-16 h-16 mb-4 object-contain" />
-          <p className="auth-subtitle">
-            {activeRole === "user" ? "Your marketplace universe awaits" : "Grow your business with us"}
-          </p>
-        </div>
 
-        {/* Role Toggle */}
-        <div className="role-toggle">
-          <button
+          {/* Logo Section */}
+          <div className="auth-header mb-6">
+            <img src="/moondala-logo.png" alt="Moondala" className="w-12 h-12 mb-3 object-contain" />
+            <p className="auth-subtitle text-sm">
+              {activeRole === "user" ? "Your marketplace universe awaits" : "Grow your business with us"}
+            </p>
+          </div>
+
+          {/* Role Toggle */}
+          <div className="role-toggle mb-6">
+            <button
+
             className={`role-option ${activeRole === "user" ? "active" : ""}`}
             onClick={() => { setActiveRole("user"); setActiveMode("login"); }}
           >
@@ -107,7 +114,7 @@ export default function SplitAuthPage() {
 
         {/* Footer */}
         <div className="auth-footer">
-          <p>© 2026 Moondala Inc. All rights reserved.</p>
+          <p className="text-xs text-slate-500">© 2026 Moondala Inc. All rights reserved.</p>
         </div>
       </div>
     </div>

@@ -25,26 +25,28 @@
   --radius: 16px;
 }
 
-/* Light Theme */
+/* Light Theme - Soft Luxury Slate */
 [data-theme="light"] {
-  --bg0: #f9fafb;
-  --bg1: #f3f4f6;
-  --bg2: #e5e7eb;
+  --bg0: #f8fafc;  /* Slate-50: Main application background */
+  --bg1: #ffffff;  /* Pure White: Cards, Sidebar, Header */
+  --bg2: #f1f5f9;  /* Slate-100: Secondary elements, inputs */
 
-  --panel: rgba(0,0,0,0.04);
-  --panel2: rgba(0,0,0,0.02);
-  --border: rgba(0,0,0,0.10);
-  --border2: rgba(0,0,0,0.06);
+  --panel: #ffffff;
+  --panel2: #f8fafc;
+  
+  --border: #e2e8f0;  /* Slate-200: Soft borders */
+  --border2: #f1f5f9; /* Slate-100: Very subtle dividers */
 
-  --text: #1f2937;
-  --muted: rgba(31,41,55,0.60);
+  --text: #0f172a;    /* Slate-900: Deep Navy/Black text (high contrast but not harsh) */
+  --muted: #64748b;   /* Slate-500: Secondary text */
 
-  --blue: rgba(59,130,246,0.12);
-  --purple: rgba(147,51,234,0.10);
-  --green: rgba(34,197,94,0.10);
-  --red: rgba(239,68,68,0.10);
+  /* Softer colored tinges */
+  --blue: rgba(59,130,246,0.08); 
+  --purple: rgba(147,51,234,0.08);
+  --green: rgba(34,197,94,0.08);
+  --red: rgba(239,68,68,0.08);
 
-  --shadow: 0 10px 30px rgba(0,0,0,0.10);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   --radius: 16px;
 }
 

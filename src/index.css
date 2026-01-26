@@ -47,27 +47,31 @@
   --mdSidebarCollapsedW: 84px; /* collapsed sidebar width */
 }
 
-/* Light theme */
+/* Light theme - Softer Luxury Palette */
 [data-theme="light"],
 [data-theme="light"] body {
   color-scheme: light;
-  --background: 0 0% 98%; /* light gray */
-  --foreground: 222 47% 11%; /* dark text */
+  /* Soft Slate-50 background, not stark white */
+  --background: 210 40% 98%; 
+  --foreground: 222 47% 11%; /* Slate-900 */
 
-  --card: 0 0% 100%; /* white */
+  /* White cards with slight off-white tint */
+  --card: 0 0% 100%; 
   --card-foreground: 222 47% 11%;
 
   --popover: 0 0% 100%;
   --popover-foreground: 222 47% 11%;
 
   --primary: 262 83% 58%; /* violet (same) */
-  --primary-foreground: 210 40% 98%;
+  --primary-foreground: 0 0% 100%; /* Ensure white text on primary buttons */
 
-  --secondary: 215 28% 75%; /* light slate */
+  /* Softer secondary backgrounds */
+  --secondary: 210 40% 96.1%; 
   --secondary-foreground: 222 47% 11%;
 
-  --muted: 215 28% 80%;
-  --muted-foreground: 215 20% 40%;
+  /* Softer muted elements */
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215 16% 47%;
 
   --accent: 199 89% 48%; /* cyan (same) */
   --accent-foreground: 222 47% 11%;
@@ -75,9 +79,10 @@
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 215 28% 88%; /* light border */
-  --input: 215 28% 90%;
-  --ring: 199 89% 48%;
+  /* Softer borders */
+  --border: 214 32% 91%; 
+  --input: 214 32% 91%;
+  --ring: 262 83% 58%; /* violet ring for focus */
 }
 
 @layer base {

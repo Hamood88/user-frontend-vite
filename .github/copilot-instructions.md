@@ -27,8 +27,16 @@ VITE_API_BASE=http://localhost:5000
 
 ## Key Feature Patterns
 
-### 1. Earn More (Referrals)
+### 1. Internationalization (i18n) - CRITICAL
+- **Mandatory**: ALL user-facing text must be wrapped in `t('key')`. Never use hardcoded English strings.
+- **Library**: `i18next`, `react-i18next`.
+- **Usage**: `const { t } = useTranslation();` -> `{t('welcome_message')}`.
+- **Keys**: Add new keys to `public/locales/en/translation.json` (English is source).
+- **RTL**: Automatic handling via `dir="rtl"` on body when Arabic is selected.
+
+### 2. Earn More (Referrals)
 - **Docs**: See `EARN_MORE_FEATURE.md` in root for implementation details.
+
 - **Components**: `EarnMore.jsx` (Dual tabs for User/Shop invites).
 - **QR Codes**: Client-side generation with error correction using `qrcode` package.
 - **Routes**: `/earn-more`, `/refer/user/:code` (signup), `/refer/shop/:code`.
@@ -62,10 +70,12 @@ VITE_API_BASE=http://localhost:5000
     - Cloud name for Moondala: `dohetomaw`.
 
 ### Styling Strategy
-- **Primary**: Tailwind CSS v4 (No `tailwind.config.js` needed for v4 defaults, but check `src/index.css` for `@theme`).
+- **Tailwind CSS v4**: Uses `@tailwindcss/postcss`.
+- **Config**: Keeps `tailwind.config.js` for theme extensions (colors, fonts). Do not delete.
 - **Custom**: CSS files in `src/styles/*.css` (e.g. `appLayoutModern.css`) for complex animations/layouts.
 - **Icons**: `lucide-react`.
 - **Animations**: `framer-motion` v12.
+
 
 ### Adding a New Page
 1.  Create `src/pages/NewPage.jsx`.
@@ -76,7 +86,9 @@ VITE_API_BASE=http://localhost:5000
 
 ## Critical Rules
 1.  **Directory Awareness**: Confirm you are in `user-frontend-vite-temp/`, not the legacy `user-frontend/` folder.
-2.  **No Vendor/Admin Access**: Never call `/api/shop/*` or `/api/admin/*`. User frontend strictly uses `/api/users/*` and `/api/public/*`.
+2.  **Stack Specifics**: Use **React 18** and **React Router v6**. Do NOT use Shop Frontend's React 19/Router v7 patterns.
+3.  **No Vendor/Admin Access**: Never call `/api/shop/*` or `/api/admin/*`. User frontend strictly uses `/api/users/*` and `/api/public/*`.
+
 3.  **Token Hygiene**: Use `setUserSession({ token, user })` to update auth state atomically; use `clearUserSession()` to clear both.
 4.  **Referral Logic**: QR codes are generated client-side; referral codes are tracked via `referredBy` in the `User` model on the backend.
 5.  **Image Resolution**: Use `toAbsUrl()` for ALL image/video sources. It handles localhost→backend URL replacement and Cloudinary paths automatically.
@@ -85,8 +97,10 @@ VITE_API_BASE=http://localhost:5000
 ## Deployment
 - **Platform**: Vercel (https://moondala.one)
 - **Build Command**: `npm run build` (outputs to `dist/`)
-- **Environment Variables**: Set in `vercel.json` or Vercel dashboard.
-- **Error Boundary**: `App.jsx` contains a top-level `ErrorBoundary` to catch crashes and direct users to `/_probe`.
+- **Environment Variables**: Set in `vercel.json` or Vercel dashboard
+- **Framework Preset**: Vite
+- **Root Directory**: `user-frontend-vite-temp/` (if deploying from monorepo)
+- **Error Boundary**: `App.jsx` contains a top-level `ErrorBoundary` to catch crashes and direct users to `/_probe`
 
 ## Common Patterns
 

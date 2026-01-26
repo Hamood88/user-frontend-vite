@@ -2,7 +2,8 @@
 
 .cart-wrap {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   padding: 20px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
@@ -20,7 +21,7 @@
 .cart-header h1 {
   margin: 0;
   font-size: 32px;
-  color: white;
+  color: hsl(var(--foreground));
   font-weight: 700;
 }
 
@@ -32,9 +33,9 @@
 
 .cart-back-btn,
 .cart-clear-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
@@ -45,7 +46,8 @@
 
 .cart-back-btn:hover,
 .cart-clear-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
   transform: translateY(-2px);
 }
 

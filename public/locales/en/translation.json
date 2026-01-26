@@ -161,5 +161,11 @@
         "section4Minor": "For minor violations: Warnings, temporary feature restrictions, or reward holds."
       }
     }
+  },
+  "onboarding": {
+    "choose_language": "Choose your language",
+    "how_it_works_title": "How Moondala Works",
+    "how_it_works_desc": "Big platforms profit from every order — you get nothing. Moondala changes that.\n\nInstead of keeping the transaction fees, Moondala shares them with users through the referral tree.\n\nLife is hard and expensive, so Moondala helps you turn your network into extra income.",
+    "continue": "Continue"
   }
 }
