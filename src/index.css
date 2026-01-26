@@ -87,13 +87,6 @@
   /* High contrast specific overrides */
   --high-contrast-text: #0f172a;
 }
-  --destructive-foreground: 0 0% 100%;
-
-  /* Visible but subtle borders */
-  --border: 214 25% 82%; /* More visible gray borders */
-  --input: 214 25% 85%; /* Clearer input borders */
-  --ring: 262 70% 50%; /* Violet ring for focus */
-}
 
 @layer base {
   * {
