@@ -618,15 +618,15 @@ export function UserAuthForm({ mode }) {
       )}
 
       {mode === "signup" && (
-        <div className="flex items-start gap-3 mt-4 p-3 bg-muted/30 border border-border rounded-lg">
+        <div className="flex items-start gap-3 mt-4">
           <input
             type="checkbox"
             id="termsAgreement"
             checked={termsAgreed}
             onChange={(e) => setTermsAgreed(e.target.checked)}
-            className="mt-1 w-4 h-4 text-primary bg-muted border-border rounded cursor-pointer"
+            className="mt-1 w-5 h-5 text-primary bg-background border-2 border-primary/30 rounded cursor-pointer flex-shrink-0"
           />
-          <label htmlFor="termsAgreement" className="text-sm leading-relaxed cursor-pointer text-muted-foreground">
+          <label htmlFor="termsAgreement" className="text-sm leading-relaxed cursor-pointer text-foreground">
             {t('legal.agreeToTerms')}{' '}
             <Link to="/legal/terms" target="_blank" className="text-foreground underline hover:opacity-80">
               {t('legal.termsLink')}
