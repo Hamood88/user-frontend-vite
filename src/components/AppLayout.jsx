@@ -219,10 +219,6 @@ export default function AppLayout() {
               <span>{item.label}</span>
             </NavLink>
           ))}
-          <button type="button" className="md-mLogout" onClick={logout}>
-            <LogOut className="w-5 h-5" />
-            Log out
-          </button>
         </div>
       )}
 
