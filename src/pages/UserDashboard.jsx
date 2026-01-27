@@ -460,7 +460,7 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
           {display}
         </div>
         {subValue ? (
-          <div className="text-xs font-semibold mt-2 text-gray-700 dark:text-gray-300">{subValue}</div>
+          <div className="text-sm font-bold mt-2 text-gray-900 dark:text-white">{subValue}</div>
         ) : null}
       </div>
     </div>
