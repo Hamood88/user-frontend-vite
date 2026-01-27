@@ -406,6 +406,18 @@ export function apiUpload(path, formData, opts = {}) {
     auth: true,
   });
 }
+
+/* ================================
+   ✅ CAREERS
+   ================================ */
+export function submitCareerApplication(formData) {
+  return request("/api/careers/apply", {
+    method: "POST",
+    body: formData,
+    isFormData: true,
+    auth: false, // Public endpoint
+  });
+}
 export function apiUploadPut(path, formData, opts = {}) {
   return request(path, {
     method: "PUT",

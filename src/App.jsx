@@ -26,6 +26,7 @@ import Cart from "./pages/Cart";
 import ProductDetailsUnified from "./pages/ProductDetailsUnified";
 import PublicShareRedirect from "./pages/PublicShareRedirect";
 import EarnMore from "./pages/EarnMore";
+import Careers from "./pages/Careers";
 import ReferralLanding from "./pages/ReferralLanding";
 
 /* ✅ PUBLIC SHOP PAGES */
@@ -307,6 +308,7 @@ export default function App() {
             <Route path="/cart" element={<Cart />} />
             
             <Route path="/earn-more" element={<EarnMore />} />
+            <Route path="/careers" element={<Careers />} />
 
             <Route path="/settings" element={<Settings />} />
 

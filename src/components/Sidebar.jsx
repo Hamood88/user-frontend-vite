@@ -12,7 +12,8 @@ import {
   ShoppingCart, 
   DollarSign, 
   User, 
-  Settings 
+  Settings,
+  Briefcase
 } from "lucide-react";
 import "../styles/Sidebar.css";
 import { apiGet, API_BASE, toAbsUrl } from "../api.jsx";
@@ -168,6 +169,7 @@ export default function Sidebar({ collapsed = false, onToggle }) {
         <NavItem to="/mall" label="Mall" collapsed={collapsed} icon={Store} theme="purple" />
         <NavItem to="/cart" label="Cart" collapsed={collapsed} icon={ShoppingCart} theme="teal" />
         <NavItem to="/earn-more" label="Earn More" collapsed={collapsed} icon={DollarSign} theme="green" />
+        <NavItem to="/careers" label="Careers" collapsed={collapsed} icon={Briefcase} theme="rose" />
         <NavItem to="/profile" label="Profile" collapsed={collapsed} icon={User} theme="indigo" />
         <NavItem to="/settings" label="Settings" collapsed={collapsed} icon={Settings} theme="gray" />
       </nav>
@@ -190,6 +192,7 @@ const THEMES = {
   green: { active: "bg-green-500/10 text-green-500 border-green-500/20 shadow-[0_0_15px_-3px_rgba(34,197,94,0.2)]", icon: "text-green-500" },
   indigo: { active: "bg-indigo-500/10 text-indigo-500 border-indigo-500/20 shadow-[0_0_15px_-3px_rgba(99,102,241,0.2)]", icon: "text-indigo-500" },
   gray: { active: "bg-gray-500/10 text-gray-500 border-gray-500/20 shadow-[0_0_15px_-3px_rgba(107,114,128,0.2)]", icon: "text-gray-500" },
+  rose: { active: "bg-rose-500/10 text-rose-500 border-rose-500/20 shadow-[0_0_15px_-3px_rgba(244,63,94,0.2)]", icon: "text-rose-500" },
 };
 
 function NavItem({ to, label, collapsed, icon: Icon, theme = "violet" }) {
