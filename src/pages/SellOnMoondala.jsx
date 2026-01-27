@@ -216,9 +216,17 @@ export default function SellOnMoondala() {
 
         {/* Feature 5 */}
         <FeatureSection
-          badge="COMMUNITY"
-          title="Supported by Sellers"
-          desc="Join a thriving community of entrepreneurs. Access exclusive workshops, seller forums, and 24/7 dedicated support to help you navigate every step of your journey."
+          badge="SOCIAL COMMERCE"
+          title="Your shop doesn’t sell alone"
+          desc={
+            <>
+              On Moondala, shops and users interact in real time.
+              Post updates, feature products, and engage with people who already follow your shop.
+              <br /><br />
+              Every post is a touchpoint. Every interaction builds trust.
+              And trust turns followers into buyers.
+            </>
+          }
           imgUrl={feedImg}
           align="left"
         />
