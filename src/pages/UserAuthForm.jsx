@@ -624,10 +624,14 @@ export function UserAuthForm({ mode }) {
             id="termsAgreement"
             checked={termsAgreed}
             onChange={(e) => setTermsAgreed(e.target.checked)}
-            className="mt-1 w-5 h-5 accent-primary bg-transparent border-2 border-white/40 rounded cursor-pointer flex-shrink-0"
-            style={{ backgroundColor: 'transparent' }}
+            className="mt-1 w-5 h-5 rounded cursor-pointer flex-shrink-0"
+            style={{ 
+              backgroundColor: '#ffffff',
+              accentColor: '#8b5cf6',
+              border: 'none'
+            }}
           />
-          <label htmlFor="termsAgreement" className="text-sm leading-relaxed cursor-pointer" style={{ color: 'rgba(248, 250, 252, 0.9)' }}>
+          <label htmlFor="termsAgreement" className="text-sm leading-relaxed cursor-pointer" style={{ color: '#f8fafc' }}>
             {t('legal.agreeToTerms')}{' '}
             <Link to="/legal/terms" target="_blank" className="text-foreground underline hover:opacity-80">
               {t('legal.termsLink')}
