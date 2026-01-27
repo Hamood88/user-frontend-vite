@@ -205,3 +205,18 @@
     box-shadow: 0 0 0 2px hsl(var(--ring));
   }
 }
+
+/* Global Glass Card - Adaptive */
+.glass-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.8);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  transition: all 0.2s ease;
+}
+
+[data-theme='dark'] .glass-card {
+  background: hsl(var(--card) / 0.7);
+  backdrop-filter: blur(12px);
+}
+

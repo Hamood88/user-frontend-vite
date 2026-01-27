@@ -855,31 +855,34 @@ export default function Messages() {
   }
 
   /* =========================
-    THEME
+    THEME (Refactored to use CSS Variables for Light/Dark Mode)
     ========================= */
   const theme = {
-    text: "#e5e7eb",
-    muted: "#94a3b8",
-    border: "rgba(255,255,255,0.08)",
-    panel: "rgba(255,255,255,0.04)",
-    panel2: "rgba(255,255,255,0.06)",
-    hover: "rgba(59,130,246,0.18)",
-    active: "rgba(59,130,246,0.28)",
-    accent: "#3b82f6",
-    dangerBg: "rgba(239,68,68,0.14)",
-    dangerBorder: "rgba(239,68,68,0.25)",
-    dangerText: "#fecaca",
-    inputBg: "rgba(0,0,0,0.30)",
+    text: "hsl(var(--foreground))",
+    muted: "hsl(var(--muted-foreground))",
+    border: "hsl(var(--border))",
+    panel: "hsl(var(--card))",      // "glass-card" background
+    panel2: "hsl(var(--secondary))", // slightly distinct
+    
+    hover: "hsl(var(--accent) / 0.5)",
+    active: "hsl(var(--accent))",
+    accent: "hsl(var(--primary))", // "me" bubble color
+    
+    dangerBg: "hsl(var(--destructive) / 0.15)",
+    dangerBorder: "hsl(var(--destructive) / 0.3)",
+    dangerText: "hsl(var(--destructive))",
+    
+    inputBg: "hsl(var(--input) / 0.4)",
 
     // badges
-    badgeMeBg: "rgba(59,130,246,0.22)",
-    badgeMeBd: "rgba(59,130,246,0.45)",
-    badgeShopBg: "rgba(168,85,247,0.18)",
-    badgeShopBd: "rgba(168,85,247,0.45)",
-    badgeFriendBg: "rgba(34,197,94,0.18)",
-    badgeFriendBd: "rgba(34,197,94,0.45)",
-    badgeUserBg: "rgba(148,163,184,0.14)",
-    badgeUserBd: "rgba(148,163,184,0.35)",
+    badgeMeBg: "hsl(var(--primary) / 0.15)",
+    badgeMeBd: "hsl(var(--primary) / 0.3)",
+    badgeShopBg: "hsl(262 80% 50% / 0.15)",
+    badgeShopBd: "hsl(262 80% 50% / 0.3)",
+    badgeFriendBg: "hsl(142 70% 50% / 0.15)",
+    badgeFriendBd: "hsl(142 70% 50% / 0.3)",
+    badgeUserBg: "hsl(var(--muted) / 0.5)",
+    badgeUserBd: "hsl(var(--border))",
   };
 
   // Mobile: show only chat when conversation is selected, else show inbox
@@ -1612,7 +1615,7 @@ const styles = {
     padding: 10,
     overflow: "auto",
     flex: 1,
-    background: "rgba(0,0,0,0.10)",
+    background: "transparent",
     minHeight: 0,
   }),
 
@@ -1624,9 +1627,9 @@ const styles = {
     borderRadius: 14,
     fontWeight: 700,
     lineHeight: 1.35,
-    background: admin ? "rgba(234, 179, 8, 0.15)" : (mine ? t.accent : "rgba(255,255,255,0.08)"), 
-    color: mine ? "#fff" : t.text,
-    border: admin ? "2px solid rgba(234, 179, 8, 0.5)" : (mine ? "none" : `1px solid ${t.border}`),
+    background: admin ? "hsl(48 96% 53% / 0.15)" : (mine ? t.accent : t.panel2), 
+    color: mine ? "hsl(var(--primary-foreground))" : t.text,
+    border: admin ? "2px solid hsl(48 96% 53% / 0.5)" : (mine ? "none" : `1px solid ${t.border}`),
   }),
 
   senderBadge: (t, kind) => {

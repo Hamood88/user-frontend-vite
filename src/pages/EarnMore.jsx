@@ -181,8 +181,8 @@ export default function EarnMore() {
     <div className="min-h-screen bg-background text-foreground pb-20 overflow-x-hidden relative">
       {/* Background Ambience - Lighter in light mode */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/10 dark:bg-purple-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/10 dark:bg-blue-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s' }} />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/20 dark:bg-purple-600/30 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/20 dark:bg-blue-600/30 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s' }} />
       </div>
 
       <div className="max-w-5xl mx-auto px-4 pt-8 relative z-10">
@@ -211,21 +211,21 @@ export default function EarnMore() {
             label="Total Invited" 
             value={stats.totalInvited} 
             icon={Users} 
-            color="bg-blue-500" 
+            color="bg-gradient-to-br from-blue-600 to-cyan-400 text-white" 
             delay={0.1}
           />
           <StatCard 
             label="Total Earned" 
             value={`$${Number(stats.totalEarned || 0).toFixed(2)}`} 
             icon={Award} 
-            color="bg-green-500" 
+            color="bg-gradient-to-br from-emerald-500 to-lime-500 text-white" 
             delay={0.2}
           />
           <StatCard 
             label="Your Code" 
             value={referralCode} 
             icon={Zap} 
-            color="bg-purple-500" 
+            color="bg-gradient-to-br from-violet-600 to-fuchsia-500 text-white" 
             delay={0.3}
             isCode
           />
