@@ -1,20 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { apiPost } from "../api";
 
 export function ShopAuthForm({ mode }) {
+  const [searchParams] = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   
-  const [shopName, setShopName] = useState("");
-  const [ownerFirstName, setOwnerFirstName] = useState("");
-  const [ownerLastName, setOwnerLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [dobDay, setDobDay] = useState("");
+  const [dobMonth, setDobMonth] = useState("");
+  const [dobYear, setDobYear] = useState("");
   const [country, setCountry] = useState("");
+  const [phone, setPhone] = useState("");
   const [inviterCode, setInviterCode] = useState("");
+
+  // Auto-fill inviter code from URL
+  useEffect(() => {
+    const codeFromUrl = searchParams.get("inviter") || 
+                       searchParams.get("code") || 
+                       searchParams.get("ref") || "";
+    if (codeFromUrl) {
+      setInviterCode(codeFromUrl.toUpperCase());
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,10 +33,12 @@ export function ShopAuthForm({ mode }) {
     setLoading(true);
 
     try {
+      const dateOfBirth = `${dobYear}-${dobMonth.padStart(2, '0')}-${dobDay.padStart(2, '0')}`;
+      
       await apiPost("/shop-early-access/apply", {
-        shopName,
-        ownerFirstName,
-        ownerLastName,
+        shopName: email.split('@')[0], // Generate shop name from email
+        ownerFirstName: "Shop",
+        ownerLastName: "Owner",
         email,
         password,
         phone,
@@ -143,36 +156,8 @@ export function ShopAuthForm({ mode }) {
       )}
 
       <input
-        type="text"
-        placeholder="Shop Name *"
-        value={shopName}
-        onChange={(e) => setShopName(e.target.value)}
-        required
-        style={inputStyle}
-      />
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-        <input
-          type="text"
-          placeholder="Owner First Name *"
-          value={ownerFirstName}
-          onChange={(e) => setOwnerFirstName(e.target.value)}
-          required
-          style={inputStyle}
-        />
-        <input
-          type="text"
-          placeholder="Owner Last Name *"
-          value={ownerLastName}
-          onChange={(e) => setOwnerLastName(e.target.value)}
-          required
-          style={inputStyle}
-        />
-      </div>
-
-      <input
         type="email"
-        placeholder="Shop Email *"
+        placeholder="Email *"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
@@ -189,23 +174,46 @@ export function ShopAuthForm({ mode }) {
         style={inputStyle}
       />
 
-      <input
-        type="tel"
-        placeholder="Phone Number *"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        required
-        style={inputStyle}
-      />
-
-      <input
-        type="date"
-        placeholder="Owner Date of Birth *"
-        value={dateOfBirth}
-        onChange={(e) => setDateOfBirth(e.target.value)}
-        required
-        style={inputStyle}
-      />
+      <div>
+        <label style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '6px', display: 'block' }}>
+          Date of Birth *
+        </label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+          <select
+            value={dobDay}
+            onChange={(e) => setDobDay(e.target.value)}
+            required
+            style={selectStyle}
+          >
+            <option value="">Day</option>
+            {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+              <option key={d} value={d}>{d}</option>
+            ))}
+          </select>
+          <select
+            value={dobMonth}
+            onChange={(e) => setDobMonth(e.target.value)}
+            required
+            style={selectStyle}
+          >
+            <option value="">Month</option>
+            {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((m, i) => (
+              <option key={i} value={i + 1}>{m}</option>
+            ))}
+          </select>
+          <select
+            value={dobYear}
+            onChange={(e) => setDobYear(e.target.value)}
+            required
+            style={selectStyle}
+          >
+            <option value="">Year</option>
+            {Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - i).map(y => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       <input
         type="text"
@@ -217,13 +225,30 @@ export function ShopAuthForm({ mode }) {
       />
 
       <input
-        type="text"
-        placeholder="Inviter Code (required) *"
-        value={inviterCode}
-        onChange={(e) => setInviterCode(e.target.value)}
+        type="tel"
+        placeholder="Phone Number *"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
         required
         style={inputStyle}
       />
+
+      <input
+        type="text"
+        placeholder="Inviter Code (optional)"
+        value={inviterCode}
+        onChange={(e) => setInviterCode(e.target.value)}
+        style={{
+          ...inputStyle,
+          ...(inviterCode ? { background: 'rgba(34, 197, 94, 0.1)', borderColor: 'rgba(34, 197, 94, 0.3)' } : {})
+        }}
+        disabled={!!searchParams.get("inviter")}
+      />
+      {inviterCode && (
+        <span style={{ fontSize: '12px', color: '#22c55e', marginTop: '-8px' }}>
+          ✓ Inviter code: {inviterCode}
+        </span>
+      )}
 
       <button
         type="submit"
@@ -256,6 +281,11 @@ const inputStyle = {
   fontSize: '14px',
   outline: 'none',
   transition: 'border-color 0.2s',
+};
+
+const selectStyle = {
+  ...inputStyle,
+  cursor: 'pointer',
 };
 
 export default ShopAuthForm;
