@@ -319,7 +319,7 @@ export default function UserDashboard() {
 
       {/* KPI Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <KpiCard title="Total Earnings" value={money.total} icon={DollarSign} trend="+"
+        <KpiCard title="Total Earnings" value={money.total} icon={DollarSign}
           color="violet"
         />
         <KpiCard
