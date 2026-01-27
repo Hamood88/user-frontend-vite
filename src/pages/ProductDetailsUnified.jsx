@@ -243,10 +243,17 @@ export default function ProductDetailsUnified() {
 
   // ✅ Redirect to shop feed page if product not found
   useEffect(() => {
-    if (err && shopIdRef) {
-      nav(`/shop/${shopIdRef}/feed`, { replace: true });
+    if (err) {
+      // Priority 1: shop ID from navigation state (passed from orders)
+      const stateShopId = loc.state?.shopId;
+      // Priority 2: shop ID extracted from API response
+      const sid = stateShopId || shopIdRef;
+      
+      if (sid) {
+        nav(`/shop/${sid}/feed`, { replace: true });
+      }
     }
-  }, [err, shopIdRef, nav]);
+  }, [err, shopIdRef, loc.state, nav]);
 
   const pid = String(product?._id || product?.id || id || "").trim();
   const title = product?.title || product?.name || "Product";

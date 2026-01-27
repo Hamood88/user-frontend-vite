@@ -552,7 +552,7 @@ export default function MyOrders() {
                     style={{ ...S.thumbWrap, cursor: "pointer" }}
                     onClick={() => {
                       const pid = pickProductId(o);
-                      if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders" } });
+                      if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders", shopId: o.shopId } });
                     }}
                   >
                     {productImg ? (
@@ -574,7 +574,7 @@ export default function MyOrders() {
                       style={{ ...S.product, cursor: "pointer" }}
                       onClick={() => {
                         const pid = pickProductId(o);
-                        if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders" } });
+                        if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders", shopId: o.shopId } });
                       }}
                     >
                       {o.productTitle || "Product"}
