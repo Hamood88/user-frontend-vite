@@ -245,32 +245,6 @@ export default function ProductDetailsUnified() {
       if (shopId) {
         // If we have shop ID from partial product data
         nav(`/shop/${shopId}/feed`, { replace: true });
-      } else {
-        // Try to fetch product to get shop ID, then redirect
-        (async () => {
-          try {
-            const endpoints = [
-              `/api/mall/products/${encodeURIComponent(id)}`,
-              `/api/products/${encodeURIComponent(id)}`,
-            ];
-            
-            for (const url of endpoints) {
-              try {
-                const res = await request(url, { auth: false });
-                const prod = res?.product || res?.data?.product || res?.data || res;
-                const sid = getShopIdFromProduct(prod);
-                if (sid) {
-                  nav(`/shop/${sid}/feed`, { replace: true });
-                  return;
-                }
-              } catch {}
-            }
-            // If no shop ID found, redirect to mall
-            nav('/mall', { replace: true });
-          } catch {
-            nav('/mall', { replace: true });
-          }
-        })();
       }
     }
   }, [err, product, id, nav]);
