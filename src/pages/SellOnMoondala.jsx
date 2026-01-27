@@ -14,9 +14,14 @@ import editorImg from '../assets/screenshot-editor.png';
 export default function SellOnMoondala() {
   const nav = useNavigate();
   const formRef = useRef(null);
+  const featuresRef = useRef(null);
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToFeatures = () => {
+    featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
 
@@ -108,7 +113,7 @@ export default function SellOnMoondala() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}>
-            Scale Your Business with <span style={{ color: '#22c55e', WebkitTextFillColor: '#22c55e' }}>Moondala</span>
+            This is not another marketplace
           </h1>
           
           <p style={{
@@ -120,12 +125,12 @@ export default function SellOnMoondala() {
             marginLeft: 'auto',
             marginRight: 'auto',
           }}>
-            The next-generation marketplace that empowers map-based discovery, equitable growth, and community-first commerce.
+            Moondala replaces ads and algorithms with social discovery, targeted malls, and fair growth — built for shops that want real customers, not traffic.
           </p>
 
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
-              onClick={scrollToForm}
+              onClick={scrollToFeatures}
               style={{
                 padding: '16px 40px',
                 background: '#22c55e',
@@ -141,7 +146,7 @@ export default function SellOnMoondala() {
               onMouseEnter={(e) => { e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = '0 8px 30px rgba(34, 197, 94, 0.4)'; }}
               onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = '0 4px 20px rgba(34, 197, 94, 0.3)'; }}
             >
-              Start Selling Today
+              Why Moondala works →
             </button>
           </div>
         </div>
@@ -150,7 +155,7 @@ export default function SellOnMoondala() {
       {/* Stats Banner: REMOVED as requested */}
 
       {/* Features Grid */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', marginTop: '100px' }}>
+      <div ref={featuresRef} style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', marginTop: '100px', scrollMarginTop: '100px' }}>
         
         {/* Feature 1 */}
         <FeatureSection
