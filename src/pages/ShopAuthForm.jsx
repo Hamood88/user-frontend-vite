@@ -2,6 +2,33 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { apiPost } from "../api";
 
+const COUNTRIES = [
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Australia",
+  "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
+  "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei",
+  "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Republic",
+  "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus",
+  "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador",
+  "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia",
+  "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
+  "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland",
+  "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan",
+  "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
+  "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania",
+  "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco",
+  "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua",
+  "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau",
+  "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal",
+  "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
+  "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles",
+  "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa",
+  "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland",
+  "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga",
+  "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine",
+  "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu",
+  "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+].sort();
+
 export function ShopAuthForm({ mode }) {
   const [searchParams] = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
@@ -38,7 +65,7 @@ export function ShopAuthForm({ mode }) {
     try {
       const dateOfBirth = `${dobYear}-${dobMonth.padStart(2, '0')}-${dobDay.padStart(2, '0')}`;
       
-      await apiPost("/shop-early-access/apply", {
+      const payload = {
         shopName,
         ownerFirstName,
         ownerLastName,
@@ -47,11 +74,16 @@ export function ShopAuthForm({ mode }) {
         phone,
         dateOfBirth,
         country,
-        inviterCode: inviterCode.trim().toUpperCase() || undefined
-      });
+        inviterCode: inviterCode.trim().toUpperCase()
+      };
+
+      console.log("Submitting shop registration:", payload);
+      
+      await apiPost("/shop-early-access/apply", payload);
       
       setSubmitted(true);
     } catch (err) {
+      console.error("Shop registration error:", err);
       setError(err?.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
@@ -241,14 +273,17 @@ export function ShopAuthForm({ mode }) {
             <option value="">Year</option>
             {Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - i).map(y => (
               <option key={y} value={y}>{y}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <input
-        type="text"
-        placeholder="Country *"
+       select
+        value={country}
+        onChange={(e) => setCountry(e.target.value)}
+        required
+        style={selectStyle}
+      >
+        <option value="">Select Country *</option>
+        {COUNTRIES.map(c => (
+          <option key={c} value={c}>{c}</option>
+        ))}
+      </select placeholder="Country *"
         value={country}
         onChange={(e) => setCountry(e.target.value)}
         required
@@ -266,9 +301,10 @@ export function ShopAuthForm({ mode }) {
 
       <input
         type="text"
-        placeholder="Inviter Code (optional)"
+        placeholder="Inviter Code *"
         value={inviterCode}
         onChange={(e) => setInviterCode(e.target.value)}
+        required
         style={{
           ...inputStyle,
           ...(inviterCode ? { background: 'rgba(34, 197, 94, 0.1)', borderColor: 'rgba(34, 197, 94, 0.3)' } : {})
@@ -278,6 +314,11 @@ export function ShopAuthForm({ mode }) {
       {inviterCode && (
         <span style={{ fontSize: '12px', color: '#22c55e', marginTop: '-8px' }}>
           ✓ Inviter code: {inviterCode}
+        </span>
+      )}
+      {!inviterCode && (
+        <span style={{ fontSize: '12px', color: '#fca5a5', marginTop: '-8px' }}>
+          Required - Use referral link or enter the code
         </span>
       )}
 
