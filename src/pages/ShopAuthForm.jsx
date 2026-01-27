@@ -74,7 +74,7 @@ export function ShopAuthForm({ mode }) {
         phone,
         dateOfBirth,
         country,
-        inviterCode: inviterCode.trim().toUpperCase()
+        inviterCode: inviterCode.trim().toUpperCase() || undefined
       };
 
       console.log("Submitting shop registration:", payload);
@@ -301,10 +301,9 @@ export function ShopAuthForm({ mode }) {
 
       <input
         type="text"
-        placeholder="Inviter Code *"
+        placeholder="Inviter Code (optional)"
         value={inviterCode}
         onChange={(e) => setInviterCode(e.target.value)}
-        required
         style={{
           ...inputStyle,
           ...(inviterCode ? { background: 'rgba(34, 197, 94, 0.1)', borderColor: 'rgba(34, 197, 94, 0.3)' } : {})
@@ -314,11 +313,6 @@ export function ShopAuthForm({ mode }) {
       {inviterCode && (
         <span style={{ fontSize: '12px', color: '#22c55e', marginTop: '-8px' }}>
           ✓ Inviter code: {inviterCode}
-        </span>
-      )}
-      {!inviterCode && (
-        <span style={{ fontSize: '12px', color: '#fca5a5', marginTop: '-8px' }}>
-          Required - Use referral link or enter the code
         </span>
       )}
 
