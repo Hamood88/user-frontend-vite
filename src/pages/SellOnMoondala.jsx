@@ -185,9 +185,15 @@ export default function SellOnMoondala() {
 
         {/* Feature 3 */}
         <FeatureSection
-          badge="DATA DRIVEN"
-          title="Analytics That Matter"
-          desc="Understand your customers like never before. Our dashboard provides real-time insights on traffic sources, popular products, and customer behavior to help you make smarter decisions."
+          badge="ACTIONABLE INSIGHTS"
+          title="See what actually drives your sales"
+          desc={
+            <>
+              Moondala analytics show you which products convert, which users become buyers, and how your shop spreads through social sharing.
+              <br /><br />
+              Instead of guessing, you see what’s working, who’s engaging, and where your next sales will come from.
+            </>
+          }
           imgUrl={analyticsImg}
           align="left"
         />
