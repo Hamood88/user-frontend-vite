@@ -19,15 +19,6 @@ export default function SellOnMoondala() {
     formRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  return (
-    <div style={{
-      background: '#09090b',
-      color: '#fff',
-      minHeight: '100vh',
-      fontFamily: '"Inter", system-ui, sans-serif',
-      paddingBottom: '80px',
-    }}>
-      {/* Navbar / Header */}
 
   return (
     <div style={{
