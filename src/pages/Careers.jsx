@@ -12,6 +12,9 @@ export default function Careers() {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
+    country: "",
+    state: "",
     role: "Frontend Developer",
     about: "",
   });
@@ -50,6 +53,9 @@ export default function Careers() {
       fd.append("firstName", formData.firstName);
       fd.append("lastName", formData.lastName);
       fd.append("email", formData.email);
+      fd.append("phone", formData.phone);
+      fd.append("country", formData.country);
+      fd.append("state", formData.state);
       fd.append("role", formData.role);
       fd.append("about", formData.about);
       fd.append("cv", cvFile);
@@ -152,6 +158,48 @@ export default function Careers() {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-black text-muted-foreground ml-1">Phone Number</label>
+            <input
+              required
+              type="tel"
+              placeholder="+1 (555) 000-0000"
+              className="w-full p-4 rounded-xl bg-accent/30 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-bold"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-sm font-black text-muted-foreground ml-1">Country</label>
+              <input
+                required
+                type="text"
+                placeholder="e.g. United States"
+                className="w-full p-4 rounded-xl bg-accent/30 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-bold"
+                value={formData.country}
+                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+              />
+            </div>
+            
+            {(formData.country.toLowerCase().includes("usa") || 
+              formData.country.toLowerCase().includes("united states") || 
+              formData.country.toLowerCase() === "us") && (
+              <div className="space-y-2">
+                <label className="text-sm font-black text-muted-foreground ml-1">State</label>
+                <input
+                  required
+                  type="text"
+                  placeholder="e.g. California"
+                  className="w-full p-4 rounded-xl bg-accent/30 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-bold"
+                  value={formData.state}
+                  onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                />
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
