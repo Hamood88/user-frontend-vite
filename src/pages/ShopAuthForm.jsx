@@ -2,6 +2,29 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { apiPost } from "../api";
 
+// Add global styles for select options
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `
+  select option {
+    background-color: #1e1e1e;
+    color: #fff;
+    padding: 8px;
+  }
+  select option:hover {
+    background-color: #22c55e;
+    color: #000;
+  }
+  select option:checked {
+    background: linear-gradient(#22c55e, #22c55e);
+    background-color: #22c55e !important;
+    color: #000 !important;
+  }
+`;
+if (typeof document !== 'undefined' && !document.querySelector('style[data-shop-select]')) {
+  styleSheet.setAttribute('data-shop-select', 'true');
+  document.head.appendChild(styleSheet);
+}
+
 const COUNTRIES = [
   "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Australia",
   "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
@@ -353,6 +376,14 @@ const selectStyle = {
   ...inputStyle,
   cursor: 'pointer',
   colorScheme: 'dark',
+  WebkitAppearance: 'none',
+  appearance: 'none',
+  backgroundColor: 'rgba(30, 30, 30, 0.8)',
+  backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/csvg%3e")`,
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'right 10px center',
+  backgroundSize: '20px',
+  paddingRight: '40px',
 };
 
 export default ShopAuthForm;
