@@ -169,9 +169,16 @@ export default function SellOnMoondala() {
 
         {/* Feature 2 */}
         <FeatureSection
-          badge="MAXIMUM EARNINGS"
-          title="Keep More of What You Earn"
-          desc="Stop losing 30% to platform fees. We offer industry-leading payout rates with a transparent commission structure, so you can reinvest in your products and grow faster."
+          badge="FAIR ECONOMY"
+          title="Earn more because customers come to you"
+          desc={
+            <>
+              Moondala doesn’t take your profits to fund ads.
+              Instead, growth is powered by users who share and invite others to earn — bringing you real buyers without expensive marketing costs.
+              <br /><br />
+              You sell more, spend less, and keep more of every sale.
+            </>
+          }
           imgUrl="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=2000&auto=format&fit=crop"
           align="right"
         />
