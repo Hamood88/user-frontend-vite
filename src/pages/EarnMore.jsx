@@ -427,17 +427,27 @@ function StatCard({ label, value, icon: Icon, color, delay, isCode }) {
 }
 
 function TabButton({ isActive, onClick, icon: Icon, label }) {
+  const isUsersTab = label === "Invite Users";
+  
   return (
     <button
       onClick={onClick}
-      className={`relative flex-1 py-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-colors z-10 ${
-        isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+      className={`relative flex-1 py-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all z-10 ${
+        isActive 
+          ? isUsersTab 
+            ? "text-white" 
+            : "text-white"
+          : "text-muted-foreground hover:text-foreground"
       }`}
     >
       {isActive && (
         <motion.div
           layoutId="tab-bg"
-          className="absolute inset-0 bg-background rounded-xl shadow-sm border border-border z-[-1]"
+          className={`absolute inset-0 rounded-xl shadow-lg z-[-1] ${
+            isUsersTab
+              ? "bg-gradient-to-r from-blue-500 to-indigo-600"
+              : "bg-gradient-to-r from-purple-500 to-pink-600"
+          }`}
           transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
         />
       )}
