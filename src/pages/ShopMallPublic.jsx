@@ -85,7 +85,11 @@ export default function ShopMallPublic() {
 
         // ✅ Fetch Mall Page AND All Products (for sidebar/search)
         Promise.all([
-            apiGet(`/public/shops/${shopId}/mall?_t=${timestamp}`),
+            apiGet(`/public/shops/${shopId}/mall?_t=${timestamp}`)
+                .catch(err => {
+                    console.error("Failed to load mall page:", err);
+                    return { ok: false, message: err.message || "Mall not found" };
+                }),
             apiGet(`/public/shops/${shopId}/products?limit=500`)
                 .then(res => res.products || [])
                 .catch(err => {
@@ -286,9 +290,19 @@ export default function ShopMallPublic() {
     if (error) {
         return (
             <div className="min-h-screen bg-zinc-950 text-white flex flex-col items-center justify-center p-4">
-                <h2 className="text-xl font-bold mb-2">Shop Unavailable</h2>
-                <p className="text-zinc-500 mb-6">{error}</p>
-                <a href="/" className="px-4 py-2 bg-zinc-800 rounded hover:bg-zinc-700">Go Home</a>
+                <div className="text-center max-w-md">
+                    <h2 className="text-2xl font-bold mb-3">Store Not Available</h2>
+                    <p className="text-zinc-400 mb-6">{error}</p>
+                    <p className="text-sm text-zinc-500 mb-8">
+                        This store may be temporarily unavailable or doesn't have any products yet.
+                    </p>
+                    <button 
+                        onClick={() => navigate('/')} 
+                        className="px-6 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-semibold transition-colors"
+                    >
+                        Back to Home
+                    </button>
+                </div>
             </div>
         );
     }
