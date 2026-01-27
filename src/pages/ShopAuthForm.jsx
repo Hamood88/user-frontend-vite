@@ -352,6 +352,7 @@ const inputStyle = {
 const selectStyle = {
   ...inputStyle,
   cursor: 'pointer',
+  colorScheme: 'dark',
 };
 
 export default ShopAuthForm;
