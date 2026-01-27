@@ -139,7 +139,6 @@
 
 /* comment box */
 .md-commentBox {
-  border-top: 1px solid hsl(var(--border));
   padding-top: 14px;
 }
 .md-commentInput {

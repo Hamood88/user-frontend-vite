@@ -41,6 +41,18 @@ const LinkedInIcon = (props) => (
   </svg>
 );
 
+const SnapchatIcon = (props) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.54 0-.958.089-1.272.149-.211.043-.391.074-.54.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.052-.15-.055-.225-.015-.243.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-1.107-.435-1.257-.93-1.197-1.273.09-.479.674-.793 1.168-.793.146 0 .27.029.383.074.42.194.789.3 1.104.3.234 0 .384-.06.465-.105l-.046-.569c-.098-1.626-.225-3.651.307-4.837C7.392 1.077 10.739.807 11.727.807l.419-.015h.06z"/>
+  </svg>
+);
+
+const TikTokIcon = (props) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+  </svg>
+);
+
 const DownloadIcon = (props) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
 );
@@ -149,22 +161,27 @@ export default function EarnMore() {
     const isUser = activeTab === "users";
     const link = isUser ? userReferralLink : shopReferralLink;
     
-    // Use custom message if available, otherwise fallback (though customMessage should always be set)
-    // Removed explicit code from message as requested, link already has it
+    // Custom message + link (link already contains the referral code)
     const finalMessage = `${customMessage}\n\n${link}`;
     
-    // Updated simple share logic
     const urls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`,
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(finalMessage)}`,
       whatsapp: `https://wa.me/?text=${encodeURIComponent(finalMessage)}`,
-      telegram: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(finalMessage)}`,
+      telegram: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(customMessage)}`,
+      snapchat: `https://www.snapchat.com/scan?attachmentUrl=${encodeURIComponent(link)}`,
+      tiktok: `https://www.tiktok.com/share?url=${encodeURIComponent(link)}`,
+      sms: `sms:?&body=${encodeURIComponent(finalMessage)}`,
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`,
       email: `mailto:?subject=Join Moondala!&body=${encodeURIComponent(finalMessage)}`,
     };
 
     if (urls[platform]) {
-      window.open(urls[platform], "_blank", "width=600,height=400");
+      if (platform === 'sms') {
+        window.location.href = urls[platform];
+      } else {
+        window.open(urls[platform], "_blank", "width=600,height=400");
+      }
     }
   };
 
@@ -309,6 +326,16 @@ export default function EarnMore() {
 
                 {/* Link Copy Section - Compact */}
                 <div className="bg-slate-100 dark:bg-black/40 rounded-xl p-4 mb-6 border border-slate-200 dark:border-slate-800 relative overflow-hidden flex items-center gap-4 shadow-inner">
+                   <div className="flex-shrink-0">
+                      <img 
+                        src="/moondala-logo.png" 
+                        alt="Moondala" 
+                        className="w-10 h-10 object-contain"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                   </div>
                    <div className="flex-1 min-w-0">
                       <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Referral Link</p>
                       <code className="text-blue-600 dark:text-blue-400 text-sm block truncate font-mono select-all font-bold tracking-tight">
@@ -340,11 +367,17 @@ export default function EarnMore() {
                 {/* Social Grid - Compact */}
                 <div>
                    <h3 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">Share instantly</h3>
-                   <div className="flex gap-2 justify-between">
+                   <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
+                     Your referral code is attached to all apps, share your code and build your network
+                   </p>
+                   <div className="grid grid-cols-4 gap-2">
                       <SocialBtn icon={FacebookIcon} color="bg-[#1877F2]" onClick={() => shareOnSocial("facebook")} compact />
                       <SocialBtn icon={XIcon} color="bg-black text-white dark:bg-black dark:border-white/20 border-border" onClick={() => shareOnSocial("twitter")} compact />
                       <SocialBtn icon={WhatsAppIcon} color="bg-[#25D366]" onClick={() => shareOnSocial("whatsapp")} compact />
                       <SocialBtn icon={TelegramIcon} color="bg-[#229ED9]" onClick={() => shareOnSocial("telegram")} compact />
+                      <SocialBtn icon={SnapchatIcon} color="bg-[#FFFC00] text-black" onClick={() => shareOnSocial("snapchat")} compact />
+                      <SocialBtn icon={TikTokIcon} color="bg-black text-white dark:bg-black dark:border-white/20 border-border" onClick={() => shareOnSocial("tiktok")} compact />
+                      <SocialBtn icon={MessageCircle} color="bg-green-600" onClick={() => shareOnSocial("sms")} compact />
                       <SocialBtn icon={Mail} color="bg-rose-500" onClick={() => shareOnSocial("email")} compact />
                    </div>
                 </div>

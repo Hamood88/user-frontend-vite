@@ -109,10 +109,13 @@ export default function Careers() {
       <div className="max-w-2xl mx-auto px-6 py-10">
         <div className="mb-10 text-center">
           <h1 className="text-4xl md:text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-            Join the Team
+            Join Moondala
           </h1>
           <p className="text-xl text-muted-foreground font-medium max-w-lg mx-auto leading-relaxed">
-            We’re building Moondala. If you’re into tech, design, or product — we’d love to hear from you.
+            We're building the next generation of social commerce — a platform where users don't just shop, they earn, connect, and grow together.
+          </p>
+          <p className="text-lg text-muted-foreground font-medium max-w-lg mx-auto leading-relaxed mt-4">
+            If you care about clean systems, real-world impact, and building something from zero to global scale, we want to hear from you.
           </p>
         </div>
 
