@@ -701,32 +701,40 @@ export default function Feed() {
 
     // Resolve post object
     let post = null;
-    let pid = "";
 
     if (postOrId && typeof postOrId === 'object') {
       post = postOrId;
-      pid = post._id;
     } else {
-      pid = postOrId;
-      post = posts.find(p => p._id === pid);
+      post = posts.find(p => p._id === postOrId);
     }
 
-    // 1. Try Native Share (Mobile/Tablet)
-    if (post && navigator.share) {
+    if (!post) return;
+
+    // ✅ Use Native Share API only
+    if (navigator.share) {
       try {
         await navigator.share({
           title: `Post by ${userName(post.user)}`,
           text: post.text || "Check out this post on Moondala",
           url: getPostPermaLink(post),
         });
-        return; // Success
       } catch (err) {
-        // User cancelled or failed
-        if (err.name !== 'AbortError') console.warn('Share failed', err);
+        // User cancelled or share failed
+        if (err.name !== 'AbortError') {
+          console.warn('Share failed:', err);
+          alert('Sharing not available. Please try copying the link manually.');
+        }
+      }
+    } else {
+      // Fallback: copy link to clipboard
+      try {
+        const link = getPostPermaLink(post);
+        await navigator.clipboard.writeText(link);
+        alert('Link copied to clipboard!');
+      } catch (err) {
+        alert('Sharing not supported on this device. Link: ' + getPostPermaLink(post));
       }
     }
-
-    setShareDropdownOpen(shareDropdownOpen === pid ? "" : pid);
   }
 
   function getPostPermaLink(post) {
@@ -1348,134 +1356,6 @@ export default function Feed() {
                           <Share className="w-5 h-5" />
                         </span>
                       </button>
-                      
-                      {/* Share Dropdown */}
-                      {shareDropdownOpen === post._id && (
-                        <div 
-                          className="absolute right-0 top-12 bg-popover border border-border rounded-xl p-3 z-50 w-[280px] shadow-2xl"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <div className="px-1 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                            Share Post
-                          </div>
-
-                          {/* Copy Actions Row */}
-                          <div className="flex gap-2 mb-3">
-                            <button
-                              onClick={() => copyPostLink(post)}
-                              className="flex-1 flex flex-col items-center justify-center gap-1.5 p-2 rounded-lg bg-secondary hover:bg-muted transition-colors text-foreground text-xs font-medium"
-                            >
-                              <Link className="w-4 h-4 text-purple-400" />
-                              Copy Link
-                            </button>
-                            <button
-                              onClick={() => copyPostContent(post)}
-                              className="flex-1 flex flex-col items-center justify-center gap-1.5 p-2 rounded-lg bg-secondary hover:bg-muted transition-colors text-foreground text-xs font-medium"
-                            >
-                              <Copy className="w-4 h-4 text-blue-400" />
-                              Copy Text
-                            </button>
-                          </div>
-                          
-                          <div className="border-t border-border mb-3"></div>
-                          
-                          {/* Social Grid */}
-                          <div className="grid grid-cols-2 gap-2">
-                            <button
-                              onClick={() => shareToWhatsApp(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
-                            >
-                              <MessageCircleWarning className="w-4 h-4 text-green-500 shrink-0" />
-                              WhatsApp
-                            </button>
-                            
-                            <button
-                              onClick={() => shareToFacebook(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
-                            >
-                              <Share className="w-4 h-4 text-blue-500 shrink-0" />
-                              Facebook
-                            </button>
-                            
-                            <button
-                              onClick={() => shareToLinkedIn(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
-                            >
-                              <Users className="w-4 h-4 text-blue-400 shrink-0" />
-                              LinkedIn
-                            </button>
-                            
-                            <button
-                              onClick={() => shareToTelegram(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
-                            >
-                              <Send className="w-4 h-4 text-sky-400 shrink-0" />
-                              Telegram
-                            </button>
-                            
-                            <button
-                              onClick={() => shareToTwitter(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
-                            >
-                              <Twitter className="w-4 h-4 text-foreground shrink-0" />
-                              Twitter
-                            </button>
-
-                            <button
-                              onClick={() => shareToReddit(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
-                            >
-                              <Share className="w-4 h-4 text-orange-500 shrink-0" />
-                              Reddit
-                            </button>
-                            
-                            <button
-                              onClick={() => shareViaEmail(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
-                            >
-                              <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
-                              Email
-                            </button>
-                            
-                            <button
-                              onClick={() => shareViaSMS(post)}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-foreground text-xs text-left overflow-hidden"
-                            >
-                              <MessageCircle className="w-4 h-4 text-green-400 shrink-0" />
-                              SMS
-                            </button>
-                          </div>
-                          
-                          <div className="border-t border-border my-2"></div>
-
-                          {/* Extra Actions */}
-                          <div className="space-y-1">
-                            <button
-                              onClick={() => downloadPostAsImage(post)}
-                              className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-muted transition-colors text-xs"
-                            >
-                              <Download className="w-4 h-4 text-muted-foreground" />
-                              Download Image
-                            </button>
-                            
-                            <button
-                              onClick={() => printPost(post)}
-                              className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-muted transition-colors text-xs"
-                            >
-                              <Printer className="w-4 h-4 text-muted-foreground" />
-                              Print Post
-                            </button>
-
-                            <button
-                              onClick={() => reportPost(post)}
-                              className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-400/10 transition-colors text-xs"
-                            >
-                              <Flag className="w-4 h-4" />
-                              Report Post
-                            </button>
-                          </div>
-                      </div>
-                      )}
                     </div>
                   </div>
 
