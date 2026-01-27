@@ -1602,8 +1602,8 @@ export default function Feed() {
       </div>
 
 
-      {/* Right Sidebar - FIXED positioning */}
-      <div className="fixed right-0 top-20 w-80 h-screen overflow-y-auto pr-2 hidden lg:flex flex-col gap-6 pt-4">
+      {/* Right Sidebar - Scrolls with content */}
+      <div className="w-80 hidden lg:flex flex-col gap-6 pt-4 sticky top-20 self-start">
         {/* Top Inviters - First */}
         <TopInvitersList />
 
