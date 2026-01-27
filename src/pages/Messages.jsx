@@ -1,6 +1,7 @@
 // user-frontend-vite/src/pages/Messages.jsx
 import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Trash2 } from "lucide-react"; // ✅ IMPORT ICON
 import {
   API_BASE,
   getMyFriends,
@@ -10,6 +11,7 @@ import {
   getOrCreateConversation,
   startShopConversation,
   sendConversationMessage,
+  deleteConversation,
 
   // ✅ NEW (from our api.jsx fix)
   markConversationMessageNotificationsRead,
@@ -247,6 +249,22 @@ export default function Messages() {
   const productIdFromUrl = extractId(query.get("productId") || "");
 
   const bottomRef = useRef(null);
+
+  const handleDeleteConversation = async (e, convId) => {
+    e.stopPropagation();
+    if (!window.confirm("Delete this conversation? It will be removed from your list.")) return;
+    try {
+      await deleteConversation(convId);
+      setConversations((prev) => prev.filter((c) => String(c._id) !== String(convId)));
+      if (String(conversationId) === String(convId)) {
+        nav("/messages");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete conversation");
+    }
+  };
+
   const fileInputRef = useRef(null);
 
   const meId = useMemo(() => {
@@ -961,9 +979,9 @@ export default function Messages() {
                 : "";
 
             return (
-              <button
+              <div
+                role="button"
                 key={String(c?._id || `row-${i}`)}
-                type="button"
                 onClick={() => {
                   // ✅ clear badge instantly on click
                   setConversations((prev) =>
@@ -973,7 +991,7 @@ export default function Messages() {
                   );
                   nav(`/messages/${c._id}`);
                 }}
-                style={styles.convBtn(theme, active)}
+                style={{ ...styles.convBtn(theme, active), cursor: "pointer" }}
               >
                 <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
                   {previewImg ? (
@@ -1042,8 +1060,36 @@ export default function Messages() {
                   {Number(c?.unreadCount || 0) > 0 ? (
                     <div style={styles.badge(theme)}>{Number(c.unreadCount)}</div>
                   ) : null}
+
+                  <button
+                    onClick={(e) => handleDeleteConversation(e, c._id)}
+                    style={{
+                      border: "none",
+                      background: "transparent",
+                      cursor: "pointer",
+                      padding: "8px", 
+                      marginLeft: 2,
+                      opacity: 0.6,
+                      color: theme.dangerText || "#ef4444", // Explicit red color
+                      flexShrink: 0,
+                      transition: "all 0.2s ease",
+                      display: "flex", alignItems: "center", justifyContent: "center"
+                    }}
+                    title="Delete Conversation"
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.opacity = 1;
+                      e.currentTarget.style.background = "rgba(239, 68, 68, 0.1)"; // faint red bg
+                      e.currentTarget.style.borderRadius = "8px";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.opacity = 0.6;
+                      e.currentTarget.style.background = "transparent";
+                    }}
+                  >
+                   <Trash2 size={18} />
+                  </button>
                 </div>
-              </button>
+              </div>
             );
           })}
 
@@ -1527,6 +1573,11 @@ const styles = {
     textAlign: "left",
     background: active ? t.active : t.panel2,
     transition: "all 0.15s ease",
+    // ✅ Fix layout stability (prevent shaking)
+    width: "100%",
+    boxSizing: "border-box",
+    userSelect: "none",
+    position: "relative",
   }),
 
   avatar: (t) => ({

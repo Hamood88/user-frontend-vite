@@ -958,6 +958,14 @@ export function sendConversationMessage(conversationIdOrObj, { text = "", files 
   });
 }
 
+/**
+ * ✅ Delete (or hide) a conversation
+ */
+export async function deleteConversation(conversationId) {
+  if (!conversationId) throw new Error("Missing conversationId");
+  return apiDelete(`/api/messages/conversations/${encodeURIComponent(conversationId)}`);
+}
+
 /* ================================
    ✅ PUBLIC INDUSTRIES (Mall sidebar)
    ================================ */
