@@ -8,6 +8,9 @@ export function ShopAuthForm({ mode }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   
+  const [shopName, setShopName] = useState("");
+  const [ownerFirstName, setOwnerFirstName] = useState("");
+  const [ownerLastName, setOwnerLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [dobDay, setDobDay] = useState("");
@@ -36,9 +39,9 @@ export function ShopAuthForm({ mode }) {
       const dateOfBirth = `${dobYear}-${dobMonth.padStart(2, '0')}-${dobDay.padStart(2, '0')}`;
       
       await apiPost("/shop-early-access/apply", {
-        shopName: email.split('@')[0], // Generate shop name from email
-        ownerFirstName: "Shop",
-        ownerLastName: "Owner",
+        shopName,
+        ownerFirstName,
+        ownerLastName,
         email,
         password,
         phone,
