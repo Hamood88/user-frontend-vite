@@ -361,8 +361,6 @@ export function ShopAuthForm({ mode }) {
 
       <Button
         type="submit"
-      <Button
-        type="submit"
         variant="shop"
         className="w-full mt-6"
         disabled={isLoading}
