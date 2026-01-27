@@ -223,7 +223,7 @@ export default function Settings() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-display font-bold text-white mb-2">Settings</h1>
+        <h1 className="text-3xl font-display font-bold text-foreground mb-2">Settings</h1>
         <p className="text-muted-foreground">Manage your preferences and account.</p>
       </div>
 
@@ -236,7 +236,7 @@ export default function Settings() {
 
           {/* Profile card */}
           <div className="glass-card rounded-2xl overflow-hidden">
-            <div className="p-6 border-b border-white/5">
+            <div className="p-6 border-b border-border">
               <h2 className="text-xl font-bold flex items-center gap-2">
                 <User className="w-5 h-5 text-primary" />
                 Profile Information
