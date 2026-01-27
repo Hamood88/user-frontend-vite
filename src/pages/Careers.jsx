@@ -272,7 +272,7 @@ export default function Careers() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-primary text-primary-foreground font-black text-lg rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
+              className="w-full py-4 bg-gradient-to-r from-blue-600 to-violet-600 text-white font-black text-lg rounded-xl hover:shadow-lg hover:shadow-blue-500/25 hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
             >
               {loading ? (
                 <>
