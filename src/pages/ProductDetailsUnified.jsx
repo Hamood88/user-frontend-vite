@@ -236,12 +236,12 @@ export default function ProductDetailsUnified() {
     };
   }, [id]);
 
-  // ✅ Redirect to shop public page if product not found
+  // ✅ Redirect to shop feed page if product not found
   useEffect(() => {
     if (err && product) {
       const shopId = getShopIdFromProduct(product);
       if (shopId) {
-        nav(`/s/${shopId}`, { replace: true });
+        nav(`/shop/${shopId}/feed`, { replace: true });
       } else {
         nav("/mall", { replace: true });
       }
