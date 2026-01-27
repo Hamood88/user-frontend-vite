@@ -77,9 +77,25 @@ export default function ShopMallPublic() {
     // ✅ Redirect to mall feed if error occurs
     useEffect(() => {
         if (error) {
-            navigate('/mall', { replace: true });
+            // Try to find any available product from this shop
+            apiGet(`/public/shops/${shopId}/products?limit=1`)
+                .then(res => {
+                    const products = res?.products || [];
+                    if (products.length > 0) {
+                        // Redirect to first available product
+                        const productId = products[0]._id || products[0].id;
+                        navigate(`/product/${productId}`, { replace: true });
+                    } else {
+                        // No products available, go to mall feed
+                        navigate('/mall', { replace: true });
+                    }
+                })
+                .catch(() => {
+                    // If can't fetch products, go to mall feed
+                    navigate('/mall', { replace: true });
+                });
         }
-    }, [error, navigate]);
+    }, [error, navigate, shopId]);
 
     // Fetch Shop Data
     useEffect(() => {
