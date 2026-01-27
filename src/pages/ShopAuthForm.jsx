@@ -212,14 +212,55 @@ export function ShopAuthForm({ mode, onModeChange }) {
 
   // Show registration form for signup mode
   return (
-    <form onSubmit={handleSubmit} style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '16px',
-      maxHeight: '500px',
-      overflowY: 'auto',
-      padding: '4px'
-    }}>
+    <>
+      {/* Landing Preview Section */}
+      <div style={{
+        marginBottom: 24,
+        paddingBottom: 20,
+        borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+        textAlign: "center",
+      }}>
+        <div style={{ fontSize: "32px", marginBottom: 12 }}>✨</div>
+        <div style={{ fontSize: "18px", fontWeight: 900, marginBottom: 12, background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          Sell on Moondala
+        </div>
+        <div style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.8)", marginBottom: 12, lineHeight: "1.6" }}>
+          The seller dashboard is currently in development. Register your shop to join the early waitlist, and we'll notify you when selling on Moondala goes live.
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          {[
+            { icon: "🌍", label: "Global Reach" },
+            { icon: "💰", label: "Better Payouts" },
+            { icon: "📊", label: "Analytics" },
+            { icon: "🎨", label: "Custom Mall" },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              style={{
+                padding: 12,
+                borderRadius: 8,
+                border: "1px solid rgba(34, 197, 94, 0.3)",
+                background: "rgba(34, 197, 94, 0.05)",
+                textAlign: "center",
+                fontSize: 13,
+                fontWeight: 600,
+              }}
+            >
+              <div style={{ fontSize: 18, marginBottom: 4 }}>{item.icon}</div>
+              {item.label}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+        maxHeight: '500px',
+        overflowY: 'auto',
+        padding: '4px'
+      }}>
       {error && (
         <div style={{
           padding: '12px',
@@ -377,7 +418,8 @@ export function ShopAuthForm({ mode, onModeChange }) {
       >
         {loading ? "Submitting..." : "Join Waitlist"}
       </button>
-    </form>
+      </form>
+    </>
   );
 }
 
