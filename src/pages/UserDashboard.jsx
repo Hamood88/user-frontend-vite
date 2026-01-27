@@ -402,32 +402,32 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
   };
 
   const textColors = {
-    violet: "text-violet-600 dark:text-violet-300",
-    emerald: "text-emerald-600 dark:text-emerald-300",
-    amber: "text-amber-600 dark:text-amber-300",
-    cyan: "text-cyan-600 dark:text-cyan-300",
+    violet: "text-violet-700 dark:text-violet-200",
+    emerald: "text-emerald-700 dark:text-emerald-200",
+    amber: "text-amber-700 dark:text-amber-200",
+    cyan: "text-cyan-700 dark:text-cyan-200",
   };
 
   const iconBgColors = {
-    violet: "bg-violet-500/15 dark:bg-violet-500/20 border-violet-200 dark:border-violet-500/30",
-    emerald: "bg-emerald-500/15 dark:bg-emerald-500/20 border-emerald-200 dark:border-emerald-500/30",
-    amber: "bg-amber-500/15 dark:bg-amber-500/20 border-amber-200 dark:border-amber-500/30",
-    cyan: "bg-cyan-500/15 dark:bg-cyan-500/20 border-cyan-200 dark:border-cyan-500/30",
+    violet: "bg-violet-600/20 dark:bg-violet-400/25 border-violet-300 dark:border-violet-400/40",
+    emerald: "bg-emerald-600/20 dark:bg-emerald-400/25 border-emerald-300 dark:border-emerald-400/40",
+    amber: "bg-amber-600/20 dark:bg-amber-400/25 border-amber-300 dark:border-amber-400/40",
+    cyan: "bg-cyan-600/20 dark:bg-cyan-400/25 border-cyan-300 dark:border-cyan-400/40",
   };
 
   const valueColors = {
-    violet: "text-violet-950 dark:text-white",
-    emerald: "text-emerald-950 dark:text-white",
-    amber: "text-amber-950 dark:text-white",
-    cyan: "text-cyan-950 dark:text-white",
+    violet: "text-violet-900 dark:text-white",
+    emerald: "text-emerald-900 dark:text-white",
+    amber: "text-amber-900 dark:text-white",
+    cyan: "text-cyan-900 dark:text-white",
   };
 
-  // More vibrant gradients for dark mode
+  // Improved contrast gradients for mobile PWA visibility
   const themeClasses = {
-    violet: "bg-gradient-to-br from-violet-50 to-violet-100/60 dark:from-violet-500/10 dark:to-violet-900/40 border-violet-200 dark:border-violet-500/30 shadow-md hover:shadow-violet-500/20",
-    emerald: "bg-gradient-to-br from-emerald-50 to-emerald-100/60 dark:from-emerald-500/10 dark:to-emerald-900/40 border-emerald-200 dark:border-emerald-500/30 shadow-md hover:shadow-emerald-500/20",
-    amber: "bg-gradient-to-br from-amber-50 to-amber-100/60 dark:from-amber-500/10 dark:to-amber-900/40 border-amber-200 dark:border-amber-500/30 shadow-md hover:shadow-amber-500/20",
-    cyan: "bg-gradient-to-br from-cyan-50 to-cyan-100/60 dark:from-cyan-500/10 dark:to-cyan-900/40 border-cyan-200 dark:border-cyan-500/30 shadow-md hover:shadow-cyan-500/20",
+    violet: "bg-gradient-to-br from-violet-100 to-violet-200 dark:from-violet-600/20 dark:to-violet-900/50 border-violet-300 dark:border-violet-400/40 shadow-lg hover:shadow-violet-400/30",
+    emerald: "bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-600/20 dark:to-emerald-900/50 border-emerald-300 dark:border-emerald-400/40 shadow-lg hover:shadow-emerald-400/30",
+    amber: "bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-600/20 dark:to-amber-900/50 border-amber-300 dark:border-amber-400/40 shadow-lg hover:shadow-amber-400/30",
+    cyan: "bg-gradient-to-br from-cyan-100 to-cyan-200 dark:from-cyan-600/20 dark:to-cyan-900/50 border-cyan-300 dark:border-cyan-400/40 shadow-lg hover:shadow-cyan-400/30",
   };
 
   const isNumber = typeof value === "number";
@@ -443,24 +443,24 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
 
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-4">
-          <div className={`p-3 rounded-xl border transition-colors ${iconBgColors[color]} ${textColors[color]} bg-white/50 dark:bg-black/20`}>
+          <div className={`p-3 rounded-xl border transition-colors ${iconBgColors[color]} ${textColors[color]} bg-white/70 dark:bg-black/30 shadow-sm`}>
             <Icon className="w-6 h-6" />
           </div>
           {trend ? (
-            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${iconBgColors[color]} ${textColors[color]} bg-white/50 dark:bg-black/20`}>
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${iconBgColors[color]} ${textColors[color]} bg-white/70 dark:bg-black/30 shadow-sm`}>
               {trend}
             </span>
           ) : null}
         </div>
 
-        <div className={`text-sm font-bold mb-1 tracking-wide opacity-90 ${textColors[color]}`}>
+        <div className={`text-sm font-bold mb-1 tracking-wide ${textColors[color]}`}>
           {title}
         </div>
-        <div className={`text-3xl font-black tracking-tight drop-shadow-sm ${valueColors[color]}`}>
+        <div className={`text-3xl font-black tracking-tight ${valueColors[color]} drop-shadow-md`}>
           {display}
         </div>
         {subValue ? (
-          <div className="text-xs text-muted-foreground mt-2 font-medium opacity-80">{subValue}</div>
+          <div className="text-xs font-semibold mt-2 text-gray-700 dark:text-gray-300">{subValue}</div>
         ) : null}
       </div>
     </div>
