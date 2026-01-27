@@ -158,18 +158,18 @@ export default function Sidebar({ collapsed = false, onToggle }) {
       </div>
 
       <nav className="md-nav">
-        <NavItem to="/dashboard" label="Dashboard" collapsed={collapsed} icon={LayoutDashboard} color="text-violet-500" />
-        <NavItem to="/feed" label="Feed" collapsed={collapsed} icon={Home} color="text-pink-500" />
-        <NavItem to="/search" label="Search" collapsed={collapsed} icon={Search} color="text-sky-500" />
-        <NavItem to="/friends" label="Friends" collapsed={collapsed} icon={Users} color="text-emerald-500" />
-        <NavItem to="/messages" label="Messages" collapsed={collapsed} icon={MessageCircle} color="text-blue-500" />
-        <NavItem to="/notifications" label="Notifications" collapsed={collapsed} icon={Bell} color="text-amber-500" />
-        <NavItem to="/orders" label="Orders" collapsed={collapsed} icon={ShoppingBag} color="text-orange-500" />
-        <NavItem to="/mall" label="Mall" collapsed={collapsed} icon={Store} color="text-purple-500" />
-        <NavItem to="/cart" label="Cart" collapsed={collapsed} icon={ShoppingCart} color="text-teal-500" />
-        <NavItem to="/earn-more" label="Earn More" collapsed={collapsed} icon={DollarSign} color="text-green-500" />
-        <NavItem to="/profile" label="Profile" collapsed={collapsed} icon={User} color="text-indigo-500" />
-        <NavItem to="/settings" label="Settings" collapsed={collapsed} icon={Settings} color="text-gray-500" />
+        <NavItem to="/dashboard" label="Dashboard" collapsed={collapsed} icon={LayoutDashboard} theme="violet" />
+        <NavItem to="/feed" label="Feed" collapsed={collapsed} icon={Home} theme="pink" />
+        <NavItem to="/search" label="Search" collapsed={collapsed} icon={Search} theme="sky" />
+        <NavItem to="/friends" label="Friends" collapsed={collapsed} icon={Users} theme="emerald" />
+        <NavItem to="/messages" label="Messages" collapsed={collapsed} icon={MessageCircle} theme="blue" />
+        <NavItem to="/notifications" label="Notifications" collapsed={collapsed} icon={Bell} theme="amber" />
+        <NavItem to="/orders" label="Orders" collapsed={collapsed} icon={ShoppingBag} theme="orange" />
+        <NavItem to="/mall" label="Mall" collapsed={collapsed} icon={Store} theme="purple" />
+        <NavItem to="/cart" label="Cart" collapsed={collapsed} icon={ShoppingCart} theme="teal" />
+        <NavItem to="/earn-more" label="Earn More" collapsed={collapsed} icon={DollarSign} theme="green" />
+        <NavItem to="/profile" label="Profile" collapsed={collapsed} icon={User} theme="indigo" />
+        <NavItem to="/settings" label="Settings" collapsed={collapsed} icon={Settings} theme="gray" />
       </nav>
 
       
@@ -177,21 +177,53 @@ export default function Sidebar({ collapsed = false, onToggle }) {
   );
 }
 
-function NavItem({ to, label, collapsed, icon: Icon, color }) {
+const THEMES = {
+  violet: { active: "bg-violet-500/10 text-violet-500 border-violet-500/20 shadow-[0_0_15px_-3px_rgba(139,92,246,0.2)]", icon: "text-violet-500" },
+  pink: { active: "bg-pink-500/10 text-pink-500 border-pink-500/20 shadow-[0_0_15px_-3px_rgba(236,72,153,0.2)]", icon: "text-pink-500" },
+  sky: { active: "bg-sky-500/10 text-sky-500 border-sky-500/20 shadow-[0_0_15px_-3px_rgba(14,165,233,0.2)]", icon: "text-sky-500" },
+  emerald: { active: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20 shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]", icon: "text-emerald-500" },
+  blue: { active: "bg-blue-500/10 text-blue-500 border-blue-500/20 shadow-[0_0_15px_-3px_rgba(59,130,246,0.2)]", icon: "text-blue-500" },
+  amber: { active: "bg-amber-500/10 text-amber-500 border-amber-500/20 shadow-[0_0_15px_-3px_rgba(245,158,11,0.2)]", icon: "text-amber-500" },
+  orange: { active: "bg-orange-500/10 text-orange-500 border-orange-500/20 shadow-[0_0_15px_-3px_rgba(249,115,22,0.2)]", icon: "text-orange-500" },
+  purple: { active: "bg-purple-500/10 text-purple-500 border-purple-500/20 shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]", icon: "text-purple-500" },
+  teal: { active: "bg-teal-500/10 text-teal-500 border-teal-500/20 shadow-[0_0_15px_-3px_rgba(20,184,166,0.2)]", icon: "text-teal-500" },
+  green: { active: "bg-green-500/10 text-green-500 border-green-500/20 shadow-[0_0_15px_-3px_rgba(34,197,94,0.2)]", icon: "text-green-500" },
+  indigo: { active: "bg-indigo-500/10 text-indigo-500 border-indigo-500/20 shadow-[0_0_15px_-3px_rgba(99,102,241,0.2)]", icon: "text-indigo-500" },
+  gray: { active: "bg-gray-500/10 text-gray-500 border-gray-500/20 shadow-[0_0_15px_-3px_rgba(107,114,128,0.2)]", icon: "text-gray-500" },
+};
+
+function NavItem({ to, label, collapsed, icon: Icon, theme = "violet" }) {
+  const themeStyles = THEMES[theme] || THEMES.violet;
+
   return (
     <NavLink
       to={to}
-      className={({ isActive }) => `md-nav__item ${isActive ? "is-active" : ""}`}
+      className={({ isActive }) => 
+        `relative flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 border border-transparent group overflow-hidden ${
+          isActive 
+            ? themeStyles.active + " font-bold" 
+            : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+        }`
+      }
       title={collapsed ? label : undefined}
     >
-      {Icon ? (
-        <span className={`md-nav__icon ${color}`}>
-          <Icon size={20} strokeWidth={2.5} />
-        </span>
-      ) : (
-        <span className="md-nav__dot" />
+      {({ isActive }) => (
+        <>
+           {/* Active Side Bar Line */}
+           {isActive && !collapsed && (
+            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-current opacity-50" />
+          )}
+
+          {Icon ? (
+            <span className={`flex items-center justify-center transition-colors duration-300 ${isActive ? "text-current" : themeStyles.icon}`}>
+              <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+            </span>
+          ) : (
+            <span className="w-2 h-2 rounded-full bg-current" />
+          )}
+          {!collapsed && <span className="text-[14px]">{label}</span>}
+        </>
       )}
-      {!collapsed ? <span className="md-nav__label">{label}</span> : null}
     </NavLink>
   );
 }
