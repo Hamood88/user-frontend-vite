@@ -236,6 +236,21 @@ export default function ProductDetailsUnified() {
     };
   }, [id]);
 
+  // ✅ Redirect to shop public page if product not found
+  useEffect(() => {
+    if (err && product) {
+      const shopId = getShopIdFromProduct(product);
+      if (shopId) {
+        nav(`/s/${shopId}`, { replace: true });
+      } else {
+        nav("/mall", { replace: true });
+      }
+    } else if (err && !product) {
+      // No product data at all, go to mall
+      nav("/mall", { replace: true });
+    }
+  }, [err, product, nav]);
+
   const pid = String(product?._id || product?.id || id || "").trim();
   const title = product?.title || product?.name || "Product";
   const category =
