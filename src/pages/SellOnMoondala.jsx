@@ -35,10 +35,11 @@ export default function SellOnMoondala() {
           <div style={{
             fontSize: '12px',
             fontWeight: '700',
-            color: '#22c55e',
+            color: '#d8b4fe', // Light purple
             letterSpacing: '2px',
             marginBottom: '16px',
             textTransform: 'uppercase',
+            textShadow: '0 0 20px rgba(168, 85, 247, 0.5)'
           }}>
             {badge}
           </div>
@@ -169,7 +170,7 @@ export default function SellOnMoondala() {
           </button>
 
            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-             <img src={logo} alt="Moondala" style={{ height: '32px', width: 'auto' }} />
+             <img src={logo} alt="Moondala" style={{ height: '40px', width: 'auto' }} />
              <span style={{ fontWeight: 700, fontSize: '18px', letterSpacing: '-0.5px' }}>Seller Central</span>
            </div>
 
@@ -182,7 +183,7 @@ export default function SellOnMoondala() {
         position: 'relative',
         padding: 'clamp(60px, 10vw, 100px) 24px',
         textAlign: 'center',
-        background: 'radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.15) 0%, rgba(9, 9, 11, 0) 70%)',
+        background: 'radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.2) 0%, rgba(9, 9, 11, 0) 70%)',
         overflow: 'hidden',
       }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -190,24 +191,26 @@ export default function SellOnMoondala() {
             src={logo} 
             alt="Moondala" 
             style={{ 
-              height: '64px', // Adjust size as needed
+              height: '180px', 
               width: 'auto',
-              marginBottom: '32px',
-              display: 'inline-block'
+              marginBottom: '48px',
+              display: 'inline-block',
+              filter: 'drop-shadow(0 0 60px rgba(168, 85, 247, 0.3))'
             }} 
           />
           <br />
           <div style={{
             display: 'inline-block',
-            padding: '6px 16px',
+            padding: '8px 20px',
             borderRadius: '999px',
-            background: 'rgba(34, 197, 94, 0.1)',
-            border: '1px solid rgba(34, 197, 94, 0.2)',
-            color: '#22c55e',
+            background: 'rgba(168, 85, 247, 0.1)',
+            border: '1px solid rgba(168, 85, 247, 0.3)',
+            color: '#d8b4fe',
             fontSize: '13px',
             fontWeight: '600',
-            marginBottom: '24px',
-            letterSpacing: '0.5px',
+            marginBottom: '32px',
+            letterSpacing: '1px',
+            boxShadow: '0 0 20px rgba(168, 85, 247, 0.1)'
           }}>
             NOW ACCEPTING NEW SHOPS
           </div>
@@ -218,9 +221,10 @@ export default function SellOnMoondala() {
             lineHeight: '1.1',
             marginBottom: '24px',
             letterSpacing: '-1px',
-            background: 'linear-gradient(135deg, #fff 0%, #a1a1aa 100%)',
+            background: 'linear-gradient(135deg, #fff 0%, #e9d5ff 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 40px rgba(168, 85, 247, 0.2)'
           }}>
             This is not another marketplace
           </h1>
@@ -242,18 +246,18 @@ export default function SellOnMoondala() {
               onClick={scrollToFeatures}
               style={{
                 padding: '16px 40px',
-                background: '#22c55e',
-                color: '#000',
+                background: 'linear-gradient(135deg, #a855f7 0%, #ec4899 100%)',
+                color: '#fff',
                 border: 'none',
                 borderRadius: '12px',
                 fontSize: '16px',
                 fontWeight: '700',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                boxShadow: '0 4px 20px rgba(34, 197, 94, 0.3)',
+                boxShadow: '0 4px 20px rgba(168, 85, 247, 0.4)',
               }}
-              onMouseEnter={(e) => { e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = '0 8px 30px rgba(34, 197, 94, 0.4)'; }}
-              onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = '0 4px 20px rgba(34, 197, 94, 0.3)'; }}
+              onMouseEnter={(e) => { e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = '0 8px 30px rgba(168, 85, 247, 0.6)'; }}
+              onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = '0 4px 20px rgba(168, 85, 247, 0.4)'; }}
             >
               Why Moondala works →
             </button>
@@ -377,15 +381,16 @@ export default function SellOnMoondala() {
         <div style={{ 
           maxWidth: '800px', 
           margin: '0 auto', 
-          background: 'radial-gradient(ellipse at top, rgba(34, 197, 94, 0.1) 0%, rgba(9, 9, 11, 0.5) 100%)',
+          background: 'radial-gradient(ellipse at top, rgba(168, 85, 247, 0.15) 0%, rgba(9, 9, 11, 0.8) 100%)',
           borderRadius: '32px',
           padding: 'clamp(40px, 8vw, 80px) 24px',
-          border: '1px solid rgba(34, 197, 94, 0.2)',
+          border: '1px solid rgba(168, 85, 247, 0.3)',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          boxShadow: '0 0 100px rgba(168, 85, 247, 0.1)'
         }}>
           {/* Decorative glow */}
-          <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '600px', height: '300px', background: '#22c55e', filter: 'blur(120px)', opacity: 0.05, borderRadius: '50%', pointerEvents: 'none' }}></div>
+          <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '600px', height: '300px', background: '#a855f7', filter: 'blur(120px)', opacity: 0.15, borderRadius: '50%', pointerEvents: 'none' }}></div>
 
           <h2 style={{
             fontSize: 'clamp(28px, 5vw, 42px)',
