@@ -1,5 +1,19 @@
 import React, { useMemo, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { 
+  Home, 
+  LayoutDashboard, 
+  Search, 
+  Users, 
+  MessageCircle, 
+  Bell, 
+  ShoppingBag, 
+  Store, 
+  ShoppingCart, 
+  DollarSign, 
+  User, 
+  Settings 
+} from "lucide-react";
 import "../styles/Sidebar.css";
 import { apiGet, API_BASE, toAbsUrl } from "../api.jsx";
 
@@ -144,18 +158,18 @@ export default function Sidebar({ collapsed = false, onToggle }) {
       </div>
 
       <nav className="md-nav">
-        <NavItem to="/dashboard" label="Dashboard" collapsed={collapsed} />
-        <NavItem to="/feed" label="Feed" collapsed={collapsed} />
-        <NavItem to="/search" label="Search" collapsed={collapsed} />
-        <NavItem to="/friends" label="Friends" collapsed={collapsed} />
-        <NavItem to="/messages" label="Messages" collapsed={collapsed} />
-        <NavItem to="/notifications" label="🔔 Notifications" collapsed={collapsed} />
-        <NavItem to="/orders" label="Orders" collapsed={collapsed} />
-        <NavItem to="/mall" label="Mall" collapsed={collapsed} />
-        <NavItem to="/cart" label="🛒 Cart" collapsed={collapsed} />
-        <NavItem to="/earn-more" label="💰 Earn More" collapsed={collapsed} />
-        <NavItem to="/profile" label="Profile" collapsed={collapsed} />
-        <NavItem to="/settings" label="Settings" collapsed={collapsed} />
+        <NavItem to="/dashboard" label="Dashboard" collapsed={collapsed} icon={LayoutDashboard} color="text-violet-500" />
+        <NavItem to="/feed" label="Feed" collapsed={collapsed} icon={Home} color="text-pink-500" />
+        <NavItem to="/search" label="Search" collapsed={collapsed} icon={Search} color="text-sky-500" />
+        <NavItem to="/friends" label="Friends" collapsed={collapsed} icon={Users} color="text-emerald-500" />
+        <NavItem to="/messages" label="Messages" collapsed={collapsed} icon={MessageCircle} color="text-blue-500" />
+        <NavItem to="/notifications" label="Notifications" collapsed={collapsed} icon={Bell} color="text-amber-500" />
+        <NavItem to="/orders" label="Orders" collapsed={collapsed} icon={ShoppingBag} color="text-orange-500" />
+        <NavItem to="/mall" label="Mall" collapsed={collapsed} icon={Store} color="text-purple-500" />
+        <NavItem to="/cart" label="Cart" collapsed={collapsed} icon={ShoppingCart} color="text-teal-500" />
+        <NavItem to="/earn-more" label="Earn More" collapsed={collapsed} icon={DollarSign} color="text-green-500" />
+        <NavItem to="/profile" label="Profile" collapsed={collapsed} icon={User} color="text-indigo-500" />
+        <NavItem to="/settings" label="Settings" collapsed={collapsed} icon={Settings} color="text-gray-500" />
       </nav>
 
       
@@ -163,14 +177,20 @@ export default function Sidebar({ collapsed = false, onToggle }) {
   );
 }
 
-function NavItem({ to, label, collapsed }) {
+function NavItem({ to, label, collapsed, icon: Icon, color }) {
   return (
     <NavLink
       to={to}
       className={({ isActive }) => `md-nav__item ${isActive ? "is-active" : ""}`}
       title={collapsed ? label : undefined}
     >
-      <span className="md-nav__dot" />
+      {Icon ? (
+        <span className={`md-nav__icon ${color}`}>
+          <Icon size={20} strokeWidth={2.5} />
+        </span>
+      ) : (
+        <span className="md-nav__dot" />
+      )}
       {!collapsed ? <span className="md-nav__label">{label}</span> : null}
     </NavLink>
   );
