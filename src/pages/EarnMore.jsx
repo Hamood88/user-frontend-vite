@@ -193,9 +193,10 @@ export default function EarnMore() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-10"
         >
-          <div className="inline-flex items-center justify-center p-3 mb-4 rounded-full bg-yellow-500/10 border border-yellow-500/20 backdrop-blur-sm">
-            <Sparkles className="w-5 h-5 text-yellow-600 dark:text-yellow-500 mr-2" />
-            <span className="text-yellow-700 dark:text-yellow-200 font-medium text-sm">Refer & Earn Real Cash</span>
+          <div className="inline-flex items-center justify-center px-6 py-2 mb-6 rounded-full bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-200 dark:from-amber-700 dark:via-yellow-600 dark:to-amber-700 border border-yellow-400/50 shadow-[0_0_20px_rgba(251,191,36,0.4)] relative overflow-hidden">
+            <div className="absolute inset-0 bg-white/20 animate-[shimmer_2s_infinite] skew-x-12" />
+            <Sparkles className="w-5 h-5 text-amber-800 dark:text-amber-100 mr-2 relative z-10 animate-pulse" />
+            <span className="text-amber-900 dark:text-white font-extrabold text-sm tracking-wide relative z-10 uppercase">Refer & Earn Real Cash</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-black mb-4 text-foreground drop-shadow-sm leading-tight">
             Grow Your Empire
@@ -286,7 +287,7 @@ export default function EarnMore() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
-                className="bg-card rounded-3xl p-6 border border-border shadow-xl"
+                className="bg-gray-100/80 dark:bg-white/5 rounded-3xl p-6 border border-border/60 shadow-xl backdrop-blur-md"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
@@ -307,10 +308,10 @@ export default function EarnMore() {
                 </div>
 
                 {/* Link Copy Section - Compact */}
-                <div className="bg-muted/50 rounded-xl p-3 mb-4 border border-border relative overflow-hidden flex items-center gap-3">
+                <div className="bg-white/60 dark:bg-black/20 rounded-xl p-3 mb-4 border border-border/50 relative overflow-hidden flex items-center gap-3 shadow-sm">
                    <div className="flex-1 min-w-0">
                       <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Referral Link</p>
-                      <code className="text-foreground text-sm block truncate font-mono select-all">
+                      <code className="text-foreground text-sm block truncate font-mono select-all font-bold">
                         {activeTab === "users" ? userReferralLink : shopReferralLink}
                       </code>
                    </div>
@@ -330,7 +331,7 @@ export default function EarnMore() {
                   <textarea
                     value={customMessage}
                     onChange={(e) => setCustomMessage(e.target.value)}
-                    className="w-full bg-input border border-input rounded-xl p-3 text-sm text-foreground focus:outline-none focus:border-ring resize-none placeholder:text-muted-foreground"
+                    className="w-full bg-white/60 dark:bg-black/20 border border-border/50 rounded-xl p-3 text-sm text-foreground focus:outline-none focus:border-ring resize-none placeholder:text-muted-foreground shadow-sm"
                     rows={2}
                     placeholder="Write a message to share..."
                   />
