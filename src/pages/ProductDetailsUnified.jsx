@@ -143,6 +143,7 @@ export default function ProductDetailsUnified() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [product, setProduct] = useState(null);
+  const [shopIdRef, setShopIdRef] = useState("");
 
   const [qty, setQty] = useState(1);
   const [activeImg, setActiveImg] = useState("");
@@ -211,6 +212,10 @@ export default function ProductDetailsUnified() {
 
         const found = res?.product || res?.data?.product || res?.data || res;
 
+        // ✅ Extract shop ID even if product is incomplete
+        const sid = getShopIdFromProduct(found);
+        if (sid && live) setShopIdRef(sid);
+
         if (!found?._id && !found?.id) {
           throw new Error(lastErr?.message || "Product not found");
         }
@@ -238,16 +243,10 @@ export default function ProductDetailsUnified() {
 
   // ✅ Redirect to shop feed page if product not found
   useEffect(() => {
-    if (err && id) {
-      // Try to find shop ID from the product before error occurred
-      const shopId = getShopIdFromProduct(product);
-      
-      if (shopId) {
-        // If we have shop ID from partial product data
-        nav(`/shop/${shopId}/feed`, { replace: true });
-      }
+    if (err && shopIdRef) {
+      nav(`/shop/${shopIdRef}/feed`, { replace: true });
     }
-  }, [err, product, id, nav]);
+  }, [err, shopIdRef, nav]);
 
   const pid = String(product?._id || product?.id || id || "").trim();
   const title = product?.title || product?.name || "Product";
