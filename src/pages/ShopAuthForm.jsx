@@ -1,4 +1,5 @@
 export function ShopAuthForm({ mode }) {
+  // Always show Coming Soon - no form, no submission needed
   return (
     <div style={{
       display: 'flex',
@@ -13,33 +14,24 @@ export function ShopAuthForm({ mode }) {
         fontSize: '64px',
         marginBottom: '24px'
       }}>
-        
+        🛠️
       </div>
-      <h2 style={{
-        fontSize: '28px',
+      <h3 style={{
+        fontSize: '24px',
         fontWeight: 'bold',
         color: '#22c55e',
         marginBottom: '16px',
         letterSpacing: '0.5px'
       }}>
-        You're in!
-      </h2>
+        Shop Dashboard Coming Soon
+      </h3>
       <p style={{
-        fontSize: '16px',
+        fontSize: '15px',
         color: '#94a3b8',
         lineHeight: '1.7',
-        marginBottom: '12px',
-        maxWidth: '400px'
+        maxWidth: '380px'
       }}>
-        The Moondala shop app isn't ready yet.
-      </p>
-      <p style={{
-        fontSize: '16px',
-        color: '#94a3b8',
-        lineHeight: '1.7',
-        fontWeight: '600'
-      }}>
-        We'll notify you as soon as it's live.
+        Seller login will be available once the shop app is live.
       </p>
     </div>
   );
