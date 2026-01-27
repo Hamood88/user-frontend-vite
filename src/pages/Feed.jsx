@@ -203,6 +203,7 @@ export default function Feed() {
   const [newPostText, setNewPostText] = useState("");
   const [posting, setPosting] = useState(false);
   const [err, setErr] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [friendRequestSentToProfile, setFriendRequestSentToProfile] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -445,7 +446,7 @@ export default function Feed() {
       await sendFriendRequest(profileUser._id, `Hi ${userName(profileUser)}, I'd like to connect with you on Moondala!`);
       
       setFriendRequestSentToProfile(true);
-      setErr("Friend request sent successfully!");
+      setSuccessMsg("Friend request sent successfully!");
     } catch (e) {
       console.error('Add friend error:', e);
       setErr(e?.message || "Failed to send friend request");
@@ -695,9 +696,37 @@ export default function Feed() {
     setEditText("");
   }
 
-  function toggleShareDropdown(e, postId) {
+  async function toggleShareDropdown(e, postOrId) {
     e.stopPropagation();
-    setShareDropdownOpen(shareDropdownOpen === postId ? "" : postId);
+
+    // Resolve post object
+    let post = null;
+    let pid = "";
+
+    if (postOrId && typeof postOrId === 'object') {
+      post = postOrId;
+      pid = post._id;
+    } else {
+      pid = postOrId;
+      post = posts.find(p => p._id === pid);
+    }
+
+    // 1. Try Native Share (Mobile/Tablet)
+    if (post && navigator.share) {
+      try {
+        await navigator.share({
+          title: `Post by ${userName(post.user)}`,
+          text: post.text || "Check out this post on Moondala",
+          url: getPostPermaLink(post),
+        });
+        return; // Success
+      } catch (err) {
+        // User cancelled or failed
+        if (err.name !== 'AbortError') console.warn('Share failed', err);
+      }
+    }
+
+    setShareDropdownOpen(shareDropdownOpen === pid ? "" : pid);
   }
 
   function getPostPermaLink(post) {
@@ -708,12 +737,10 @@ export default function Feed() {
   async function copyPostLink(post) {
     try {
       const shareUrl = getPostPermaLink(post);
-      
       await navigator.clipboard.writeText(shareUrl);
       
-      const originalErr = err;
-      setErr("Link copied to clipboard!");
-      setTimeout(() => setErr(originalErr), 2000);
+      setSuccessMsg("Link copied to clipboard!");
+      setTimeout(() => setSuccessMsg(""), 3000);
       setShareDropdownOpen("");
     } catch (e) {
       setErr("Failed to copy link");
@@ -725,9 +752,8 @@ export default function Feed() {
       const shareText = `"${post.text}" - ${userName(post.user)} on Moondala`;
       await navigator.clipboard.writeText(shareText);
       
-      const originalErr = err;
-      setErr("Post content copied!");
-      setTimeout(() => setErr(originalErr), 2000);
+      setSuccessMsg("Post content copied!");
+      setTimeout(() => setSuccessMsg(""), 3000);
       setShareDropdownOpen("");
     } catch (e) {
       setErr("Failed to copy content");
@@ -809,9 +835,8 @@ export default function Feed() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       
-      const originalErr = err;
-      setErr("Post downloaded!");
-      setTimeout(() => setErr(originalErr), 2000);
+      setSuccessMsg("Post content downloaded!");
+      setTimeout(() => setSuccessMsg(""), 3000);
       setShareDropdownOpen("");
     } catch (e) {
       setErr("Failed to download post");
@@ -860,9 +885,8 @@ export default function Feed() {
     try {
       await apiPost(`/posts/${post._id}/report`, { reason: reportReason });
       
-      const originalErr = err;
-      setErr(`Post reported for: ${reportReason}. Thank you for helping keep Moondala safe.`);
-      setTimeout(() => setErr(originalErr), 3000);
+      setSuccessMsg(`Reported: ${reportReason}. Thank you.`);
+      setTimeout(() => setSuccessMsg(""), 3000);
       setShareDropdownOpen("");
     } catch (e) {
       setErr("Failed to report post");
@@ -1074,6 +1098,22 @@ export default function Feed() {
               </div>
             </div>
           </div>
+
+          {successMsg && (
+            <div className="rounded-2xl p-4 mb-6 bg-green-500/10 border border-green-500/20 flex items-center justify-between animate-in fade-in slide-in-from-top-2">
+              <div className="flex items-center gap-3">
+                <Check className="w-5 h-5 text-green-400" />
+                <p className="text-green-400 font-medium">{successMsg}</p>
+              </div>
+              <button
+                type="button"
+                className="text-green-400/60 hover:text-green-400"
+                onClick={() => setSuccessMsg("")}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
 
           {err ? (
             <div className={cx("rounded-2xl p-5", isPrivateFeed ? "glass-card bg-blue-500/10 border border-blue-500/30" : "md-error")}>
@@ -1301,7 +1341,7 @@ export default function Feed() {
                       <button
                         type="button"
                         className="md-actionBtn hover-green group"
-                        onClick={(e) => toggleShareDropdown(e, post._id)}
+                        onClick={(e) => toggleShareDropdown(e, post)}
                         title="Share"
                       >
                         <span className="md-actionIconWrap group-hover:bg-green-400/10">
