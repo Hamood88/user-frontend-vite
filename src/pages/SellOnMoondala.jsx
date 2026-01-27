@@ -147,36 +147,10 @@ export default function SellOnMoondala() {
         </div>
       </div>
 
-      {/* Stats Banner */}
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto 100px',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '24px',
-        padding: '0 24px',
-      }}>
-        {[
-          { label: "Active Buyers", val: "50k+" },
-          { label: "Countries Supported", val: "12+" },
-          { label: "Average Growth", val: "300%" },
-          { label: "Seller Satisfaction", val: "4.9/5" }
-        ].map((stat, i) => (
-          <div key={i} style={{ 
-            textAlign: 'center', 
-            padding: '24px',
-            background: 'rgba(255, 255, 255, 0.03)',
-            borderRadius: '16px',
-            border: '1px solid rgba(255, 255, 255, 0.05)'
-          }}>
-            <div style={{ fontSize: '32px', fontWeight: '800', color: '#fff', marginBottom: '4px' }}>{stat.val}</div>
-            <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.5)' }}>{stat.label}</div>
-          </div>
-        ))}
-      </div>
+      {/* Stats Banner: REMOVED as requested */}
 
       {/* Features Grid */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', marginTop: '100px' }}>
         
         {/* Feature 1 */}
         <FeatureSection
@@ -381,19 +355,19 @@ function FeatureSection({ badge, title, desc, imgUrl, align = 'left' }) {
           borderRadius: '24px',
           overflow: 'hidden',
           boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)',
-          background: '#18181b', // skeleton loading color
-          aspectRatio: '4/3',
+          background: 'transparent',
+          minHeight: '200px',
         }}>
           <img 
             src={imgUrl} 
             alt={title}
             style={{
               width: '100%',
-              height: '100%',
-              objectFit: 'cover',
+              height: 'auto',
+              borderRadius: '24px',
               transition: 'transform 0.5s ease',
             }}
-            onMouseEnter={(e) => e.target.style.transform = 'scale(1.03)'}
+            onMouseEnter={(e) => e.target.style.transform = 'scale(1.02)'}
             onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
           />
           {/* Overlay gradient */}
