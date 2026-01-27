@@ -154,9 +154,15 @@ export default function SellOnMoondala() {
         
         {/* Feature 1 */}
         <FeatureSection
-          badge="GLOBAL REACH"
-          title="Sell to the World"
-          desc="Break down borders. Moondala automatically translates your listings and handles currency conversions, giving you instant access to energetic markets across the Middle East and beyond."
+          badge="SMART MALL"
+          title="Your products appear only to the right buyers"
+          desc={
+            <>
+              Moondala is not a traditional marketplace. Each user has a personalized mall, and your products are shown only to users who match your targeting — based on interests, location, and behavior.
+              <br /><br />
+              That means no wasted exposure, no competing for attention, and higher conversion from day one.
+            </>
+          }
           imgUrl={mallImg}
           align="left"
         />
