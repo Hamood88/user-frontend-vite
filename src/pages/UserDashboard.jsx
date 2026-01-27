@@ -415,6 +415,13 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
     cyan: "bg-cyan-500/15 dark:bg-cyan-500/20 border-cyan-200 dark:border-cyan-500/30",
   };
 
+  const valueColors = {
+    violet: "text-violet-950 dark:text-white",
+    emerald: "text-emerald-950 dark:text-white",
+    amber: "text-amber-950 dark:text-white",
+    cyan: "text-cyan-950 dark:text-white",
+  };
+
   // More vibrant gradients for dark mode
   const themeClasses = {
     violet: "bg-gradient-to-br from-violet-50 to-violet-100/60 dark:from-violet-500/10 dark:to-violet-900/40 border-violet-200 dark:border-violet-500/30 shadow-md hover:shadow-violet-500/20",
@@ -449,7 +456,7 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
         <div className={`text-sm font-bold mb-1 tracking-wide opacity-90 ${textColors[color]}`}>
           {title}
         </div>
-        <div className="text-3xl font-black text-foreground tracking-tight drop-shadow-sm">
+        <div className={`text-3xl font-black tracking-tight drop-shadow-sm ${valueColors[color]}`}>
           {display}
         </div>
         {subValue ? (
