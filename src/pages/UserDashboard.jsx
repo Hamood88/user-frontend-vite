@@ -417,10 +417,10 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
 
   // More vibrant gradients for dark mode
   const themeClasses = {
-    violet: "bg-gradient-to-br from-violet-50 to-violet-100/60 dark:from-violet-900/40 dark:to-violet-900/10 border-violet-200 dark:border-violet-500/30 shadow-md hover:shadow-violet-500/20",
-    emerald: "bg-gradient-to-br from-emerald-50 to-emerald-100/60 dark:from-emerald-900/40 dark:to-emerald-900/10 border-emerald-200 dark:border-emerald-500/30 shadow-md hover:shadow-emerald-500/20",
-    amber: "bg-gradient-to-br from-amber-50 to-amber-100/60 dark:from-amber-900/40 dark:to-amber-900/10 border-amber-200 dark:border-amber-500/30 shadow-md hover:shadow-amber-500/20",
-    cyan: "bg-gradient-to-br from-cyan-50 to-cyan-100/60 dark:from-cyan-900/40 dark:to-cyan-900/10 border-cyan-200 dark:border-cyan-500/30 shadow-md hover:shadow-cyan-500/20",
+    violet: "bg-gradient-to-br from-violet-50 to-violet-100/60 dark:from-violet-500/10 dark:to-violet-900/40 border-violet-200 dark:border-violet-500/30 shadow-md hover:shadow-violet-500/20",
+    emerald: "bg-gradient-to-br from-emerald-50 to-emerald-100/60 dark:from-emerald-500/10 dark:to-emerald-900/40 border-emerald-200 dark:border-emerald-500/30 shadow-md hover:shadow-emerald-500/20",
+    amber: "bg-gradient-to-br from-amber-50 to-amber-100/60 dark:from-amber-500/10 dark:to-amber-900/40 border-amber-200 dark:border-amber-500/30 shadow-md hover:shadow-amber-500/20",
+    cyan: "bg-gradient-to-br from-cyan-50 to-cyan-100/60 dark:from-cyan-500/10 dark:to-cyan-900/40 border-cyan-200 dark:border-cyan-500/30 shadow-md hover:shadow-cyan-500/20",
   };
 
   const isNumber = typeof value === "number";
@@ -431,29 +431,29 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
       className={`rounded-2xl p-6 border backdrop-blur-md relative overflow-hidden group transition-all duration-300 ${themeClasses[color]}`}
     >
       <div
-        className={`absolute -right-10 -top-10 w-40 h-40 rounded-full bg-gradient-to-br ${colors[color]} opacity-10 dark:opacity-20 group-hover:dark:opacity-30 transition-opacity blur-3xl`}
+        className={`absolute -right-10 -top-10 w-40 h-40 rounded-full bg-gradient-to-br ${colors[color]} opacity-10 dark:opacity-25 group-hover:dark:opacity-35 transition-opacity blur-3xl`}
       />
 
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-4">
-          <div className={`p-3 rounded-xl border transition-colors ${iconBgColors[color]} ${textColors[color]}`}>
+          <div className={`p-3 rounded-xl border transition-colors ${iconBgColors[color]} ${textColors[color]} bg-white/50 dark:bg-black/20`}>
             <Icon className="w-6 h-6" />
           </div>
           {trend ? (
-            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${iconBgColors[color]} ${textColors[color]}`}>
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${iconBgColors[color]} ${textColors[color]} bg-white/50 dark:bg-black/20`}>
               {trend}
             </span>
           ) : null}
         </div>
 
-        <div className="text-muted-foreground text-sm font-bold mb-1 tracking-wide opacity-90">
+        <div className={`text-sm font-bold mb-1 tracking-wide opacity-90 ${textColors[color]}`}>
           {title}
         </div>
-        <div className="text-3xl font-black text-foreground tracking-tight">
+        <div className="text-3xl font-black text-foreground tracking-tight drop-shadow-sm">
           {display}
         </div>
         {subValue ? (
-          <div className="text-xs text-muted-foreground mt-2 font-medium">{subValue}</div>
+          <div className="text-xs text-muted-foreground mt-2 font-medium opacity-80">{subValue}</div>
         ) : null}
       </div>
     </div>
