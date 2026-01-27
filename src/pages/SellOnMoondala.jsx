@@ -1,441 +1,418 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logo from '../assets/moondala-logo.png';
+import { ShopAuthForm } from './ShopAuthForm'; // Reuse existing form
+import '../pages/ShopLoginRegister.css'; // Ensure any custom styles load
+
+// Placeholders for user screenshots
+// Please rename your photos to these names and put them in src/assets
+import feedImg from '../assets/screenshot-feed.png';
+import mallImg from '../assets/screenshot-mall.png';
+import analyticsImg from '../assets/screenshot-analytics.png';
+import editorImg from '../assets/screenshot-editor.png';
 
 export default function SellOnMoondala() {
   const nav = useNavigate();
+  const formRef = useRef(null);
+
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <div style={{
       background: '#09090b',
       color: '#fff',
       minHeight: '100vh',
-      padding: '20px',
+      fontFamily: '"Inter", system-ui, sans-serif',
+      paddingBottom: '80px',
     }}>
-      {/* Header */}
+      {/* Navbar / Header */}
+
+  return (
+    <div style={{
+      background: '#09090b',
+      color: '#fff',
+      minHeight: '100vh',
+      fontFamily: '"Inter", system-ui, sans-serif',
+      paddingBottom: '80px',
+    }}>
+      {/* Navbar / Header */}
       <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        paddingTop: '40px',
-        paddingBottom: '20px',
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        background: 'rgba(9, 9, 11, 0.8)',
+        backdropFilter: 'blur(12px)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
       }}>
-        <button
-          onClick={() => nav(-1)}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#22c55e',
-            fontSize: '16px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            marginBottom: '24px',
-            padding: 0,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-        >
-          ← Back
-        </button>
-        <h1 style={{
-          fontSize: 'clamp(28px, 5vw, 48px)',
-          fontWeight: '900',
-          marginBottom: '16px',
-          background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '16px 24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}>
-          Why Sell on Moondala?
-        </h1>
-        <p style={{
-          fontSize: '16px',
-          color: 'rgba(255, 255, 255, 0.7)',
-          maxWidth: '600px',
-          lineHeight: '1.8',
-        }}>
-          [Add your introduction text here]
-        </p>
+          <button
+            onClick={() => nav(-1)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'rgba(255, 255, 255, 0.7)',
+              fontSize: '14px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'color 0.2s',
+            }}
+            onMouseEnter={(e) => e.target.style.color = '#fff'}
+            onMouseLeave={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.7)'}
+          >
+            ← Back
+          </button>
+
+           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+             <img src={logo} alt="Moondala" style={{ height: '32px', width: 'auto' }} />
+             <span style={{ fontWeight: 700, fontSize: '18px', letterSpacing: '-0.5px' }}>Seller Central</span>
+           </div>
+
+           <div style={{ width: '60px' }}></div>
+        </div>
       </div>
 
-      {/* Main Content */}
+      {/* Hero Section */}
+      <div style={{
+        position: 'relative',
+        padding: 'clamp(60px, 10vw, 100px) 24px',
+        textAlign: 'center',
+        background: 'radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.15) 0%, rgba(9, 9, 11, 0) 70%)',
+        overflow: 'hidden',
+      }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <div style={{
+            display: 'inline-block',
+            padding: '6px 16px',
+            borderRadius: '999px',
+            background: 'rgba(34, 197, 94, 0.1)',
+            border: '1px solid rgba(34, 197, 94, 0.2)',
+            color: '#22c55e',
+            fontSize: '13px',
+            fontWeight: '600',
+            marginBottom: '24px',
+            letterSpacing: '0.5px',
+          }}>
+            NOW ACCEPTING NEW SHOPS
+          </div>
+          
+          <h1 style={{
+            fontSize: 'clamp(40px, 6vw, 72px)',
+            fontWeight: '900',
+            lineHeight: '1.1',
+            marginBottom: '24px',
+            letterSpacing: '-1px',
+            background: 'linear-gradient(135deg, #fff 0%, #a1a1aa 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>
+            Scale Your Business with <span style={{ color: '#22c55e', WebkitTextFillColor: '#22c55e' }}>Moondala</span>
+          </h1>
+          
+          <p style={{
+            fontSize: 'clamp(18px, 3vw, 20px)',
+            color: 'rgba(255, 255, 255, 0.6)',
+            marginBottom: '40px',
+            lineHeight: '1.6',
+            maxWidth: '600px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}>
+            The next-generation marketplace that empowers map-based discovery, equitable growth, and community-first commerce.
+          </p>
+
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={scrollToForm}
+              style={{
+                padding: '16px 40px',
+                background: '#22c55e',
+                color: '#000',
+                border: 'none',
+                borderRadius: '12px',
+                fontSize: '16px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 4px 20px rgba(34, 197, 94, 0.3)',
+              }}
+              onMouseEnter={(e) => { e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = '0 8px 30px rgba(34, 197, 94, 0.4)'; }}
+              onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = '0 4px 20px rgba(34, 197, 94, 0.3)'; }}
+            >
+              Start Selling Today
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Banner */}
       <div style={{
         maxWidth: '1200px',
-        margin: '0 auto',
-        paddingTop: '60px',
-        paddingBottom: '60px',
+        margin: '0 auto 100px',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '24px',
+        padding: '0 24px',
       }}>
-        {/* Section 1 */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '60px',
-          alignItems: 'center',
-          marginBottom: '120px',
-        }}>
-          <div>
-            <h2 style={{
-              fontSize: 'clamp(24px, 4vw, 36px)',
-              fontWeight: '900',
-              marginBottom: '16px',
-              color: '#22c55e',
-            }}>
-              🌍 Global Reach
-            </h2>
-            <p style={{
-              fontSize: '16px',
-              color: 'rgba(255, 255, 255, 0.8)',
-              lineHeight: '1.8',
-              marginBottom: '16px',
-            }}>
-              [Add your benefit description here]
-            </p>
-            <p style={{
-              fontSize: '14px',
-              color: 'rgba(255, 255, 255, 0.6)',
-              lineHeight: '1.8',
-            }}>
-              [Add additional details or key points]
-            </p>
-          </div>
-          <div style={{
-            width: '100%',
-            height: '300px',
-            border: '2px dashed rgba(34, 197, 94, 0.3)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(34, 197, 94, 0.05)',
-            color: 'rgba(34, 197, 94, 0.5)',
-            fontSize: '18px',
-            fontWeight: '600',
-            textAlign: 'center',
-            padding: '20px',
+        {[
+          { label: "Active Buyers", val: "50k+" },
+          { label: "Countries Supported", val: "12+" },
+          { label: "Average Growth", val: "300%" },
+          { label: "Seller Satisfaction", val: "4.9/5" }
+        ].map((stat, i) => (
+          <div key={i} style={{ 
+            textAlign: 'center', 
+            padding: '24px',
+            background: 'rgba(255, 255, 255, 0.03)',
+            borderRadius: '16px',
+            border: '1px solid rgba(255, 255, 255, 0.05)'
           }}>
-            [Add Photo Here]
+            <div style={{ fontSize: '32px', fontWeight: '800', color: '#fff', marginBottom: '4px' }}>{stat.val}</div>
+            <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.5)' }}>{stat.label}</div>
           </div>
-        </div>
-
-        {/* Section 2 */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '60px',
-          alignItems: 'center',
-          marginBottom: '120px',
-          direction: 'rtl',
-        }}>
-          <div style={{ direction: 'ltr' }}>
-            <h2 style={{
-              fontSize: 'clamp(24px, 4vw, 36px)',
-              fontWeight: '900',
-              marginBottom: '16px',
-              color: '#22c55e',
-            }}>
-              💰 Better Payouts
-            </h2>
-            <p style={{
-              fontSize: '16px',
-              color: 'rgba(255, 255, 255, 0.8)',
-              lineHeight: '1.8',
-              marginBottom: '16px',
-            }}>
-              [Add your benefit description here]
-            </p>
-            <p style={{
-              fontSize: '14px',
-              color: 'rgba(255, 255, 255, 0.6)',
-              lineHeight: '1.8',
-            }}>
-              [Add additional details or key points]
-            </p>
-          </div>
-          <div style={{
-            width: '100%',
-            height: '300px',
-            border: '2px dashed rgba(34, 197, 94, 0.3)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(34, 197, 94, 0.05)',
-            color: 'rgba(34, 197, 94, 0.5)',
-            fontSize: '18px',
-            fontWeight: '600',
-            textAlign: 'center',
-            padding: '20px',
-          }}>
-            [Add Photo Here]
-          </div>
-        </div>
-
-        {/* Section 3 */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '60px',
-          alignItems: 'center',
-          marginBottom: '120px',
-        }}>
-          <div>
-            <h2 style={{
-              fontSize: 'clamp(24px, 4vw, 36px)',
-              fontWeight: '900',
-              marginBottom: '16px',
-              color: '#22c55e',
-            }}>
-              📊 Advanced Analytics
-            </h2>
-            <p style={{
-              fontSize: '16px',
-              color: 'rgba(255, 255, 255, 0.8)',
-              lineHeight: '1.8',
-              marginBottom: '16px',
-            }}>
-              [Add your benefit description here]
-            </p>
-            <p style={{
-              fontSize: '14px',
-              color: 'rgba(255, 255, 255, 0.6)',
-              lineHeight: '1.8',
-            }}>
-              [Add additional details or key points]
-            </p>
-          </div>
-          <div style={{
-            width: '100%',
-            height: '300px',
-            border: '2px dashed rgba(34, 197, 94, 0.3)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(34, 197, 94, 0.05)',
-            color: 'rgba(34, 197, 94, 0.5)',
-            fontSize: '18px',
-            fontWeight: '600',
-            textAlign: 'center',
-            padding: '20px',
-          }}>
-            [Add Photo Here]
-          </div>
-        </div>
-
-        {/* Section 4 */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '60px',
-          alignItems: 'center',
-          marginBottom: '120px',
-          direction: 'rtl',
-        }}>
-          <div style={{ direction: 'ltr' }}>
-            <h2 style={{
-              fontSize: 'clamp(24px, 4vw, 36px)',
-              fontWeight: '900',
-              marginBottom: '16px',
-              color: '#22c55e',
-            }}>
-              🎨 Custom Mall Builder
-            </h2>
-            <p style={{
-              fontSize: '16px',
-              color: 'rgba(255, 255, 255, 0.8)',
-              lineHeight: '1.8',
-              marginBottom: '16px',
-            }}>
-              [Add your benefit description here]
-            </p>
-            <p style={{
-              fontSize: '14px',
-              color: 'rgba(255, 255, 255, 0.6)',
-              lineHeight: '1.8',
-            }}>
-              [Add additional details or key points]
-            </p>
-          </div>
-          <div style={{
-            width: '100%',
-            height: '300px',
-            border: '2px dashed rgba(34, 197, 94, 0.3)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(34, 197, 94, 0.05)',
-            color: 'rgba(34, 197, 94, 0.5)',
-            fontSize: '18px',
-            fontWeight: '600',
-            textAlign: 'center',
-            padding: '20px',
-          }}>
-            [Add Photo Here]
-          </div>
-        </div>
-
-        {/* Section 5 */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '60px',
-          alignItems: 'center',
-          marginBottom: '120px',
-        }}>
-          <div>
-            <h2 style={{
-              fontSize: 'clamp(24px, 4vw, 36px)',
-              fontWeight: '900',
-              marginBottom: '16px',
-              color: '#22c55e',
-            }}>
-              🤝 Community & Support
-            </h2>
-            <p style={{
-              fontSize: '16px',
-              color: 'rgba(255, 255, 255, 0.8)',
-              lineHeight: '1.8',
-              marginBottom: '16px',
-            }}>
-              [Add your benefit description here]
-            </p>
-            <p style={{
-              fontSize: '14px',
-              color: 'rgba(255, 255, 255, 0.6)',
-              lineHeight: '1.8',
-            }}>
-              [Add additional details or key points]
-            </p>
-          </div>
-          <div style={{
-            width: '100%',
-            height: '300px',
-            border: '2px dashed rgba(34, 197, 94, 0.3)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(34, 197, 94, 0.05)',
-            color: 'rgba(34, 197, 94, 0.5)',
-            fontSize: '18px',
-            fontWeight: '600',
-            textAlign: 'center',
-            padding: '20px',
-          }}>
-            [Add Photo Here]
-          </div>
-        </div>
-
-        {/* Section 6 */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '60px',
-          alignItems: 'center',
-          marginBottom: '120px',
-          direction: 'rtl',
-        }}>
-          <div style={{ direction: 'ltr' }}>
-            <h2 style={{
-              fontSize: 'clamp(24px, 4vw, 36px)',
-              fontWeight: '900',
-              marginBottom: '16px',
-              color: '#22c55e',
-            }}>
-              💎 Transparent Pricing
-            </h2>
-            <p style={{
-              fontSize: '16px',
-              color: 'rgba(255, 255, 255, 0.8)',
-              lineHeight: '1.8',
-              marginBottom: '16px',
-            }}>
-              [Add your benefit description here]
-            </p>
-            <p style={{
-              fontSize: '14px',
-              color: 'rgba(255, 255, 255, 0.6)',
-              lineHeight: '1.8',
-            }}>
-              [Add additional details or key points]
-            </p>
-          </div>
-          <div style={{
-            width: '100%',
-            height: '300px',
-            border: '2px dashed rgba(34, 197, 94, 0.3)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(34, 197, 94, 0.5)',
-            color: 'rgba(34, 197, 94, 0.5)',
-            fontSize: '18px',
-            fontWeight: '600',
-            textAlign: 'center',
-            padding: '20px',
-          }}>
-            [Add Photo Here]
-          </div>
-        </div>
+        ))}
       </div>
 
-      {/* CTA Section */}
-      <div style={{
-        background: 'rgba(34, 197, 94, 0.1)',
-        borderTop: '1px solid rgba(34, 197, 94, 0.2)',
-        borderBottom: '1px solid rgba(34, 197, 94, 0.2)',
-        padding: 'clamp(40px, 8vw, 80px) 20px',
-        textAlign: 'center',
-      }}>
-        <div style={{
-          maxWidth: '600px',
-          margin: '0 auto',
+      {/* Features Grid */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+        
+        {/* Feature 1 */}
+        <FeatureSection
+          badge="GLOBAL REACH"
+          title="Sell to the World"
+          desc="Break down borders. Moondala automatically translates your listings and handles currency conversions, giving you instant access to energetic markets across the Middle East and beyond."
+          imgUrl={mallImg}
+          align="left"
+        />
+
+        {/* Feature 2 */}
+        <FeatureSection
+          badge="MAXIMUM EARNINGS"
+          title="Keep More of What You Earn"
+          desc="Stop losing 30% to platform fees. We offer industry-leading payout rates with a transparent commission structure, so you can reinvest in your products and grow faster."
+          imgUrl="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=2000&auto=format&fit=crop"
+          align="right"
+        />
+
+        {/* Feature 3 */}
+        <FeatureSection
+          badge="DATA DRIVEN"
+          title="Analytics That Matter"
+          desc="Understand your customers like never before. Our dashboard provides real-time insights on traffic sources, popular products, and customer behavior to help you make smarter decisions."
+          imgUrl={analyticsImg}
+          align="left"
+        />
+
+        {/* Feature 4 */}
+        <FeatureSection
+          badge="BRANDING"
+          title="Your Store, Your Identity"
+          desc="Don't just be another list item. Use our Custom Mall Builder to create a stunning, immersive storefront that reflects your brand's unique personality and story."
+          imgUrl={editorImg}
+          align="right"
+        />
+
+        {/* Feature 5 */}
+        <FeatureSection
+          badge="COMMUNITY"
+          title="Supported by Sellers"
+          desc="Join a thriving community of entrepreneurs. Access exclusive workshops, seller forums, and 24/7 dedicated support to help you navigate every step of your journey."
+          imgUrl={feedImg}
+          align="left"
+        />
+
+        {/* Feature 6 */}
+        <FeatureSection
+          badge="TRANSPARENT"
+          title="Growth Without Limits"
+          desc="We believe in fair play. No hidden algorithms favoring big brands. Our transparent ranking system ensures that everyone gets a fair shot at visibility and success."
+          imgUrl="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2000&auto=format&fit=crop"
+          align="right"
+        />
+
+      </div>
+
+      {/* Big CTA with Integrated Form */}
+      <div 
+        ref={formRef}
+        style={{
+          marginTop: '120px',
+          padding: '24px',
+          textAlign: 'center',
+          scrollMarginTop: '100px'
+        }}
+      >
+        <div style={{ 
+          maxWidth: '800px', 
+          margin: '0 auto', 
+          background: 'radial-gradient(ellipse at top, rgba(34, 197, 94, 0.1) 0%, rgba(9, 9, 11, 0.5) 100%)',
+          borderRadius: '32px',
+          padding: 'clamp(40px, 8vw, 80px) 24px',
+          border: '1px solid rgba(34, 197, 94, 0.2)',
+          position: 'relative',
+          overflow: 'hidden'
         }}>
+          {/* Decorative glow */}
+          <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '600px', height: '300px', background: '#22c55e', filter: 'blur(120px)', opacity: 0.05, borderRadius: '50%', pointerEvents: 'none' }}></div>
+
           <h2 style={{
-            fontSize: 'clamp(24px, 4vw, 36px)',
+            fontSize: 'clamp(28px, 5vw, 42px)',
             fontWeight: '900',
-            marginBottom: '24px',
+            marginBottom: '16px',
+            color: '#fff',
+            position: 'relative'
           }}>
-            Ready to Start Selling?
+            Join the Seller Waitlist
           </h2>
           <p style={{
             fontSize: '16px',
             color: 'rgba(255, 255, 255, 0.7)',
-            marginBottom: '32px',
-            lineHeight: '1.8',
+            marginBottom: '40px',
+            maxWidth: '500px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            position: 'relative'
           }}>
-            [Add your call-to-action message here]
+            Register your shop details below. We'll review your application and notify you as soon as your store is ready to go live.
           </p>
-          <button
-            onClick={() => nav('/shop/landing')}
-            style={{
-              padding: '14px 32px',
-              background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-            onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
-          >
-            Register Your Shop Now
-          </button>
+          
+          <div style={{ 
+            maxWidth: '500px', 
+            margin: '0 auto', 
+            background: 'rgba(0,0,0,0.3)', 
+            padding: '32px', 
+            borderRadius: '24px',
+            border: '1px solid rgba(255,255,255,0.05)',
+            textAlign: 'left'
+          }}>
+            <ShopAuthForm mode="signup" onModeChange={() => {}} />
+          </div>
+
         </div>
       </div>
 
       {/* Footer */}
       <div style={{
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+        marginTop: '80px',
+        paddingTop: '60px',
         textAlign: 'center',
-        padding: '40px 20px',
-        color: 'rgba(255, 255, 255, 0.5)',
-        fontSize: '14px',
+        paddingLeft: '24px',
+        paddingRight: '24px',
       }}>
-        <p>© 2026 Moondala. All rights reserved.</p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '24px', opacity: 0.5 }}>
+          <img src={logo} alt="Moondala" style={{ height: '24px', filter: 'grayscale(100%)' }} />
+          <span style={{ fontWeight: 600 }}>Moondala</span>
+        </div>
+        <p style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '14px' }}>
+          © 2026 Moondala Inc. All rights reserved.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// Reusable Feature Component
+function FeatureSection({ badge, title, desc, imgUrl, align = 'left' }) {
+  const isRight = align === 'right';
+  
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+      gap: 'clamp(40px, 6vw, 80px)',
+      alignItems: 'center',
+      marginBottom: 'clamp(80px, 10vw, 160px)',
+    }}>
+      {/* Text Content */}
+      <div style={{ order: isRight ? 2 : 1 }}>
+        <div style={{
+          fontSize: '12px',
+          fontWeight: '700',
+          color: '#22c55e',
+          letterSpacing: '2px',
+          marginBottom: '16px',
+          textTransform: 'uppercase',
+        }}>
+          {badge}
+        </div>
+        <h2 style={{
+          fontSize: 'clamp(28px, 4vw, 42px)',
+          fontWeight: '800',
+          marginBottom: '20px',
+          lineHeight: '1.2',
+          background: 'linear-gradient(135deg, #fff 0%, #a1a1aa 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}>
+          {title}
+        </h2>
+        <p style={{
+          fontSize: '16px',
+          color: 'rgba(255, 255, 255, 0.7)',
+          lineHeight: '1.8',
+          marginBottom: '32px',
+        }}>
+          {desc}
+        </p>
+      </div>
+
+      {/* Image Content */}
+      <div style={{ 
+        order: isRight ? 1 : 2,
+        position: 'relative',
+      }}>
+        {/* Decorative elements behind image */}
+        <div style={{
+          position: 'absolute',
+          top: '20px',
+          left: isRight ? '-20px' : '20px',
+          right: isRight ? '20px' : '-20px',
+          bottom: '-20px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '24px',
+          zIndex: 0,
+        }}></div>
+        
+        <div style={{
+          position: 'relative',
+          borderRadius: '24px',
+          overflow: 'hidden',
+          boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)',
+          background: '#18181b', // skeleton loading color
+          aspectRatio: '4/3',
+        }}>
+          <img 
+            src={imgUrl} 
+            alt={title}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transition: 'transform 0.5s ease',
+            }}
+            onMouseEnter={(e) => e.target.style.transform = 'scale(1.03)'}
+            onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+          />
+          {/* Overlay gradient */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)',
+            pointerEvents: 'none',
+          }}></div>
+        </div>
       </div>
     </div>
   );

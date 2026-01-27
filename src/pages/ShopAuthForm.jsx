@@ -170,27 +170,15 @@ export function ShopAuthForm({ mode, onModeChange }) {
         minHeight: '400px'
       }}>
         <div style={{ fontSize: '64px', marginBottom: '24px' }}>✨</div>
-        <button
-          onClick={() => nav("/sell")}
-          style={{
-            background: "none",
-            border: "none",
-            color: '#22c55e',
-            fontSize: '28px',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            letterSpacing: '0.5px',
-            marginBottom: '24px',
-            textDecoration: "underline",
-            opacity: 0.9,
-            transition: "all 0.2s ease",
-          }}
-          onMouseEnter={(e) => e.target.style.opacity = '1'}
-          onMouseLeave={(e) => e.target.style.opacity = '0.9'}
-          title="Learn why Moondala is different"
-        >
+        <h2 style={{
+          fontSize: '28px',
+          fontWeight: 'bold',
+          color: '#22c55e',
+          marginBottom: '16px',
+          letterSpacing: '0.5px'
+        }}>
           Sell on Moondala
-        </button>
+        </h2>
         <p style={{
           fontSize: '16px',
           color: '#cbd5e1',
@@ -198,27 +186,49 @@ export function ShopAuthForm({ mode, onModeChange }) {
           maxWidth: '420px',
           marginBottom: '32px'
         }}>
-          The seller dashboard is currently in development. Register your shop to join the early waitlist, and we'll notify you when selling on Moondala goes live.
+          The seller dashboard is currently in development. Learn more about selling on Moondala or join our waiting list.
         </p>
-        <button
-          onClick={() => onModeChange && onModeChange("signup")}
-          style={{
-            padding: '14px 32px',
-            background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '16px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            transition: 'opacity 0.2s',
-            boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
-          }}
-          onMouseOver={(e) => e.target.style.opacity = '0.9'}
-          onMouseOut={(e) => e.target.style.opacity = '1'}
-        >
-          Register Your Shop
-        </button>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', maxWidth: '300px' }}>
+          <button
+            onClick={() => nav("/sell")}
+            style={{
+              padding: '14px 24px',
+              background: 'rgba(34, 197, 94, 0.1)',
+              color: '#22c55e',
+              border: '1px solid rgba(34, 197, 94, 0.3)',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={(e) => e.target.style.background = 'rgba(34, 197, 94, 0.2)'}
+            onMouseLeave={(e) => e.target.style.background = 'rgba(34, 197, 94, 0.1)'}
+          >
+            Learn More
+          </button>
+          
+          <button
+            onClick={() => onModeChange && onModeChange("signup")}
+            style={{
+              padding: '14px 24px',
+              background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'opacity 0.2s',
+              boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
+            }}
+            onMouseOver={(e) => e.target.style.opacity = '0.9'}
+            onMouseOut={(e) => e.target.style.opacity = '1'}
+          >
+            Register Your Shop
+          </button>
+        </div>
       </div>
     );
   }
