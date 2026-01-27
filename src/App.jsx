@@ -28,6 +28,7 @@ import PublicShareRedirect from "./pages/PublicShareRedirect";
 import EarnMore from "./pages/EarnMore";
 import Careers from "./pages/Careers";
 import ReferralLanding from "./pages/ReferralLanding";
+import SellOnMoondala from "./pages/SellOnMoondala";
 
 /* ✅ PUBLIC SHOP PAGES */
 import ShopFeedPublic from "./pages/ShopFeedPublic";
@@ -281,6 +282,9 @@ export default function App() {
         <Route path="/legal/guidelines" element={<CommunityGuidelines />} />
         <Route path="/legal/referrals" element={<ReferralPolicy />} />
         <Route path="/legal/refunds" element={<RefundPolicy />} />
+
+        {/* ✅ SELL ON MOONDALA PAGE (public) */}
+        <Route path="/sell" element={<SellOnMoondala />} />
 
         {/* ✅ PRIVATE APP (logged-in) */}
         <Route element={<ProtectedRoute />}>

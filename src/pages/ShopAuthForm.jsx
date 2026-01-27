@@ -171,7 +171,7 @@ export function ShopAuthForm({ mode, onModeChange }) {
       }}>
         <div style={{ fontSize: '64px', marginBottom: '24px' }}>✨</div>
         <button
-          onClick={() => nav("/shop/why")}
+          onClick={() => nav("/sell")}
           style={{
             background: "none",
             border: "none",
