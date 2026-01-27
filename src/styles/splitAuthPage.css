@@ -32,6 +32,8 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .auth-gradient {
@@ -97,7 +99,7 @@
 
 .auth-card {
   position: relative;
-  z-index: 10;
+  z-index: 100;
   width: 100%;
   max-width: 440px;
   background: var(--bg-card);

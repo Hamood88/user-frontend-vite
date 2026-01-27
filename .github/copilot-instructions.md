@@ -3,6 +3,8 @@
 **Status**: ACTIVE. (Legacy `user-frontend` is DEPRECATED).  
 **Port**: 5173 (dev), Vercel (production, `moondala.com`)
 
+**Monorepo Quick Start**: See [../backend/COPILOT_QUICKSTART.md](../backend/COPILOT_QUICKSTART.md) for 60-second setup
+
 ## 🏗️ Architecture & Tech Stack
 - **Framework**: React 18, Vite 7 (ES modules, not CRA).
 - **Styling**: Tailwind CSS v4, Framer Motion v12, lucide-react icons.

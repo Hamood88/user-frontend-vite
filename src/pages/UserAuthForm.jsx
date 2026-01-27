@@ -618,30 +618,56 @@ export function UserAuthForm({ mode }) {
       )}
 
       {mode === "signup" && (
-        <div className="flex items-start gap-3 mt-4" style={{ background: 'transparent' }}>
-          <input
-            type="checkbox"
-            id="termsAgreement"
-            checked={termsAgreed}
-            onChange={(e) => setTermsAgreed(e.target.checked)}
-            className="mt-1 w-5 h-5 rounded cursor-pointer flex-shrink-0"
-            style={{ 
-              backgroundColor: '#ffffff',
-              accentColor: '#8b5cf6',
-              border: 'none'
-            }}
-          />
-          <label htmlFor="termsAgreement" className="text-sm leading-relaxed cursor-pointer" style={{ color: '#f8fafc' }}>
+        <div className="relative z-[101] mt-6 flex items-start gap-3 rounded-xl border border-white/10 bg-black/20 p-4 backdrop-blur-sm transition-colors hover:bg-black/30">
+          <div className="relative flex h-5 w-5 flex-shrink-0 items-center justify-center">
+            <input
+              type="checkbox"
+              id="termsAgreement"
+              checked={termsAgreed}
+              onChange={(e) => setTermsAgreed(e.target.checked)}
+              className="peer h-5 w-5 appearance-none rounded border border-white/30 bg-white/10 checked:border-primary checked:bg-primary hover:border-white/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+              style={{ cursor: 'pointer' }}
+            />
+            <svg
+              className="pointer-events-none absolute hidden h-3.5 w-3.5 text-white peer-checked:block"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          
+          <label htmlFor="termsAgreement" className="flex-1 cursor-pointer text-sm leading-relaxed text-gray-300 select-none">
             {t('legal.agreeToTerms')}{' '}
-            <Link to="/legal/terms" target="_blank" className="text-foreground underline hover:opacity-80">
+            <Link 
+              to="/legal/terms" 
+              target="_blank" 
+              className="font-medium text-primary hover:text-primary-300 hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
               {t('legal.termsLink')}
             </Link>
             {', '}
-            <Link to="/legal/privacy" target="_blank" className="text-foreground underline hover:opacity-80">
+            <Link 
+              to="/legal/privacy" 
+              target="_blank" 
+              className="font-medium text-primary hover:text-primary-300 hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
               {t('legal.privacyLink')}
             </Link>
             {', '}{t('legal.and')}{' '}
-            <Link to="/legal/referrals" target="_blank" className="text-foreground underline hover:opacity-80">
+            <Link 
+              to="/legal/referrals" 
+              target="_blank" 
+              className="font-medium text-primary hover:text-primary-300 hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
               {t('legal.referralPolicyLink')}
             </Link>
             .
@@ -652,7 +678,7 @@ export function UserAuthForm({ mode }) {
       <Button 
         type="submit" 
         variant="default" 
-        className="w-full mt-6"
+        className="relative z-[101] mt-6 w-full"
         disabled={isLoading || (mode === "signup" && !termsAgreed)}
       >
         {isLoading ? (

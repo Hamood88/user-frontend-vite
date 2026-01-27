@@ -98,6 +98,7 @@ export default function Register() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   useEffect(() => {
     // ✅ If user lands with a referral URL, force it into state (locked)
@@ -190,6 +191,11 @@ export default function Register() {
 
       // ✅ clear legacy token key from older builds
       localStorage.removeItem("token");
+
+      // ✅ Validate terms agreement
+      if (!agreedToTerms) {
+        throw new Error("You must agree to the Terms of Service, Privacy Policy, and Referral Policy to create an account.");
+      }
 
       // ✅ URL inviter code ALWAYS wins
       const invitedByCodeToSend = lockInviter
@@ -552,24 +558,93 @@ export default function Register() {
           )}
         </div>
 
+        {/* ✅ Terms of Service Agreement */}
+        <div style={{ 
+          marginTop: 16, 
+          padding: "16px", 
+          borderRadius: 8, 
+          border: "1px solid #ddd",
+          background: "#f8f9fa",
+          position: "relative",
+          zIndex: 10
+        }}>
+          <label style={{ 
+            display: "flex", 
+            alignItems: "flex-start", 
+            cursor: "pointer",
+            gap: 10,
+            position: "relative",
+            zIndex: 10
+          }}>
+            <input
+              type="checkbox"
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
+              style={{ 
+                marginTop: 4,
+                width: 18,
+                height: 18,
+                cursor: "pointer",
+                position: "relative",
+                zIndex: 10,
+                flexShrink: 0
+              }}
+            />
+            <span style={{ fontSize: 14, lineHeight: 1.5, position: "relative", zIndex: 10 }}>
+              I AGREE TO MOONDALA'S{" "}
+              <a 
+                href="/terms" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ color: "#7c3aed", textDecoration: "underline", position: "relative", zIndex: 10 }}
+              >
+                TERMS OF SERVICE
+              </a>
+              ,{" "}
+              <a 
+                href="/privacy" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ color: "#7c3aed", textDecoration: "underline", position: "relative", zIndex: 10 }}
+              >
+                PRIVACY POLICY
+              </a>
+              , AND{" "}
+              <a 
+                href="/referral-policy" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ color: "#7c3aed", textDecoration: "underline", position: "relative", zIndex: 10 }}
+              >
+                REFERRAL POLICY
+              </a>
+              .
+            </span>
+          </label>
+        </div>
+
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !agreedToTerms}
           style={{
             marginTop: 10,
             padding: "12px 14px",
             borderRadius: 10,
             border: "none",
-            background: "#111",
+            background: (loading || !agreedToTerms) ? "#999" : "#7c3aed",
             color: "white",
             fontWeight: 800,
-            cursor: "pointer",
+            cursor: (loading || !agreedToTerms) ? "not-allowed" : "pointer",
+            opacity: (loading || !agreedToTerms) ? 0.6 : 1,
+            position: "relative",
+            zIndex: 10,
+            width: "100%"
           }}
         >
           {loading ? "Creating..." : "Create Account"}
         </button>
 
-        <div style={{ marginTop: 8, fontSize: 14 }}>
+        <div style={{ marginTop: 8, fontSize: 14, position: "relative", zIndex: 10 }}>
           Already have an account? <Link to="/login">Login</Link>
         </div>
       </form>
