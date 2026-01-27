@@ -396,31 +396,31 @@ export default function UserDashboard() {
 function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }) {
   const colors = {
     violet: "from-violet-500 to-purple-600",
-    emerald: "from-emerald-400 to-teal-500",
+    emerald: "from-emerald-500 to-teal-500",
     amber: "from-amber-400 to-orange-500",
     cyan: "from-cyan-400 to-blue-500",
   };
 
   const textColors = {
-    violet: "text-violet-600 dark:text-violet-400",
-    emerald: "text-emerald-600 dark:text-emerald-400",
-    amber: "text-amber-600 dark:text-amber-400",
-    cyan: "text-cyan-600 dark:text-cyan-400",
+    violet: "text-violet-600 dark:text-violet-300",
+    emerald: "text-emerald-600 dark:text-emerald-300",
+    amber: "text-amber-600 dark:text-amber-300",
+    cyan: "text-cyan-600 dark:text-cyan-300",
   };
 
-  const bgColors = {
-    violet: "bg-violet-500/10 border-violet-500/20",
-    emerald: "bg-emerald-500/10 border-emerald-500/20",
-    amber: "bg-amber-500/10 border-amber-500/20",
-    cyan: "bg-cyan-500/10 border-cyan-500/20",
+  const iconBgColors = {
+    violet: "bg-violet-500/15 dark:bg-violet-500/20 border-violet-200 dark:border-violet-500/30",
+    emerald: "bg-emerald-500/15 dark:bg-emerald-500/20 border-emerald-200 dark:border-emerald-500/30",
+    amber: "bg-amber-500/15 dark:bg-amber-500/20 border-amber-200 dark:border-amber-500/30",
+    cyan: "bg-cyan-500/15 dark:bg-cyan-500/20 border-cyan-200 dark:border-cyan-500/30",
   };
 
-  // Vibrant cards with gradient backgrounds
+  // More vibrant gradients for dark mode
   const themeClasses = {
-    violet: "bg-gradient-to-br from-violet-50/50 to-violet-100/50 dark:from-violet-500/5 dark:to-violet-500/20 border-violet-200 dark:border-violet-500/30 shadow-sm hover:shadow-violet-500/10",
-    emerald: "bg-gradient-to-br from-emerald-50/50 to-emerald-100/50 dark:from-emerald-500/5 dark:to-emerald-500/20 border-emerald-200 dark:border-emerald-500/30 shadow-sm hover:shadow-emerald-500/10",
-    amber: "bg-gradient-to-br from-amber-50/50 to-amber-100/50 dark:from-amber-500/5 dark:to-amber-500/20 border-amber-200 dark:border-amber-500/30 shadow-sm hover:shadow-amber-500/10",
-    cyan: "bg-gradient-to-br from-cyan-50/50 to-cyan-100/50 dark:from-cyan-500/5 dark:to-cyan-500/20 border-cyan-200 dark:border-cyan-500/30 shadow-sm hover:shadow-cyan-500/10",
+    violet: "bg-gradient-to-br from-violet-50 to-violet-100/60 dark:from-violet-900/40 dark:to-violet-900/10 border-violet-200 dark:border-violet-500/30 shadow-md hover:shadow-violet-500/20",
+    emerald: "bg-gradient-to-br from-emerald-50 to-emerald-100/60 dark:from-emerald-900/40 dark:to-emerald-900/10 border-emerald-200 dark:border-emerald-500/30 shadow-md hover:shadow-emerald-500/20",
+    amber: "bg-gradient-to-br from-amber-50 to-amber-100/60 dark:from-amber-900/40 dark:to-amber-900/10 border-amber-200 dark:border-amber-500/30 shadow-md hover:shadow-amber-500/20",
+    cyan: "bg-gradient-to-br from-cyan-50 to-cyan-100/60 dark:from-cyan-900/40 dark:to-cyan-900/10 border-cyan-200 dark:border-cyan-500/30 shadow-md hover:shadow-cyan-500/20",
   };
 
   const isNumber = typeof value === "number";
@@ -431,16 +431,16 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
       className={`rounded-2xl p-6 border backdrop-blur-md relative overflow-hidden group transition-all duration-300 ${themeClasses[color]}`}
     >
       <div
-        className={`absolute -right-6 -top-6 w-32 h-32 rounded-full bg-gradient-to-br ${colors[color]} opacity-10 group-hover:opacity-20 transition-opacity blur-3xl`}
+        className={`absolute -right-10 -top-10 w-40 h-40 rounded-full bg-gradient-to-br ${colors[color]} opacity-10 dark:opacity-20 group-hover:dark:opacity-30 transition-opacity blur-3xl`}
       />
 
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-4">
-          <div className={`p-3 rounded-xl border transition-colors ${bgColors[color]} ${textColors[color]}`}>
+          <div className={`p-3 rounded-xl border transition-colors ${iconBgColors[color]} ${textColors[color]}`}>
             <Icon className="w-6 h-6" />
           </div>
           {trend ? (
-            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${bgColors[color]} ${textColors[color]}`}>
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${iconBgColors[color]} ${textColors[color]}`}>
               {trend}
             </span>
           ) : null}
