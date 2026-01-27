@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/moondala-logo.png';
 import { ShopAuthForm } from './ShopAuthForm'; // Reuse existing form
-import '../pages/ShopLoginRegister.css'; // Ensure any custom styles load
+// import '../pages/ShopLoginRegister.css'; // REMOVED: File does not exist
 
 // Placeholders for user screenshots
 // Please rename your photos to these names and put them in src/assets
