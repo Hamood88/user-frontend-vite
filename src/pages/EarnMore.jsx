@@ -287,18 +287,18 @@ export default function EarnMore() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
-                className="bg-gray-100/80 dark:bg-white/5 rounded-3xl p-6 border border-border/60 shadow-xl backdrop-blur-md"
+                className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xl backdrop-blur-md"
               >
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-xl bg-gradient-to-br shadow-inner ${activeTab === 'users' ? 'from-blue-500 to-indigo-600' : 'from-purple-500 to-pink-600'}`}>
-                      {activeTab === 'users' ? <Users className="w-5 h-5 text-white" /> : <Gift className="w-5 h-5 text-white" />}
+                    <div className={`p-2.5 rounded-xl bg-gradient-to-br shadow-lg ${activeTab === 'users' ? 'from-blue-500 to-indigo-600' : 'from-purple-500 to-pink-600'}`}>
+                      {activeTab === 'users' ? <Users className="w-6 h-6 text-white" /> : <Gift className="w-6 h-6 text-white" />}
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-card-foreground leading-none mb-1">
+                      <h2 className="text-xl font-bold text-slate-900 dark:text-white leading-none mb-1.5">
                         {activeTab === "users" ? "Invite New Users" : "Onboard Merchants"}
                       </h2>
-                      <p className="text-muted-foreground text-xs text-balance">
+                      <p className="text-slate-500 dark:text-slate-400 text-xs text-balance font-medium">
                         {activeTab === "users" 
                           ? "Earn lifetime commissions." 
                           : "Earn from their revenue."}
@@ -308,10 +308,10 @@ export default function EarnMore() {
                 </div>
 
                 {/* Link Copy Section - Compact */}
-                <div className="bg-white/60 dark:bg-black/20 rounded-xl p-3 mb-4 border border-border/50 relative overflow-hidden flex items-center gap-3 shadow-sm">
+                <div className="bg-slate-100 dark:bg-black/40 rounded-xl p-4 mb-6 border border-slate-200 dark:border-slate-800 relative overflow-hidden flex items-center gap-4 shadow-inner">
                    <div className="flex-1 min-w-0">
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Referral Link</p>
-                      <code className="text-foreground text-sm block truncate font-mono select-all font-bold">
+                      <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Referral Link</p>
+                      <code className="text-blue-600 dark:text-blue-400 text-sm block truncate font-mono select-all font-bold tracking-tight">
                         {activeTab === "users" ? userReferralLink : shopReferralLink}
                       </code>
                    </div>
@@ -319,19 +319,19 @@ export default function EarnMore() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => copyToClipboard(activeTab === "users" ? userReferralLink : shopReferralLink)}
-                      className="bg-background hover:bg-muted p-2.5 rounded-lg text-foreground transition-colors border border-border flex-shrink-0"
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 p-3 rounded-xl text-slate-700 dark:text-slate-200 transition-all border border-slate-200 dark:border-slate-700 flex-shrink-0 shadow-sm"
                     >
-                      {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5" />}
+                      {copied ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5" />}
                    </motion.button>
                 </div>
 
                 {/* Message Editor */}
-                <div className="mb-4">
-                  <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Customize Message</h3>
+                <div className="mb-6">
+                  <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Customize Message</h3>
                   <textarea
                     value={customMessage}
                     onChange={(e) => setCustomMessage(e.target.value)}
-                    className="w-full bg-white/60 dark:bg-black/20 border border-border/50 rounded-xl p-3 text-sm text-foreground focus:outline-none focus:border-ring resize-none placeholder:text-muted-foreground shadow-sm"
+                    className="w-full bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-inner min-h-[80px]"
                     rows={2}
                     placeholder="Write a message to share..."
                   />
