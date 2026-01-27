@@ -1606,63 +1606,6 @@ export default function Feed() {
       <div className="w-80 hidden lg:flex flex-col gap-6 pt-4 sticky top-20 self-start">
         {/* Top Inviters - First */}
         <TopInvitersList />
-
-        {/* Trending Products */}
-        <div className="glass-card rounded-2xl p-5">
-          <h2 className="font-display font-bold text-lg mb-4 text-foreground flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-pink-500" />
-            Trending Products
-          </h2>
-          
-          <div className="space-y-4">
-            {trendingProducts.length === 0 ? (
-              <div className="text-sm text-muted-foreground">No trending products yet.</div>
-            ) : (
-              trendingProducts.map((p) => (
-                <RouterLink 
-                  key={p._id} 
-                  to={`/product/${p._id}`}
-                  className="flex gap-3 group"
-                >
-                  <div className="w-16 h-16 rounded-lg bg-muted overflow-hidden flex-shrink-0 border border-border">
-                    {p.image ? (
-                      <img 
-                        src={toAbsUrl(p.image)} 
-                        alt={p.title} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
-                        No Img
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0 flex flex-col justify-center">
-                    <h3 className="font-semibold text-foreground text-sm truncate group-hover:text-primary transition-colors">
-                      {p.title}
-                    </h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-primary font-bold">
-                        {p.currency} {p.price.toLocaleString()}
-                      </span>
-                      {p.shop && (
-                        <span className="text-[10px] text-muted-foreground truncate">
-                          by {p.shop?.shopName || "Shop"}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </RouterLink>
-              ))
-            )}
-          </div>
-          
-          <RouterLink to="/mall" className="block w-full mt-4">
-            <button type="button" className="md-btnOutline w-full text-xs py-2">
-              Explore Mall
-            </button>
-          </RouterLink>
-        </div>
       </div>
 
       {/* Lightbox Modal */}
