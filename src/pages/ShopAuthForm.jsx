@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { apiPost } from "../api";
 
 // Add global styles for select options
@@ -54,6 +54,7 @@ const COUNTRIES = [
 
 export function ShopAuthForm({ mode, onModeChange }) {
   const [searchParams] = useSearchParams();
+  const nav = useNavigate();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -169,15 +170,27 @@ export function ShopAuthForm({ mode, onModeChange }) {
         minHeight: '400px'
       }}>
         <div style={{ fontSize: '64px', marginBottom: '24px' }}>✨</div>
-        <h3 style={{
-          fontSize: '28px',
-          fontWeight: 'bold',
-          color: '#22c55e',
-          marginBottom: '24px',
-          letterSpacing: '0.5px'
-        }}>
+        <button
+          onClick={() => nav("/shop/why")}
+          style={{
+            background: "none",
+            border: "none",
+            color: '#22c55e',
+            fontSize: '28px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            letterSpacing: '0.5px',
+            marginBottom: '24px',
+            textDecoration: "underline",
+            opacity: 0.9,
+            transition: "all 0.2s ease",
+          }}
+          onMouseEnter={(e) => e.target.style.opacity = '1'}
+          onMouseLeave={(e) => e.target.style.opacity = '0.9'}
+          title="Learn why Moondala is different"
+        >
           Sell on Moondala
-        </h3>
+        </button>
         <p style={{
           fontSize: '16px',
           color: '#cbd5e1',
