@@ -119,71 +119,41 @@ const UserAuth = ({ inviterRef }) => {
   );
 };
 
-// Shop Login/Register
-const ShopAuth = ({ inviterRef }) => {
-  const navigate = useNavigate();
-  const [tab, setTab] = useState('login');
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleLogin = async e => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    try {
-      const res = await axios.post('https://moondala-backend.onrender.com/api/shop/login', {
-        email: form.email,
-        password: form.password,
-      });
-      localStorage.setItem('shopToken', res.data.token);
-      setSuccess('Shop login successful!');
-      setTimeout(() => navigate('/shop/feed'), 400); // SHOP FEED
-    } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
-    }
-  };
-
-  const handleRegister = async e => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    try {
-      await axios.post('https://moondala-backend.onrender.com/api/shop/register', {
-        ...form,
-        invitedByUserRef: inviterRef,
-      });
-      setSuccess('Shop registration successful!');
-      setForm({ name: '', email: '', password: '' });
-    } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
-    }
-  };
-
+// Shop Coming Soon
+const ShopAuth = () => {
   return (
-    <div>
-      <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
-        <button onClick={() => setTab('login')} style={tab === 'login' ? shopBtnActive : shopBtnInactive}>Login</button>
-        <button onClick={() => setTab('register')} style={tab === 'register' ? shopBtnActive : shopBtnInactive}>Register</button>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '40px 20px',
+      textAlign: 'center',
+      minHeight: 300
+    }}>
+      <div style={{
+        fontSize: 48,
+        marginBottom: 20
+      }}>
+        🛠️
       </div>
-      {tab === 'login' ? (
-        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
-          <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Shop Email" required style={inputStyle} />
-          <input name="password" type="password" value={form.password} onChange={handleChange} placeholder="Password" required style={inputStyle} />
-          <button type="submit" style={{ ...mainBtnStyle, background: '#3bb271' }}>Login</button>
-        </form>
-      ) : (
-        <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
-          <input name="name" value={form.name} onChange={handleChange} placeholder="Shop Name" required style={inputStyle} />
-          <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Shop Email" required style={inputStyle} />
-          <input name="password" type="password" value={form.password} onChange={handleChange} placeholder="Password" required style={inputStyle} />
-          <button type="submit" style={{ ...mainBtnStyle, background: '#3bb271' }}>Register</button>
-        </form>
-      )}
-      {error && <div style={{ color: '#e84545', marginTop: 12, fontWeight: 500 }}>{error}</div>}
-      {success && <div style={{ color: '#118b40', marginTop: 12, fontWeight: 500 }}>{success}</div>}
+      <h3 style={{
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#178a63',
+        marginBottom: 12,
+        letterSpacing: 0.5
+      }}>
+        Shop Dashboard Coming Soon
+      </h3>
+      <p style={{
+        fontSize: 15,
+        color: '#64748b',
+        lineHeight: 1.6,
+        maxWidth: 320
+      }}>
+        Seller login will be available once the shop app is live.
+      </p>
     </div>
   );
 };
