@@ -401,12 +401,26 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
     cyan: "from-cyan-400 to-blue-500",
   };
 
+  const textColors = {
+    violet: "text-violet-600 dark:text-violet-400",
+    emerald: "text-emerald-600 dark:text-emerald-400",
+    amber: "text-amber-600 dark:text-amber-400",
+    cyan: "text-cyan-600 dark:text-cyan-400",
+  };
+
+  const bgColors = {
+    violet: "bg-violet-500/10 border-violet-500/20",
+    emerald: "bg-emerald-500/10 border-emerald-500/20",
+    amber: "bg-amber-500/10 border-amber-500/20",
+    cyan: "bg-cyan-500/10 border-cyan-500/20",
+  };
+
   // Vibrant cards with gradient backgrounds
   const themeClasses = {
-    violet: "bg-gradient-to-br from-card to-violet-500/10 border-violet-500/30 shadow-sm hover:shadow-violet-500/10",
-    emerald: "bg-gradient-to-br from-card to-emerald-500/10 border-emerald-500/30 shadow-sm hover:shadow-emerald-500/10",
-    amber: "bg-gradient-to-br from-card to-amber-500/10 border-amber-500/30 shadow-sm hover:shadow-amber-500/10",
-    cyan: "bg-gradient-to-br from-card to-cyan-500/10 border-cyan-500/30 shadow-sm hover:shadow-cyan-500/10",
+    violet: "bg-gradient-to-br from-violet-50/50 to-violet-100/50 dark:from-violet-500/5 dark:to-violet-500/20 border-violet-200 dark:border-violet-500/30 shadow-sm hover:shadow-violet-500/10",
+    emerald: "bg-gradient-to-br from-emerald-50/50 to-emerald-100/50 dark:from-emerald-500/5 dark:to-emerald-500/20 border-emerald-200 dark:border-emerald-500/30 shadow-sm hover:shadow-emerald-500/10",
+    amber: "bg-gradient-to-br from-amber-50/50 to-amber-100/50 dark:from-amber-500/5 dark:to-amber-500/20 border-amber-200 dark:border-amber-500/30 shadow-sm hover:shadow-amber-500/10",
+    cyan: "bg-gradient-to-br from-cyan-50/50 to-cyan-100/50 dark:from-cyan-500/5 dark:to-cyan-500/20 border-cyan-200 dark:border-cyan-500/30 shadow-sm hover:shadow-cyan-500/10",
   };
 
   const isNumber = typeof value === "number";
@@ -417,25 +431,25 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
       className={`rounded-2xl p-6 border backdrop-blur-md relative overflow-hidden group transition-all duration-300 ${themeClasses[color]}`}
     >
       <div
-        className={`absolute -right-6 -top-6 w-24 h-24 rounded-full bg-gradient-to-br ${colors[color]} opacity-10 group-hover:opacity-20 transition-opacity blur-2xl`}
+        className={`absolute -right-6 -top-6 w-32 h-32 rounded-full bg-gradient-to-br ${colors[color]} opacity-10 group-hover:opacity-20 transition-opacity blur-3xl`}
       />
 
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-4">
-          <div className="p-2.5 rounded-xl bg-secondary/50 border border-border text-foreground transition-colors group-hover:bg-secondary">
-            <Icon className="w-5 h-5" />
+          <div className={`p-3 rounded-xl border transition-colors ${bgColors[color]} ${textColors[color]}`}>
+            <Icon className="w-6 h-6" />
           </div>
           {trend ? (
-            <span className="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${bgColors[color]} ${textColors[color]}`}>
               {trend}
             </span>
           ) : null}
         </div>
 
-        <div className="text-muted-foreground text-sm font-semibold mb-1 tracking-wide">
+        <div className="text-muted-foreground text-sm font-bold mb-1 tracking-wide opacity-90">
           {title}
         </div>
-        <div className="text-3xl font-bold text-foreground tracking-tight">
+        <div className="text-3xl font-black text-foreground tracking-tight">
           {display}
         </div>
         {subValue ? (
