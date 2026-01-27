@@ -55,6 +55,16 @@ function pickProductId(order) {
   );
 }
 
+function pickShopId(order) {
+  return String(
+    order?.shopId?._id ||
+    order?.shopId ||
+    order?.shop?._id ||
+    order?.shop ||
+    ""
+  ).trim();
+}
+
 function pickProductImage(order) {
   // try many shapes (populated product, flat order fields)
   const img =
@@ -552,7 +562,8 @@ export default function MyOrders() {
                     style={{ ...S.thumbWrap, cursor: "pointer" }}
                     onClick={() => {
                       const pid = pickProductId(o);
-                      if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders", shopId: o.shopId } });
+                      const sid = pickShopId(o);
+                      if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders", shopId: sid } });
                     }}
                   >
                     {productImg ? (
@@ -574,7 +585,8 @@ export default function MyOrders() {
                       style={{ ...S.product, cursor: "pointer" }}
                       onClick={() => {
                         const pid = pickProductId(o);
-                        if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders", shopId: o.shopId } });
+                        const sid = pickShopId(o);
+                        if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders", shopId: sid } });
                       }}
                     >
                       {o.productTitle || "Product"}
