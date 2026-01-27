@@ -158,6 +158,22 @@ export default function SellOnMoondala() {
       {/* Features Grid */}
       <div ref={featuresRef} style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', marginTop: '100px', scrollMarginTop: '100px' }}>
         
+        {/* Feature 0 (New) */}
+        <FeatureSection
+          badge="PROFIT SHARING"
+          title="Customers buy more when they earn"
+          desc={
+            <>
+              On Moondala, a portion of each transaction is shared back with users.
+              That means every purchase increases their earnings — giving them a real reason to shop more, return often, and choose Moondala over other platforms.
+              <br /><br />
+              When users earn by shopping, your sales don’t stop at one checkout — they multiply.
+            </>
+          }
+          imgUrl={earningsImg}
+          align="left"
+        />
+
         {/* Feature 1 */}
         <FeatureSection
           badge="SMART MALL"
@@ -170,22 +186,6 @@ export default function SellOnMoondala() {
             </>
           }
           imgUrl={mallImg}
-          align="left"
-        />
-
-        {/* Feature 2 */}
-        <FeatureSection
-          badge="FAIR ECONOMY"
-          title="Earn more because customers come to you"
-          desc={
-            <>
-              Moondala doesn’t take your profits to fund ads.
-              Instead, growth is powered by users who share and invite others to earn — bringing you real buyers without expensive marketing costs.
-              <br /><br />
-              You sell more, spend less, and keep more of every sale.
-            </>
-          }
-          imgUrl={earningsImg}
           align="right"
         />
 
