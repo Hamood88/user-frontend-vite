@@ -398,10 +398,10 @@ export default function Settings() {
                     <div className="flex gap-2">
                       <button
                         type="button"
-                        className={`flex items-center gap-2 px-3 py-1 rounded-lg ${
+                        className={`flex items-center gap-2 px-3 py-1 rounded-lg transition-colors ${
                           theme === "light"
-                            ? "bg-yellow-400/20 text-yellow-400 border border-yellow-400"
-                            : "bg-white/5 text-white/50 border border-white/10 hover:bg-white/10"
+                            ? "bg-yellow-400/20 text-yellow-600 border border-yellow-400 font-bold"
+                            : "bg-transparent text-muted-foreground border border-border hover:bg-muted font-medium"
                         }`}
                         onClick={() => handleThemeChange("light")}
                       >
@@ -410,10 +410,10 @@ export default function Settings() {
                       </button>
                       <button
                         type="button"
-                        className={`flex items-center gap-2 px-3 py-1 rounded-lg ${
+                        className={`flex items-center gap-2 px-3 py-1 rounded-lg transition-colors ${
                           theme === "dark"
-                            ? "bg-indigo-400/20 text-indigo-400 border border-indigo-400"
-                            : "bg-white/5 text-white/50 border border-white/10 hover:bg-white/10"
+                            ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500 font-bold"
+                            : "bg-transparent text-muted-foreground border border-border hover:bg-muted font-medium"
                         }`}
                         onClick={() => handleThemeChange("dark")}
                       >

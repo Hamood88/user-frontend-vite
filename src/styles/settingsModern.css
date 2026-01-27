@@ -57,11 +57,16 @@
 }
 
 .md-btn-danger {
-  border-color: hsl(var(--destructive) / 0.35);
-  background: hsl(var(--destructive) / 0.10);
-  color: hsl(var(--destructive));
+  border: none;
+  background: linear-gradient(135deg, hsl(var(--destructive)) 0%, #b91c1c 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(239,68,68,0.25);
 }
-.md-btn-danger:hover { background: hsl(var(--destructive) / 0.16); }
+.md-btn-danger:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(239,68,68,0.35);
+}
 
 .md-btn-outline {
   width: 100%;
