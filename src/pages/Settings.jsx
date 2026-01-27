@@ -424,10 +424,10 @@ export default function Settings() {
                   }
                 />
 
-                <div className="pt-4 mt-4 border-t border-white/10">
+                <div className="pt-4 mt-4 border-t border-border">
                   <button
                     type="button"
-                    className="md-btn md-btn-outline w-full justify-start"
+                    className="md-btn md-btn-danger w-full justify-start font-bold"
                     onClick={logoutEverywhere}
                   >
                     <LogOut className="w-4 h-4 mr-2" />
@@ -447,7 +447,7 @@ function SettingRow({ title, sub, right }) {
   return (
     <div className="flex items-center justify-between gap-3">
       <div>
-        <div className="font-medium text-white">{title}</div>
+        <div className="font-medium text-foreground">{title}</div>
         <div className="text-xs text-muted-foreground">{sub}</div>
       </div>
       {right}
