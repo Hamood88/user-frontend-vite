@@ -1080,17 +1080,17 @@ const S = {
   returnBtn: {
     padding: "10px 14px",
     borderRadius: 12,
-    border: "1px solid rgba(245,158,11,0.35)",
-    background: "rgba(245,158,11,0.18)",
-    color: "#f59e0b",
+    border: "1px solid rgba(245,158,11,0)",
+    background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+    color: "#fff",
     fontWeight: 900,
   },
   reviewBtn: {
     padding: "10px 14px",
     borderRadius: 12,
-    border: "1px solid rgba(168,85,247,0.35)",
-    background: "rgba(168,85,247,0.18)",
-    color: "#a855f7",
+    border: "1px solid rgba(168,85,247,0)",
+    background: "linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)",
+    color: "#fff",
     fontWeight: 900,
   },
 
