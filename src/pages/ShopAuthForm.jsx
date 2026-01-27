@@ -159,6 +159,34 @@ export function ShopAuthForm({ mode }) {
       )}
 
       <input
+        type="text"
+        placeholder="Shop Name *"
+        value={shopName}
+        onChange={(e) => setShopName(e.target.value)}
+        required
+        style={inputStyle}
+      />
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <input
+          type="text"
+          placeholder="First Name *"
+          value={ownerFirstName}
+          onChange={(e) => setOwnerFirstName(e.target.value)}
+          required
+          style={inputStyle}
+        />
+        <input
+          type="text"
+          placeholder="Last Name *"
+          value={ownerLastName}
+          onChange={(e) => setOwnerLastName(e.target.value)}
+          required
+          style={inputStyle}
+        />
+      </div>
+
+      <input
         type="email"
         placeholder="Email *"
         value={email}
