@@ -929,11 +929,11 @@ function returnStyle(status) {
   if (s === "shipped_back") return { borderColor: "#a855f7", background: "rgba(168,85,247,0.18)" };
   if (s === "received") return { borderColor: "#3b82f6", background: "rgba(59,130,246,0.18)" };
   if (s === "refunded") return { borderColor: "#22c55e", background: "rgba(22,197,94,0.18)" };
-  return { borderColor: "rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.06)" };
+  return { borderColor: "hsl(var(--border))", background: "hsl(var(--muted))" };
 }
 
 const S = {
-  page: { padding: 18, color: "#fff" },
+  page: { padding: 18, color: "hsl(var(--foreground))" },
   header: {
     display: "flex",
     alignItems: "center",
@@ -993,9 +993,10 @@ const S = {
   card: {
     borderRadius: 18,
     padding: 16,
-    background: "rgba(15,23,42,0.65)",
-    border: "1px solid rgba(255,255,255,0.12)",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
+    background: "hsl(var(--card))",
+    border: "1px solid hsl(var(--border) / 0.5)",
+    boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
+    marginBottom: 14,
   },
 
   rowTop: { display: "flex", justifyContent: "space-between", gap: 12 },
@@ -1103,19 +1104,21 @@ const S = {
   },
   modal: {
     width: "min(520px, 100%)",
-    background: "#0f172a",
-    border: "1px solid rgba(255,255,255,0.12)",
+    background: "hsl(var(--card))",
+    border: "1px solid hsl(var(--border))",
     borderRadius: 18,
     padding: 16,
-    boxShadow: "0 18px 60px rgba(0,0,0,0.5)",
+    boxShadow: "0 18px 60px rgba(0,0,0,0.2)",
+    color: "hsl(var(--foreground))",
   },
   modalLarge: {
     width: "min(900px, 100%)",
-    background: "#0f172a",
-    border: "1px solid rgba(255,255,255,0.12)",
+    background: "hsl(var(--card))",
+    border: "1px solid hsl(var(--border))",
     borderRadius: 18,
     padding: 16,
-    boxShadow: "0 18px 60px rgba(0,0,0,0.5)",
+    boxShadow: "0 18px 60px rgba(0,0,0,0.2)",
+    color: "hsl(var(--foreground))",
   },
   modalTitle: { fontSize: 18, fontWeight: 900 },
   modalErr: {
@@ -1143,9 +1146,9 @@ const S = {
     marginTop: 8,
     padding: "10px 12px",
     borderRadius: 12,
-    border: "1px solid rgba(255,255,255,0.14)",
-    background: "rgba(255,255,255,0.06)",
-    color: "#fff",
+    border: "1px solid hsl(var(--border))",
+    background: "hsl(var(--muted))",
+    color: "hsl(var(--foreground))",
     fontWeight: 900,
     outline: "none",
   },
@@ -1154,9 +1157,9 @@ const S = {
     marginTop: 8,
     padding: "10px 12px",
     borderRadius: 12,
-    border: "1px solid rgba(255,255,255,0.14)",
-    background: "rgba(255,255,255,0.06)",
-    color: "#fff",
+    border: "1px solid hsl(var(--border))",
+    background: "hsl(var(--muted))",
+    color: "hsl(var(--foreground))",
     fontWeight: 800,
     outline: "none",
     minHeight: 90,
@@ -1166,9 +1169,9 @@ const S = {
   btnGhost: {
     padding: "10px 14px",
     borderRadius: 12,
-    border: "1px solid rgba(255,255,255,0.14)",
-    background: "rgba(255,255,255,0.06)",
-    color: "#fff",
+    border: "1px solid hsl(var(--border))",
+    background: "transparent",
+    color: "hsl(var(--foreground))",
     fontWeight: 900,
     cursor: "pointer",
   },

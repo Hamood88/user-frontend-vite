@@ -401,12 +401,12 @@ function KpiCard({ title, value, icon: Icon, subValue, trend, color = "violet" }
     cyan: "from-cyan-400 to-blue-500",
   };
 
-  // Cleaner look: White/Dark card background with colored border and shadow
+  // Vibrant cards with gradient backgrounds
   const themeClasses = {
-    violet: "bg-card border-violet-500/30 shadow-sm hover:shadow-violet-500/10",
-    emerald: "bg-card border-emerald-500/30 shadow-sm hover:shadow-emerald-500/10",
-    amber: "bg-card border-amber-500/30 shadow-sm hover:shadow-amber-500/10",
-    cyan: "bg-card border-cyan-500/30 shadow-sm hover:shadow-cyan-500/10",
+    violet: "bg-gradient-to-br from-card to-violet-500/10 border-violet-500/30 shadow-sm hover:shadow-violet-500/10",
+    emerald: "bg-gradient-to-br from-card to-emerald-500/10 border-emerald-500/30 shadow-sm hover:shadow-emerald-500/10",
+    amber: "bg-gradient-to-br from-card to-amber-500/10 border-amber-500/30 shadow-sm hover:shadow-amber-500/10",
+    cyan: "bg-gradient-to-br from-card to-cyan-500/10 border-cyan-500/30 shadow-sm hover:shadow-cyan-500/10",
   };
 
   const isNumber = typeof value === "number";

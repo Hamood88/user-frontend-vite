@@ -179,10 +179,11 @@ export default function EarnMore() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-20 overflow-x-hidden relative">
-      {/* Background Ambience - Lighter in light mode */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/20 dark:bg-purple-600/30 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/20 dark:bg-blue-600/30 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s' }} />
+      {/* Background Ambience - Vibrant */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] bg-purple-600/20 dark:bg-purple-600/30 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '6s' }} />
+        <div className="absolute bottom-[-10%] right-[10%] w-[500px] h-[500px] bg-blue-600/20 dark:bg-blue-600/30 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '9s' }} />
+        <div className="absolute top-[40%] left-[60%] w-[300px] h-[300px] bg-pink-500/10 dark:bg-pink-500/20 rounded-full blur-[80px]" />
       </div>
 
       <div className="max-w-5xl mx-auto px-4 pt-8 relative z-10">
