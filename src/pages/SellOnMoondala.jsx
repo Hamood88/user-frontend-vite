@@ -200,9 +200,16 @@ export default function SellOnMoondala() {
 
         {/* Feature 4 */}
         <FeatureSection
-          badge="BRANDING"
-          title="Your Store, Your Identity"
-          desc="Don't just be another list item. Use our Custom Mall Builder to create a stunning, immersive storefront that reflects your brand's unique personality and story."
+          badge="YOUR SPACE"
+          title="Your shop isn’t a listing. It’s a destination."
+          desc={
+            <>
+              On Moondala, you don’t disappear in a feed of competitors.
+              You build your own mall space — designed your way — where users arrive already interested in what you sell.
+              <br /><br />
+              Your brand, your layout, your story — inside a social commerce ecosystem built to convert.
+            </>
+          }
           imgUrl={editorImg}
           align="right"
         />
