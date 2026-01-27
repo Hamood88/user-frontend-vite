@@ -273,7 +273,12 @@ export function ShopAuthForm({ mode }) {
             <option value="">Year</option>
             {Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - i).map(y => (
               <option key={y} value={y}>{y}</option>
-       select
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <select
         value={country}
         onChange={(e) => setCountry(e.target.value)}
         required
@@ -283,12 +288,7 @@ export function ShopAuthForm({ mode }) {
         {COUNTRIES.map(c => (
           <option key={c} value={c}>{c}</option>
         ))}
-      </select placeholder="Country *"
-        value={country}
-        onChange={(e) => setCountry(e.target.value)}
-        required
-        style={inputStyle}
-      />
+      </select>
 
       <input
         type="tel"
