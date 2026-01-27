@@ -212,8 +212,8 @@ export default function Careers() {
                   onClick={() => setFormData({ ...formData, role: r.value })}
                   className={`p-4 rounded-xl border flex items-center gap-3 font-bold transition-all text-left ${
                     formData.role === r.value
-                      ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/25"
-                      : "bg-accent/30 border-border hover:border-primary/50 text-muted-foreground hover:text-foreground"
+                      ? "bg-gradient-to-r from-blue-600 to-violet-600 text-white border-transparent shadow-lg shadow-blue-500/25 ring-2 ring-blue-500/20 scale-[1.02]"
+                      : "bg-accent/30 border-border hover:border-blue-500/50 hover:bg-accent/50 text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {r.icon}
