@@ -261,7 +261,8 @@ export default function Messages() {
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to delete conversation");
+      const msg = err?.data?.message || err?.message || "Server connection failed";
+      alert(`Failed to delete conversation: ${msg}`);
     }
   };
 
