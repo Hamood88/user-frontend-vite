@@ -233,9 +233,17 @@ export default function SellOnMoondala() {
 
         {/* Feature 6 */}
         <FeatureSection
-          badge="TRANSPARENT"
-          title="Growth Without Limits"
-          desc="We believe in fair play. No hidden algorithms favoring big brands. Our transparent ranking system ensures that everyone gets a fair shot at visibility and success."
+          badge="FAIR GROWTH"
+          title="Growth without gatekeepers"
+          desc={
+            <>
+              Moondala doesn’t hide visibility behind algorithms or paid boosts.
+              Your growth comes from real engagement — users who discover, follow, and share your shop because they want to.
+              <br /><br />
+              No favoritism. No pay-to-win.
+              Just transparent growth driven by people, not platforms.
+            </>
+          }
           imgUrl="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2000&auto=format&fit=crop"
           align="right"
         />
