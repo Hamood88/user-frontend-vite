@@ -238,13 +238,38 @@ export default function ProductDetailsUnified() {
 
   // ✅ Redirect to shop feed page if product not found
   useEffect(() => {
-    if (err) {
+    if (err && id) {
+      // Try to find shop ID from the product before error occurred
       const shopId = getShopIdFromProduct(product);
+      
       if (shopId) {
+        // If we have shop ID from partial product data
         nav(`/shop/${shopId}/feed`, { replace: true });
+      } else {
+        // Try to fetch product to get shop ID, then redirect
+        (async () => {
+          try {
+            const endpoints = [
+              `/api/mall/products/${encodeURIComponent(id)}`,
+              `/api/products/${encodeURIComponent(id)}`,
+            ];
+            
+            for (const url of endpoints) {
+              try {
+                const res = await request(url, { auth: false });
+                const prod = res?.product || res?.data?.product || res?.data || res;
+                const sid = getShopIdFromProduct(prod);
+                if (sid) {
+                  nav(`/shop/${sid}/feed`, { replace: true });
+                  return;
+                }
+              } catch {}
+            }
+          } catch {}
+        })();
       }
     }
-  }, [err, product, nav]);
+  }, [err, product, id, nav]);
 
   const pid = String(product?._id || product?.id || id || "").trim();
   const title = product?.title || product?.name || "Product";
