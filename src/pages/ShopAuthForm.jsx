@@ -116,6 +116,7 @@ export function ShopAuthForm({ mode }) {
           throw new Error("Country is required");
         }
 
+        // ✅ Early Access Application Payload
         const registerData = {
           shopName: shopName.trim(),
           shopEmail: shopEmail.trim().toLowerCase(),
@@ -123,29 +124,24 @@ export function ShopAuthForm({ mode }) {
           password,
           ownerFirstName: ownerFirstName.trim(),
           ownerLastName: ownerLastName.trim(),
-          ownerDOB: dateStr,
+          dateOfBirth: dateStr, // Keep compatibility with backend schema
           country: country,
-          phoneNumber: phoneNumber.trim(),
+          phone: phoneNumber.trim(),
         };
 
         if (inviterCode.trim()) {
-          registerData.invitedByCode = inviterCode.trim().toUpperCase();
+          registerData.inviterCode = inviterCode.trim().toUpperCase();
         }
 
-        const data = await apiPost("/shop/auth/register", registerData);
+        // ✅ Change endpoint to Early Access
+        await apiPost("/shop-early-access/apply", registerData);
+        
         setSuccess(true);
-        setUserSession({ token: data.token, shop: data.shop }, "shop");
-        
-        // Clear referral data
-        try {
-          localStorage.removeItem("shopReferralCode");
-        } catch {}
-        
-        // ✅ Redirect with token in URL for cross-domain auth
-        const shopUrl = import.meta.env.PROD 
-          ? `https://shop.moondala.one/shop/feed?token=${data.token}` 
-          : `http://localhost:3001/shop/feed?token=${data.token}`; 
-        window.location.href = shopUrl;
+        setError("Your application has been received! This is a waitlist. We will contact you soon.");
+        setIsLoading(false);
+        // Do not redirect to shop feed or save session
+        return;
+
       }
     } catch (err) {
       setError(err.message || "An error occurred. Please try again.");
@@ -156,12 +152,19 @@ export function ShopAuthForm({ mode }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-h-[600px] overflow-y-auto pr-2">
-      {success && <Alert type="success" message="Success! Redirecting..." />}
+      {success && <Alert type="success" message="Success! Joined Waitlist." />}
       
-      {error && (
+      {error && !success && (
         <div className="flex items-start gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
           <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-red-300">{error}</p>
+        </div>
+      )}
+
+      {error && success && (
+        <div className="flex items-start gap-2 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+          <AlertCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-green-300">{error}</p>
         </div>
       )}
 
@@ -358,6 +361,8 @@ export function ShopAuthForm({ mode }) {
 
       <Button
         type="submit"
+      <Button
+        type="submit"
         variant="shop"
         className="w-full mt-6"
         disabled={isLoading}
@@ -365,10 +370,10 @@ export function ShopAuthForm({ mode }) {
         {isLoading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
-            {mode === "login" ? "Signing in..." : "Creating shop..."}
+            {mode === "login" ? "Signing in..." : "Submitting..."}
           </>
         ) : (
-          mode === "login" ? "Log In" : "Sign Up"
+          mode === "login" ? "Log In" : "Join Waitlist"
         )}
       </Button>
     </form>
