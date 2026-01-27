@@ -50,8 +50,10 @@ const validateEmail = (email) => {
 };
 
 const SPORTS = [
-  "Football", "Basketball", "Tennis", "Cricket", "Volleyball", "Baseball",
-  "Golf", "Swimming", "Track & Field", "Gymnastics", "Running", "Other"
+  "Soccer", "Football", "Basketball", "Tennis", "Cricket", "Volleyball", 
+  "Baseball", "Golf", "Swimming", "Track & Field", "Gymnastics", "Running",
+  "Boxing", "MMA", "Cycling", "Skiing", "Surfing", "Hockey", "Rugby",
+  "Table Tennis", "Badminton", "Wrestling", "Archery", "Martial Arts", "Other"
 ];
 
 const INTERESTS = [
