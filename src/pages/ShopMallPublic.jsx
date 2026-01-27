@@ -288,39 +288,12 @@ export default function ShopMallPublic() {
     }
 
     if (error) {
-        // Auto-redirect to mall feed after showing brief message
+        // Immediate redirect to mall feed - no error message shown
         React.useEffect(() => {
-            const timer = setTimeout(() => {
-                navigate('/mall', { replace: true });
-            }, 2000);
-            return () => clearTimeout(timer);
-        }, []);
+            navigate('/mall', { replace: true });
+        }, [navigate]);
 
-        return (
-            <div className="min-h-screen bg-zinc-950 text-white flex flex-col items-center justify-center p-4">
-                <div className="text-center max-w-md">
-                    <h2 className="text-2xl font-bold mb-3">Store Not Available</h2>
-                    <p className="text-zinc-400 mb-6">This store may be temporarily unavailable or doesn't have any products yet.</p>
-                    <p className="text-sm text-zinc-500 mb-8">
-                        Redirecting you to browse other products...
-                    </p>
-                    <div className="flex gap-3 justify-center">
-                        <button 
-                            onClick={() => navigate('/mall', { replace: true })} 
-                            className="px-6 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-semibold transition-colors"
-                        >
-                            Browse Products
-                        </button>
-                        <button 
-                            onClick={() => navigate('/', { replace: true })} 
-                            className="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-lg font-semibold transition-colors"
-                        >
-                            Go Home
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
+        return null; // Don't render anything, just redirect
     }
 
     const showAll = searchParams.get("showAll") === "true";
