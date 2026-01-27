@@ -618,25 +618,25 @@ export function UserAuthForm({ mode }) {
       )}
 
       {mode === "signup" && (
-        <div className="flex items-start gap-3 mt-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+        <div className="flex items-start gap-3 mt-4 p-3 bg-muted/30 border border-border rounded-lg">
           <input
             type="checkbox"
             id="termsAgreement"
             checked={termsAgreed}
             onChange={(e) => setTermsAgreed(e.target.checked)}
-            className="mt-1 w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+            className="mt-1 w-4 h-4 text-primary bg-muted border-border rounded cursor-pointer"
           />
-          <label htmlFor="termsAgreement" className="text-sm leading-relaxed cursor-pointer">
+          <label htmlFor="termsAgreement" className="text-sm leading-relaxed cursor-pointer text-muted-foreground">
             {t('legal.agreeToTerms')}{' '}
-            <Link to="/legal/terms" target="_blank" className="text-blue-400 underline hover:text-blue-300">
+            <Link to="/legal/terms" target="_blank" className="text-foreground underline hover:opacity-80">
               {t('legal.termsLink')}
             </Link>
             {', '}
-            <Link to="/legal/privacy" target="_blank" className="text-blue-400 underline hover:text-blue-300">
+            <Link to="/legal/privacy" target="_blank" className="text-foreground underline hover:opacity-80">
               {t('legal.privacyLink')}
             </Link>
             {', '}{t('legal.and')}{' '}
-            <Link to="/legal/referrals" target="_blank" className="text-blue-400 underline hover:text-blue-300">
+            <Link to="/legal/referrals" target="_blank" className="text-foreground underline hover:opacity-80">
               {t('legal.referralPolicyLink')}
             </Link>
             .
