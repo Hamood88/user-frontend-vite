@@ -1,9 +1,53 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2, Mail, Lock, Store, User, Phone, Globe, Calendar, AlertCircle } from "lucide-react";
-import { apiPost, setUserSession } from "../api";
-import { Button, Input, Alert, Label, Select } from "../components/ui";
-import { countries } from "../utils/countries";
+
+export function ShopAuthForm({ mode }) {
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '60px 20px',
+      textAlign: 'center',
+      minHeight: '400px'
+    }}>
+      <div style={{
+        fontSize: '64px',
+        marginBottom: '24px'
+      }}>
+        🚀
+      </div>
+      <h2 style={{
+        fontSize: '28px',
+        fontWeight: 'bold',
+        color: '#22c55e',
+        marginBottom: '16px',
+        letterSpacing: '0.5px'
+      }}>
+        You're in!
+      </h2>
+      <p style={{
+        fontSize: '16px',
+        color: '#94a3b8',
+        lineHeight: '1.7',
+        marginBottom: '12px',
+        maxWidth: '400px'
+      }}>
+        The Moondala shop app isn't ready yet.
+      </p>
+      <p style={{
+        fontSize: '16px',
+        color: '#94a3b8',
+        lineHeight: '1.7',
+        fontWeight: '600'
+      }}>
+        We'll notify you as soon as it's live.
+      </p>
+    </div>
+  );
+}
+
+export default ShopAuthForm;
 
 const validateEmail = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -29,36 +73,51 @@ const calculateAge = (dateString) => {
 };
 
 export function ShopAuthForm({ mode }) {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-
-  // Login fields
-  const [shopEmail, setShopEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  // Register fields
-  const [shopName, setShopName] = useState("");
-  const [ownerFirstName, setOwnerFirstName] = useState("");
-  const [ownerLastName, setOwnerLastName] = useState("");
-  const [dobDay, setDobDay] = useState("");
-  const [dobMonth, setDobMonth] = useState("");
-  const [dobYear, setDobYear] = useState("");
-  const [country, setCountry] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  
-  // Get inviter code from URL params
-  const [inviterCode, setInviterCode] = useState(() => {
-    const urlInviter = searchParams.get("inviter");
-    if (urlInviter) return urlInviter;
-    try {
-      return localStorage.getItem("shopReferralCode") || "";
-    } catch {
-      return "";
-    }
-  });
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '60px 20px',
+      textAlign: 'center',
+      minHeight: '400px'
+    }}>
+      <div style={{
+        fontSize: '64px',
+        marginBottom: '24px'
+      }}>
+        🚀
+      </div>
+      <h2 style={{
+        fontSize: '28px',
+        fontWeight: 'bold',
+        color: '#22c55e',
+        marginBottom: '16px',
+        letterSpacing: '0.5px'
+      }}>
+        You're in!
+      </h2>
+      <p style={{
+        fontSize: '16px',
+        color: '#94a3b8',
+        lineHeight: '1.7',
+        marginBottom: '12px',
+        maxWidth: '400px'
+      }}>
+        The Moondala shop app isn't ready yet.
+      </p>
+      <p style={{
+        fontSize: '16px',
+        color: '#94a3b8',
+        lineHeight: '1.7',
+        fontWeight: '600'
+      }}>
+        We'll notify you as soon as it's live.
+      </p>
+    </div>
+  );
+}
 
   const handleSubmit = async (e) => {
     e.preventDefault();
