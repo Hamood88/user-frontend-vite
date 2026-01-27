@@ -72,6 +72,11 @@ export default function Settings() {
       const html = document.documentElement;
       html.setAttribute("data-theme", newTheme);
       html.style.colorScheme = newTheme;
+      if (newTheme === 'dark') {
+        html.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
+      }
     } catch {}
   }
 

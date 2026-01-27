@@ -61,16 +61,16 @@ function getUserTokenOnly() {
 function useThemeInit() {
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("theme");
+      const saved = localStorage.getItem("theme") || "dark";
       const html = document.documentElement;
-      // Default to dark if not set, or if set to dark (to clean up attributes)
-      // BUT if 'light', we must apply it.
-      if (saved === "light") {
-        html.setAttribute("data-theme", "light");
-        html.style.colorScheme = "light";
+      
+      html.setAttribute("data-theme", saved);
+      html.style.colorScheme = saved;
+
+      if (saved === "dark") {
+        html.classList.add("dark");
       } else {
-        html.removeAttribute("data-theme");
-        html.style.colorScheme = "dark";
+        html.classList.remove("dark");
       }
     } catch {}
   }, []);
