@@ -10,6 +10,7 @@ import feedImg from '../assets/screenshot-feed.png';
 import mallImg from '../assets/screenshot-mall.png';
 import analyticsImg from '../assets/screenshot-analytics.png';
 import editorImg from '../assets/screenshot-editor.png';
+import earningsImg from '../assets/screenshot-earnings.png';
 
 export default function SellOnMoondala() {
   const nav = useNavigate();
@@ -184,7 +185,7 @@ export default function SellOnMoondala() {
               You sell more, spend less, and keep more of every sale.
             </>
           }
-          imgUrl="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=2000&auto=format&fit=crop"
+          imgUrl={earningsImg}
           align="right"
         />
 
