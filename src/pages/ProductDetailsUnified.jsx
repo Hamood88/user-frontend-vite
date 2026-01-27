@@ -265,7 +265,11 @@ export default function ProductDetailsUnified() {
                 }
               } catch {}
             }
-          } catch {}
+            // If no shop ID found, redirect to mall
+            nav('/mall', { replace: true });
+          } catch {
+            nav('/mall', { replace: true });
+          }
         })();
       }
     }
