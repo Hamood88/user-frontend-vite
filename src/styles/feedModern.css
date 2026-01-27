@@ -47,18 +47,29 @@
 
 /* small buttons */
 .md-btnPrimary {
-  border: 1px solid hsl(var(--primary));
-  background: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
+  border: none;
+  background: linear-gradient(135deg, #8B5CF6 0%, #ec4899 100%);
+  color: #ffffff;
   border-radius: 999px;
-  padding: 10px 18px;
-  font-weight: 900;
+  padding: 10px 24px;
+  font-weight: 700;
   cursor: pointer;
-  transition: 140ms ease;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 15px -3px rgba(139, 92, 246, 0.5);
+  letter-spacing: 0.5px;
 }
-.md-btnPrimary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.md-btnPrimary:disabled { opacity: 0.6; cursor: not-allowed; }
+.md-btnPrimary:hover { 
+  transform: translateY(-2px) scale(1.02); 
+  box-shadow: 0 8px 20px -3px rgba(236, 72, 153, 0.5);
+}
+.md-btnPrimary:disabled { 
+  opacity: 0.5; 
+  cursor: not-allowed; 
+  transform: none;
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  box-shadow: none;
+}
 
 .md-btnGhost, .md-btnOutline {
   display: inline-flex;
