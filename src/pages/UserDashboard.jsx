@@ -262,7 +262,7 @@ export default function UserDashboard() {
 
   if (loading) {
     return (
-      <div className="p-8 animate-pulse text-muted-foreground">
+      <div className="p-8 animate-pulse font-semibold text-gray-700 dark:text-muted-foreground">
         Loading dashboard data...
       </div>
     );
@@ -270,16 +270,16 @@ export default function UserDashboard() {
 
   if (err) {
     return (
-      <div className="glass-card rounded-2xl p-6 border border-border">
-        <div className="text-foreground font-bold mb-2">Dashboard error</div>
-        <div className="text-muted-foreground">{err}</div>
+      <div className="glass-card rounded-2xl p-6 border-2 border-red-300 dark:border-border bg-red-50 dark:bg-card">
+        <div className="text-red-900 dark:text-foreground font-bold mb-2">Dashboard error</div>
+        <div className="text-red-700 dark:text-muted-foreground font-medium">{err}</div>
       </div>
     );
   }
 
   if (!earnings) {
     return (
-      <div className="glass-card rounded-2xl p-6 border border-border text-muted-foreground">
+      <div className="glass-card rounded-2xl p-6 border-2 border-border bg-gray-50 dark:bg-card font-semibold text-gray-700 dark:text-muted-foreground">
         No earnings data yet.
       </div>
     );
@@ -289,21 +289,21 @@ export default function UserDashboard() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-display font-bold text-foreground mb-2">
+          <h1 className="text-3xl font-display font-black text-gray-900 dark:text-foreground mb-2">
             Welcome back,
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-gray-700 dark:text-muted-foreground font-medium">
             Track your commissions and network growth.
           </p>
         </div>
 
         {referralCode ? (
-          <div className="glass-card px-4 py-2 rounded-full flex items-center gap-3 border-primary/20 bg-primary/5">
-            <span className="text-sm font-medium text-primary">Share Link</span>
-            <code className="font-mono font-bold text-foreground">{referralCode}</code>
+          <div className="glass-card px-4 py-2 rounded-full flex items-center gap-3 border-2 border-primary/30 dark:border-primary/20 bg-primary/10 dark:bg-primary/5 shadow-md">
+            <span className="text-sm font-bold text-primary">Share Link</span>
+            <code className="font-mono font-black text-gray-900 dark:text-foreground">{referralCode}</code>
             <button
               onClick={copyCode}
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="text-gray-600 dark:text-muted-foreground hover:text-primary dark:hover:text-foreground transition-colors"
               type="button"
               title="Copy"
             >
@@ -349,7 +349,7 @@ export default function UserDashboard() {
         {/* Recent Transactions */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-display font-bold text-foreground">
+            <h2 className="text-xl font-display font-black text-gray-900 dark:text-foreground">
               Recent Activity
             </h2>
             <button
@@ -361,8 +361,8 @@ export default function UserDashboard() {
             </button>
           </div>
 
-          <div className="glass-card rounded-2xl overflow-hidden">
-            <div className="grid grid-cols-12 gap-4 p-4 border-b border-border text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <div className="glass-card rounded-2xl overflow-hidden border-2 border-border/50 dark:border-border">
+            <div className="grid grid-cols-12 gap-4 p-4 border-b-2 border-border bg-gray-100 dark:bg-card text-xs font-bold text-gray-700 dark:text-muted-foreground uppercase tracking-wider">
               <div className="col-span-6">Description</div>
               <div className="col-span-3 text-right">Date</div>
               <div className="col-span-3 text-right">Amount</div>
@@ -370,7 +370,7 @@ export default function UserDashboard() {
 
             <div className="divide-y divide-border">
               {items.length === 0 && !previewTransaction ? (
-                <div className="p-6 text-muted-foreground">No transactions yet.</div>
+                <div className="p-6 font-medium text-gray-600 dark:text-muted-foreground">No transactions yet.</div>
               ) : items.length === 0 && previewTransaction ? (
                 // Show preview of last transaction when collapsed
                 <TransactionRow it={previewTransaction} earnings={earnings} />
@@ -485,17 +485,17 @@ function TransactionRow({ it, earnings }) {
   return (
     <div
       key={id}
-      className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-muted/50 transition-colors"
+      className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-primary/5 dark:hover:bg-muted/50 transition-colors"
     >
       <div className="col-span-6 flex items-center gap-3">
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center
+          className={`w-8 h-8 rounded-full flex items-center justify-center shadow-sm
           ${
             isReleased
-              ? "bg-emerald-500/10 text-emerald-400"
+              ? "bg-emerald-600/20 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/30"
               : isLocked
-              ? "bg-amber-500/10 text-amber-400"
-              : "bg-red-500/10 text-red-400"
+              ? "bg-amber-600/20 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-500/30"
+              : "bg-red-600/20 dark:bg-red-500/20 text-red-700 dark:text-red-400 border border-red-300 dark:border-red-500/30"
           }`}
         >
           {isReleased ? (
@@ -505,16 +505,16 @@ function TransactionRow({ it, earnings }) {
           )}
         </div>
         <div>
-          <div className="font-medium text-foreground">{label}</div>
-          <div className="text-xs text-muted-foreground">{status}</div>
+          <div className="font-semibold text-gray-900 dark:text-foreground">{label}</div>
+          <div className="text-xs font-medium text-gray-600 dark:text-muted-foreground">{status}</div>
         </div>
       </div>
 
-      <div className="col-span-3 text-right text-sm text-muted-foreground">
+      <div className="col-span-3 text-right text-sm font-medium text-gray-700 dark:text-muted-foreground">
         {safeDate(createdAt) || "-"}
       </div>
 
-      <div className="col-span-3 text-right font-medium font-mono text-foreground">
+      <div className="col-span-3 text-right font-bold font-mono text-gray-900 dark:text-foreground">
         {formatMoney(amount, earnings.currency || "USD")}
       </div>
     </div>
