@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/moondala-logo.png';
 import { ShopAuthForm } from './ShopAuthForm'; // Reuse existing form
@@ -16,6 +16,103 @@ export default function SellOnMoondala() {
   const nav = useNavigate();
   const formRef = useRef(null);
   const featuresRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // Reusable Feature Component (Moved Inside)
+  function FeatureSection({ badge, title, desc, imgUrl, align = 'left' }) {
+    const isRight = align === 'right';
+    
+    return (
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: 'clamp(40px, 6vw, 80px)',
+        alignItems: 'center',
+        marginBottom: 'clamp(80px, 10vw, 160px)',
+      }}>
+        {/* Text Content */}
+        <div style={{ order: isRight ? 2 : 1 }}>
+          <div style={{
+            fontSize: '12px',
+            fontWeight: '700',
+            color: '#22c55e',
+            letterSpacing: '2px',
+            marginBottom: '16px',
+            textTransform: 'uppercase',
+          }}>
+            {badge}
+          </div>
+          <h2 style={{
+            fontSize: 'clamp(28px, 4vw, 42px)',
+            fontWeight: '800',
+            marginBottom: '20px',
+            lineHeight: '1.2',
+            background: 'linear-gradient(135deg, #fff 0%, #a1a1aa 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>
+            {title}
+          </h2>
+          <p style={{
+            fontSize: '16px',
+            color: 'rgba(255, 255, 255, 0.7)',
+            lineHeight: '1.8',
+            marginBottom: '32px',
+          }}>
+            {desc}
+          </p>
+        </div>
+
+        {/* Image Content */}
+        <div style={{ 
+          order: isRight ? 1 : 2,
+          position: 'relative',
+        }}>
+          {/* Decorative elements behind image */}
+          <div style={{
+            position: 'absolute',
+            top: '20px',
+            left: isRight ? '-20px' : '20px',
+            right: isRight ? '20px' : '-20px',
+            bottom: '-20px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '24px',
+            zIndex: 0,
+          }}></div>
+          
+          <div style={{
+            position: 'relative',
+            borderRadius: '24px',
+            overflow: 'hidden',
+            boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)',
+            background: 'transparent',
+            minHeight: '200px',
+            cursor: 'zoom-in',
+          }} onClick={() => setSelectedImage(imgUrl)}>
+            <img 
+              src={imgUrl} 
+              alt={title}
+              style={{
+                width: '100%',
+                height: 'auto',
+                borderRadius: '24px',
+                transition: 'transform 0.5s ease',
+              }}
+              onMouseEnter={(e) => e.target.style.transform = 'scale(1.02)'}
+              onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+            />
+            {/* Overlay gradient */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)',
+              pointerEvents: 'none',
+            }}></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -89,6 +186,17 @@ export default function SellOnMoondala() {
         overflow: 'hidden',
       }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <img 
+            src={logo} 
+            alt="Moondala" 
+            style={{ 
+              height: '64px', // Adjust size as needed
+              width: 'auto',
+              marginBottom: '32px',
+              display: 'inline-block'
+            }} 
+          />
+          <br />
           <div style={{
             display: 'inline-block',
             padding: '6px 16px',
@@ -332,101 +440,60 @@ export default function SellOnMoondala() {
           © 2026 Moondala Inc. All rights reserved.
         </p>
       </div>
-    </div>
-  );
-}
 
-// Reusable Feature Component
-function FeatureSection({ badge, title, desc, imgUrl, align = 'left' }) {
-  const isRight = align === 'right';
-  
-  return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      gap: 'clamp(40px, 6vw, 80px)',
-      alignItems: 'center',
-      marginBottom: 'clamp(80px, 10vw, 160px)',
-    }}>
-      {/* Text Content */}
-      <div style={{ order: isRight ? 2 : 1 }}>
-        <div style={{
-          fontSize: '12px',
-          fontWeight: '700',
-          color: '#22c55e',
-          letterSpacing: '2px',
-          marginBottom: '16px',
-          textTransform: 'uppercase',
-        }}>
-          {badge}
-        </div>
-        <h2 style={{
-          fontSize: 'clamp(28px, 4vw, 42px)',
-          fontWeight: '800',
-          marginBottom: '20px',
-          lineHeight: '1.2',
-          background: 'linear-gradient(135deg, #fff 0%, #a1a1aa 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-        }}>
-          {title}
-        </h2>
-        <p style={{
-          fontSize: '16px',
-          color: 'rgba(255, 255, 255, 0.7)',
-          lineHeight: '1.8',
-          marginBottom: '32px',
-        }}>
-          {desc}
-        </p>
-      </div>
-
-      {/* Image Content */}
-      <div style={{ 
-        order: isRight ? 1 : 2,
-        position: 'relative',
-      }}>
-        {/* Decorative elements behind image */}
-        <div style={{
-          position: 'absolute',
-          top: '20px',
-          left: isRight ? '-20px' : '20px',
-          right: isRight ? '20px' : '-20px',
-          bottom: '-20px',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: '24px',
-          zIndex: 0,
-        }}></div>
-        
-        <div style={{
-          position: 'relative',
-          borderRadius: '24px',
-          overflow: 'hidden',
-          boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)',
-          background: 'transparent',
-          minHeight: '200px',
-        }}>
-          <img 
-            src={imgUrl} 
-            alt={title}
-            style={{
-              width: '100%',
-              height: 'auto',
-              borderRadius: '24px',
-              transition: 'transform 0.5s ease',
-            }}
-            onMouseEnter={(e) => e.target.style.transform = 'scale(1.02)'}
-            onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
-          />
-          {/* Overlay gradient */}
-          <div style={{
-            position: 'absolute',
+      {/* Image Modal */}
+      {selectedImage && (
+        <div 
+          style={{
+            position: 'fixed',
             inset: 0,
-            background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)',
-            pointerEvents: 'none',
-          }}></div>
+            zIndex: 100,
+            background: 'rgba(0,0,0,0.9)',
+            backdropFilter: 'blur(10px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px',
+            animation: 'fadeIn 0.2s ease-out'
+          }}
+          onClick={() => setSelectedImage(null)}
+        >
+          <div style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh' }}>
+            <img 
+              src={selectedImage} 
+              alt="Feature Preview" 
+              style={{
+                maxWidth: '100%',
+                maxHeight: '90vh',
+                borderRadius: '16px',
+                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+                objectFit: 'contain'
+              }}
+              onClick={(e) => e.stopPropagation()} 
+            />
+            <button
+              onClick={() => setSelectedImage(null)}
+              style={{
+                position: 'absolute',
+                top: '-40px',
+                right: '-40px',
+                background: 'none',
+                border: 'none',
+                color: '#fff',
+                fontSize: '24px',
+                cursor: 'pointer',
+                opacity: 0.7,
+                padding: '10px' // hit area
+              }}
+              onMouseEnter={(e) => e.target.style.opacity = 1}
+              onMouseLeave={(e) => e.target.style.opacity = 0.7}
+            >
+              ✕
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
+
