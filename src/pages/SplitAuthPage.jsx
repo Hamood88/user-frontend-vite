@@ -109,7 +109,7 @@ export default function SplitAuthPage() {
         {/* Form */}
         <div className="auth-form-wrapper">
           {activeRole === "user" && <UserAuthForm mode={activeMode} />}
-          {activeRole === "shop" && <ShopAuthForm mode={activeMode} />}
+          {activeRole === "shop" && <ShopAuthForm mode={activeMode} onModeChange={setActiveMode} />}
         </div>
 
         {/* Footer */}

@@ -52,7 +52,7 @@ const COUNTRIES = [
   "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
 ].sort();
 
-export function ShopAuthForm({ mode }) {
+export function ShopAuthForm({ mode, onModeChange }) {
   const [searchParams] = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -168,24 +168,44 @@ export function ShopAuthForm({ mode }) {
         textAlign: 'center',
         minHeight: '400px'
       }}>
-        <div style={{ fontSize: '64px', marginBottom: '24px' }}>🛠️</div>
+        <div style={{ fontSize: '64px', marginBottom: '24px' }}>✨</div>
         <h3 style={{
-          fontSize: '24px',
+          fontSize: '28px',
           fontWeight: 'bold',
           color: '#22c55e',
-          marginBottom: '16px',
+          marginBottom: '24px',
           letterSpacing: '0.5px'
         }}>
-          Shop Dashboard Coming Soon
+          Sell on Moondala
         </h3>
         <p style={{
-          fontSize: '15px',
-          color: '#94a3b8',
-          lineHeight: '1.7',
-          maxWidth: '380px'
+          fontSize: '16px',
+          color: '#cbd5e1',
+          lineHeight: '1.8',
+          maxWidth: '420px',
+          marginBottom: '32px'
         }}>
-          Seller login will be available once the shop app is live.
+          The seller dashboard is currently in development. Register your shop to join the early waitlist, and we'll notify you when selling on Moondala goes live.
         </p>
+        <button
+          onClick={() => onModeChange && onModeChange("signup")}
+          style={{
+            padding: '14px 32px',
+            background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '16px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            transition: 'opacity 0.2s',
+            boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
+          }}
+          onMouseOver={(e) => e.target.style.opacity = '0.9'}
+          onMouseOut={(e) => e.target.style.opacity = '1'}
+        >
+          Register Your Shop
+        </button>
       </div>
     );
   }
