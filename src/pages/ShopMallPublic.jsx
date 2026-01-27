@@ -74,6 +74,13 @@ export default function ShopMallPublic() {
     const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
     const [cartCount, setCartCount] = useState(0);
 
+    // ✅ Redirect to mall feed if error occurs
+    useEffect(() => {
+        if (error) {
+            navigate('/mall', { replace: true });
+        }
+    }, [error, navigate]);
+
     // Fetch Shop Data
     useEffect(() => {
         if (!shopId) return;
@@ -288,12 +295,7 @@ export default function ShopMallPublic() {
     }
 
     if (error) {
-        // Immediate redirect to mall feed - no error message shown
-        React.useEffect(() => {
-            navigate('/mall', { replace: true });
-        }, [navigate]);
-
-        return null; // Don't render anything, just redirect
+        return null; // Don't render anything, redirect happens via useEffect
     }
 
     const showAll = searchParams.get("showAll") === "true";
