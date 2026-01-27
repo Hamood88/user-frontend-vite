@@ -238,16 +238,11 @@ export default function ProductDetailsUnified() {
 
   // ✅ Redirect to shop feed page if product not found
   useEffect(() => {
-    if (err && product) {
+    if (err) {
       const shopId = getShopIdFromProduct(product);
       if (shopId) {
         nav(`/shop/${shopId}/feed`, { replace: true });
-      } else {
-        nav("/mall", { replace: true });
       }
-    } else if (err && !product) {
-      // No product data at all, go to mall
-      nav("/mall", { replace: true });
     }
   }, [err, product, nav]);
 
