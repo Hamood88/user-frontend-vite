@@ -1322,7 +1322,7 @@ export default function Feed() {
                     </div>
                   ) : null}
 
-                  <div className="flex items-center gap-6 pt-4 border-t border-border">
+                  <div className="flex items-center gap-6 pt-4">
                     <button
                       type="button"
                       onClick={() => onLike(post._id)}
