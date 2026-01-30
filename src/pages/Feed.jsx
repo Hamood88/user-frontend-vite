@@ -933,8 +933,8 @@ export default function Feed() {
                   <div 
                     className="absolute -top-2 -right-2 w-12 h-12 rounded-full flex items-center justify-center font-extrabold text-white shadow-lg animate-pulse"
                     style={{
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      boxShadow: '0 0 20px rgba(102, 126, 234, 0.6), 0 0 40px rgba(118, 75, 162, 0.4)',
+                      background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                      boxShadow: '0 0 20px rgba(245, 158, 11, 0.6), 0 0 40px rgba(217, 119, 6, 0.4)',
                       border: '3px solid rgba(255, 255, 255, 0.3)',
                     }}
                     title={`${profileUser.totalReferrals} Total Users Invited`}
