@@ -56,43 +56,53 @@ export default function TopInvitersList({
           </button>
         </div>
       
-      {loading ? (
-        <div className="text-sm text-muted-foreground animate-pulse">Loading leaderboard...</div>
-      ) : list.length === 0 ? (
-        <div className="text-sm text-muted-foreground">No top inviters yet.</div>
-      ) : (
-        <div className="space-y-3">
-          {list.map((inviter, index) => (
-            <Link
-              to={`/feed/user/${inviter._id}`}
-              key={inviter._id}
-              className={`flex items-center gap-3 rounded-xl bg-muted/40 hover:bg-muted/80 ring-1 ring-border/10 transition-all cursor-pointer group ${compact ? "p-2" : "p-3"}`}
-            >
-              <div className="relative">
-                <div className={`rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity ${compact ? "w-10 h-10" : "w-12 h-12"}`}>
-                  {inviter.avatarUrl ? (
-                    <img
-                      src={toAbsUrl(inviter.avatarUrl)}
-                      alt={inviter.displayName}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span className={`font-bold text-primary ${compact ? "text-sm" : "text-lg"}`}>
-                      {(inviter.displayName || "U").charAt(0).toUpperCase()}
-                    </span>
-                  )}
+        {loading ? (
+          <div className="text-sm text-muted-foreground animate-pulse">Loading leaderboard...</div>
+        ) : list.length === 0 ? (
+          <div className="text-sm text-muted-foreground">No top inviters yet.</div>
+        ) : (
+          <div className="space-y-3">
+            {list.map((inviter, index) => (
+              <Link
+                to={`/feed/user/${inviter._id}`}
+                key={inviter._id}
+                className={`flex items-center gap-3 rounded-xl bg-muted/40 hover:bg-muted/80 ring-1 ring-border/10 transition-all cursor-pointer group ${compact ? "p-2" : "p-3"}`}
+              >
+                <div className="relative">
+                  <div className={`rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity ${compact ? "w-10 h-10" : "w-12 h-12"}`}>
+                    {inviter.avatarUrl ? (
+                      <img
+                        src={toAbsUrl(inviter.avatarUrl)}
+                        alt={inviter.displayName}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className={`font-bold text-primary ${compact ? "text-sm" : "text-lg"}`}>
+                        {(inviter.displayName || "U").charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-[10px] font-bold text-black border-2 border-background">
+                    {index + 1}
+                  </div>
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-[10px] font-bold text-black border-2 border-background">
-                  {index + 1}
+                
+                <div className="flex-1 min-w-0">
+                  <div className={`font-semibold text-foreground truncate group-hover:underline ${compact ? "text-sm" : "text-base"}`}>
+                    {inviter.displayName}
+                  </div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wide">
+                    {inviter.totalReferrals} REFERRALS
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <div className={`font-semibold text-foreground truncate group-hover:underline ${compact ? "text-sm" : "text-base"}`}>
-                  {inviter.displayName}
+
+                <div className="flex items-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
+                  <TrendingUp className="w-3.5 h-3.5 text-green-500" />
                 </div>
-                <div className="text-[10px] text-muted-foreground uppercase tracking-wide">
-                  {inviter.totalReferrals} REFERRALS
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Info Modal */}
@@ -162,16 +172,6 @@ export default function TopInvitersList({
           </div>
         </div>
       )}
-    </       </div>
-              </div>
-
-              <div className="flex items-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
-                <TrendingUp className="w-3.5 h-3.5 text-green-500" />
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   );
 }
