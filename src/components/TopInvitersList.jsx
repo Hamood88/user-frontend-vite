@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Users, TrendingUp } from "lucide-react";
+import { Users, TrendingUp, HelpCircle, X } from "lucide-react";
 import { toAbsUrl, apiGet } from "../api";
 
 export default function TopInvitersList({ 
@@ -10,6 +10,7 @@ export default function TopInvitersList({
 }) {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -39,11 +40,21 @@ export default function TopInvitersList({
   }, [limit]);
 
   return (
-    <div className={`glass-card rounded-2xl ${compact ? "p-4" : "p-5"}`}>
-      <h2 className={`font-display font-bold text-foreground flex items-center gap-2 ${compact ? "text-base mb-3" : "text-lg mb-4"}`}>
-        <Users className={compact ? "w-4 h-4" : "w-5 h-5"} />
-        {title}
-      </h2>
+    <>
+      <div className={`glass-card rounded-2xl ${compact ? "p-4" : "p-5"}`}>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className={`font-display font-bold text-foreground flex items-center gap-2 ${compact ? "text-base" : "text-lg"}`}>
+            <Users className={compact ? "w-4 h-4" : "w-5 h-5"} />
+            {title}
+          </h2>
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="p-1.5 rounded-full hover:bg-muted/60 transition-colors group"
+            title="How to become a top inviter"
+          >
+            <HelpCircle className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+          </button>
+        </div>
       
       {loading ? (
         <div className="text-sm text-muted-foreground animate-pulse">Loading leaderboard...</div>
@@ -82,7 +93,76 @@ export default function TopInvitersList({
                 </div>
                 <div className="text-[10px] text-muted-foreground uppercase tracking-wide">
                   {inviter.totalReferrals} REFERRALS
+      </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-card border border-border rounded-2xl shadow-2xl max-w-md w-full p-6 relative animate-in fade-in zoom-in duration-200">
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="absolute top-4 right-4 p-1 rounded-full hover:bg-muted/60 transition-colors"
+            >
+              <X className="w-5 h-5 text-muted-foreground" />
+            </button>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-full bg-primary/10">
+                <Users className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground">How to Become a Top Inviter</h3>
+            </div>
+
+            <div className="space-y-4 text-sm text-muted-foreground">
+              <p className="leading-relaxed">
+                Join the leaderboard by inviting friends and shops to Moondala! 
+                The more people you invite, the higher you rank.
+              </p>
+
+              <div className="bg-muted/30 rounded-xl p-4 space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-primary">1</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground mb-1">Get Your Referral Link</p>
+                    <p className="text-xs">Visit the <Link to="/earn-more" className="text-primary hover:underline font-medium">Earn More</Link> page to find your unique referral link.</p>
+                  </div>
                 </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-primary">2</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground mb-1">Share Your Link</p>
+                    <p className="text-xs">Share via social media, QR code, or direct messaging. You can invite both users and shops!</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-primary">3</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground mb-1">Watch Your Rank Rise</p>
+                    <p className="text-xs">Every successful referral counts! Plus, you earn commission on their purchases.</p>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                to="/earn-more"
+                onClick={() => setShowInfoModal(false)}
+                className="block w-full text-center py-3 px-4 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-xl font-semibold hover:opacity-90 transition-opacity"
+              >
+                Go to Earn More Page
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </       </div>
               </div>
 
               <div className="flex items-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
