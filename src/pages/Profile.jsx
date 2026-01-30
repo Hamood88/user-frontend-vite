@@ -234,6 +234,7 @@ className="h-20 w-20 overflow-hidden rounded-2xl border bg-secondary"
         ) : (
           <div className="grid gap-3 md:grid-cols-2">
             <Field label="Email" value={me?.email} />
+            <Field label="Total Users Invited" value={me?.totalReferrals || 0} />
             <Field label="Country" value={me?.country} />
             <Field label="Age" value={me?.age} />
             <Field label="Gender" value={me?.gender} />
