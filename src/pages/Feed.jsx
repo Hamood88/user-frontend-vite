@@ -913,16 +913,36 @@ export default function Feed() {
             className="glass-card rounded-2xl p-6"
           >
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-full border-4 border-border bg-muted flex items-center justify-center overflow-hidden shadow-md">
-                {avatarUrl(profileUser) ? (
-                  <img
-                    src={avatarUrl(profileUser)}
-                    alt={userName(profileUser)}
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-muted-foreground">
-                    {(userName(profileUser) || "U").slice(0, 1).toUpperCase()}
+              <div className="relative">
+                <div className="w-20 h-20 rounded-full border-4 border-border bg-muted flex items-center justify-center overflow-hidden shadow-md">
+                  {avatarUrl(profileUser) ? (
+                    <img
+                      src={avatarUrl(profileUser)}
+                      alt={userName(profileUser)}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-muted-foreground">
+                      {(userName(profileUser) || "U").slice(0, 1).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                
+                {/* Total Referrals Badge - Shining Circle */}
+                {profileUser?.totalReferrals !== undefined && profileUser.totalReferrals >= 0 && (
+                  <div 
+                    className="absolute -top-2 -right-2 w-12 h-12 rounded-full flex items-center justify-center font-extrabold text-white shadow-lg animate-pulse"
+                    style={{
+                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      boxShadow: '0 0 20px rgba(102, 126, 234, 0.6), 0 0 40px rgba(118, 75, 162, 0.4)',
+                      border: '3px solid rgba(255, 255, 255, 0.3)',
+                    }}
+                    title={`${profileUser.totalReferrals} Total Users Invited`}
+                  >
+                    <div className="text-center">
+                      <div className="text-lg leading-none">{profileUser.totalReferrals}</div>
+                      <div className="text-[8px] leading-none opacity-90">REFS</div>
+                    </div>
                   </div>
                 )}
               </div>
