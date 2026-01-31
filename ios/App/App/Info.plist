@@ -47,5 +47,23 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	
+	<!-- ✅ Universal Links for Deep Linking -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>moondala</string>
+			</array>
+		</dict>
+	</array>
+	
+	<!-- ✅ Associated Domains for moondala.one -->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:moondala.one</string>
+		<string>applinks:moondala.com</string>
+	</array>
 </dict>
 </plist>
