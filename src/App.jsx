@@ -1,6 +1,9 @@
 // user-frontend-vite/src/App.jsx
 import React, { useEffect } from "react";
-import { Routes, Route, Navigate, useParams } from "react-router-dom";
+import { Routes, Route, Navigate, useParams, useNavigate } from "react-router-dom";
+
+/* ✅ Capacitor */
+import { initializeCapacitor } from "./capacitor-init";
 
 /* ✅ AUTH (single page) */
 import SplitAuthPage from "./pages/SplitAuthPage";
@@ -44,7 +47,8 @@ import RefundPolicy from "./pages/legal/RefundPolicy";
 /* ✅ LAYOUT / GUARDS */
 import AppLayout from "./components/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
-import LandingPage from "./components/LandingPage";
+import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
 
 /* =========================
    helpers
@@ -171,27 +175,6 @@ function NotFound() {
 }
 
 /* =========================
-   Home Router (SplitAuthPage)
-   ========================= */
-function HomeRouter() {
-  const token = getUserTokenOnly();
-  if (token) return <Navigate to="/feed" replace />;
-  return <SplitAuthPage />;
-}
-
-/* =========================
-   ✅ redirect /login and /register into SplitAuthPage
-   ========================= */
-function AuthRedirect({ mode = "login", side = "user" }) {
-  return (
-    <Navigate
-      to={`/?mode=${encodeURIComponent(mode)}&side=${encodeURIComponent(side)}`}
-      replace
-    />
-  );
-}
-
-/* =========================
    ✅ SHORT LINK /s/<shopId> -> /shop/<shopId>
    ========================= */
 function ShopShortRedirect() {
@@ -223,6 +206,8 @@ function ShopDefaultToMallPreview() {
 }
 
 export default function App() {
+  const navigate = useNavigate();
+  
   // Apply saved theme on mount
   useEffect(() => {
     try {
@@ -232,6 +217,13 @@ export default function App() {
       html.style.colorScheme = savedTheme;
     } catch {}
   }, []);
+  
+  // Initialize Capacitor for native platforms
+  useEffect(() => {
+    initializeCapacitor(navigate).catch(err => {
+      console.error('Capacitor init failed:', err);
+    });
+  }, [navigate]);
 
   return (
     <ErrorBoundary>
@@ -239,12 +231,17 @@ export default function App() {
         {/* ✅ DEBUG route */}
         <Route path="/_probe" element={<Probe />} />
 
-        {/* Home */}
-        <Route path="/" element={<HomeRouter />} />
-
-        {/* ✅ These now go to SplitAuthPage */}
-        <Route path="/login" element={<AuthRedirect mode="login" side="user" />} />
-        <Route path="/register" element={<AuthRedirect mode="register" side="user" />} />
+        {/* Landing & Auth */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        
+        {/* Helper redirects */}
+        <Route path="/app" element={<Navigate to="/login" replace />} />
+        <Route path="/register" element={<Navigate to="/login?mode=register" replace />} />
+        
+        {/* Shop Auth shortcuts */}
+        <Route path="/shop/login" element={<Navigate to="/login?role=shop" replace />} />
+        <Route path="/shop/register" element={<Navigate to="/login?role=shop&mode=register" replace />} />
         
         {/* Referral System */}
         <Route path="/refer/landing/:type/:code" element={<ReferralLanding />} />
@@ -254,10 +251,6 @@ export default function App() {
         {/* Short paths */}
         <Route path="/r/:code" element={<ReferralLanding type="user" />} />
         <Route path="/b/:code" element={<ReferralLanding type="shop" />} />
-
-        {/* Optional: shop auth shortcuts */}
-        <Route path="/shop/login" element={<AuthRedirect mode="login" side="shop" />} />
-        <Route path="/shop/register" element={<AuthRedirect mode="register" side="shop" />} />
 
         {/* Public product share */}
         <Route path="/p/:shareId" element={<PublicShareRedirect />} />

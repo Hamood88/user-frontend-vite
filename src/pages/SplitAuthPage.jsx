@@ -14,18 +14,26 @@ export default function SplitAuthPage() {
 
 
   useEffect(() => {
-    // 1. Check URL first
+    // 1. Check params
     const roleParam = searchParams.get("role");
-    if (roleParam === "shop") {
-      setActiveRole("shop");
-      setActiveMode("signup"); // Assume signup if coming via referral link usually
-    } else if (roleParam === "user") {
-      setActiveRole("user");
+    const modeParam = searchParams.get("mode");
+
+    // Role
+    if (roleParam === "shop") setActiveRole("shop");
+    else if (roleParam === "user") setActiveRole("user");
+
+    // Mode
+    if (modeParam === "register" || modeParam === "signup") {
+      setActiveMode("signup");
+    } else if (modeParam === "login") {
+      setActiveMode("login");
+    } else if (roleParam) {
+      // If role specified but no mode, likely a referral link -> Default to signup
       setActiveMode("signup");
     }
 
-    // 2. Check localStorage (legacy support or no-url flow)
-    if (!roleParam) {
+    // 2. Check localStorage (legacy support)
+    if (!roleParam && !modeParam) {
       const storedShopRef = localStorage.getItem("shopReferralCode");
       const storedUserRef = localStorage.getItem("referralCode");
       
