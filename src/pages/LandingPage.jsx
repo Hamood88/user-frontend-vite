@@ -1096,7 +1096,7 @@ const LandingPage = () => {
                src="/moondala-logo.png"
                alt=""
                aria-hidden="true"
-               className="w-[40rem] sm:w-[50rem] md:w-[60rem] opacity-[0.03] dark:opacity-[0.05] select-none mt-32 md:mt-48"
+               className="w-[40rem] sm:w-[50rem] md:w-[60rem] opacity-[0.03] dark:opacity-[0.05] select-none -mt-24 md:-mt-32"
                style={{ transform: `translateY(${scrollY * 0.05}px)` }}
              />
           </div>
@@ -1141,7 +1141,7 @@ const LandingPage = () => {
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                      </div>
-                     <span className="bg-purple-500/10 border border-purple-500/20 text-purple-300 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm backdrop-blur-md">
+                     <span className="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/50 text-yellow-300 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.3)] backdrop-blur-md animate-pulse">
                         {t.earnMonthlyBadge}
                      </span>
                   </div>
