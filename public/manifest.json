@@ -1,0 +1,25 @@
+{
+  "short_name": "Moondala",
+  "name": "Moondala: Shop, Share, Earn",
+  "icons": [
+    {
+      "src": "/moondala-logo.png",
+      "type": "image/png",
+      "sizes": "64x64 32x32 24x24 16x16"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0a0a0f",
+  "background_color": "#ffffff"
+}
