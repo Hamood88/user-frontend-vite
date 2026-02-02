@@ -48,7 +48,8 @@ function normalizeBase(u) {
 }
 
 export const API_BASE = normalizeBase(
-  readEnv("VITE_API_BASE") ||
+  readEnv("VITE_API_BASE_URL") ||
+    readEnv("VITE_API_BASE") ||
     readEnv("VITE_API_URL") ||
     readEnv("VITE_BACKEND_URL") ||
     readEnv("REACT_APP_API_URL") ||
