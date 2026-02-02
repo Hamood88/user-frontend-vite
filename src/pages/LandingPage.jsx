@@ -1096,7 +1096,7 @@ const LandingPage = () => {
                src="/moondala-logo.png"
                alt=""
                aria-hidden="true"
-               className="w-[40rem] sm:w-[50rem] md:w-[60rem] opacity-[0.03] dark:opacity-[0.05] select-none -mt-24 md:-mt-32"
+               className="w-[40rem] sm:w-[50rem] md:w-[60rem] opacity-[0.03] dark:opacity-[0.05] select-none -mt-12 md:-mt-16"
                style={{ transform: `translateY(${scrollY * 0.05}px)` }}
              />
           </div>
