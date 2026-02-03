@@ -100,7 +100,7 @@ export function ShopAuthForm({ mode, onModeChange }) {
           localStorage.setItem("shopEmail", email);
           
           // Redirect to shop dashboard
-          window.location.href = "https://shop.moondala.com";
+          window.location.href = "https://shop-frontend.vercel.app";
         } else {
           throw new Error("Login failed - no token received");
         }
@@ -131,7 +131,7 @@ export function ShopAuthForm({ mode, onModeChange }) {
           localStorage.setItem("shopEmail", email);
           
           // Redirect to shop dashboard
-          window.location.href = "https://shop.moondala.com";
+          window.location.href = "https://shop-frontend.vercel.app";
         } else {
           setSubmitted(true);
         }
