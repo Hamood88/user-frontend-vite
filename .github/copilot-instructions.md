@@ -1,75 +1,208 @@
 # Copilot Instructions: User Frontend (Vite)
 
-**Status**: ✅ ACTIVE.
-**Port**: 5173 (dev), `moondala.com` (prod).
+**Status**: ✅ ACTIVE (Port 5173, prod: `moondala.com`).
+**CRITICAL**: Folder `../user-frontend` is DEPRECATED—always work here.
 
-> **⚠️ CRITICAL WARNING**: The folder `../user-frontend` is DEPRECATED and MUST BE IGNORED.
-> **ALWAYS** work in `../user-frontend-vite-temp` (This Directory).
+## 🚀 Architecture
 
-## 🚀 Architecture & Tech Stack
-- **Framework**: React 18 + Vite (ES Modules).
-- **Styling**: Tailwind CSS v4 + Framer Motion.
-- **State**: Local State + API Context.
-- **Auth**: `userToken` (LocalStorage).
-- **i18n**: `react-i18next` (English/Arabic RTL).
+```
+user-frontend-vite-temp (Vite React 18)
+├─ Entry: index.html → src/index.jsx
+├─ Router: App.jsx (React Router v6)
+├─ API: src/api.jsx (apiGet, apiPost, toAbsUrl)
+├─ i18n: public/locales/{en,ar}/translation.json (react-i18next)
+├─ State: Local + Context (UserContext for auth)
+├─ Styling: Tailwind CSS v4 + Framer Motion
+└─ Key Pages: ProductDetailsUnified, EarnMore, Mall, Cart
+```
+
+**Token**: `userToken` (localStorage, user role only).
 
 ## ⚠️ 5 Non-Negotiable Rules
 
-### 1. API Calls (`src/api.jsx`)
-- **Wrapper**: ALWAYS use `apiGet`, `apiPost`, `apiPut`, `apiDelete` from `../api.jsx`.
-- **Banned**: NEVER use `fetch` or `axios` directly.
-- **Why**: Handles token injection, 401 auto-logout, and API base URL resolution.
-- **Example**: `const user = await apiGet("/users/me");`
+### 1. **API Calls (`src/api.jsx` Wrapper)**
+```javascript
+// ✅ CORRECT: Use centralized wrapper
+import { apiGet, apiPost, apiPut, apiDelete } from '../api.jsx';
+const user = await apiGet('/users/me');
+const result = await apiPost('/orders', { items: [...] });
 
-### 2. Image URLs (`toAbsUrl`)
-- **Wrapper**: ALWAYS wrap image paths: `<img src={toAbsUrl(product.image)} />`.
-- **Why**: Resolves relative paths (`/uploads/...`) from backend/Cloudinary correctly in all environments.
-- **Import**: `import { toAbsUrl } from "../api.jsx";`
+// ❌ WRONG: Direct fetch/axios bypass error handling + 401 logic
+const user = await fetch(`${API_BASE}/api/users/me`).then(r => r.json());
+```
 
-### 3. Internationalization (i18n)
-- **Mandatory**: All visible text must use `t("key")`.
-- **RTL**: Layout must succeed in both LTR (English) and RTL (Arabic).
-- **Files**: `public/locales/{en,ar}/translation.json`.
+**Why**: Wrapper handles:
+- Token injection (`Authorization: Bearer` + `x-auth-token`)
+- 401 auto-logout (clears token, redirects to login)
+- API base URL resolution (Vite env vars)
+- Request/response logging
 
-### 4. Token Isolation
-- **Storage**: `localStorage.getItem("userToken")`.
-- **Forbidden**: NEVER access `shopToken` or `adminToken`.
-- **Cart Key**: `cart_items_${userId}` (prevents cross-user cart pollution).
+### 2. **Image URLs (`toAbsUrl` Wrapper)**
+```javascript
+// ✅ CORRECT: Always wrap backend paths
+import { toAbsUrl } from '../api.jsx';
+<img src={toAbsUrl(product.image)} />
+<img src={toAbsUrl(shop.logo)} />
 
-### 5. Environment Variables
-- **Vite Pattern**: Use `import.meta.env.VITE_*`.
-- **Legacy**: `process.env` does NOT work in Vite.
+// ❌ WRONG: Raw paths fail in production
+<img src={product.image} />  // breaks when deployed
+<img src="/uploads/products/abc123.jpg" />  // localhost-only
+```
+
+**Smart Resolution**:
+- Detects Cloudinary URLs (keeps as-is)
+- Fixes localhost → production backend (avoids mixed content)
+- Handles `/uploads/` relative paths
+- Works offline (graceful fallback)
+
+### 3. **Internationalization (i18n)**
+```javascript
+// ✅ CORRECT: All visible text uses t("key")
+import { useTranslation } from 'react-i18next';
+
+export function ProductCard({ product }) {
+  const { t } = useTranslation();
+  return <h2>{t('product.title')}</h2>;
+}
+
+// ❌ WRONG: Hardcoded English breaks Arabic version
+<h2>Product Details</h2>
+
+// File: public/locales/en/translation.json
+{ "product.title": "Product Details" }
+// File: public/locales/ar/translation.json
+{ "product.title": "تفاصيل المنتج" }
+```
+
+**RTL Layout**: Tailwind auto-flips for Arabic (check via browser DevTools).
+
+### 4. **Token Isolation**
+```javascript
+// ✅ CORRECT: User role only
+const token = localStorage.getItem('userToken');
+
+// ❌ WRONG: Never access shop/admin tokens
+localStorage.getItem('shopToken');    // BLOCKED
+localStorage.getItem('adminToken');   // BLOCKED
+```
+
+**Cart Key**: `cart_items_${userId}` (prevents cross-user pollution on shared device).
+
+### 5. **Environment Variables (Vite Pattern)**
+```javascript
+// ✅ CORRECT: Vite-safe ES module syntax
+const apiBase = import.meta.env.VITE_API_BASE;
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
+// ❌ WRONG: CRA pattern doesn't work in Vite
+const apiBase = process.env.REACT_APP_API_BASE;  // undefined
+```
+
+**.env file**:
+```
+VITE_API_BASE=https://moondala-backend.onrender.com
+VITE_API_BASE_URL=https://moondala-backend.onrender.com
+```
 
 ## 📂 Key Features & Patterns
 
-### Earn More (`src/pages/EarnMore.jsx`)
-- **QR Codes**: Client-side generation.
-- **Referrals**: Dual-tab (Invite Users / Invite Shops).
-- **Data**: Fetched from `/api/users/earnings` and `/api/users/downline-counts`.
+### **Product Details Unified** (`src/pages/ProductDetailsUnified.jsx`)
+- Handles products from 3 sources: Mall, Shops, Marketplace
+- Features: Reviews, Q&A, "Ask Previous Buyer" chat
+- Upload review photos via `uploadReviews` helper
+- Integrates with Earn More referral links
 
-### Product Details Unified (`src/pages/ProductDetailsUnified.jsx`)
-- **Complex View**: Handles products from Mall, Shops, and Marketplace.
-- **Chat**: "Ask Previous Buyer" feature integration.
-- **Reviews**: Integrated review component with photo upload.
+### **Earn More** (`src/pages/EarnMore.jsx`)
+- Dual tabs: Invite Users (QR code) | Invite Shops (unique link)
+- Client-side QR generation: `qrcode` package
+- Data: `/api/users/earnings` + `/api/users/downline-counts`
+- Displays referral tree (5 levels max)
 
-### Mall Fairness
-- **Rotation**: Mall shops rotate based on fairness algorithm (backend).
-- **Frontend**: Simply renders the list provided by `/api/mall`.
+### **Shopping Flow**
+- Mall: Fixed rotation (backend fairness)
+- Shops: Browse → Add to Cart
+- Cart: Stored in localStorage (`cart_items_${userId}`)
+- Checkout: Creates Order → Redirects to confirmation
 
 ## 🛠️ Developer Workflows
 
-### Component Creation
-1. Use functional components with hooks.
-2. Use `useMemo` for expensive calculations (cart totals).
-3. Use `useCallback` for functions passed to children.
+### **Start Development**
+```bash
+cd user-frontend-vite-temp && npm run dev  # Port 5173
+# Backend MUST be running (port 5000)
+```
 
-### Deployment
-- **Platform**: Vercel.
-- **Config**: `vercel.json` handles SPA rewrites.
-- **Env**: Set `VITE_API_BASE` in Vercel.
+### **Add a New Page**
+```jsx
+// 1. Create src/pages/MyNewPage.jsx
+import { useTranslation } from 'react-i18next';
+import { apiGet } from '../api.jsx';
+import { toAbsUrl } from '../api.jsx';
+
+export function MyNewPage() {
+  const { t } = useTranslation();
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const result = await apiGet('/my-endpoint');
+      setData(result);
+    })();
+  }, []);
+
+  return (
+    <div>
+      <h1>{t('my.page.title')}</h1>
+      {data && <img src={toAbsUrl(data.image)} />}
+    </div>
+  );
+}
+
+// 2. Register in App.jsx
+import { MyNewPage } from './pages/MyNewPage';
+// Add route: <Route path="/my-new-page" element={<MyNewPage />} />
+
+// 3. Add translations
+// public/locales/en/translation.json: { "my.page.title": "My Page" }
+// public/locales/ar/translation.json: { "my.page.title": "صفحتي" }
+```
+
+### **Debug API Issues**
+| Problem | Symptom | Fix |
+|---------|---------|-----|
+| 401 loops | Redirects to login repeatedly | Check token expiry + ensure `apiGet` wrapper used |
+| 404 on image | Image shows broken icon | Verify `toAbsUrl()` wrapper + check Cloudinary path |
+| Missing env var | Image URL `undefined` | Set `VITE_API_BASE` in `.env` file |
+| RTL broken | English layout in Arabic mode | Verify `lang` attribute set + Tailwind dir config |
+| Cart empty | Items disappear after reload | Check localStorage key matches `userId` format |
+
+### **Memory Leaks**
+```javascript
+// ❌ WRONG: Async without cleanup
+useEffect(() => {
+  apiGet('/data').then(r => setData(r));  // stale closure!
+}, []);
+
+// ✅ CORRECT: Cleanup or use flag
+useEffect(() => {
+  let isMounted = true;
+  apiGet('/data').then(r => {
+    if (isMounted) setData(r);
+  });
+  return () => { isMounted = false; };
+}, []);
+
+// OR use useMemo for expensive calcs
+const total = useMemo(() => cart.reduce((sum, item) => sum + item.price, 0), [cart]);
+```
 
 ## 🚨 Common Pitfalls
-1. **401 Loops**: API wrapper handles this, don't implement custom 401 logic.
-2. **Missing `toAbsUrl`**: Images fail in production.
-3. **Hardcoded Text**: Breaks Arabic version.
-4. **Memory Leaks**: Cleanup `useEffect` subscriptions or async flags.
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| Images 404 prod | Missing `toAbsUrl()` | Wrap ALL `<img src>` in `toAbsUrl(path)` |
+| Hardcoded text in UI | No i18n | Replace with `t("key.name")` from translation.json |
+| `process.env` undefined | CRA pattern in Vite | Use `import.meta.env.VITE_*` |
+| 401 Unauthorized | Token expired | API wrapper auto-logs out; user redirected to login |
+| Cart lost on navigation | Not in localStorage | Ensure using key format `cart_items_${userId}` |
+| CORS blocked | Frontend not in allowedOrigins | Check `backend/app.js` allowedOrigins array |

@@ -87,28 +87,58 @@ export function ShopAuthForm({ mode, onModeChange }) {
     setLoading(true);
 
     try {
-      const dateOfBirth = `${dobYear}-${dobMonth.padStart(2, '0')}-${dobDay.padStart(2, '0')}`;
-      
-      const payload = {
-        shopName,
-        ownerFirstName,
-        ownerLastName,
-        email,
-        password,
-        phone,
-        dateOfBirth,
-        country,
-        inviterCode: inviterCode.trim().toUpperCase() || undefined
-      };
+      if (mode === "login") {
+        // Login existing shop
+        const response = await apiPost("/shop/auth/login", {
+          shopEmail: email,
+          password
+        });
 
-      console.log("Submitting shop registration:", payload);
-      
-      await apiPost("/shop-early-access/apply", payload);
-      
-      setSubmitted(true);
+        if (response?.token) {
+          // Store shop token
+          localStorage.setItem("shopToken", response.token);
+          localStorage.setItem("shopEmail", email);
+          
+          // Redirect to shop dashboard
+          window.location.href = "https://shop.moondala.com";
+        } else {
+          throw new Error("Login failed - no token received");
+        }
+      } else {
+        // Register new shop
+        const dateOfBirth = `${dobYear}-${dobMonth.padStart(2, '0')}-${dobDay.padStart(2, '0')}`;
+        
+        const payload = {
+          shopName,
+          ownerFirstName,
+          ownerLastName,
+          shopEmail: email,
+          email,
+          password,
+          phoneNumber: phone,
+          ownerDateOfBirth: dateOfBirth,
+          country,
+          inviterCode: inviterCode.trim().toUpperCase() || undefined
+        };
+
+        console.log("Submitting shop registration:", payload);
+        
+        const response = await apiPost("/shop/auth/register", payload);
+        
+        if (response?.token) {
+          // Store shop token
+          localStorage.setItem("shopToken", response.token);
+          localStorage.setItem("shopEmail", email);
+          
+          // Redirect to shop dashboard
+          window.location.href = "https://shop.moondala.com";
+        } else {
+          setSubmitted(true);
+        }
+      }
     } catch (err) {
-      console.error("Shop registration error:", err);
-      setError(err?.message || "Registration failed. Please try again.");
+      console.error("Shop auth error:", err);
+      setError(err?.message || `${mode === "login" ? "Login" : "Registration"} failed. Please try again.`);
     } finally {
       setLoading(false);
     }
@@ -126,7 +156,7 @@ export function ShopAuthForm({ mode, onModeChange }) {
         textAlign: 'center',
         minHeight: '400px'
       }}>
-        <div style={{ fontSize: '64px', marginBottom: '24px' }}>🚀</div>
+        <div style={{ fontSize: '64px', marginBottom: '24px' }}>🎉</div>
         <h2 style={{
           fontSize: '28px',
           fontWeight: 'bold',
@@ -134,102 +164,80 @@ export function ShopAuthForm({ mode, onModeChange }) {
           marginBottom: '16px',
           letterSpacing: '0.5px'
         }}>
-          You're in!
+          Shop Created Successfully!
         </h2>
         <p style={{
           fontSize: '16px',
           color: '#94a3b8',
           lineHeight: '1.7',
-          marginBottom: '12px',
+          marginBottom: '24px',
           maxWidth: '400px'
         }}>
-          The Moondala shop app isn't ready yet.
-        </p>
-        <p style={{
-          fontSize: '16px',
-          color: '#94a3b8',
-          lineHeight: '1.7',
-          fontWeight: '600'
-        }}>
-          We'll notify you as soon as it's live.
+          Redirecting you to the shop dashboard...
         </p>
       </div>
     );
   }
 
-  // Show "Coming Soon" for login mode (no login allowed)
+  // Show login form for login mode
   if (mode === "login") {
     return (
-      <div style={{
+      <form onSubmit={handleSubmit} style={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '60px 20px',
-        textAlign: 'center',
-        minHeight: '400px'
+        gap: '16px',
+        padding: '4px'
       }}>
-        <div style={{ fontSize: '64px', marginBottom: '24px' }}>✨</div>
-        <h2 style={{
-          fontSize: '28px',
-          fontWeight: 'bold',
-          color: '#22c55e',
-          marginBottom: '16px',
-          letterSpacing: '0.5px'
-        }}>
-          Sell on Moondala
-        </h2>
-        <p style={{
-          fontSize: '16px',
-          color: '#cbd5e1',
-          lineHeight: '1.8',
-          maxWidth: '420px',
-          marginBottom: '32px'
-        }}>
-          The seller dashboard is currently in development. Learn more about selling on Moondala or join our waiting list.
-        </p>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', maxWidth: '300px' }}>
-          <button
-            onClick={() => nav("/sell")}
-            style={{
-              padding: '14px 24px',
-              background: 'rgba(34, 197, 94, 0.1)',
-              color: '#22c55e',
-              border: '1px solid rgba(34, 197, 94, 0.3)',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={(e) => e.target.style.background = 'rgba(34, 197, 94, 0.2)'}
-            onMouseLeave={(e) => e.target.style.background = 'rgba(34, 197, 94, 0.1)'}
-          >
-            Learn More
-          </button>
-          
-          <button
-            onClick={() => onModeChange && onModeChange("signup")}
-            style={{
-              padding: '14px 24px',
-              background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'opacity 0.2s',
-              boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
-            }}
-            onMouseOver={(e) => e.target.style.opacity = '0.9'}
-            onMouseOut={(e) => e.target.style.opacity = '1'}
-          >
-            Register Your Shop
-          </button>
-        </div>
-      </div>
+        {error && (
+          <div style={{
+            padding: '12px',
+            background: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: '8px',
+            color: '#fca5a5',
+            fontSize: '14px'
+          }}>
+            {error}
+          </div>
+        )}
+
+        <input
+          type="email"
+          placeholder="Shop Email *"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          style={inputStyle}
+        />
+
+        <input
+          type="password"
+          placeholder="Password *"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          style={inputStyle}
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            padding: '14px',
+            background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '16px',
+            fontWeight: '600',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            opacity: loading ? 0.7 : 1,
+            marginTop: '8px'
+          }}
+        >
+          {loading ? "Signing in..." : "Sign In to Shop"}
+        </button>
+      </form>
     );
   }
 
@@ -398,7 +406,7 @@ export function ShopAuthForm({ mode, onModeChange }) {
           marginTop: '8px'
         }}
       >
-        {loading ? "Submitting..." : "Join Waitlist"}
+        {loading ? "Creating Shop..." : "Create Shop"}
       </button>
     </form>
   );
