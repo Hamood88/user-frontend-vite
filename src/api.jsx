@@ -1213,3 +1213,231 @@ export function pickId(x) {
   if (!x) return "";
   return String(x._id || x.id || x.productId || x.shopId || x.userId || "").trim();
 }
+/* ================================
+   ✅ WISHLIST / SAVED PRODUCTS
+   ================================ */
+
+/**
+ * Get all saved products for the current user
+ * Returns array of products with priceAtSave, savedAt, and priceDropped flag
+ */
+export async function getSavedProducts() {
+  const data = await apiGet("/api/wishlist");
+  return data?.products || [];
+}
+
+/**
+ * Get just the IDs of saved products (for checking saved state on cards)
+ */
+export async function getSavedProductIds() {
+  const data = await apiGet("/api/wishlist/ids");
+  return data?.productIds || [];
+}
+
+/**
+ * Save a product to wishlist
+ */
+export async function saveProduct(productId) {
+  if (!productId) throw new Error("Missing productId");
+  return apiPost(`/api/wishlist/${encodeURIComponent(productId)}`, {});
+}
+
+/**
+ * Remove a product from wishlist
+ */
+export async function unsaveProduct(productId) {
+  if (!productId) throw new Error("Missing productId");
+  return apiDelete(`/api/wishlist/${encodeURIComponent(productId)}`);
+}
+
+/**
+ * Check if a specific product is saved
+ */
+export async function checkProductSaved(productId) {
+  if (!productId) return { saved: false };
+  try {
+    const data = await apiGet(`/api/wishlist/check/${encodeURIComponent(productId)}`);
+    return { saved: data?.saved === true, priceAtSave: data?.priceAtSave };
+  } catch {
+    return { saved: false };
+  }
+}
+
+/* ================================
+   ✅ SIMILAR PRODUCTS (AI Embeddings)
+   ================================ */
+
+/**
+ * Get similar products using AI embeddings (cosine similarity)
+ * @param {string} productId - The product to find similar items for
+ * @param {number} limit - Maximum number of similar products (default 10)
+ */
+export async function getSimilarProducts(productId, limit = 10) {
+  if (!productId) throw new Error("Missing productId");
+  const data = await apiGet(`/api/mall/similar/${encodeURIComponent(productId)}?limit=${limit}`);
+  return data?.products || [];
+}
+
+/* ================================
+   ✅ AI-POWERED SEARCH
+   ================================ */
+
+/**
+ * AI-powered semantic search for products
+ * Uses embeddings to find products by meaning, not just keywords.
+ * 
+ * @param {string} query - Natural language search query (e.g., "cozy winter clothes")
+ * @param {object} options - Search options
+ * @param {number} options.limit - Max results (default 20)
+ * @param {number} options.minScore - Minimum similarity score 0-1 (default 0.3)
+ * @returns {Promise<{ok: boolean, query: string, count: number, aiPowered: boolean, products: Array}>}
+ */
+export async function aiSearch(query, { limit = 20, minScore = 0.3 } = {}) {
+  if (!query || typeof query !== "string" || query.trim().length < 2) {
+    return { ok: true, query: query || "", count: 0, aiPowered: false, products: [] };
+  }
+  
+  const params = new URLSearchParams({
+    q: query.trim(),
+    limit: String(limit),
+    minScore: String(minScore)
+  });
+  
+  const data = await apiGet(`/api/mall/ai-search?${params.toString()}`);
+  return {
+    ok: data?.ok ?? true,
+    query: data?.query || query,
+    count: data?.count || 0,
+    aiPowered: data?.aiPowered ?? false,
+    products: data?.products || []
+  };
+}
+
+/**
+ * Combined search: AI search for products + traditional search for users/shops
+ * Best for search pages that show all result types
+ */
+export async function combinedSearch(query, { productLimit = 20, userLimit = 10 } = {}) {
+  if (!query || query.trim().length < 2) {
+    return { products: [], users: [], shops: [], aiPowered: false };
+  }
+  
+  const [aiResults, publicResults] = await Promise.all([
+    aiSearch(query, { limit: productLimit }).catch(() => ({ products: [], aiPowered: false })),
+    apiGet(`/api/public/search?q=${encodeURIComponent(query)}&limit=${userLimit}`).catch(() => ({ users: [], shops: [] }))
+  ]);
+  
+  return {
+    products: aiResults?.products || [],
+    users: publicResults?.users || [],
+    shops: publicResults?.shops || [],
+    aiPowered: aiResults?.aiPowered ?? false
+  };
+}
+
+/* ==========================================================================
+   ✅ RECENTLY VIEWED PRODUCTS
+   ========================================================================== */
+
+/**
+ * Record that the user viewed a product
+ * Call this when user opens product detail page
+ */
+export async function recordProductView(productId) {
+  if (!productId) return { ok: false };
+  try {
+    return await apiPost(`/api/engagement/viewed/${productId}`);
+  } catch (err) {
+    console.error("recordProductView error:", err);
+    return { ok: false };
+  }
+}
+
+/**
+ * Get user's recently viewed products
+ * @param {number} limit - Max products to return (default 20)
+ */
+export async function getRecentlyViewed(limit = 20) {
+  try {
+    const data = await apiGet(`/api/engagement/viewed?limit=${limit}`);
+    return data?.products || [];
+  } catch (err) {
+    console.error("getRecentlyViewed error:", err);
+    return [];
+  }
+}
+
+/**
+ * Clear user's view history
+ */
+export async function clearViewHistory() {
+  return apiDelete("/api/engagement/viewed");
+}
+
+/* ==========================================================================
+   ✅ STOCK ALERTS (Back in Stock Notifications)
+   ========================================================================== */
+
+/**
+ * Subscribe to stock alerts for a product
+ */
+export async function subscribeToStockAlert(productId) {
+  if (!productId) return { ok: false };
+  return apiPost(`/api/engagement/stock-alert/${productId}`);
+}
+
+/**
+ * Unsubscribe from stock alerts for a product
+ */
+export async function unsubscribeFromStockAlert(productId) {
+  if (!productId) return { ok: false };
+  return apiDelete(`/api/engagement/stock-alert/${productId}`);
+}
+
+/**
+ * Check if user is subscribed to stock alerts for a product
+ */
+export async function isSubscribedToStockAlert(productId) {
+  if (!productId) return false;
+  try {
+    const data = await apiGet(`/api/engagement/stock-alert/${productId}/status`);
+    return data?.subscribed || false;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Get all stock alert subscriptions
+ */
+export async function getStockAlerts() {
+  try {
+    const data = await apiGet("/api/engagement/stock-alerts");
+    return data?.alerts || [];
+  } catch (err) {
+    console.error("getStockAlerts error:", err);
+    return [];
+  }
+}
+
+/* ==========================================================================
+   ✅ FOR YOU FEED (Personalized Recommendations)
+   ========================================================================== */
+
+/**
+ * Get personalized product recommendations based on user behavior
+ * @param {number} limit - Max products to return (default 20)
+ */
+export async function getForYouFeed(limit = 20) {
+  try {
+    const data = await apiGet(`/api/engagement/for-you?limit=${limit}`);
+    return {
+      products: data?.products || [],
+      aiPowered: data?.aiPowered || false,
+      basedOn: data?.basedOn || {}
+    };
+  } catch (err) {
+    console.error("getForYouFeed error:", err);
+    return { products: [], aiPowered: false, basedOn: {} };
+  }
+}

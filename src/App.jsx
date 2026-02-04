@@ -32,6 +32,9 @@ import EarnMore from "./pages/EarnMore";
 import Careers from "./pages/Careers";
 import ReferralLanding from "./pages/ReferralLanding";
 import SellOnMoondala from "./pages/SellOnMoondala";
+import SavedProducts from "./pages/SavedProducts";
+import ForYouPage from "./pages/ForYouPage";
+import RecentlyViewedPage from "./pages/RecentlyViewedPage";
 
 /* ✅ PUBLIC SHOP PAGES */
 import ShopFeedPublic from "./pages/ShopFeedPublic";
@@ -298,6 +301,11 @@ export default function App() {
             <Route path="/mall" element={<Mall />} />
             <Route path="/mall/feed" element={<MallFeed />} />
             <Route path="/mall/product/:productId" element={<MallProduct />} />
+            <Route path="/saved" element={<SavedProducts />} />
+            <Route path="/saved-products" element={<SavedProducts />} />
+            <Route path="/wishlist" element={<SavedProducts />} />
+            <Route path="/for-you" element={<ForYouPage />} />
+            <Route path="/recently-viewed" element={<RecentlyViewedPage />} />
 
             <Route path="/orders" element={<MyOrders />} />
             <Route path="/my-orders" element={<Navigate to="/orders" replace />} />

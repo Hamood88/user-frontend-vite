@@ -7,10 +7,16 @@ import {
   API_BASE,
   startAskBuyerConversation,
   getOrCreateShopConversation,
+  recordProductView,
 } from "../api.jsx";
 
 import ProductReviews from "../components/ProductReviews.jsx";
+import SaveProductButton from "../components/SaveProductButton.jsx";
+import SimilarProducts from "../components/SimilarProducts.jsx";
+import RecentlyViewed from "../components/RecentlyViewed.jsx";
+import StockAlertButton from "../components/StockAlertButton.jsx";
 import "../styles/productDetailsUnified.css";
+import "../styles/Engagement.css";
 
 /* =========================
    Helpers
@@ -223,6 +229,12 @@ export default function ProductDetailsUnified() {
         if (!live) return;
 
         setProduct(found);
+
+        // ✅ Record product view for history
+        const token = getUserTokenOnly();
+        if (token && (found._id || found.id)) {
+          recordProductView(found._id || found.id).catch(() => {}); // Fire and forget
+        }
 
         const imgs = pickImages(found);
         setActiveImg(imgs[0] || "");
@@ -543,7 +555,10 @@ export default function ProductDetailsUnified() {
         </div>
 
         <div className="pdu-right">
-          <h1 className="pdu-title">{title}</h1>
+          <div className="pdu-title-row" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+            <h1 className="pdu-title" style={{ flex: 1 }}>{title}</h1>
+            <SaveProductButton productId={pid || id} size="lg" />
+          </div>
 
           {/* Store name - clickable to shop page */}
           {(product?.shopName || product?.shop?.shopName) && shopId && (
@@ -589,14 +604,27 @@ export default function ProductDetailsUnified() {
             {product?.description?.trim() ? product.description : "No description."}
           </div>
 
-          <div className="pdu-btns">
-            <button className="pdu-btn primary" onClick={buyNow} type="button">
-              Buy Now
-            </button>
-            <button className="pdu-btn" onClick={addToCart} type="button">
-              Add to Cart
-            </button>
-          </div>
+          {/* ✅ Out of Stock Banner + Stock Alert */}
+          {product?.inStock === false && (
+            <div className="out-of-stock-banner">
+              <div className="out-of-stock-text">
+                ⚠️ This item is currently out of stock
+              </div>
+              <StockAlertButton productId={pid} inStock={false} />
+            </div>
+          )}
+
+          {/* ✅ Buy/Cart buttons only show when in stock */}
+          {product?.inStock !== false && (
+            <div className="pdu-btns">
+              <button className="pdu-btn primary" onClick={buyNow} type="button">
+                Buy Now
+              </button>
+              <button className="pdu-btn" onClick={addToCart} type="button">
+                Add to Cart
+              </button>
+            </div>
+          )}
 
           {/* ✅ Ask Previous Buyers - Toggle on/off */}
           <div style={{ marginTop: 14, position: 'relative' }} ref={buyersRef}>
@@ -697,6 +725,16 @@ export default function ProductDetailsUnified() {
       {/* ✅ Reviews */}
       <div style={{ marginTop: 14 }}>
         <ProductReviews productId={pid || id} canWrite={false} defaultOpen={true} />
+      </div>
+
+      {/* ✅ Similar Products (AI-powered recommendations) */}
+      <div className="pdu-card" style={{ marginTop: 14 }}>
+        <SimilarProducts productId={pid || id} limit={10} />
+      </div>
+
+      {/* ✅ Recently Viewed Products */}
+      <div className="pdu-card" style={{ marginTop: 14 }}>
+        <RecentlyViewed limit={10} showClear={false} />
       </div>
     </div>
   );

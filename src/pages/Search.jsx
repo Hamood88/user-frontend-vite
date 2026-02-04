@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { Sparkles, Search as SearchIcon, Users, Store, Package, Loader2 } from "lucide-react";
 import "../styles/Search.css";
-import { API_BASE, getToken } from "../api.jsx";
+import { API_BASE, getToken, combinedSearch, toAbsUrl } from "../api.jsx";
+import SaveProductButton from "../components/SaveProductButton.jsx";
 
 /* =========================
    Helpers
@@ -77,10 +79,12 @@ export default function Search() {
   const [searchParams] = useSearchParams();
 
   const [q, setQ] = useState(searchParams.get("q") || "");
-  const [type, setType] = useState("all"); // all | users | shops
+  const [type, setType] = useState("all"); // all | users | shops | products
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [shops, setShops] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [aiPowered, setAiPowered] = useState(false);
   const [err, setErr] = useState("");
 
   async function runSearch(searchText, searchType) {
@@ -92,28 +96,26 @@ export default function Search() {
     if (!qq) {
       setUsers([]);
       setShops([]);
+      setProducts([]);
+      setAiPowered(false);
       return;
     }
 
     setLoading(true);
     try {
-      const url = apiUrl(
-        `/public/search?q=${encodeURIComponent(qq)}&type=${encodeURIComponent(tt)}&limit=25`
-      );
-
-      const res = await fetch(url, { headers: { Accept: "application/json" } });
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok || data?.ok === false) {
-        throw new Error(data?.message || "Search failed");
-      }
-
-      setUsers(Array.isArray(data?.users) ? data.users : []);
-      setShops(Array.isArray(data?.shops) ? data.shops : []);
+      // Use combined AI search for all types
+      const results = await combinedSearch(qq, { productLimit: 30, userLimit: 20 });
+      
+      setProducts(results?.products || []);
+      setUsers(results?.users || []);
+      setShops(results?.shops || []);
+      setAiPowered(results?.aiPowered || false);
     } catch (e) {
       setErr(String(e?.message || e));
       setUsers([]);
       setShops([]);
+      setProducts([]);
+      setAiPowered(false);
     } finally {
       setLoading(false);
     }
@@ -121,7 +123,7 @@ export default function Search() {
 
   // ✅ debounce
   useEffect(() => {
-    const t = setTimeout(() => runSearch(q, type), 250);
+    const t = setTimeout(() => runSearch(q, type), 350);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q, type]);
@@ -132,6 +134,7 @@ export default function Search() {
 
     if (type === "users") return u;
     if (type === "shops") return s;
+    if (type === "products") return []; // Products shown separately
 
     // "all"
     return [...u, ...s];
@@ -157,17 +160,27 @@ export default function Search() {
     navigate(userUrl);
   }
 
+  function openProduct(productId) {
+    navigate(`/product/${encodeURIComponent(productId)}`);
+  }
+
+  const showProducts = type === "all" || type === "products";
+  const showPeopleShops = type === "all" || type === "users" || type === "shops";
+
   return (
     <div className="search-page">
       <div className="search-card">
-        <div className="search-title">Search</div>
+        <div className="search-title">
+          <SearchIcon className="w-5 h-5 mr-2" />
+          Search
+        </div>
 
         <div className="search-controls">
           <input
             className="search-input"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search users or shops..."
+            placeholder="Try 'cozy winter clothes' or 'gift for dad'..."
           />
 
           <select
@@ -176,50 +189,154 @@ export default function Search() {
             onChange={(e) => setType(e.target.value)}
           >
             <option value="all">All</option>
+            <option value="products">Products</option>
             <option value="users">Users</option>
             <option value="shops">Shops</option>
           </select>
         </div>
 
-        {loading ? <div className="search-status">Searching…</div> : null}
+        {/* AI Badge */}
+        {aiPowered && q.trim() && !loading && (
+          <div className="ai-badge">
+            <Sparkles className="w-4 h-4" />
+            <span>AI-powered semantic search</span>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="search-status">
+            <Loader2 className="w-5 h-5 animate-spin mr-2" />
+            Searching…
+          </div>
+        ) : null}
         {err ? <div className="search-error">{err}</div> : null}
 
-        {!loading && q.trim() && results.length === 0 ? (
-          <div className="search-status">No results.</div>
+        {/* Products Section */}
+        {showProducts && products.length > 0 && (
+          <div className="search-section">
+            <div className="search-section-header">
+              <Package className="w-4 h-4" />
+              <span>Products ({products.length})</span>
+              {aiPowered && <span className="ai-label">AI Match</span>}
+            </div>
+            <div className="search-products-grid">
+              {products.map((product) => {
+                const pid = product._id || product.id;
+                const mainImage = Array.isArray(product.images)
+                  ? product.images[0]
+                  : product.image;
+                
+                return (
+                  <div
+                    key={pid}
+                    className="search-product-card"
+                    onClick={() => openProduct(pid)}
+                  >
+                    {/* Match Score Badge */}
+                    {product.searchScore && product.searchScore > 0.5 && (
+                      <div className="match-badge">
+                        {Math.round(product.searchScore * 100)}%
+                      </div>
+                    )}
+                    
+                    {/* Save Button */}
+                    <div className="product-save-btn">
+                      <SaveProductButton productId={pid} size="sm" />
+                    </div>
+                    
+                    <div className="product-image">
+                      <img
+                        src={toAbsUrl(mainImage)}
+                        alt={product.title}
+                        onError={(e) => {
+                          e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23f3f4f6' width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af'%3E📦%3C/text%3E%3C/svg%3E";
+                        }}
+                      />
+                    </div>
+                    <div className="product-info">
+                      <div className="product-title">{product.title}</div>
+                      <div className="product-price">
+                        ${(product.localPrice || 0).toFixed(2)}
+                      </div>
+                      {product.aiTags && product.aiTags.length > 0 && (
+                        <div className="product-tags">
+                          {product.aiTags.slice(0, 3).map((tag, i) => (
+                            <span key={i} className="product-tag">{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* People & Shops Section */}
+        {showPeopleShops && results.length > 0 && (
+          <div className="search-section">
+            <div className="search-section-header">
+              <Users className="w-4 h-4" />
+              <span>People & Shops ({results.length})</span>
+            </div>
+            <div className="search-results">
+              {results.map((r) => {
+                const id = pickId(r);
+                const realType = r?.__type || pickType(r);
+                const name = pickName(r);
+                const avatar = pickAvatar(r);
+
+                // ✅ stable key (no Math.random())
+                const key = `${realType}-${id || name}`;
+
+                return (
+                  <button
+                    key={key}
+                    className="search-item"
+                    onClick={() => openResult(r)}
+                    type="button"
+                  >
+                    <div className="search-avatar">
+                      {avatar ? <img src={assetUrl(avatar)} alt="" /> : (
+                        realType === "shop" ? <Store className="w-5 h-5" /> : <Users className="w-5 h-5" />
+                      )}
+                    </div>
+
+                    <div className="search-meta">
+                      <div className="search-name">{name}</div>
+                      <div className="search-sub">
+                        {realType === "shop" ? "Shop" : "User"}
+                        {r?.email ? ` • ${r.email}` : ""}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* No Results */}
+        {!loading && q.trim() && results.length === 0 && products.length === 0 ? (
+          <div className="search-status">No results found. Try different keywords!</div>
         ) : null}
 
-        <div className="search-results">
-          {results.map((r) => {
-            const id = pickId(r);
-            const realType = r?.__type || pickType(r);
-            const name = pickName(r);
-            const avatar = pickAvatar(r);
-
-            // ✅ stable key (no Math.random())
-            const key = `${realType}-${id || name}`;
-
-            return (
-              <button
-                key={key}
-                className="search-item"
-                onClick={() => openResult(r)}
-                type="button"
-              >
-                <div className="search-avatar">
-                  {avatar ? <img src={assetUrl(avatar)} alt="" /> : null}
-                </div>
-
-                <div className="search-meta">
-                  <div className="search-name">{name}</div>
-                  <div className="search-sub">
-                    {realType === "shop" ? "Shop" : "User"}
-                    {r?.email ? ` • ${r.email}` : ""}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        {/* Search Tips */}
+        {!q.trim() && !loading && (
+          <div className="search-tips">
+            <div className="search-tips-title">
+              <Sparkles className="w-4 h-4" />
+              AI Search Tips
+            </div>
+            <ul>
+              <li>Try natural language: "comfortable shoes for running"</li>
+              <li>Describe what you need: "gift for someone who loves cooking"</li>
+              <li>Search by style: "minimalist home decor"</li>
+              <li>Find similar items: "blue summer dress"</li>
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

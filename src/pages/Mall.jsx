@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE, getMallFeed } from "../api";
+import ForYouFeed from "../components/ForYouFeed";
+import RecentlyViewed from "../components/RecentlyViewed";
+import "../styles/Engagement.css";
 
 /* =========================
    Helpers
@@ -874,6 +877,16 @@ export default function Mall() {
       ) : null}
 
       <div style={S.surface}>
+        {/* ✅ For You - Personalized Recommendations */}
+        {!hasAnyFilter(filters) && getUserToken() && (
+          <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
+        )}
+
+        {/* ✅ Recently Viewed */}
+        {!hasAnyFilter(filters) && getUserToken() && (
+          <RecentlyViewed limit={8} showClear={false} />
+        )}
+
         {error && <div style={S.err}>{error}</div>}
 
         {loading ? (
