@@ -95,12 +95,9 @@ export function ShopAuthForm({ mode, onModeChange }) {
         });
 
         if (response?.token) {
-          // Store shop token
-          localStorage.setItem("shopToken", response.token);
-          localStorage.setItem("shopEmail", email);
-          
-          // Redirect to shop dashboard
-          window.location.href = "https://shop-frontend.vercel.app";
+          // Redirect to shop dashboard with token in URL
+          // The shop frontend will read the token from URL and store it
+          window.location.href = `https://shop-frontend.vercel.app/shop/login?token=${encodeURIComponent(response.token)}`;
         } else {
           throw new Error("Login failed - no token received");
         }
@@ -126,12 +123,9 @@ export function ShopAuthForm({ mode, onModeChange }) {
         const response = await apiPost("/shop/auth/register", payload);
         
         if (response?.token) {
-          // Store shop token
-          localStorage.setItem("shopToken", response.token);
-          localStorage.setItem("shopEmail", email);
-          
-          // Redirect to shop dashboard
-          window.location.href = "https://shop-frontend.vercel.app";
+          // Redirect to shop dashboard with token in URL
+          // The shop frontend will read the token from URL and store it
+          window.location.href = `https://shop-frontend.vercel.app/shop/login?token=${encodeURIComponent(response.token)}`;
         } else {
           setSubmitted(true);
         }
