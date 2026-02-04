@@ -97,7 +97,8 @@ export function ShopAuthForm({ mode, onModeChange }) {
         if (response?.token) {
           // Redirect to shop dashboard with token in URL
           // The shop frontend will read the token from URL and store it
-          window.location.href = `https://shop-frontend.vercel.app/shop/login?token=${encodeURIComponent(response.token)}`;
+          // Added cache busting timestamp to ensure fresh load
+          window.location.href = `https://shop-frontend.vercel.app/shop/login?token=${encodeURIComponent(response.token)}&t=${Date.now()}`;
         } else {
           throw new Error("Login failed - no token received");
         }
@@ -125,7 +126,8 @@ export function ShopAuthForm({ mode, onModeChange }) {
         if (response?.token) {
           // Redirect to shop dashboard with token in URL
           // The shop frontend will read the token from URL and store it
-          window.location.href = `https://shop-frontend.vercel.app/shop/login?token=${encodeURIComponent(response.token)}`;
+          // Added cache busting timestamp to ensure fresh load
+          window.location.href = `https://shop-frontend.vercel.app/shop/login?token=${encodeURIComponent(response.token)}&t=${Date.now()}`;
         } else {
           setSubmitted(true);
         }
