@@ -127,6 +127,11 @@ export default function AppLayout() {
     }
   }
 
+  function handleSearchClick() {
+    // Navigate to search page when clicking the search bar
+    nav("/search");
+  }
+
   const navItems = [
     { label: "Feed", icon: Home, to: "/feed" },
     { label: "Dashboard", icon: LayoutDashboard, to: "/dashboard" },
@@ -226,16 +231,27 @@ export default function AppLayout() {
       <main className={cx("md-main", sidebarCollapsed ? "md-mainExpanded" : "")}>
         {/* Desktop Top Bar */}
         <header className="md-topbar">
-          <div className="md-searchWrap">
-            <Search className="md-searchIcon" />
+          <div className="md-searchWrap" onClick={handleSearchClick} style={{ cursor: 'pointer' }}>
+            <Search className="md-searchIcon" style={{ cursor: 'pointer' }} onClick={handleSearchClick} />
             <input 
               className="md-searchInput" 
               placeholder="Search Moondala..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={handleSearch}
+              onClick={(e) => e.stopPropagation()} // Allow typing without navigating
             />
           </div>
+
+          {/* Search icon button for quick access */}
+          <button 
+            type="button" 
+            className="md-iconBtn" 
+            onClick={handleSearchClick}
+            title="AI Search"
+          >
+            <Search className="w-5 h-5" />
+          </button>
 
           <div className="relative" ref={notifRef}>
             <button 
