@@ -3,6 +3,8 @@
 **Status**: ✅ ACTIVE (Port 5173, prod: `moondala.com`).
 **CRITICAL**: Folder `../user-frontend` is DEPRECATED—always work here.
 
+> **📍 See Also**: [../backend/.github/copilot-instructions.md](../backend/.github/copilot-instructions.md) for API/Backend details.
+
 ## 🚀 Architecture
 
 ```
