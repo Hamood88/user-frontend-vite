@@ -105,6 +105,13 @@ export function toAbsUrl(url) {
       return `https://res.cloudinary.com/${pathNoSlash}`;
     }
   } catch {}
+
+  // ✅ NEW: Detect Cloudinary folder paths like "moondala/products/abc123.jpg"
+  // These are stored by Cloudinary uploads without the full URL structure
+  if (s.startsWith("moondala/") && !s.startsWith("/") && !s.startsWith("http")) {
+    // This is a Cloudinary path from our "moondala" folder
+    return `https://res.cloudinary.com/dohetomaw/image/upload/${s}`;
+  }
   
   // Relative path - add API_BASE
   if (s.startsWith("/")) return `${API_BASE}${s}`;
