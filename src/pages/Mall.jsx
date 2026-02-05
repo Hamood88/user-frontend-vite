@@ -877,14 +877,14 @@ export default function Mall() {
       ) : null}
 
       <div style={S.surface}>
-        {/* ✅ For You - Personalized Recommendations */}
-        {!hasAnyFilter(filters) && getUserToken() && (
-          <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
+        {/* ✅ Recently Viewed - Always show if user is logged in */}
+        {getUserToken() && (
+          <RecentlyViewed limit={8} showClear={true} />
         )}
 
-        {/* ✅ Recently Viewed */}
+        {/* ✅ For You - Personalized Recommendations (only when no filters) */}
         {!hasAnyFilter(filters) && getUserToken() && (
-          <RecentlyViewed limit={8} showClear={false} />
+          <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
         )}
 
         {error && <div style={S.err}>{error}</div>}
