@@ -154,6 +154,12 @@ export default function ProductDetailsUnified() {
   const [qty, setQty] = useState(1);
   const [activeImg, setActiveImg] = useState("");
 
+  // ✅ Cart count state (updates in real-time when adding to cart)
+  const [cartCount, setCartCount] = useState(() => {
+    const c = readCart();
+    return c.reduce((a, x) => a + Math.max(1, safeNum(x.qty, 1)), 0);
+  });
+
   // ✅ Ask previous buyers
   const [buyersOpen, setBuyersOpen] = useState(false);
   const [buyersLoading, setBuyersLoading] = useState(false);
@@ -161,11 +167,6 @@ export default function ProductDetailsUnified() {
   const [buyers, setBuyers] = useState([]);
 
   const images = useMemo(() => pickImages(product), [product]);
-
-  const cartCount = useMemo(() => {
-    const c = readCart();
-    return c.reduce((a, x) => a + Math.max(1, safeNum(x.qty, 1)), 0);
-  }, [product, qty]);
 
   function requireLogin(nextAction = "continue") {
     const token = getUserTokenOnly();
@@ -325,6 +326,11 @@ export default function ProductDetailsUnified() {
     }
 
     writeCart(cart);
+    
+    // ✅ Update cart count in real-time
+    const newCount = cart.reduce((a, x) => a + Math.max(1, safeNum(x.qty, 1)), 0);
+    setCartCount(newCount);
+    
     alert(`✅ Added ${qtySafe} item${qtySafe > 1 ? 's' : ''} to cart!`);
   }
 
@@ -334,8 +340,43 @@ export default function ProductDetailsUnified() {
 
   function buyNow() {
     if (!requireLogin("checkout")) return;
-    addToCart();
-    nav(`/checkout/${encodeURIComponent(id)}`);
+    
+    // ✅ Add product to cart first
+    if (!product) return;
+    
+    const pidLocal = String(product?._id || product?.id || "").trim();
+    if (!pidLocal) return;
+
+    const cart = readCart();
+    const idx = cart.findIndex((x) => String(x.productId) === pidLocal);
+
+    const item = {
+      productId: pidLocal,
+      title,
+      price: safeNum(price, 0),
+      currency,
+      image: images[0] || "",
+      qty: qtySafe,
+      shopId: shopId,
+    };
+
+    if (idx >= 0) {
+      // Update existing item quantity
+      cart[idx] = {
+        ...cart[idx],
+        qty: Math.min(maxStock, Math.max(1, safeNum(cart[idx]?.qty, 1)) + qtySafe),
+      };
+    } else {
+      cart.push(item);
+    }
+
+    writeCart(cart);
+    
+    // ✅ Update cart count and navigate to cart page
+    const newCount = cart.reduce((a, x) => a + Math.max(1, safeNum(x.qty, 1)), 0);
+    setCartCount(newCount);
+    
+    nav("/cart");
   }
 
   async function messageShop() {

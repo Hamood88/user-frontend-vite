@@ -8,17 +8,23 @@
 ## 🚀 Architecture
 
 ```
-user-frontend-vite-temp (Vite React 18)
+user-frontend-vite-temp (Vite React 18 + Capacitor)
 ├─ Entry: index.html → src/index.jsx
 ├─ Router: App.jsx (React Router v6)
 ├─ API: src/api.jsx (apiGet, apiPost, toAbsUrl)
 ├─ i18n: public/locales/{en,ar}/translation.json (react-i18next)
 ├─ State: Local + Context (UserContext for auth)
 ├─ Styling: Tailwind CSS v4 + Framer Motion
+├─ Mobile: Capacitor (iOS + Android native apps)
+│   ├─ capacitor.config.ts - App config, deep links
+│   ├─ src/capacitor-init.js - Native plugin initialization
+│   ├─ android/ - Native Android project (Gradle)
+│   └─ ios/ - Native iOS project (Xcode, CocoaPods)
 └─ Key Pages: ProductDetailsUnified, EarnMore, Mall, Cart
 ```
 
-**Token**: `userToken` (localStorage, user role only).
+**Token**: `userToken` (localStorage, user role only).  
+**Platform**: Web (5173) + iOS App Store + Google Play Store.
 
 ## ⚠️ 5 Non-Negotiable Rules
 
@@ -126,6 +132,59 @@ VITE_API_BASE_URL=https://moondala-backend.onrender.com
 - Cart: Stored in localStorage (`cart_items_${userId}`)
 - Checkout: Creates Order → Redirects to confirmation
 
+### **Mobile App (Capacitor)** (`src/capacitor-init.js`)
+- **Platforms**: iOS (App Store) + Android (Google Play)
+- **Deep Links**: `https://moondala.com/r/ABC123` → auto-navigates in app
+- **Native Features**: Status bar, splash screen, back button, external browser
+- **Detection**: `Capacitor.isNativePlatform()` checks if running as native app
+- **External Links**: `openExternalLink(url)` opens in system browser (not in-app)
+
+**Mobile Workflows**:
+```bash
+# Web development (standard)
+npm run dev  # Port 5173
+
+# Build for mobile
+npm run build  # Creates dist/
+
+# iOS
+npx cap sync ios      # Copy web build to iOS project
+npx cap open ios      # Opens in Xcode
+# Archive → App Store Connect
+
+# Android  
+npx cap sync android  # Copy web build to Android project
+npx cap open android  # Opens in Android Studio
+cd android && gradlew bundleRelease  # Creates AAB for Play Store
+```
+
+**Capacitor Patterns**:
+```javascript
+// Check if native app
+import { Capacitor } from '@capacitor/core';
+const isNative = Capacitor.isNativePlatform();
+const platform = Capacitor.getPlatform(); // 'web', 'ios', 'android'
+
+// Open external links (terms, social media)
+import { openExternalLink } from './capacitor-init';
+await openExternalLink('https://moondala.com/terms');
+
+// Deep links auto-handled by capacitor-init
+// User clicks: https://moondala.com/r/ABC123
+// App opens: navigates to /r/ABC123 (registers referral)
+```
+
+**Native Plugins Used**:
+- `@capacitor/app` - Deep links, back button, app state
+- `@capacitor/browser` - Open external URLs in system browser
+- `@capacitor/splash-screen` - App launch screen
+- `@capacitor/status-bar` - iOS/Android status bar styling
+
+**Config**: `capacitor.config.ts`
+- App ID: `com.moondala.app`
+- Deep Link: `https://moondala.com/*` → app navigation
+- Splash: 2s auto-hide, dark theme (`#0a0a0f`)
+
 ## 🛠️ Developer Workflows
 
 ### **Start Development**
@@ -177,6 +236,9 @@ import { MyNewPage } from './pages/MyNewPage';
 | Missing env var | Image URL `undefined` | Set `VITE_API_BASE` in `.env` file |
 | RTL broken | English layout in Arabic mode | Verify `lang` attribute set + Tailwind dir config |
 | Cart empty | Items disappear after reload | Check localStorage key matches `userId` format |
+| Mobile build fails | Gradle/CocoaPods error | Clean: `npx cap sync`, delete `android/.gradle`, rebuild |
+| Deep link not working | Config missing | Check `capacitor.config.ts` + `android/AndroidManifest.xml` |
+| Status bar wrong color | Plugin not initialized | Verify `capacitor-init.js` called in `App.jsx` |
 
 ### **Memory Leaks**
 ```javascript
@@ -205,6 +267,54 @@ const total = useMemo(() => cart.reduce((sum, item) => sum + item.price, 0), [ca
 | Images 404 prod | Missing `toAbsUrl()` | Wrap ALL `<img src>` in `toAbsUrl(path)` |
 | Hardcoded text in UI | No i18n | Replace with `t("key.name")` from translation.json |
 | `process.env` undefined | CRA pattern in Vite | Use `import.meta.env.VITE_*` |
+| External link opens in-app | Missing openExternalLink | Use `openExternalLink(url)` not `window.open()` for native |
+| Mobile features broken on web | Checking wrong platform | Use `Capacitor.isNativePlatform()` before calling native APIs |
+| Deep link ignored | Event listener not setup | Verify `initializeCapacitor(navigate)` called in `App.jsx` |
+| Android back button exits | No handler | Check `CapApp.addListener('backButton')` in `capacitor-init.js` |
+
+## 📱 Mobile-Specific Notes
+
+### PWA vs Native App
+- **Web (PWA)**: Service worker, manifest.json, installable
+- **Native (iOS/Android)**: Capacitor wraps web build in native container
+- **Same Codebase**: `src/` folder serves both web + mobile
+- **Platform Detection**: Use `Capacitor.isNativePlatform()` for conditional logic
+
+### Deep Link Testing
+```bash
+# iOS Simulator
+xcrun simctl openurl booted "https://moondala.com/r/ABC123"
+
+# Android Emulator  
+adb shell am start -a android.intent.action.VIEW -d "https://moondala.com/r/ABC123" com.moondala.app
+
+# Production
+# iOS: Universal Links (domain association file required)
+# Android: App Links (verified domain in manifest)
+```
+
+### Build Sizes
+- **Web Bundle**: ~508 KB (gzip: 151 KB)
+- **Android APK**: ~15 MB (AAB smaller after Play Store optimization)
+- **iOS IPA**: ~20 MB (compressed for App Store)
+
+### Platform-Specific UI
+```javascript
+// Show native-only features
+const isNative = Capacitor.isNativePlatform();
+{isNative && <ShareButton />}
+
+// Platform-specific styling
+const platform = Capacitor.getPlatform();
+className={platform === 'ios' ? 'pt-safe-area' : ''}
+```
+
+## 📚 Additional Resources
+
+- **Mobile Build Guide**: [android/ANDROID_BUILD_GUIDE.md](../android/ANDROID_BUILD_GUIDE.md) - Full Android release workflow
+- **Earn More Feature**: [EARN_MORE_FEATURE.md](../EARN_MORE_FEATURE.md) - Referral system architecture
+- **Backend API**: [../backend/.github/copilot-instructions.md](../backend/.github/copilot-instructions.md) - API patterns
+- **Capacitor Docs**: https://capacitorjs.com/docs - Official plugin reference
 | 401 Unauthorized | Token expired | API wrapper auto-logs out; user redirected to login |
 | Cart lost on navigation | Not in localStorage | Ensure using key format `cart_items_${userId}` |
 | CORS blocked | Frontend not in allowedOrigins | Check `backend/app.js` allowedOrigins array |

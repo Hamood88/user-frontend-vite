@@ -14,7 +14,7 @@ import Feed from "./pages/Feed";
 import Friends from "./pages/Friends";
 import Profile from "./pages/Profile";
 
-import Mall from "./pages/Mall";
+import Mall from "./pages/MallNew";
 import MallFeed from "./pages/MallFeed";
 import MallProduct from "./pages/MallProduct";
 
