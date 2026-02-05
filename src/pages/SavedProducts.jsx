@@ -63,10 +63,10 @@ export default function SavedProducts() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--md-bg)] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
-          <p className="text-gray-600">{t("loading") || "Loading..."}</p>
+          <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+          <p className="text-[var(--md-text-secondary)]">{t("loading") || "Loading..."}</p>
         </div>
       </div>
     );
@@ -74,7 +74,7 @@ export default function SavedProducts() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--md-bg)] flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-500 mb-4">{error}</p>
           <button
@@ -89,22 +89,22 @@ export default function SavedProducts() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--md-bg)]">
       {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-10">
+      <div className="bg-[var(--md-card)] border-b border-[var(--md-border)] sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate(-1)}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-2 hover:bg-[var(--md-hover)] rounded-full transition-colors text-[var(--md-text)]"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div className="flex items-center gap-2">
               <Heart className="w-6 h-6 text-red-500" fill="currentColor" />
-              <h1 className="text-xl font-bold">{t("savedProducts") || "Saved Products"}</h1>
+              <h1 className="text-xl font-bold text-[var(--md-text)]">{t("savedProducts") || "Saved Products"}</h1>
             </div>
-            <span className="ml-auto text-gray-500">
+            <span className="ml-auto text-[var(--md-text-secondary)]">
               {products.length} {t("items") || "items"}
             </span>
           </div>
@@ -115,11 +115,11 @@ export default function SavedProducts() {
       <div className="max-w-7xl mx-auto px-4 py-6">
         {products.length === 0 ? (
           <div className="text-center py-16">
-            <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-600 mb-2">
+            <Heart className="w-16 h-16 text-[var(--md-text-muted)] mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-[var(--md-text)] mb-2">
               {t("noSavedProducts") || "No saved products yet"}
             </h2>
-            <p className="text-gray-500 mb-6">
+            <p className="text-[var(--md-text-secondary)] mb-6">
               {t("saveProductsHint") || "Tap the heart icon on products you like to save them here"}
             </p>
             <button
@@ -142,7 +142,7 @@ export default function SavedProducts() {
               return (
                 <div
                   key={productId}
-                  className="bg-white rounded-xl shadow-sm overflow-hidden group hover:shadow-md transition-all cursor-pointer relative"
+                  className="bg-[var(--md-card)] rounded-xl border border-[var(--md-border)] overflow-hidden group hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10 transition-all cursor-pointer relative"
                   onClick={() => handleProductClick(productId)}
                 >
                   {/* Price Drop Badge */}
@@ -166,30 +166,30 @@ export default function SavedProducts() {
                   </div>
 
                   {/* Image */}
-                  <div className="aspect-square bg-gray-100 overflow-hidden">
+                  <div className="aspect-square bg-[var(--md-bg-elevated)] overflow-hidden">
                     <img
                       src={toAbsUrl(mainImage)}
                       alt={product.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
-                        e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23f3f4f6' width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af'%3ENo image%3C/text%3E%3C/svg%3E";
+                        e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%231a1a2e' width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%236b7280'%3ENo image%3C/text%3E%3C/svg%3E";
                       }}
                     />
                   </div>
 
                   {/* Product Info */}
                   <div className="p-3">
-                    <h3 className="font-medium text-sm text-gray-900 line-clamp-2 mb-1">
+                    <h3 className="font-medium text-sm text-[var(--md-text)] line-clamp-2 mb-1">
                       {product.title}
                     </h3>
                     
                     {/* Price Section */}
                     <div className="flex items-baseline gap-2">
-                      <span className="font-bold text-purple-600">
+                      <span className="font-bold text-purple-500">
                         ${(product.localPrice || 0).toFixed(2)}
                       </span>
                       {product.priceDropped && product.priceAtSave && (
-                        <span className="text-xs text-gray-400 line-through">
+                        <span className="text-xs text-[var(--md-text-muted)] line-through">
                           ${product.priceAtSave.toFixed(2)}
                         </span>
                       )}
@@ -197,14 +197,14 @@ export default function SavedProducts() {
 
                     {/* Shop Name */}
                     {product.shop?.name && (
-                      <p className="text-xs text-gray-500 mt-1 truncate">
+                      <p className="text-xs text-[var(--md-text-secondary)] mt-1 truncate">
                         {product.shop.name}
                       </p>
                     )}
 
                     {/* Saved Date */}
                     {product.savedAt && (
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-xs text-[var(--md-text-muted)] mt-1">
                         {t("savedOn") || "Saved"}{" "}
                         {new Date(product.savedAt).toLocaleDateString()}
                       </p>
@@ -217,7 +217,7 @@ export default function SavedProducts() {
                       e.stopPropagation();
                       handleRemove(productId);
                     }}
-                    className="absolute bottom-2 right-2 p-1.5 bg-red-50 text-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100"
+                    className="absolute bottom-2 right-2 p-1.5 bg-red-500/10 text-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/20"
                     title={t("remove") || "Remove"}
                   >
                     <Trash2 className="w-4 h-4" />
