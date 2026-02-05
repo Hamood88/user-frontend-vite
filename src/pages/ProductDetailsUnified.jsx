@@ -341,42 +341,14 @@ export default function ProductDetailsUnified() {
   function buyNow() {
     if (!requireLogin("checkout")) return;
     
-    // ✅ Add product to cart first
-    if (!product) return;
-    
-    const pidLocal = String(product?._id || product?.id || "").trim();
-    if (!pidLocal) return;
-
-    const cart = readCart();
-    const idx = cart.findIndex((x) => String(x.productId) === pidLocal);
-
-    const item = {
-      productId: pidLocal,
-      title,
-      price: safeNum(price, 0),
-      currency,
-      image: images[0] || "",
-      qty: qtySafe,
-      shopId: shopId,
-    };
-
-    if (idx >= 0) {
-      // Update existing item quantity
-      cart[idx] = {
-        ...cart[idx],
-        qty: Math.min(maxStock, Math.max(1, safeNum(cart[idx]?.qty, 1)) + qtySafe),
-      };
-    } else {
-      cart.push(item);
+    // ✅ Go directly to checkout with this product
+    const pidLocal = String(product?._id || product?.id || id || "").trim();
+    if (!pidLocal) {
+      alert("Product ID is missing");
+      return;
     }
-
-    writeCart(cart);
     
-    // ✅ Update cart count and navigate to cart page
-    const newCount = cart.reduce((a, x) => a + Math.max(1, safeNum(x.qty, 1)), 0);
-    setCartCount(newCount);
-    
-    nav("/cart");
+    nav(`/checkout/${encodeURIComponent(pidLocal)}`);
   }
 
   async function messageShop() {
