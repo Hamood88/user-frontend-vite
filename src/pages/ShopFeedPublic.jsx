@@ -230,7 +230,7 @@ async function loadPublicShopFeed(shopId) {
 const SHOP_APP_URL =
   import.meta.env.VITE_SHOP_APP_URL ||
   import.meta.env.VITE_SHOP_FRONTEND_URL ||
-  "http://localhost:3000";
+  "https://shop.moondala.com";
 
 // set to true if you want the button visible
 const SHOW_OPEN_SHOP_APP = false;
