@@ -331,6 +331,9 @@ export default function ProductDetailsUnified() {
     const newCount = cart.reduce((a, x) => a + Math.max(1, safeNum(x.qty, 1)), 0);
     setCartCount(newCount);
     
+    // ✅ Dispatch event so AppLayout can update its cart count
+    window.dispatchEvent(new Event("cartUpdated"));
+    
     alert(`✅ Added ${qtySafe} item${qtySafe > 1 ? 's' : ''} to cart!`);
   }
 

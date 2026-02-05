@@ -47,6 +47,27 @@ function safeAvatar(u) {
   return safeImageUrl(u?.avatarUrl || u?.avatar || u?.photoUrl || "", 'avatar', u);
 }
 
+// ✅ Cart helpers
+function getUserCartKey() {
+  try {
+    const user = JSON.parse(localStorage.getItem("userObj") || localStorage.getItem("user") || "{}");
+    const userId = user?._id || user?.id || "guest";
+    return `cart_items_${userId}`;
+  } catch {
+    return "cart_items_guest";
+  }
+}
+
+function getCartCount() {
+  try {
+    const key = getUserCartKey();
+    const cart = JSON.parse(localStorage.getItem(key) || "[]");
+    return cart.reduce((a, x) => a + Math.max(1, Number(x.qty) || 1), 0);
+  } catch {
+    return 0;
+  }
+}
+
 export default function AppLayout() {
   const nav = useNavigate();
   const { t } = useTranslation();
@@ -67,6 +88,27 @@ export default function AppLayout() {
       return false;
     }
   });
+
+  // ✅ Cart count state (updates in real-time)
+  const [cartCount, setCartCount] = useState(() => getCartCount());
+
+  // ✅ Listen for cart updates (custom event from ProductDetailsUnified)
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      setCartCount(getCartCount());
+    };
+
+    // Listen for custom cartUpdated event
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    
+    // Also listen for storage changes (for cross-tab sync)
+    window.addEventListener("storage", handleCartUpdate);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+      window.removeEventListener("storage", handleCartUpdate);
+    };
+  }, []);
 
   // Poll notifications for unread count
   useEffect(() => {
@@ -143,7 +185,7 @@ export default function AppLayout() {
     { label: "Mall", icon: ShoppingBag, to: "/mall" },
     { label: "My Orders", icon: Package, to: "/orders" },
     { label: "Saved", icon: Heart, to: "/saved" },
-    { label: "Cart", icon: ShoppingCart, to: "/cart" },
+    { label: cartCount > 0 ? `Cart (${cartCount})` : "Cart", icon: ShoppingCart, to: "/cart", badge: cartCount },
     { label: "Careers", icon: Briefcase, to: "/careers" },
     { label: "Settings", icon: Settings, to: "/settings" },
   ];
