@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, Search, Settings, Loader2 } from "lucide-react";
-import { toAbsUrl, apiPut, apiGet } from "../api.jsx";
+import { toAbsUrl, apiPut, apiGet, getToken } from "../api.jsx";
+import RecentlyViewed from "../components/RecentlyViewed.jsx";
+import ForYouFeed from "../components/ForYouFeed.jsx";
 import "../styles/Engagement.css";
 
 export default function Mall() {
@@ -242,20 +244,44 @@ export default function Mall() {
 
       {/* Personalized Feed (when not searching) */}
       {!hasSearched && !loading && products.length > 0 && (
-        <div style={S.grid}>
-          {products.map((product) => (
-            <ProductCard key={product._id} product={product} navigate={navigate} />
-          ))}
-        </div>
+        <>
+          {/* Recently Viewed Products */}
+          {getToken() && (
+            <RecentlyViewed limit={8} showClear={true} />
+          )}
+
+          {/* For You - AI Recommendations */}
+          {getToken() && (
+            <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
+          )}
+
+          <div style={S.grid}>
+            {products.map((product) => (
+              <ProductCard key={product._id} product={product} navigate={navigate} />
+            ))}
+          </div>
+        </>
       )}
 
       {/* Empty Feed */}
       {!hasSearched && !loading && products.length === 0 && !error && (
-        <div style={S.empty}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🛍️</div>
-          <div style={{ fontSize: 18, fontWeight: 600 }}>No products available</div>
-          <div style={{ opacity: 0.7, marginTop: 8 }}>Check back later or try searching</div>
-        </div>
+        <>
+          {/* Recently Viewed Products - show even when feed is empty */}
+          {getToken() && (
+            <RecentlyViewed limit={8} showClear={true} />
+          )}
+
+          {/* For You - AI Recommendations - show even when feed is empty */}
+          {getToken() && (
+            <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
+          )}
+
+          <div style={S.empty}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>🛍️</div>
+            <div style={{ fontSize: 18, fontWeight: 600 }}>No products available</div>
+            <div style={{ opacity: 0.7, marginTop: 8 }}>Check back later or try searching</div>
+          </div>
+        </>
       )}
 
       {/* Targeting Controls - Fixed at bottom */}
