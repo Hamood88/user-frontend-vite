@@ -1223,7 +1223,7 @@ export function pickId(x) {
  */
 export async function getSavedProducts() {
   const data = await apiGet("/api/wishlist");
-  return data?.products || [];
+  return data?.savedProducts || [];
 }
 
 /**
