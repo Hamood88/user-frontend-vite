@@ -336,6 +336,7 @@ export default function ShopMallPublic() {
                 theme={theme} 
                 shopName={finalShopName} 
                 navLinks={finalNavLinks}
+                shopId={shopId}
                 searchQuery={searchQuery}
                 onSearch={handleSearch}
                 cartCount={cartCount}
@@ -419,6 +420,7 @@ export default function ShopMallPublic() {
             theme={theme} 
             shopName={finalShopName} 
             navLinks={finalNavLinks}
+            shopId={shopId}
             searchQuery={searchQuery}
             onSearch={handleSearch}
             cartCount={cartCount}

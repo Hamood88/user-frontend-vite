@@ -153,6 +153,7 @@ export function ShopLayout({
     shopName = "My Shop", 
     isMobile = false, 
     navLinks,
+    shopId,
     searchQuery = "",
     onSearch,
     cartCount = 0
@@ -270,7 +271,11 @@ export function ShopLayout({
                         
                         {/* Footer */}
                         <div className="pt-6 mt-6 border-t font-semibold text-sm" style={{ borderColor: theme.border }}>
-                           <Link to="/" className="flex items-center gap-2 hover:opacity-80 mb-4" style={{color: theme.text}}>
+                           <Link
+                                to={shopId ? `/shop/${encodeURIComponent(shopId)}/feed` : "/shop"}
+                                className="flex items-center gap-2 hover:opacity-80 mb-4"
+                                style={{color: theme.text}}
+                            >
                                 <ArrowLeft size={16} /> Exit Store
                             </Link>
                         </div>
@@ -319,7 +324,13 @@ export function ShopLayout({
                             <SearchInput />
                         </div>
                         <CartButton />
-                        <Link to="/" className="text-sm font-semibold hover:opacity-80 hidden md:block" style={{color: theme.text}}>Exit</Link>
+                        <Link
+                            to={shopId ? `/shop/${encodeURIComponent(shopId)}/feed` : "/shop"}
+                            className="text-sm font-semibold hover:opacity-80 hidden md:block"
+                            style={{color: theme.text}}
+                        >
+                            Exit
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -348,7 +359,11 @@ export function ShopLayout({
                     </nav>
                     
                      <div className="pt-6 mt-6 border-t font-semibold text-sm" style={{ borderColor: theme.border }}>
-                         <Link to="/" className="flex items-center gap-2 hover:opacity-80" style={{color: theme.text}}>
+                         <Link
+                            to={shopId ? `/shop/${encodeURIComponent(shopId)}/feed` : "/shop"}
+                            className="flex items-center gap-2 hover:opacity-80"
+                            style={{color: theme.text}}
+                         >
                                 <ArrowLeft size={16} /> Exit Store
                          </Link>
                      </div>
