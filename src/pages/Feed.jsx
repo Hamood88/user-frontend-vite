@@ -1262,7 +1262,7 @@ export default function Feed() {
                     </div>
 
                     {/* Edit/Delete buttons for own posts */}
-                    {pickId(post.user) === pickId(me) ? (
+                    {pickId(post.user) === pickId(me) && (
                       <div className="flex gap-2">
                         <button 
                           type="button" 
