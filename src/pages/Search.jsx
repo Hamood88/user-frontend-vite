@@ -155,7 +155,7 @@ export default function Search() {
       <div className="search-card">
         <div className="search-title">
           <SearchIcon className="w-5 h-5 mr-2" />
-          Search People & Shops
+          Search Users & Shops
         </div>
 
         <div className="search-controls">
