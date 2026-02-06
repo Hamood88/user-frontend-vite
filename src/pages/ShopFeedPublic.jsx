@@ -135,7 +135,6 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
 
       <div className="sfp-marquee-head">
         <div className="sfp-marquee-title">Featured Products</div>
-        <div className="sfp-marquee-sub">Moving left • Hover to pause</div>
       </div>
 
       <div className="sfp-marquee-viewport">
@@ -608,9 +607,6 @@ export default function ShopFeedPublic() {
               </button>
             ) : null}
 
-            <button className="sfp-btn sfp-btn-ghost" onClick={load} disabled={loading} type="button">
-              {loading ? "Loading..." : "Refresh"}
-            </button>
           </div>
         </div>
 
