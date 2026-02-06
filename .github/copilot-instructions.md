@@ -239,6 +239,60 @@ import { MyNewPage } from './pages/MyNewPage';
 | Mobile build fails | Gradle/CocoaPods error | Clean: `npx cap sync`, delete `android/.gradle`, rebuild |
 | Deep link not working | Config missing | Check `capacitor.config.ts` + `android/AndroidManifest.xml` |
 | Status bar wrong color | Plugin not initialized | Verify `capacitor-init.js` called in `App.jsx` |
+| Delete post not working (iOS) | `confirm()` blocked by iOS WebView | Use `window.confirm()` instead of `confirm()` |
+
+### **iOS/Capacitor-Specific Issues**
+
+**⚠️ CRITICAL: Native Dialogs on iOS**
+```javascript
+// ❌ WRONG: Native dialogs unreliable on iOS WebView
+if (!confirm("Delete post?")) return;
+const confirmed = window.confirm("Delete?");
+
+// ✅ CORRECT: Use custom modal component for iOS compatibility
+setConfirmModal({
+  show: true,
+  message: "Delete this post?",
+  onConfirm: async () => {
+    setConfirmModal({ show: false, message: "", onConfirm: null });
+    // Perform delete action
+    await deletePost(postId);
+  }
+});
+
+// Modal component in JSX (see Feed.jsx lines 1674-1713)
+{confirmModal.show && (
+  <div className="fixed inset-0 z-[9999] bg-black/60 flex items-center justify-center">
+    {/* Custom confirmation dialog UI */}
+  </div>
+)}
+
+// Why: iOS WKWebView blocks or behaves inconsistently with:
+// - confirm() - May fail silently
+// - window.confirm() - Blocked in some contexts
+// - prompt() - Not recommended
+// - alert() - Works but poor UX
+// Solution: State-based custom modal works reliably across all platforms
+```
+
+**Common iOS Issues**:
+- **Confirm dialogs don't show**: Use `window.confirm()` instead of `confirm()`
+- **Prompt dialogs blocked**: Consider custom modal components for better UX
+- **Alert dialogs truncated**: Keep messages short (<200 chars on iOS)
+- **Back button behavior**: Capacitor handles via `CapApp.addListener('backButton')`
+
+**Platform Detection**:
+```javascript
+import { Capacitor } from '@capacitor/core';
+
+const isNative = Capacitor.isNativePlatform(); // true on iOS/Android
+const platform = Capacitor.getPlatform(); // 'web', 'ios', 'android'
+
+// Use for conditional logic
+if (platform === 'ios') {
+  // iOS-specific handling
+}
+```
 
 ### **Memory Leaks**
 ```javascript

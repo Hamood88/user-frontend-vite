@@ -29,6 +29,7 @@ import {
   apiPost,
   apiUpload,
   apiGet,
+  apiDelete,
   getMyFeed,
   getPost,
   getPostsByUser,
@@ -205,6 +206,9 @@ export default function Feed() {
   const [err, setErr] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [friendRequestSentToProfile, setFriendRequestSentToProfile] = useState(false);
+  
+  // Confirmation modal state for iOS-compatible dialogs
+  const [confirmModal, setConfirmModal] = useState({ show: false, message: "", onConfirm: null });
 
   const [selectedFile, setSelectedFile] = useState(null);
   const fileRef = useRef(null);
@@ -590,8 +594,15 @@ export default function Feed() {
     const cid = s(commentId);
     if (!pid || !cid) return;
 
-    // optimistic: remove comment and decrement count
-    setPosts((prev) =>
+    // ✅ iOS-compatible confirmation using custom modal
+    setConfirmModal({
+      show: true,
+      message: "Delete this comment?",
+      onConfirm: async () => {
+        setConfirmModal({ show: false, message: "", onConfirm: null });
+        
+        // optimistic: remove comment and decrement count
+        setPosts((prev) =>
       prev.map((p) => {
         if (p._id === pid) {
           const updatedComments = (p.comments || []).filter((c) => c._id !== cid);
@@ -605,14 +616,16 @@ export default function Feed() {
       })
     );
 
-    try {
-      await apiDelete(`/posts/${pid}/comments/${cid}`);
-      // Already updated optimistically
-    } catch (e) {
-      // Revert: reload the post
-      await loadFeed();
-      setErr(e?.message || "Delete comment failed.");
-    }
+        try {
+          await apiDelete(`/api/posts/${pid}/comments/${cid}`);
+          // Already updated optimistically
+        } catch (e) {
+          // Revert: reload the post
+          await loadFeed();
+          setErr(e?.message || "Delete comment failed.");
+        }
+      }
+    });
   }
 
   async function handleLikeComment(postId, commentId) {
@@ -655,16 +668,23 @@ export default function Feed() {
   }
 
   async function handleDeletePost(postId) {
-    if (!confirm("Are you sure you want to delete this post?")) return;
-    
-    try {
-      await deletePost(postId);
-      // Remove from UI
-      setPosts(prev => prev.filter(p => p._id !== postId));
-      setErr("");
-    } catch (e) {
-      setErr(e?.message || "Failed to delete post");
-    }
+    // ✅ iOS-compatible confirmation using custom modal
+    setConfirmModal({
+      show: true,
+      message: "Are you sure you want to delete this post?",
+      onConfirm: async () => {
+        setConfirmModal({ show: false, message: "", onConfirm: null });
+        
+        try {
+          await deletePost(postId);
+          // Remove from UI
+          setPosts(prev => prev.filter(p => p._id !== postId));
+          setErr("");
+        } catch (e) {
+          setErr(e?.message || "Failed to delete post");
+        }
+      }
+    });
   }
 
   function startEditingPost(post) {
@@ -1647,6 +1667,49 @@ export default function Feed() {
             className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl cursor-default"
             onClick={(e) => e.stopPropagation()} 
           />
+        </div>
+      )}
+
+      {/* Confirmation Modal - iOS Compatible */}
+      {confirmModal.show && (
+        <div 
+          className="fixed inset-0 z-[9999] bg-black/60 flex items-center justify-center p-4 animate-in fade-in duration-200"
+          onClick={() => setConfirmModal({ show: false, message: "", onConfirm: null })}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-background/95 backdrop-blur-lg border border-border rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-3 mb-6">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
+                <Trash2 className="w-5 h-5 text-destructive" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-foreground mb-1">Confirm Delete</h3>
+                <p className="text-sm text-muted-foreground">{confirmModal.message}</p>
+              </div>
+            </div>
+            <div className="flex gap-3 justify-end">
+              <button
+                type="button"
+                onClick={() => setConfirmModal({ show: false, message: "", onConfirm: null })}
+                className="px-4 py-2 rounded-lg border border-border bg-background hover:bg-accent text-foreground transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (confirmModal.onConfirm) confirmModal.onConfirm();
+                }}
+                className="px-4 py-2 rounded-lg bg-destructive hover:bg-destructive/90 text-destructive-foreground transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </motion.div>
         </div>
       )}
     </div>
