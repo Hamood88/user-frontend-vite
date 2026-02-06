@@ -276,12 +276,11 @@ export default function AppLayout() {
           <div className="relative" ref={notifRef}>
             <button 
               type="button" 
-              className="md-iconBtn md-iconBtnBare" 
+              className="md-iconBtn md-iconBtnBell" 
               onClick={handleNotificationClick}
               title="Notifications"
-              style={{ color: "#d4af37" }}
             >
-              <Bell className="w-5 h-5" style={{ color: "#d4af37" }} />
+              <Bell className="w-5 h-5" />
               {unreadCount > 0 && <span className="md-dot" />}
             </button>
             {showNotifs && (

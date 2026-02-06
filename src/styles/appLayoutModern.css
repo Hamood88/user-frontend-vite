@@ -180,6 +180,24 @@
   background: transparent;
   color: #d4af37;
 }
+
+.md-iconBtnBell {
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(9,16,30,0.9);
+  color: #d4af37;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+.md-iconBtnBell:hover {
+  color: #e6c15a;
+  background: rgba(12,20,38,0.95);
+  border-color: rgba(255,255,255,0.12);
+}
+
+.md-iconBtnBell .md-dot {
+  background: #d4af37;
+  box-shadow: 0 0 18px rgba(212,175,55,0.7);
+}
   place-items: center;
   font-weight: 900;
   background: hsl(var(--muted));
