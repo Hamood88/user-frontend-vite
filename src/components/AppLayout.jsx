@@ -285,16 +285,6 @@ export default function AppLayout() {
             />
           </div>
 
-          {/* Search icon button for quick access */}
-          <button 
-            type="button" 
-            className="md-iconBtn" 
-            onClick={handleSearchClick}
-            title="AI Search"
-          >
-            <Search className="w-5 h-5" />
-          </button>
-
           <div className="relative" ref={notifRef}>
             <button 
               type="button" 
