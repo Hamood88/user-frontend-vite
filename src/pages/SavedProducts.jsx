@@ -1,6 +1,6 @@
 // SavedProducts.jsx - Page to view all saved/wishlist products
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Heart, ShoppingBag, TrendingDown, Trash2, ArrowLeft, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { getSavedProducts, unsaveProduct, toAbsUrl } from "../api.jsx";
@@ -9,10 +9,15 @@ import SaveProductButton from "../components/SaveProductButton.jsx";
 export default function SavedProducts() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const location = useLocation();
-  const preloaded = Array.isArray(location.state?.preloaded)
-    ? location.state.preloaded
-    : null;
+  const preloaded = (() => {
+    try {
+      const raw = sessionStorage.getItem("saved_prefetch");
+      const parsed = raw ? JSON.parse(raw) : null;
+      return Array.isArray(parsed) ? parsed : null;
+    } catch {
+      return null;
+    }
+  })();
   const [products, setProducts] = useState(preloaded || []);
   const [loading, setLoading] = useState(!preloaded);
   const [error, setError] = useState(null);
@@ -26,6 +31,9 @@ export default function SavedProducts() {
         if (mounted) {
           setProducts(data);
           setError(null);
+          try {
+            sessionStorage.setItem("saved_prefetch", JSON.stringify(Array.isArray(data) ? data : []));
+          } catch {}
         }
       } catch (err) {
         console.error("Error fetching saved products:", err);

@@ -226,7 +226,11 @@ export default function MyOrders() {
     (async () => {
       try {
         const data = await getSavedProducts();
-        if (mounted) setSavedPrefetch(Array.isArray(data) ? data : []);
+        const normalized = Array.isArray(data) ? data : [];
+        if (mounted) setSavedPrefetch(normalized);
+        try {
+          sessionStorage.setItem("saved_prefetch", JSON.stringify(normalized));
+        } catch {}
       } catch {
         if (mounted) setSavedPrefetch([]);
       }
@@ -529,7 +533,7 @@ export default function MyOrders() {
         </button>
         <button
           style={S.filterPill}
-          onClick={() => navigate("/saved", { state: { preloaded: savedPrefetch } })}
+          onClick={() => navigate("/saved")}
           disabled={loading}
           title="Open saved products"
         >
