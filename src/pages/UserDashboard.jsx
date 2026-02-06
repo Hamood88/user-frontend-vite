@@ -343,7 +343,7 @@ export default function UserDashboard() {
           </div>
 
           <div className="glass-card rounded-2xl overflow-hidden border-2 border-border/50 dark:border-border">
-            <div className="grid grid-cols-12 gap-4 p-4 border-b-2 border-border bg-gray-50 dark:bg-card/50 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            <div className="grid grid-cols-12 gap-4 p-4 border-b-2 border-border bg-muted/30 text-xs font-bold text-foreground/70 uppercase tracking-wider">
               <div className="col-span-6">Description</div>
               <div className="col-span-3 text-right">Date</div>
               <div className="col-span-3 text-right">Amount</div>
