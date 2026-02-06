@@ -201,6 +201,10 @@
   background: rgba(167,139,250,1);
   box-shadow: 0 0 20px rgba(167,139,250,0.55);
 }
+.md-iconBtnGold .md-dot {
+  background: #fbbf24;
+  box-shadow: 0 0 18px rgba(251,191,36,0.7);
+}
 
 /* Mobile header */
 .md-mHeader {

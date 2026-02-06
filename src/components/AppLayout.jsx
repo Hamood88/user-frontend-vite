@@ -279,8 +279,9 @@ export default function AppLayout() {
               className="md-iconBtn md-iconBtnGold" 
               onClick={handleNotificationClick}
               title="Notifications"
+              style={{ color: "#fbbf24", borderColor: "rgba(251,191,36,0.7)", background: "rgba(251,191,36,0.08)" }}
             >
-              <Bell className="w-5 h-5" />
+              <Bell className="w-5 h-5" style={{ color: "#fbbf24" }} />
               {unreadCount > 0 && <span className="md-dot" />}
             </button>
             {showNotifs && (
