@@ -398,6 +398,14 @@ export default function Mall() {
     try {
       // ✅ Default personalized feed when no filters
       if (!hasAnyFilter(filters)) {
+        // If user is logged in, we let the <ForYouFeed> component handle the main view
+        // so we don't need to double-fetch distinct "mall feed" here.
+        if (getUserToken()) {
+          setProducts([]);
+          setLoading(false);
+          return;
+        }
+
         const list = await getMallFeed(30);
         setProducts(Array.isArray(list) ? list : []);
         return;
@@ -877,24 +885,34 @@ export default function Mall() {
       ) : null}
 
       <div style={S.surface}>
-        {/* ✅ Recently Viewed - Always show if user is logged in */}
-        {getUserToken() && (
-          <RecentlyViewed limit={8} showClear={true} />
-        )}
-
-        {/* ✅ For You - Personalized Recommendations (only when no filters) */}
+        {/* ✅ 1. AI For You Feed (Main View for Logged In) */}
         {!hasAnyFilter(filters) && getUserToken() && (
-          <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
+          <div style={{ marginBottom: 24 }}>
+            <ForYouFeed limit={24} showHeader={true} showRefresh={true} layout="grid" />
+          </div>
         )}
 
+        {/* ✅ 2. Recently Viewed (Below AI Feed) */}
+        {getUserToken() && (
+          <div style={{ marginBottom: 24 }}>
+            <RecentlyViewed limit={8} showClear={true} />
+          </div>
+        )}
+
+        {/* ✅ 3. Main Grid (Search Results OR Guest General Feed) */}
         {error && <div style={S.err}>{error}</div>}
 
         {loading ? (
           <div style={S.note}>Loading products…</div>
         ) : products.length === 0 ? (
-          <div style={S.note}>
-            {hasAnyFilter(filters) ? "No products found for your search." : "No products match your profile yet."}
-          </div>
+          hasAnyFilter(filters) ? (
+             <div style={S.note}>No products found for your search.</div>
+          ) : getUserToken() ? (
+             /* Logged in user with no search results -> handled by ForYouFeed, nothing to show here */
+             null
+          ) : (
+             <div style={S.note}>No products match your profile yet.</div>
+          )
         ) : (
           <div style={S.grid}>
             {products.map((p) => {
