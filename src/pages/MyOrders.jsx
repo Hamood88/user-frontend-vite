@@ -14,6 +14,7 @@ import {
 
   // ✅ generic api helper (already used across your app)
   apiPost,
+  getSavedProducts,
   toAbsUrl,
 } from "../api.jsx";
 
@@ -131,6 +132,7 @@ export default function MyOrders() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [returnsMap, setReturnsMap] = useState({}); // orderId -> return object
+  const [savedPrefetch, setSavedPrefetch] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -216,6 +218,23 @@ export default function MyOrders() {
   useEffect(() => {
     load();
     // eslint-disable-next-line
+  }, []);
+
+  // ✅ Prefetch Saved products for instant open from Orders
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const data = await getSavedProducts();
+        if (mounted) setSavedPrefetch(Array.isArray(data) ? data : []);
+      } catch {
+        if (mounted) setSavedPrefetch([]);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // ✅ PROOF MODAL (shows order commissions)
@@ -510,7 +529,7 @@ export default function MyOrders() {
         </button>
         <button
           style={S.filterPill}
-          onClick={() => navigate("/saved")}
+          onClick={() => navigate("/saved", { state: { preloaded: savedPrefetch } })}
           disabled={loading}
           title="Open saved products"
         >

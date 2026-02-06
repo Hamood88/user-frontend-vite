@@ -1,6 +1,6 @@
 // SavedProducts.jsx - Page to view all saved/wishlist products
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Heart, ShoppingBag, TrendingDown, Trash2, ArrowLeft, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { getSavedProducts, unsaveProduct, toAbsUrl } from "../api.jsx";
@@ -9,15 +9,19 @@ import SaveProductButton from "../components/SaveProductButton.jsx";
 export default function SavedProducts() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const preloaded = Array.isArray(location.state?.preloaded)
+    ? location.state.preloaded
+    : null;
+  const [products, setProducts] = useState(preloaded || []);
+  const [loading, setLoading] = useState(!preloaded);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let mounted = true;
     (async () => {
       try {
-        setLoading(true);
+        if (!preloaded) setLoading(true);
         const data = await getSavedProducts();
         if (mounted) {
           setProducts(data);
