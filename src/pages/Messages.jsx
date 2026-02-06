@@ -441,6 +441,8 @@ export default function Messages() {
 
       setLoadingChat(true);
       setChatErr("");
+      // ✅ Prevent stale header flash by clearing active conversation start
+      setActiveConversation(null);
 
       try {
         const res = await getConversationMessages(cleanCid);
@@ -799,31 +801,38 @@ export default function Messages() {
   }, [query]);
 
   const headerProduct = useMemo(() => {
-    const conv = activeConversation || activeRow;
-    const topic = String(conv?.topic || "").toLowerCase();
+    // 1. If we have a conversation ID, rely ONLY on the active conversation data
+    if (conversationId) {
+      const conv = activeRow || (activeConversation && String(activeConversation._id) === String(conversationId) ? activeConversation : null);
+      if (!conv) return null; // Waiting for load
 
-    if (topic === "product" || topic === "ask-buyer") {
-      const prev =
-        conv?.productPreview ||
-        conv?.raw?.productSnapshot ||
-        conv?.raw?.productPreview ||
-        null;
+      const topic = String(conv?.topic || "").toLowerCase();
+      if (topic === "product" || topic === "ask-buyer") {
+        const prev =
+          conv?.productPreview ||
+          conv?.raw?.productSnapshot ||
+          conv?.raw?.productPreview ||
+          null;
 
-      if (prev?.productId || prev?._id) {
-        const pid = String(prev.productId || prev._id || "");
-        return {
-          productId: pid,
-          title: safeName(prev.title || prev.name || "Product"),
-          imageUrl: absUrl(
-            prev.imageUrl || prev.image || (Array.isArray(prev.images) ? prev.images[0] : "")
-          ),
-        };
+        if (prev?.productId || prev?._id) {
+          const pid = String(prev.productId || prev._id || "");
+          return {
+            productId: pid,
+            title: safeName(prev.title || prev.name || "Product"),
+            imageUrl: absUrl(
+              prev.imageUrl || prev.image || (Array.isArray(prev.images) ? prev.images[0] : "")
+            ),
+          };
+        }
       }
+      return null;
     }
 
+    // 2. Only use URL fallback if we are in "New Chat" mode (no conversation ID)
     if (urlProductPreview?.productId) return urlProductPreview;
+    
     return null;
-  }, [activeConversation, activeRow, urlProductPreview]);
+  }, [activeConversation, activeRow, urlProductPreview, conversationId]);
 
   function mineMessage(m) {
     const st = String(m?.senderType || "").toLowerCase().trim();
