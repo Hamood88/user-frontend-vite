@@ -441,6 +441,8 @@ export default function Messages() {
 
       setLoadingChat(true);
       setChatErr("");
+      // ✅ Clear messages immediately to prevent showing stale messages from previous chat
+      setMessages([]);
       // ✅ Prevent stale header flash by clearing active conversation start
       setActiveConversation(null);
 
