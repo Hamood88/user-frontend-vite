@@ -19,6 +19,31 @@ export default function Mall() {
   const [error, setError] = useState("");
   const [aiPowered, setAiPowered] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+
+  // Sidebar offset for fixed bottom bar (avoid covering sidebar)
+  const [sidebarOffset, setSidebarOffset] = useState(0);
+
+  useEffect(() => {
+    const calcOffset = () => {
+      try {
+        if (window.innerWidth < 768) return 0;
+        const collapsed = localStorage.getItem("sidebarCollapsed") === "true";
+        return collapsed ? 80 : 260;
+      } catch {
+        return 0;
+      }
+    };
+
+    const update = () => setSidebarOffset(calcOffset());
+    update();
+
+    window.addEventListener("resize", update);
+    window.addEventListener("storage", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("storage", update);
+    };
+  }, []);
   
   // Targeting state
   const [showTargeting, setShowTargeting] = useState(false);
@@ -285,7 +310,13 @@ export default function Mall() {
       )}
 
       {/* Targeting Controls - Fixed at bottom */}
-      <div style={S.targetingContainer}>
+      <div
+        style={{
+          ...S.targetingContainer,
+          left: sidebarOffset,
+          width: `calc(100% - ${sidebarOffset}px)`,
+        }}
+      >
         <button
           onClick={() => setShowTargeting(!showTargeting)}
           style={S.targetingToggle}
