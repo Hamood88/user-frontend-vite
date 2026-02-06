@@ -98,8 +98,8 @@ export default function Search() {
 
     setLoading(true);
     try {
-      // Search only for users and shops (no products)
-      const results = await apiGet(`/api/public/search?q=${encodeURIComponent(qq)}&limit=30`);
+      // ✅ FIXED: apiGet already adds /api prefix, so use /public/search
+      const results = await apiGet(`/public/search?q=${encodeURIComponent(qq)}&limit=30`);
       
       setUsers(results?.users || []);
       setShops(results?.shops || []);
