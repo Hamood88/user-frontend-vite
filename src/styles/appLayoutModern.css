@@ -210,21 +210,27 @@
 
 .md-iconBtnBell {
   border-radius: 12px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
-  color: #d4af37 !important;
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+  border: 1px solid #b4912f;
+  background: linear-gradient(135deg, #ecc94b 0%, #b7791f 100%);
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(183, 121, 31, 0.3);
 }
 .md-iconBtnBell:hover {
-  color: #fbbf24 !important;
-  background: rgba(212, 175, 55, 0.15);
-  border-color: #d4af37;
-  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.25);
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #f6e05e 0%, #d69e2e 100%);
+  border-color: #d69e2e;
+  box-shadow: 0 6px 16px rgba(183, 121, 31, 0.5);
+  transform: translateY(-1px);
+}
+
+.md-iconBtnBell svg {
+  fill: currentColor;
 }
 
 .md-iconBtnBell .md-dot {
-  background: #d4af37;
-  box-shadow: 0 0 18px rgba(212,175,55,0.7);
+  background: #ff4444;
+  border: 2px solid #ecc94b;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
 }
 
 .md-dot {
