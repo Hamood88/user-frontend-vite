@@ -949,7 +949,7 @@ export default function Messages() {
         </div>
 
         {inboxErr ? <div style={styles.errBox(theme)}>{inboxErr}</div> : null}
-        {loadingInbox ? <div style={styles.muted(theme)}>Loading inbox…</div> : null}
+        {/* {loadingInbox ? <div style={styles.muted(theme)}>Loading inbox…</div> : null} */}
 
         {/* ✅ FILTER TABS */}
         <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
@@ -1193,7 +1193,7 @@ export default function Messages() {
               </button>
             ) : null}
 
-            {loadingChat ? <div style={styles.muted(theme)}>Loading chat…</div> : null}
+            {/* {loadingChat ? <div style={styles.muted(theme)}>Loading chat…</div> : null} */}
             {chatErr ? <div style={styles.errBox(theme)}>{chatErr}</div> : null}
 
             <div style={styles.chatBody(theme)}>
