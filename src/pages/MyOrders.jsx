@@ -486,7 +486,7 @@ export default function MyOrders() {
           onClick={() => setFilter("pending")}
           disabled={loading}
         >
-          Pending (Shop action)
+          Pending
         </button>
         <button
           style={{
