@@ -250,19 +250,28 @@ export default function Messages() {
 
   const bottomRef = useRef(null);
 
-  const handleDeleteConversation = async (e, convId) => {
+  // ✅ Custom modal state to avoid window.confirm issues
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+
+  const handleDeleteConversation = (e, convId) => {
     e.stopPropagation();
-    if (!window.confirm("Delete this conversation? It will be removed from your list.")) return;
+    setConfirmDeleteId(convId);
+  };
+
+  const confirmDeleteAction = async () => {
+    if (!confirmDeleteId) return;
     try {
-      await deleteConversation(convId);
-      setConversations((prev) => prev.filter((c) => String(c._id) !== String(convId)));
-      if (String(conversationId) === String(convId)) {
+      await deleteConversation(confirmDeleteId);
+      setConversations((prev) => prev.filter((c) => String(c._id) !== String(confirmDeleteId)));
+      if (String(conversationId) === String(confirmDeleteId)) {
         nav("/messages");
       }
     } catch (err) {
       console.error(err);
       const msg = err?.data?.message || err?.message || "Server connection failed";
       alert(`Failed to delete conversation: ${msg}`);
+    } finally {
+      setConfirmDeleteId(null);
     }
   };
 
@@ -1500,6 +1509,41 @@ export default function Messages() {
           </div>
         </div>
       ) : null}
+
+      {/* DELETE CONFIRMATION MODAL */}
+      {confirmDeleteId && (
+        <div style={styles.modalOverlay} onMouseDown={() => setConfirmDeleteId(null)}>
+          <div style={{ ...styles.modal(theme), width: "min(400px, 90vw)" }} onMouseDown={(e) => e.stopPropagation()}>
+            <div style={{ fontWeight: 900, fontSize: 18, color: theme.text, marginBottom: 12 }}>
+              Delete Conversation?
+            </div>
+            <div style={{ color: theme.muted, marginBottom: 20, lineHeight: 1.5, fontWeight: 500 }}>
+              This conversation will be removed from your inbox. This action cannot be undone.
+            </div>
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
+              <button
+                type="button"
+                style={styles.secondaryBtn(theme)}
+                onClick={() => setConfirmDeleteId(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                style={{
+                  ...styles.primaryBtn(theme),
+                  background: "hsl(var(--destructive))",
+                  borderColor: "hsl(var(--destructive))",
+                  color: "hsl(var(--destructive-foreground))",
+                }}
+                onClick={confirmDeleteAction}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
