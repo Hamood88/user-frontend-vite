@@ -292,28 +292,10 @@ export default function UserDashboard() {
           <h1 className="text-3xl font-display font-black text-gray-900 dark:text-foreground mb-2">
             Welcome back,
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 font-medium">
+          <p className="text-gray-700 dark:text-gray-300 font-medium">
             Track your commissions and network growth.
           </p>
         </div>
-
-        {referralCode ? (
-          <div className="glass-card px-4 py-2 rounded-full flex items-center gap-3 border-2 border-primary/30 dark:border-primary/20 bg-primary/10 dark:bg-primary/5 shadow-md">
-            <code className="font-mono font-black text-gray-900 dark:text-foreground">{referralCode}</code>
-            <button
-              onClick={copyCode}
-              className="text-gray-600 dark:text-muted-foreground hover:text-primary dark:hover:text-foreground transition-colors"
-              type="button"
-              title="Copy"
-            >
-              {copied ? (
-                <Check className="w-4 h-4 text-green-400" />
-              ) : (
-                <Copy className="w-4 h-4" />
-              )}
-            </button>
-          </div>
-        ) : null}
       </div>
 
       {/* KPI Grid */}

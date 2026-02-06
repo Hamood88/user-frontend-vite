@@ -9,7 +9,7 @@
 
 ```
 user-frontend-vite-temp (Vite React 18 + Capacitor)
-├─ Entry: index.html → src/index.jsx
+├─ Entry: index.html → src/main.jsx
 ├─ Router: App.jsx (React Router v6)
 ├─ API: src/api.jsx (apiGet, apiPost, toAbsUrl)
 ├─ i18n: public/locales/{en,ar}/translation.json (react-i18next)
@@ -25,6 +25,7 @@ user-frontend-vite-temp (Vite React 18 + Capacitor)
 
 **Token**: `userToken` (localStorage, user role only).  
 **Platform**: Web (5173) + iOS App Store + Google Play Store.
+**Testing**: ⚠️ No automated test suite enabled. Do not run `npm test`. Rely on manual verification.
 
 ## ⚠️ 5 Non-Negotiable Rules
 
@@ -121,10 +122,10 @@ VITE_API_BASE_URL=https://moondala-backend.onrender.com
 - Integrates with Earn More referral links
 
 ### **Earn More** (`src/pages/EarnMore.jsx`)
-- Dual tabs: Invite Users (QR code) | Invite Shops (unique link)
-- Client-side QR generation: `qrcode` package
-- Data: `/api/users/earnings` + `/api/users/downline-counts`
-- Displays referral tree (5 levels max)
+- **Referral System**: Dual tabs (Users/Shops), QR codes (Level H).
+- **Routes**: `/refer/user/:code`, `/refer/shop/:code`.
+- **Data**: `/api/users/earnings` + `/api/users/downline-counts`.
+- **Note**: Referral codes are case-insensitive.
 
 ### **Shopping Flow**
 - Mall: Fixed rotation (backend fairness)
@@ -189,7 +190,9 @@ await openExternalLink('https://moondala.com/terms');
 
 ### **Start Development**
 ```bash
-cd user-frontend-vite-temp && npm run dev  # Port 5173
+cd user-frontend-vite-temp
+npm install
+npm run dev  # Port 5173
 # Backend MUST be running (port 5000)
 ```
 
