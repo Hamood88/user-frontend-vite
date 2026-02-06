@@ -556,7 +556,8 @@ export default function MyOrders() {
             const status = statusLower(o);
             const returnStatus = r ? String(r.status || "requested") : "";
             const hasReturn = !!r;
-            const canRequestReturn = !hasReturn && status !== "cancelled" && status !== "canceled";
+            const canRequestReturn =
+              isCompleted && !hasReturn && status !== "cancelled" && status !== "canceled";
 
             const showConsentBlock = isTransactionComplete(o);
             const allowQuestions = !!o.allowQuestions;
