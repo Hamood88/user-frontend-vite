@@ -273,18 +273,6 @@ export default function AppLayout() {
       <main className={cx("md-main", sidebarCollapsed ? "md-mainExpanded" : "")}>
         {/* Desktop Top Bar */}
         <header className="md-topbar">
-          <div className="md-searchWrap" onClick={handleSearchClick} style={{ cursor: 'pointer' }}>
-            <Search className="md-searchIcon" style={{ cursor: 'pointer' }} onClick={handleSearchClick} />
-            <input 
-              className="md-searchInput" 
-              placeholder="Search Moondala..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearch}
-              onClick={(e) => e.stopPropagation()} // Allow typing without navigating
-            />
-          </div>
-
           <div className="relative" ref={notifRef}>
             <button 
               type="button" 
