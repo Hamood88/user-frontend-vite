@@ -560,6 +560,7 @@ export default function MyOrders() {
             const status = statusLower(o);
             const returnStatus = r ? String(r.status || "requested") : "";
             const hasReturn = !!r;
+            const isCompleted = isTransactionComplete(o);
             const canRequestReturn =
               isCompleted && !hasReturn && status !== "cancelled" && status !== "canceled";
 
@@ -573,8 +574,6 @@ export default function MyOrders() {
             const total = Number(o.total || 0);
 
             const productImg = toAbsUrl(pickProductImage(o));
-            const isCompleted = isTransactionComplete(o);
-
             return (
               <div key={o._id} style={S.card}>
                 {/* Top */}
