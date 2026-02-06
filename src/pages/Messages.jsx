@@ -945,14 +945,6 @@ export default function Messages() {
         <div style={styles.leftTop(theme)}>
           <div style={styles.h(theme)}>Messages</div>
           <div style={{ display: "flex", gap: 8 }}>
-            <button
-              onClick={loadInbox}
-              style={styles.btnGhost(theme)}
-              type="button"
-              disabled={loadingInbox}
-            >
-              {loadingInbox ? "..." : "↻"}
-            </button>
             <button onClick={openNewChat} style={styles.btnPrimary(theme)} type="button">
               + New
             </button>
@@ -1855,20 +1847,25 @@ const styles = {
     padding: "8px 10px",
     borderRadius: 10,
     border: `1px solid ${t.border}`,
-    background: "rgba(0,0,0,0.20)",
-    color: t.text,
-    fontWeight: 900,
+    background: "transparent",
+    color: t.muted,
+    fontWeight: 700,
     cursor: "pointer",
   }),
 
   btnPrimary: (t) => ({
-    padding: "8px 10px",
-    borderRadius: 10,
-    border: `1px solid rgba(59,130,246,0.55)`,
+    padding: "8px 16px",
+    borderRadius: 99, // Pill shape
+    border: `1px solid transparent`,
     background: t.accent,
-    color: "#fff",
-    fontWeight: 900,
+    color: "hsl(var(--primary-foreground))", // Theme aware text color
+    fontWeight: 700,
+    fontSize: 13,
     cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
   }),
 
   muted: (t) => ({
