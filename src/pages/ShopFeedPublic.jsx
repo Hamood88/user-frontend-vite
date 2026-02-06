@@ -560,7 +560,7 @@ export default function ShopFeedPublic() {
     <div className="sfp-page">
       <div className="sfp-surface">
         <div className="sfp-top">
-          <button className="sfp-btn sfp-btn-ghost" onClick={() => nav(-1)} type="button">
+          <button className="sfp-btn sfp-btn-ghost" onClick={() => nav("/feed")} type="button">
             ← Back
           </button>
 
