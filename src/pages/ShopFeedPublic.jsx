@@ -611,7 +611,6 @@ export default function ShopFeedPublic() {
         </div>
 
         <div className="sfp-h1">{title}</div>
-        <div className="sfp-sub">Public users view — featured products on top + posts below</div>
 
         {err ? <div className="sfp-err">{err}</div> : null}
 
