@@ -13,8 +13,7 @@ import {
   DollarSign, 
   User, 
   Settings,
-  Briefcase,
-  Heart
+  Briefcase
 } from "lucide-react";
 import "../styles/Sidebar.css";
 import { apiGet, API_BASE, toAbsUrl } from "../api.jsx";

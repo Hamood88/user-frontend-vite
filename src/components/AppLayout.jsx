@@ -17,7 +17,6 @@ import {
   Zap,
   Package,
   Briefcase,
-  Heart,
 } from "lucide-react";
 
 import { clearUserSession, getUserSession, safeImageUrl, getMyNotifications } from "../api.jsx";
@@ -184,7 +183,6 @@ export default function AppLayout() {
     { label: "Messages", icon: MessageSquare, to: "/messages" },
     { label: "Mall", icon: ShoppingBag, to: "/mall" },
     { label: "My Orders", icon: Package, to: "/orders" },
-    { label: "Saved", icon: Heart, to: "/saved" },
     { label: cartCount > 0 ? `Cart (${cartCount})` : "Cart", icon: ShoppingCart, to: "/cart", badge: cartCount },
     { label: "Careers", icon: Briefcase, to: "/careers" },
     { label: "Settings", icon: Settings, to: "/settings" },
