@@ -203,7 +203,7 @@ export default function Mall() {
         {/* Loading State */}
         {loading && (
           <div style={S.loading}>
-            <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#fbbf24" }} />
+            <Loader2 className="w-8 h-8 animate-spin" style={{ color: "hsl(var(--primary))" }} />
             <div style={{ marginTop: 16 }}>Loading products...</div>
           </div>
         )}
@@ -215,7 +215,7 @@ export default function Mall() {
         {hasSearched && exactMatches.length > 0 && (
           <div style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-            <h2 style={{ fontSize: 28, fontWeight: 700, color: "#fff" }}>Exact Matches</h2>
+            <h2 style={{ fontSize: 28, fontWeight: 700, color: "hsl(var(--foreground))" }}>Exact Matches</h2>
             <span style={{
               padding: "6px 14px",
               background: "rgba(34, 197, 94, 0.2)",
@@ -239,7 +239,7 @@ export default function Mall() {
         {hasSearched && suggestions.length > 0 && (
           <div style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-            <h2 style={{ fontSize: 22, fontWeight: 600, color: "#d1d5db" }}>You May Also Like</h2>
+            <h2 style={{ fontSize: 22, fontWeight: 600, color: "hsl(var(--muted-foreground))" }}>You May Also Like</h2>
             <span style={{
               padding: "6px 14px",
               background: "rgba(168, 85, 247, 0.2)",
@@ -442,8 +442,8 @@ function ProductCard({ product, navigate }) {
 
 const S = {
   page: {
-    background: "radial-gradient(1200px 600px at 20% -10%, rgba(79,70,229,0.18), transparent 60%), #0b0b0f",
-    color: "#fff",
+    background: "hsl(var(--background))",
+    color: "hsl(var(--foreground))",
     minHeight: "100vh"
   },
   container: {
@@ -452,12 +452,12 @@ const S = {
     padding: "24px 18px 120px"
   },
   searchCard: {
-    background: "linear-gradient(135deg, rgba(30,27,75,0.95) 0%, rgba(49,46,129,0.95) 100%)",
+    background: "hsl(var(--card))",
     borderRadius: 20,
     padding: 24,
     marginBottom: 24,
-    boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
-    border: "1px solid rgba(255,255,255,0.08)"
+    boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
+    border: "1px solid hsl(var(--border))"
   },
   searchHeader: {
     display: "flex",
@@ -467,12 +467,14 @@ const S = {
   },
   searchTitle: {
     fontSize: 20,
-    fontWeight: 700
+    fontWeight: 700,
+    color: "hsl(var(--card-foreground))"
   },
   searchSub: {
     fontSize: 14,
     opacity: 0.8,
-    marginTop: 4
+    marginTop: 4,
+    color: "hsl(var(--muted-foreground))"
   },
   searchForm: {
     display: "flex",
@@ -488,22 +490,22 @@ const S = {
     left: 16,
     top: "50%",
     transform: "translateY(-50%)",
-    color: "#9ca3af"
+    color: "hsl(var(--muted-foreground))"
   },
   searchInput: {
     width: "100%",
     padding: "14px 14px 14px 48px",
-    background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(255,255,255,0.16)",
+    background: "hsl(var(--input))",
+    border: "1px solid hsl(var(--border))",
     borderRadius: 12,
-    color: "#fff",
+    color: "hsl(var(--foreground))",
     fontSize: 15,
     outline: "none"
   },
   searchBtn: {
     padding: "14px 24px",
-    background: "#fbbf24",
-    color: "#000",
+    background: "hsl(var(--primary))",
+    color: "hsl(var(--primary-foreground))",
     border: "none",
     borderRadius: 12,
     fontWeight: 600,
@@ -518,11 +520,11 @@ const S = {
     alignItems: "center",
     gap: 8,
     padding: "8px 16px",
-    background: "rgba(251, 191, 36, 0.2)",
-    border: "1px solid rgba(251, 191, 36, 0.4)",
+    background: "hsl(var(--muted))",
+    border: "1px solid hsl(var(--border))",
     borderRadius: 20,
     fontSize: 13,
-    color: "#fbbf24"
+    color: "hsl(var(--primary))"
   },
   grid: {
     display: "grid",
@@ -530,27 +532,27 @@ const S = {
     gap: 16
   },
   sectionBlock: {
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.08)",
+    background: "hsl(var(--card))",
+    border: "1px solid hsl(var(--border))",
     borderRadius: 16,
     padding: 16,
     marginBottom: 16
   },
   productCard: {
-    background: "rgba(255,255,255,0.03)",
+    background: "hsl(var(--card))",
     borderRadius: 12,
     overflow: "hidden",
     cursor: "pointer",
     transition: "all 0.2s",
-    border: "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid hsl(var(--border))",
     position: "relative"
   },
   matchBadge: {
     position: "absolute",
     top: 8,
     right: 8,
-    background: "#10b981",
-    color: "#fff",
+    background: "hsl(var(--primary))",
+    color: "hsl(var(--primary-foreground))",
     padding: "4px 8px",
     borderRadius: 8,
     fontSize: 12,
@@ -560,7 +562,7 @@ const S = {
   productImage: {
     width: "100%",
     height: 200,
-    background: "#1a1a1f"
+    background: "hsl(var(--muted))"
   },
   productInfo: {
     padding: 12
@@ -571,12 +573,13 @@ const S = {
     marginBottom: 8,
     overflow: "hidden",
     textOverflow: "ellipsis",
-    whiteSpace: "nowrap"
+    whiteSpace: "nowrap",
+    color: "hsl(var(--card-foreground))"
   },
   productPrice: {
     fontSize: 16,
     fontWeight: 700,
-    color: "#fbbf24",
+    color: "hsl(var(--primary))",
     marginBottom: 8
   },
   tags: {
@@ -587,9 +590,9 @@ const S = {
   tag: {
     fontSize: 11,
     padding: "2px 6px",
-    background: "rgba(255,255,255,0.1)",
+    background: "hsl(var(--muted))",
     borderRadius: 4,
-    color: "#9ca3af"
+    color: "hsl(var(--muted-foreground))"
   },
   loading: {
     display: "flex",
@@ -597,28 +600,28 @@ const S = {
     alignItems: "center",
     justifyContent: "center",
     padding: 60,
-    color: "#9ca3af"
+    color: "hsl(var(--muted-foreground))"
   },
   error: {
     padding: 20,
-    background: "rgba(239, 68, 68, 0.1)",
-    border: "1px solid rgba(239, 68, 68, 0.3)",
+    background: "hsl(var(--destructive) / 0.1)",
+    border: "1px solid hsl(var(--destructive) / 0.3)",
     borderRadius: 12,
-    color: "#ef4444",
+    color: "hsl(var(--destructive))",
     textAlign: "center"
   },
   empty: {
     textAlign: "center",
     padding: 60,
-    color: "#9ca3af"
+    color: "hsl(var(--muted-foreground))"
   },
   targetingContainer: {
     position: "fixed",
     bottom: 0,
     left: 0,
     right: 0,
-    background: "#0b0b0f",
-    borderTop: "1px solid rgba(255,255,255,0.1)",
+    background: "hsl(var(--background))",
+    borderTop: "1px solid hsl(var(--border))",
     padding: 16,
     zIndex: 100
   },
@@ -631,10 +634,10 @@ const S = {
     justifyContent: "center",
     gap: 12,
     padding: "14px 24px",
-    background: "rgba(139, 92, 246, 0.2)",
-    border: "1px solid rgba(139, 92, 246, 0.4)",
+    background: "hsl(var(--muted))",
+    border: "1px solid hsl(var(--border))",
     borderRadius: 12,
-    color: "#a78bfa",
+    color: "hsl(var(--primary))",
     fontWeight: 600,
     cursor: "pointer",
     transition: "all 0.2s"
@@ -643,19 +646,21 @@ const S = {
     maxWidth: 600,
     margin: "16px auto 0",
     padding: 24,
-    background: "rgba(255,255,255,0.05)",
+    background: "hsl(var(--card))",
     borderRadius: 12,
-    border: "1px solid rgba(255,255,255,0.1)"
+    border: "1px solid hsl(var(--border))"
   },
   targetingTitle: {
     fontSize: 18,
     fontWeight: 700,
-    marginBottom: 4
+    marginBottom: 4,
+    color: "hsl(var(--card-foreground))"
   },
   targetingSub: {
     fontSize: 14,
     opacity: 0.7,
-    marginBottom: 20
+    marginBottom: 20,
+    color: "hsl(var(--muted-foreground))"
   },
   formGroup: {
     marginBottom: 20
@@ -665,15 +670,15 @@ const S = {
     fontSize: 14,
     fontWeight: 600,
     marginBottom: 8,
-    color: "#9ca3af"
+    color: "hsl(var(--muted-foreground))"
   },
   select: {
     width: "100%",
     padding: "12px 16px",
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.2)",
+    background: "hsl(var(--input))",
+    border: "1px solid hsl(var(--border))",
     borderRadius: 8,
-    color: "#fff",
+    color: "hsl(var(--foreground))",
     fontSize: 15,
     outline: "none"
   },
@@ -684,20 +689,20 @@ const S = {
   },
   chip: {
     padding: "8px 16px",
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.2)",
+    background: "hsl(var(--muted))",
+    border: "1px solid hsl(var(--border))",
     borderRadius: 20,
-    color: "#9ca3af",
+    color: "hsl(var(--muted-foreground))",
     fontSize: 14,
     cursor: "pointer",
     transition: "all 0.2s"
   },
   chipActive: {
     padding: "8px 16px",
-    background: "#8b5cf6",
-    border: "1px solid #8b5cf6",
+    background: "hsl(var(--primary))",
+    border: "1px solid hsl(var(--primary))",
     borderRadius: 20,
-    color: "#fff",
+    color: "hsl(var(--primary-foreground))",
     fontSize: 14,
     fontWeight: 600,
     cursor: "pointer"
@@ -710,20 +715,20 @@ const S = {
   btnCancel: {
     flex: 1,
     padding: "12px 24px",
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.2)",
+    background: "hsl(var(--muted))",
+    border: "1px solid hsl(var(--border))",
     borderRadius: 8,
-    color: "#fff",
+    color: "hsl(var(--foreground))",
     fontWeight: 600,
     cursor: "pointer"
   },
   btnSave: {
     flex: 1,
     padding: "12px 24px",
-    background: "#8b5cf6",
+    background: "hsl(var(--primary))",
     border: "none",
     borderRadius: 8,
-    color: "#fff",
+    color: "hsl(var(--primary-foreground))",
     fontWeight: 600,
     cursor: "pointer"
   }
