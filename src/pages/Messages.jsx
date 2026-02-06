@@ -276,6 +276,9 @@ export default function Messages() {
   };
 
   const fileInputRef = useRef(null);
+  
+  // ✅ Ref to avoid dependency loops in loadChat
+  const conversationsRef = useRef([]);
 
   const meId = useMemo(() => {
     try {
@@ -292,6 +295,9 @@ export default function Messages() {
   const [loadingInbox, setLoadingInbox] = useState(true);
   const [inboxErr, setInboxErr] = useState("");
   const [conversations, setConversations] = useState([]);
+  
+  // Keep ref in sync
+  useEffect(() => { conversationsRef.current = conversations; }, [conversations]);
 
   // chat
   const [loadingChat, setLoadingChat] = useState(false);
@@ -443,14 +449,17 @@ export default function Messages() {
       setChatErr("");
       // ✅ Clear messages immediately to prevent showing stale messages from previous chat
       setMessages([]);
-      // ✅ Prevent stale header flash by clearing active conversation start
-      setActiveConversation(null);
+      
+      // ✅ Use Ref to avoid dependency loop
+      const currentConvs = conversationsRef.current || [];
+      const cachedRow = currentConvs.find((c) => String(c._id) === String(cleanCid)) || null;
+      setActiveConversation(cachedRow);
 
       try {
         const res = await getConversationMessages(cleanCid);
         const msgs = pickArray(res, ["messages", "items", "data"]);
 
-        const row = conversations.find((c) => String(c._id) === String(cleanCid)) || null;
+        const row = currentConvs.find((c) => String(c._id) === String(cleanCid)) || null;
         setActiveConversation(row || null);
 
         const normalizedMsgs = (msgs || []).map((m) => {
@@ -491,7 +500,7 @@ export default function Messages() {
         setLoadingChat(false);
       }
     },
-    [conversations]
+    [] // ✅ Stable dependency (using conversationsRef)
   );
 
   /* =========================
