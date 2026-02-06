@@ -269,52 +269,40 @@ export default function Mall() {
         )}
 
         {/* Personalized Feed (when not searching) */}
-        {!hasSearched && !loading && products.length > 0 && (
+        {!hasSearched && !loading && !error && (
           <>
             {/* For You - AI Recommendations */}
             {getToken() && (
-              <div style={S.sectionBlock}>
-                <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
+              <div style={{ marginBottom: 40 }}>
+                <ForYouFeed limit={24} showHeader={true} showRefresh={true} layout="grid" />
               </div>
             )}
 
             {/* Recently Viewed Products */}
             {getToken() && (
-              <div style={S.sectionBlock}>
+              <div style={{ marginBottom: 40 }}>
                 <RecentlyViewed limit={8} showClear={true} />
               </div>
             )}
 
-            <div style={S.grid}>
-              {products.map((product) => (
-                <ProductCard key={product._id} product={product} navigate={navigate} />
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Empty Feed */}
-        {!hasSearched && !loading && products.length === 0 && !error && (
-          <>
-            {/* For You - AI Recommendations - show even when feed is empty */}
-            {getToken() && (
-              <div style={S.sectionBlock}>
-                <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
+            {/* General Products Grid (Only for guests OR if logged-in user has specific feed needs) */}
+            {/* If logged in, we rely on <ForYouFeed> as the main view to avoid clutter/duplication. */}
+            {!getToken() && products.length > 0 && (
+              <div style={S.grid}>
+                {products.map((product) => (
+                  <ProductCard key={product._id} product={product} navigate={navigate} />
+                ))}
               </div>
             )}
-
-            {/* Recently Viewed Products - show even when feed is empty */}
-            {getToken() && (
-              <div style={S.sectionBlock}>
-                <RecentlyViewed limit={8} showClear={true} />
+            
+            {/* Empty state for GUESTS only */}
+            {!getToken() && products.length === 0 && (
+              <div style={S.empty}>
+                <div style={{ fontSize: 48, marginBottom: 16 }}>🛍️</div>
+                <div style={{ fontSize: 18, fontWeight: 600 }}>No specific recommendations yet</div>
+                <div style={{ opacity: 0.7, marginTop: 8 }}>Search for products to get started!</div>
               </div>
             )}
-
-            <div style={S.empty}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>🛍️</div>
-              <div style={{ fontSize: 18, fontWeight: 600 }}>No products available</div>
-              <div style={{ opacity: 0.7, marginTop: 8 }}>Check back later or try searching</div>
-            </div>
           </>
         )}
       </div>
