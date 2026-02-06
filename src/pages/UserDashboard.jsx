@@ -289,10 +289,10 @@ export default function UserDashboard() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-display font-black text-gray-900 dark:text-foreground mb-2">
-            Welcome back,
+          <h1 className="text-3xl font-display font-black text-gray-900 dark:text-foreground mb-1">
+            Welcome back, <span className="text-primary dark:text-primary-foreground/90">{user?.firstName || user?.name || "User"}</span>
           </h1>
-          <p className="text-gray-700 dark:text-gray-300 font-medium">
+          <p className="text-gray-600 dark:text-gray-400 font-medium text-lg">
             Track your commissions and network growth.
           </p>
         </div>
