@@ -168,7 +168,6 @@ export default function Sidebar({ collapsed = false, onToggle }) {
         <NavItem to="/notifications" label="Notifications" collapsed={collapsed} icon={Bell} theme="amber" />
         <NavItem to="/orders" label="Orders" collapsed={collapsed} icon={ShoppingBag} theme="orange" />
         <NavItem to="/mall" label="Mall" collapsed={collapsed} icon={Store} theme="purple" />
-        <NavItem to="/saved" label="Saved" collapsed={collapsed} icon={Heart} theme="red" />
         <NavItem to="/cart" label="Cart" collapsed={collapsed} icon={ShoppingCart} theme="teal" />
         <NavItem to="/earn-more" label="Earn More" collapsed={collapsed} icon={DollarSign} theme="green" />
         <NavItem to="/careers" label="Careers" collapsed={collapsed} icon={Briefcase} theme="rose" />

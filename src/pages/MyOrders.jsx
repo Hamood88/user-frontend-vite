@@ -122,6 +122,7 @@ function computedOrderBucket(order, returnObj) {
   if (s === "cancelled" || s === "canceled") return "canceled";
   if (s === "refunded") return "refunded";
   if (rStatus === "refunded") return "refunded";
+  if (s === "pending" || s === "processing" || s === "paid") return "pending";
   if (s === "completed" || s === "complete") return "completed";
   return "other";
 }
@@ -135,7 +136,7 @@ export default function MyOrders() {
   const [err, setErr] = useState("");
 
   // ✅ filter
-  const [filter, setFilter] = useState("all"); // all | completed | canceled | refunded
+  const [filter, setFilter] = useState("all"); // all | pending | completed | canceled | refunded
 
   // ✅ return modal
   const [returnOpen, setReturnOpen] = useState(false);
@@ -480,6 +481,16 @@ export default function MyOrders() {
         <button
           style={{
             ...S.filterPill,
+            ...(filter === "pending" ? S.filterActive : null),
+          }}
+          onClick={() => setFilter("pending")}
+          disabled={loading}
+        >
+          Pending (Shop action)
+        </button>
+        <button
+          style={{
+            ...S.filterPill,
             ...(filter === "canceled" ? S.filterActive : null),
           }}
           onClick={() => setFilter("canceled")}
@@ -496,6 +507,14 @@ export default function MyOrders() {
           disabled={loading}
         >
           Refunded
+        </button>
+        <button
+          style={S.filterPill}
+          onClick={() => navigate("/saved")}
+          disabled={loading}
+          title="Open saved products"
+        >
+          Saved
         </button>
       </div>
 
