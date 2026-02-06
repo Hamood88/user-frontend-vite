@@ -292,14 +292,13 @@ export default function UserDashboard() {
           <h1 className="text-3xl font-display font-black text-gray-900 dark:text-foreground mb-2">
             Welcome back,
           </h1>
-          <p className="text-gray-700 dark:text-muted-foreground font-medium">
+          <p className="text-gray-600 dark:text-gray-400 font-medium">
             Track your commissions and network growth.
           </p>
         </div>
 
         {referralCode ? (
           <div className="glass-card px-4 py-2 rounded-full flex items-center gap-3 border-2 border-primary/30 dark:border-primary/20 bg-primary/10 dark:bg-primary/5 shadow-md">
-            <span className="text-sm font-bold text-primary">Share Link</span>
             <code className="font-mono font-black text-gray-900 dark:text-foreground">{referralCode}</code>
             <button
               onClick={copyCode}

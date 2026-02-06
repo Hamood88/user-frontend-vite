@@ -1281,10 +1281,6 @@ export default function Feed() {
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
-                    ) : (
-                      <button type="button" className="md-iconBtn" title="More">
-                        <MoreHorizontal className="w-5 h-5" />
-                      </button>
                     )}
                   </div>
 
