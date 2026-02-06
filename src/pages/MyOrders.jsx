@@ -732,42 +732,33 @@ export default function MyOrders() {
                   </div>
                 ) : null}
 
-                {/* Actions */}
-                <div style={S.actionsRow}>
+                {/* Actions (completed only) */}
+                {isCompleted ? (
+                  <div style={S.actionsRow}>
+                    <button
+                      style={S.returnBtn}
+                      disabled={!canRequestReturn}
+                      onClick={() => openReturnModal(o)}
+                      title={
+                        canRequestReturn
+                          ? "Request a return"
+                          : hasReturn
+                          ? "Return already requested"
+                          : "Cannot return this order"
+                      }
+                    >
+                      ↩️ Request Return
+                    </button>
 
-                  <button
-                    style={{
-                      ...S.returnBtn,
-                      opacity: canRequestReturn ? 1 : 0.55,
-                      cursor: canRequestReturn ? "pointer" : "not-allowed",
-                    }}
-                    disabled={!canRequestReturn}
-                    onClick={() => openReturnModal(o)}
-                    title={
-                      canRequestReturn
-                        ? "Request a return"
-                        : hasReturn
-                        ? "Return already requested"
-                        : "Cannot return this order"
-                    }
-                  >
-                    ↩️ Request Return
-                  </button>
-
-                  {/* ✅ Add review only when completed */}
-                  <button
-                    style={{
-                      ...S.reviewBtn,
-                      opacity: isCompleted ? 1 : 0.55,
-                      cursor: isCompleted ? "pointer" : "not-allowed",
-                    }}
-                    disabled={!isCompleted}
-                    onClick={() => openReviewModal(o)}
-                    title={isCompleted ? "Add a review" : "Complete the order first"}
-                  >
-                    ⭐ Add Review
-                  </button>
-                </div>
+                    <button
+                      style={S.reviewBtn}
+                      onClick={() => openReviewModal(o)}
+                      title="Add a review"
+                    >
+                      ⭐ Add Review
+                    </button>
+                  </div>
+                ) : null}
               </div>
             );
           })}
