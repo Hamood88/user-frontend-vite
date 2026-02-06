@@ -169,6 +169,17 @@
   background: rgba(251,191,36,0.14);
   border-color: rgba(251,191,36,0.7);
 }
+
+.md-iconBtnBare {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+.md-iconBtnBare:hover {
+  border-color: transparent;
+  background: transparent;
+  color: #d4af37;
+}
   place-items: center;
   font-weight: 900;
   background: hsl(var(--muted));
@@ -204,6 +215,10 @@
 .md-iconBtnGold .md-dot {
   background: #fbbf24;
   box-shadow: 0 0 18px rgba(251,191,36,0.7);
+}
+.md-iconBtnBare .md-dot {
+  background: #d4af37;
+  box-shadow: 0 0 18px rgba(212,175,55,0.7);
 }
 
 /* Mobile header */
