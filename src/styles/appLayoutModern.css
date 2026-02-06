@@ -158,6 +158,33 @@
 .md-meAvatar { object-fit: cover; }
 .md-meAvatarFallback {
   display: grid;
+  place-items: center;
+  font-weight: 900;
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+}
+
+.md-meMeta { flex: 1; min-width: 0; }
+.md-meName { font-weight: 800; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: hsl(var(--foreground)); }
+.md-meHandle { font-size: 12px; color: hsl(var(--muted-foreground)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Base Icon Button */
+.md-iconBtn {
+  border: 1px solid hsl(var(--border));
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  border-radius: 12px;
+  padding: 8px;
+  cursor: pointer;
+  transition: 160ms ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.md-iconBtn:hover { background: hsl(var(--accent) / 0.1); color: hsl(var(--foreground)); }
+
+/* Modifiers - Defined AFTER base class */
 .md-iconBtnGold {
   border-color: rgba(251,191,36,0.5);
   color: #fbbf24;
@@ -185,11 +212,11 @@
   border-radius: 12px;
   border: 1px solid rgba(212, 175, 55, 0.3);
   background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
-  color: #d4af37;
+  color: #d4af37 !important;
   box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
 }
 .md-iconBtnBell:hover {
-  color: #fbbf24;
+  color: #fbbf24 !important;
   background: rgba(212, 175, 55, 0.15);
   border-color: #d4af37;
   box-shadow: 0 6px 16px rgba(212, 175, 55, 0.25);
@@ -199,27 +226,6 @@
   background: #d4af37;
   box-shadow: 0 0 18px rgba(212,175,55,0.7);
 }
-  place-items: center;
-  font-weight: 900;
-  background: hsl(var(--muted));
-  color: hsl(var(--foreground));
-}
-
-.md-meMeta { flex: 1; min-width: 0; }
-.md-meName { font-weight: 800; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: hsl(var(--foreground)); }
-.md-meHandle { font-size: 12px; color: hsl(var(--muted-foreground)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-.md-iconBtn {
-  border: 1px solid hsl(var(--border));
-  background: transparent;
-  color: hsl(var(--muted-foreground));
-  border-radius: 12px;
-  padding: 8px;
-  cursor: pointer;
-  transition: 160ms ease;
-  position: relative;
-}
-.md-iconBtn:hover { background: hsl(var(--accent) / 0.1); color: hsl(var(--foreground)); }
 
 .md-dot {
   position: absolute;
