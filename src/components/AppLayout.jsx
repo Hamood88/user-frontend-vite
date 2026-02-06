@@ -214,6 +214,32 @@ export default function AppLayout() {
           </button>
         </div>
 
+        {/* Sidebar Search Input */}
+        <div className={`px-3 mb-2 transition-all duration-300 ${sidebarCollapsed ? 'flex justify-center' : ''}`}>
+           {!sidebarCollapsed ? (
+             <div className="relative group">
+               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+               <input 
+                 type="text" 
+                 placeholder="Search..." 
+                 className="w-full pl-9 pr-3 py-2 bg-secondary/50 hover:bg-secondary border border-transparent focus:border-primary/20 rounded-xl text-sm outline-none focus:ring-0 transition-all placeholder:text-muted-foreground/70"
+                 value={searchQuery}
+                 onChange={e => setSearchQuery(e.target.value)}
+                 onKeyDown={handleSearch}
+                 style={{ color: "hsl(var(--foreground))", background: "hsl(var(--secondary))" }} 
+               />
+             </div>
+           ) : (
+             <button 
+               onClick={() => { setSidebarCollapsed(false); setTimeout(() => document.querySelector('aside input')?.focus(), 100); }} 
+               className="p-2 text-muted-foreground hover:bg-secondary hover:text-foreground rounded-xl transition-colors"
+               title="Search"
+             >
+               <Search className="w-5 h-5" />
+             </button>
+           )}
+        </div>
+
         <nav className="md-nav">
           {navItems.map((item) => (
             <NavLink
