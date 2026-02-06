@@ -262,7 +262,7 @@ export default function UserDashboard() {
 
   if (loading) {
     return (
-      <div className="p-8 animate-pulse font-semibold text-gray-700 dark:text-muted-foreground">
+      <div className="p-8 animate-pulse font-semibold text-primary">
         Loading dashboard data...
       </div>
     );
@@ -270,16 +270,16 @@ export default function UserDashboard() {
 
   if (err) {
     return (
-      <div className="glass-card rounded-2xl p-6 border-2 border-red-300 dark:border-border bg-red-50 dark:bg-card">
-        <div className="text-red-900 dark:text-foreground font-bold mb-2">Dashboard error</div>
-        <div className="text-red-700 dark:text-muted-foreground font-medium">{err}</div>
+      <div className="glass-card rounded-2xl p-6 border-2 border-red-300 dark:border-destructive/50 bg-red-50 dark:bg-destructive/10">
+        <div className="text-red-900 dark:text-destructive-foreground font-bold mb-2">Dashboard error</div>
+        <div className="text-red-700 dark:text-destructive-foreground/80 font-medium">{err}</div>
       </div>
     );
   }
 
   if (!earnings) {
     return (
-      <div className="glass-card rounded-2xl p-6 border-2 border-border bg-gray-50 dark:bg-card font-semibold text-gray-700 dark:text-muted-foreground">
+      <div className="glass-card rounded-2xl p-6 border-2 border-border bg-gray-50 dark:bg-card font-semibold text-muted-foreground">
         No earnings data yet.
       </div>
     );
@@ -330,7 +330,7 @@ export default function UserDashboard() {
         {/* Recent Transactions */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-display font-black text-gray-900 dark:text-foreground">
+            <h2 className="text-xl font-display font-black text-foreground">
               Recent Activity
             </h2>
             <button
@@ -343,7 +343,7 @@ export default function UserDashboard() {
           </div>
 
           <div className="glass-card rounded-2xl overflow-hidden border-2 border-border/50 dark:border-border">
-            <div className="grid grid-cols-12 gap-4 p-4 border-b-2 border-border bg-gray-100 dark:bg-card text-xs font-bold text-gray-700 dark:text-muted-foreground uppercase tracking-wider">
+            <div className="grid grid-cols-12 gap-4 p-4 border-b-2 border-border bg-gray-50 dark:bg-card/50 text-xs font-bold text-muted-foreground uppercase tracking-wider">
               <div className="col-span-6">Description</div>
               <div className="col-span-3 text-right">Date</div>
               <div className="col-span-3 text-right">Amount</div>
@@ -351,7 +351,7 @@ export default function UserDashboard() {
 
             <div className="divide-y divide-border">
               {items.length === 0 && !previewTransaction ? (
-                <div className="p-6 font-medium text-gray-600 dark:text-muted-foreground">No transactions yet.</div>
+                <div className="p-6 font-medium text-muted-foreground">No transactions yet.</div>
               ) : items.length === 0 && previewTransaction ? (
                 // Show preview of last transaction when collapsed
                 <TransactionRow it={previewTransaction} earnings={earnings} />
@@ -466,7 +466,7 @@ function TransactionRow({ it, earnings }) {
   return (
     <div
       key={id}
-      className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-primary/5 dark:hover:bg-muted/50 transition-colors"
+      className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors"
     >
       <div className="col-span-6 flex items-center gap-3">
         <div
@@ -486,16 +486,16 @@ function TransactionRow({ it, earnings }) {
           )}
         </div>
         <div>
-          <div className="font-semibold text-gray-900 dark:text-foreground">{label}</div>
-          <div className="text-xs font-medium text-gray-600 dark:text-muted-foreground">{status}</div>
+          <div className="font-semibold text-foreground">{label}</div>
+          <div className="text-xs font-medium text-muted-foreground">{status}</div>
         </div>
       </div>
 
-      <div className="col-span-3 text-right text-sm font-medium text-gray-700 dark:text-muted-foreground">
+      <div className="col-span-3 text-right text-sm font-medium text-muted-foreground">
         {safeDate(createdAt) || "-"}
       </div>
 
-      <div className="col-span-3 text-right font-bold font-mono text-gray-900 dark:text-foreground">
+      <div className="col-span-3 text-right font-bold font-mono text-foreground">
         {formatMoney(amount, earnings.currency || "USD")}
       </div>
     </div>
