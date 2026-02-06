@@ -165,8 +165,9 @@ export default function Mall() {
 
   return (
     <div style={S.page}>
-      {/* AI Search Section */}
-      <div style={S.searchCard}>
+      <div style={S.container}>
+        {/* AI Search Section */}
+        <div style={S.searchCard}>
         <div style={S.searchHeader}>
           <Sparkles className="w-6 h-6" style={{ color: "#fbbf24" }} />
           <div>
@@ -199,20 +200,20 @@ export default function Mall() {
         )}
       </div>
 
-      {/* Loading State */}
-      {loading && (
-        <div style={S.loading}>
-          <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#fbbf24" }} />
-          <div style={{ marginTop: 16 }}>Loading products...</div>
-        </div>
-      )}
+        {/* Loading State */}
+        {loading && (
+          <div style={S.loading}>
+            <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#fbbf24" }} />
+            <div style={{ marginTop: 16 }}>Loading products...</div>
+          </div>
+        )}
 
-      {/* Error State */}
-      {error && <div style={S.error}>{error}</div>}
+        {/* Error State */}
+        {error && <div style={S.error}>{error}</div>}
 
-      {/* Exact Matches Section */}
-      {hasSearched && exactMatches.length > 0 && (
-        <div style={{ marginBottom: 48 }}>
+        {/* Exact Matches Section */}
+        {hasSearched && exactMatches.length > 0 && (
+          <div style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
             <h2 style={{ fontSize: 28, fontWeight: 700, color: "#fff" }}>Exact Matches</h2>
             <span style={{
@@ -231,12 +232,12 @@ export default function Mall() {
               <ProductCard key={product._id} product={product} navigate={navigate} />
             ))}
           </div>
-        </div>
-      )}
+          </div>
+        )}
 
-      {/* You May Also Like Section */}
-      {hasSearched && suggestions.length > 0 && (
-        <div style={{ marginBottom: 48 }}>
+        {/* You May Also Like Section */}
+        {hasSearched && suggestions.length > 0 && (
+          <div style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
             <h2 style={{ fontSize: 22, fontWeight: 600, color: "#d1d5db" }}>You May Also Like</h2>
             <span style={{
@@ -255,59 +256,68 @@ export default function Mall() {
               <ProductCard key={product._id} product={product} navigate={navigate} />
             ))}
           </div>
-        </div>
-      )}
-
-      {/* No Results */}
-      {hasSearched && exactMatches.length === 0 && suggestions.length === 0 && !searching && !loading && (
-        <div style={S.empty}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
-          <div style={{ fontSize: 18, fontWeight: 600 }}>No products found for "{searchQuery}"</div>
-          <div style={{ opacity: 0.7, marginTop: 8 }}>Try different keywords or browse our personalized feed</div>
-        </div>
-      )}
-
-      {/* Personalized Feed (when not searching) */}
-      {!hasSearched && !loading && products.length > 0 && (
-        <>
-          {/* For You - AI Recommendations */}
-          {getToken() && (
-            <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
-          )}
-
-          {/* Recently Viewed Products */}
-          {getToken() && (
-            <RecentlyViewed limit={8} showClear={true} />
-          )}
-
-          <div style={S.grid}>
-            {products.map((product) => (
-              <ProductCard key={product._id} product={product} navigate={navigate} />
-            ))}
           </div>
-        </>
-      )}
+        )}
 
-      {/* Empty Feed */}
-      {!hasSearched && !loading && products.length === 0 && !error && (
-        <>
-          {/* For You - AI Recommendations - show even when feed is empty */}
-          {getToken() && (
-            <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
-          )}
-
-          {/* Recently Viewed Products - show even when feed is empty */}
-          {getToken() && (
-            <RecentlyViewed limit={8} showClear={true} />
-          )}
-
+        {/* No Results */}
+        {hasSearched && exactMatches.length === 0 && suggestions.length === 0 && !searching && !loading && (
           <div style={S.empty}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>🛍️</div>
-            <div style={{ fontSize: 18, fontWeight: 600 }}>No products available</div>
-            <div style={{ opacity: 0.7, marginTop: 8 }}>Check back later or try searching</div>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
+            <div style={{ fontSize: 18, fontWeight: 600 }}>No products found for "{searchQuery}"</div>
+            <div style={{ opacity: 0.7, marginTop: 8 }}>Try different keywords or browse our personalized feed</div>
           </div>
-        </>
-      )}
+        )}
+
+        {/* Personalized Feed (when not searching) */}
+        {!hasSearched && !loading && products.length > 0 && (
+          <>
+            {/* For You - AI Recommendations */}
+            {getToken() && (
+              <div style={S.sectionBlock}>
+                <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
+              </div>
+            )}
+
+            {/* Recently Viewed Products */}
+            {getToken() && (
+              <div style={S.sectionBlock}>
+                <RecentlyViewed limit={8} showClear={true} />
+              </div>
+            )}
+
+            <div style={S.grid}>
+              {products.map((product) => (
+                <ProductCard key={product._id} product={product} navigate={navigate} />
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Empty Feed */}
+        {!hasSearched && !loading && products.length === 0 && !error && (
+          <>
+            {/* For You - AI Recommendations - show even when feed is empty */}
+            {getToken() && (
+              <div style={S.sectionBlock}>
+                <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
+              </div>
+            )}
+
+            {/* Recently Viewed Products - show even when feed is empty */}
+            {getToken() && (
+              <div style={S.sectionBlock}>
+                <RecentlyViewed limit={8} showClear={true} />
+              </div>
+            )}
+
+            <div style={S.empty}>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>🛍️</div>
+              <div style={{ fontSize: 18, fontWeight: 600 }}>No products available</div>
+              <div style={{ opacity: 0.7, marginTop: 8 }}>Check back later or try searching</div>
+            </div>
+          </>
+        )}
+      </div>
 
       {/* Targeting Controls - Fixed at bottom */}
       <div
@@ -444,18 +454,22 @@ function ProductCard({ product, navigate }) {
 
 const S = {
   page: {
-    padding: "24px 14px",
-    paddingBottom: 120, // Space for fixed targeting button
-    background: "#0b0b0f",
+    background: "radial-gradient(1200px 600px at 20% -10%, rgba(79,70,229,0.18), transparent 60%), #0b0b0f",
     color: "#fff",
     minHeight: "100vh"
   },
+  container: {
+    maxWidth: 1200,
+    margin: "0 auto",
+    padding: "24px 18px 120px"
+  },
   searchCard: {
-    background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)",
+    background: "linear-gradient(135deg, rgba(30,27,75,0.95) 0%, rgba(49,46,129,0.95) 100%)",
     borderRadius: 20,
     padding: 24,
     marginBottom: 24,
-    boxShadow: "0 10px 40px rgba(0,0,0,0.3)"
+    boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+    border: "1px solid rgba(255,255,255,0.08)"
   },
   searchHeader: {
     display: "flex",
@@ -491,8 +505,8 @@ const S = {
   searchInput: {
     width: "100%",
     padding: "14px 14px 14px 48px",
-    background: "rgba(255,255,255,0.1)",
-    border: "1px solid rgba(255,255,255,0.2)",
+    background: "rgba(255,255,255,0.08)",
+    border: "1px solid rgba(255,255,255,0.16)",
     borderRadius: 12,
     color: "#fff",
     fontSize: 15,
@@ -526,6 +540,13 @@ const S = {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
     gap: 16
+  },
+  sectionBlock: {
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16
   },
   productCard: {
     background: "rgba(255,255,255,0.03)",
