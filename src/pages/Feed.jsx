@@ -808,8 +808,13 @@ export default function Feed() {
 
   function shareToWhatsApp(post) {
     const text = `Check out this post by ${userName(post.user)}: "${post.text}"\n\n${getPostPermaLink(post)}`;
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(whatsappUrl, '_blank');
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+      window.location.href = `whatsapp://send?text=${encodeURIComponent(text)}`;
+    } else {
+      window.open(`https://web.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
     setShareDropdownOpen("");
   }
 

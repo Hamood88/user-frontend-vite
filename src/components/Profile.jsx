@@ -722,9 +722,14 @@ export default function Profile() {
           </button>
 
           <button
-            onClick={() =>
-              openShare(`https://wa.me/?text=${encodedMsg}`)
-            }
+            onClick={() => {
+              const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+              if (isMobile) {
+                window.location.href = `whatsapp://send?text=${encodedMsg}`;
+              } else {
+                openShare(`https://web.whatsapp.com/send?text=${encodedMsg}`);
+              }
+            }}
             title="Share on WhatsApp"
             style={btnStyle}
           >

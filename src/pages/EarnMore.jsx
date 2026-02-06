@@ -164,11 +164,17 @@ export default function EarnMore() {
     // Custom message + link (link already contains the referral code)
     const finalMessage = `${customMessage}\n\n${link}`;
     
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
     const urls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`,
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(finalMessage)}`,
-      whatsapp: `https://wa.me/?text=${encodeURIComponent(finalMessage)}`,
-      telegram: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(customMessage)}`,
+      whatsapp: isMobile 
+        ? `whatsapp://send?text=${encodeURIComponent(finalMessage)}`
+        : `https://web.whatsapp.com/send?text=${encodeURIComponent(finalMessage)}`,
+      telegram: isMobile
+        ? `tg://msg?text=${encodeURIComponent(finalMessage)}`
+        : `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(customMessage)}`,
       snapchat: `https://www.snapchat.com/scan?attachmentUrl=${encodeURIComponent(link)}`,
       tiktok: `https://www.tiktok.com/share?url=${encodeURIComponent(link)}`,
       sms: `sms:?&body=${encodeURIComponent(finalMessage)}`,
@@ -177,7 +183,7 @@ export default function EarnMore() {
     };
 
     if (urls[platform]) {
-      if (platform === 'sms') {
+      if (platform === 'sms' || (isMobile && (platform === 'whatsapp' || platform === 'telegram'))) {
         window.location.href = urls[platform];
       } else {
         window.open(urls[platform], "_blank", "width=600,height=400");
