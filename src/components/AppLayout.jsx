@@ -276,7 +276,7 @@ export default function AppLayout() {
           <div className="relative" ref={notifRef}>
             <button 
               type="button" 
-              className="md-iconBtn" 
+              className="md-iconBtn md-iconBtnGold" 
               onClick={handleNotificationClick}
               title="Notifications"
             >

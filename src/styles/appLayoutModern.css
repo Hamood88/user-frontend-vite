@@ -136,7 +136,7 @@
   gap: 12px;
   padding: 10px 10px;
   border-radius: 14px;
-  border: 1px solid hsl(var(--border));
+    justify-content: flex-end;
   background: hsl(var(--muted) / 0.3);
 }
 
@@ -158,6 +158,17 @@
 .md-meAvatar { object-fit: cover; }
 .md-meAvatarFallback {
   display: grid;
+.md-iconBtnGold {
+  border-color: rgba(251,191,36,0.5);
+  color: #fbbf24;
+  background: rgba(251,191,36,0.08);
+  box-shadow: 0 6px 18px rgba(251,191,36,0.18);
+}
+.md-iconBtnGold:hover {
+  color: #f59e0b;
+  background: rgba(251,191,36,0.14);
+  border-color: rgba(251,191,36,0.7);
+}
   place-items: center;
   font-weight: 900;
   background: hsl(var(--muted));
