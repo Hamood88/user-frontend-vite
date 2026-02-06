@@ -169,7 +169,7 @@ export default function Mall() {
         {/* AI Search Section */}
         <div style={S.searchCard}>
         <div style={S.searchHeader}>
-          <Sparkles className="w-6 h-6" style={{ color: "#fbbf24" }} />
+          <Sparkles className="w-6 h-6" style={{ color: "hsl(var(--primary))" }} />
           <div>
             <div style={S.searchTitle}>AI Product Search</div>
             <div style={S.searchSub}>Find products by describing what you want</div>
@@ -218,8 +218,8 @@ export default function Mall() {
             <h2 style={{ fontSize: 28, fontWeight: 700, color: "hsl(var(--foreground))" }}>Exact Matches</h2>
             <span style={{
               padding: "6px 14px",
-              background: "rgba(34, 197, 94, 0.2)",
-              color: "#22c55e",
+              background: "hsl(var(--primary) / 0.1)",
+              color: "hsl(var(--primary))",
               fontSize: 14,
               fontWeight: 600,
               borderRadius: 20
@@ -242,8 +242,8 @@ export default function Mall() {
             <h2 style={{ fontSize: 22, fontWeight: 600, color: "hsl(var(--muted-foreground))" }}>You May Also Like</h2>
             <span style={{
               padding: "6px 14px",
-              background: "rgba(168, 85, 247, 0.2)",
-              color: "#a855f7",
+              background: "hsl(var(--muted))",
+              color: "hsl(var(--muted-foreground))",
               fontSize: 14,
               fontWeight: 600,
               borderRadius: 20

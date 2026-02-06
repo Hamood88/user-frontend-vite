@@ -38,7 +38,7 @@ export default function ForYouFeed({
       <div className={`for-you-section ${className}`}>
         {showHeader && (
           <div className="for-you-header">
-            <Sparkles className="w-5 h-5 text-purple-400" />
+            <Sparkles className="w-5 h-5" style={{ color: "hsl(var(--primary))" }} />
             <span>{t("forYou") || "For You"}</span>
           </div>
         )}
@@ -46,10 +46,10 @@ export default function ForYouFeed({
           {[1, 2, 3, 4, 5, 6].map(i => (
             <div key={i} className="for-you-card-skeleton">
               <div className="animate-pulse">
-                <div className="aspect-square bg-white/10 rounded-t-xl" />
+                <div className="aspect-square rounded-t-xl" style={{ background: "hsl(var(--muted))" }} />
                 <div className="p-3 space-y-2">
-                  <div className="h-4 bg-white/10 rounded w-3/4" />
-                  <div className="h-5 bg-white/10 rounded w-1/2" />
+                  <div className="h-4 rounded w-3/4" style={{ background: "hsl(var(--muted))" }} />
+                  <div className="h-5 rounded w-1/2" style={{ background: "hsl(var(--card))" }} />
                 </div>
               </div>
             </div>
@@ -64,7 +64,7 @@ export default function ForYouFeed({
       <div className={`for-you-section for-you-empty ${className}`}>
         {showHeader && (
           <div className="for-you-header">
-            <Sparkles className="w-5 h-5 text-purple-400" />
+            <Sparkles className="w-5 h-5" style={{ color: "hsl(var(--primary))" }} />
             <span>{t("forYou") || "For You"}</span>
           </div>
         )}
@@ -80,7 +80,7 @@ export default function ForYouFeed({
       {showHeader && (
         <div className="for-you-header">
           <div className="for-you-title-group">
-            <Sparkles className="w-5 h-5 text-purple-400" />
+            <Sparkles className="w-5 h-5" style={{ color: "hsl(var(--primary))" }} />
             <span className="font-semibold">{t("forYou") || "For You"}</span>
             {aiPowered && (
               <span className="for-you-ai-badge">

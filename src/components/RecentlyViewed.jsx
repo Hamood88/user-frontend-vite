@@ -39,7 +39,7 @@ export default function RecentlyViewed({ limit = 10, showClear = true, className
         <div className="recently-viewed-loading">
           <div className="animate-pulse flex gap-3 overflow-hidden">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="w-32 h-40 bg-white/10 rounded-xl shrink-0" />
+              <div key={i} className="w-32 h-40 rounded-xl shrink-0" style={{ background: "hsl(var(--muted))" }} />
             ))}
           </div>
         </div>
@@ -55,14 +55,15 @@ export default function RecentlyViewed({ limit = 10, showClear = true, className
     <div className={`recently-viewed-section ${className}`}>
       <div className="recently-viewed-header">
         <div className="flex items-center gap-2">
-          <Clock className="w-5 h-5 text-blue-400" />
+          <Clock className="w-5 h-5" style={{ color: "hsl(var(--primary))" }} />
           <span className="font-semibold">{t("recentlyViewed") || "Recently Viewed"}</span>
-          <span className="text-white/50 text-sm">({products.length})</span>
+          <span className="text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>({products.length})</span>
         </div>
         {showClear && products.length > 0 && (
           <button
             onClick={handleClear}
-            className="text-sm text-white/50 hover:text-red-400 flex items-center gap-1 transition-colors"
+            className="text-sm flex items-center gap-1 transition-colors"
+            style={{ color: "hsl(var(--muted-foreground))" }}
           >
             <Trash2 className="w-4 h-4" />
             {t("clear") || "Clear"}
