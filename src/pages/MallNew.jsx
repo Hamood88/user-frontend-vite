@@ -245,14 +245,14 @@ export default function Mall() {
       {/* Personalized Feed (when not searching) */}
       {!hasSearched && !loading && products.length > 0 && (
         <>
-          {/* Recently Viewed Products */}
-          {getToken() && (
-            <RecentlyViewed limit={8} showClear={true} />
-          )}
-
           {/* For You - AI Recommendations */}
           {getToken() && (
             <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
+          )}
+
+          {/* Recently Viewed Products */}
+          {getToken() && (
+            <RecentlyViewed limit={8} showClear={true} />
           )}
 
           <div style={S.grid}>
@@ -266,14 +266,14 @@ export default function Mall() {
       {/* Empty Feed */}
       {!hasSearched && !loading && products.length === 0 && !error && (
         <>
-          {/* Recently Viewed Products - show even when feed is empty */}
-          {getToken() && (
-            <RecentlyViewed limit={8} showClear={true} />
-          )}
-
           {/* For You - AI Recommendations - show even when feed is empty */}
           {getToken() && (
             <ForYouFeed limit={8} showHeader={true} showRefresh={true} layout="scroll" />
+          )}
+
+          {/* Recently Viewed Products - show even when feed is empty */}
+          {getToken() && (
+            <RecentlyViewed limit={8} showClear={true} />
           )}
 
           <div style={S.empty}>
