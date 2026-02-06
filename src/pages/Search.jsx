@@ -163,7 +163,7 @@ export default function Search() {
             className="search-input"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search for users or shops..."
+            placeholder="(search users and shops)"
           />
 
           <select

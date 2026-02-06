@@ -10,24 +10,26 @@
 }
 
 .search-card {
-  background: linear-gradient(180deg, #0f1a33, #0b1426);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
   border-radius: 18px;
-  padding: 20px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .search-title {
-  font-size: 28px;
-  font-weight: 900;
-  margin-bottom: 16px;
-  color: #ffffff;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: hsl(var(--foreground));
 }
 
 /* controls */
 .search-controls {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   align-items: center;
 }
 
@@ -37,14 +39,22 @@
   border-radius: 14px;
   padding: 0 16px;
   font-size: 15px;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: hsl(var(--foreground));
+  background: hsl(var(--secondary));
+  border: 1px solid transparent;
   outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus,
+.search-select:focus {
+  background: hsl(var(--background));
+  border-color: hsl(var(--primary) / 0.5);
+  box-shadow: 0 0 0 4px hsl(var(--primary) / 0.1);
 }
 
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.55);
+  color: hsl(var(--muted-foreground));
 }
 
 /* ✅ FIX #1: dropdown menu colors (native select) */
