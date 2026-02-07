@@ -18,10 +18,10 @@ function detectProdApiBaseFallback() {
     if (typeof window === "undefined") return null;
     const host = (window.location && window.location.hostname) || "";
     if (!host) return null;
-    // If frontend hosted at moondala.one or www.moondala.one
+    // If frontend hosted at moondala.com or www.moondala.com
     // Prefer the currently deployed backend host (Render) which is reachable
-    // even when `api.moondala.one` DNS is not configured yet.
-    if (host === "moondala.one" || host === "www.moondala.one") {
+    // even when `api.moondala.com` DNS is not configured yet.
+    if (host === "moondala.com" || host === "www.moondala.com" || host === "moondala.one" || host === "www.moondala.one") {
       return "https://moondala-backend.onrender.com";
     }
     return null;
