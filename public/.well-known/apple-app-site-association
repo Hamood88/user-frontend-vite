@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "YOUR_TEAM_ID.com.moondala.app",
+        "paths": [ "/r/*", "/shop/auth/register", "/login" ]
+      }
+    ]
+  }
+}
