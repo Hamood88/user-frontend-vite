@@ -105,10 +105,16 @@ export function ShopAuthForm({ mode, onModeChange }) {
           console.log("Redirecting to:", targetUrl);
           
           try {
-            if (Capacitor.isNativePlatform()) {
+            // Enhanced native detection for iOS Simulator
+            const isNative = Capacitor.isNativePlatform() || (window.Capacitor && window.Capacitor.platform !== 'web');
+            console.log("Platform Check (Login):", { isNative, platform: Capacitor.getPlatform() });
+
+            if (isNative) {
+               console.log("Opening in Native Browser (Safari/Chrome)");
                await Browser.open({ url: targetUrl });
                setSubmitted(true);
             } else {
+               console.log("Opening in same tab (Web)");
                window.location.href = targetUrl;
             }
           } catch (err) {
@@ -149,10 +155,16 @@ export function ShopAuthForm({ mode, onModeChange }) {
           console.log("Redirecting to:", targetUrl);
           
           try {
-            if (Capacitor.isNativePlatform()) {
+            // Enhanced native detection for iOS Simulator
+            const isNative = Capacitor.isNativePlatform() || (window.Capacitor && window.Capacitor.platform !== 'web');
+            console.log("Platform Check (Register):", { isNative, platform: Capacitor.getPlatform() });
+
+            if (isNative) {
+               console.log("Opening in Native Browser (Safari/Chrome)");
                await Browser.open({ url: targetUrl });
                setSubmitted(true);
             } else {
+               console.log("Opening in same tab (Web)");
                window.location.href = targetUrl;
             }
           } catch (err) {
