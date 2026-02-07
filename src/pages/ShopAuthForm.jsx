@@ -102,15 +102,19 @@ export function ShopAuthForm({ mode, onModeChange }) {
           // Added cache busting timestamp to ensure fresh load
           const shopUrl = import.meta.env.VITE_SHOP_APP_URL || "https://shop.moondala.com";
           const targetUrl = `${shopUrl}/shop/login?token=${encodeURIComponent(response.token)}&t=${Date.now()}`;
+          console.log("Redirecting to:", targetUrl);
           
-          if (Capacitor.isNativePlatform()) {
-             // On Mobile App: Open in System Browser (Safari/Chrome)
-             await Browser.open({ url: targetUrl });
-             // Optional: Navigate user back to home or show "Opened" message
-             setSubmitted(true); // Shows "Success/Redirecting" message effectively
-          } else {
-             // On Web: Redirect current tab
-             window.location.href = targetUrl;
+          try {
+            if (Capacitor.isNativePlatform()) {
+               await Browser.open({ url: targetUrl });
+               setSubmitted(true);
+            } else {
+               window.location.href = targetUrl;
+            }
+          } catch (err) {
+            console.error("Browser open failed, falling back to window.location", err);
+            // Fallback: This will open in the WebView, but it works
+            window.location.href = targetUrl; 
           }
         } else {
           throw new Error("Login failed - no token received");
@@ -142,14 +146,18 @@ export function ShopAuthForm({ mode, onModeChange }) {
           // Added cache busting timestamp to ensure fresh load
           const shopUrl = import.meta.env.VITE_SHOP_APP_URL || "https://shop.moondala.com";
           const targetUrl = `${shopUrl}/shop/login?token=${encodeURIComponent(response.token)}&t=${Date.now()}`;
+          console.log("Redirecting to:", targetUrl);
           
-          if (Capacitor.isNativePlatform()) {
-             // On Mobile App: Open in System Browser (Safari/Chrome)
-             await Browser.open({ url: targetUrl });
-             setSubmitted(true);
-          } else {
-             // On Web: Redirect current tab
-             window.location.href = targetUrl;
+          try {
+            if (Capacitor.isNativePlatform()) {
+               await Browser.open({ url: targetUrl });
+               setSubmitted(true);
+            } else {
+               window.location.href = targetUrl;
+            }
+          } catch (err) {
+            console.error("Browser open failed, falling back to window.location", err);
+            window.location.href = targetUrl;
           }
         } else {
           setSubmitted(true);
