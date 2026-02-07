@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { Browser } from '@capacitor/browser';
+import { Capacitor } from '@capacitor/core';
 import { apiPost } from "../api";
 
 // Add global styles for select options
@@ -99,7 +101,17 @@ export function ShopAuthForm({ mode, onModeChange }) {
           // The shop frontend will read the token from URL and store it
           // Added cache busting timestamp to ensure fresh load
           const shopUrl = import.meta.env.VITE_SHOP_APP_URL || "https://shop.moondala.com";
-          window.location.href = `${shopUrl}/shop/login?token=${encodeURIComponent(response.token)}&t=${Date.now()}`;
+          const targetUrl = `${shopUrl}/shop/login?token=${encodeURIComponent(response.token)}&t=${Date.now()}`;
+          
+          if (Capacitor.isNativePlatform()) {
+             // On Mobile App: Open in System Browser (Safari/Chrome)
+             await Browser.open({ url: targetUrl });
+             // Optional: Navigate user back to home or show "Opened" message
+             setSubmitted(true); // Shows "Success/Redirecting" message effectively
+          } else {
+             // On Web: Redirect current tab
+             window.location.href = targetUrl;
+          }
         } else {
           throw new Error("Login failed - no token received");
         }
@@ -129,7 +141,16 @@ export function ShopAuthForm({ mode, onModeChange }) {
           // The shop frontend will read the token from URL and store it
           // Added cache busting timestamp to ensure fresh load
           const shopUrl = import.meta.env.VITE_SHOP_APP_URL || "https://shop.moondala.com";
-          window.location.href = `${shopUrl}/shop/login?token=${encodeURIComponent(response.token)}&t=${Date.now()}`;
+          const targetUrl = `${shopUrl}/shop/login?token=${encodeURIComponent(response.token)}&t=${Date.now()}`;
+          
+          if (Capacitor.isNativePlatform()) {
+             // On Mobile App: Open in System Browser (Safari/Chrome)
+             await Browser.open({ url: targetUrl });
+             setSubmitted(true);
+          } else {
+             // On Web: Redirect current tab
+             window.location.href = targetUrl;
+          }
         } else {
           setSubmitted(true);
         }
