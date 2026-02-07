@@ -185,6 +185,7 @@ export default function Mall() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [products, setProducts] = useState([]);
+  const [isFallback, setIsFallback] = useState(false); // ✅ Track if results are recommendations
 
   // ===== Sidebar data =====
   const COUNTRIES = useMemo(
@@ -430,9 +431,11 @@ export default function Mall() {
 
       const list = Array.isArray(data?.products) ? data.products : Array.isArray(data) ? data : [];
       setProducts(list);
+      setIsFallback(!!data.isFallback); // ✅ Capture fallback flag
     } catch (err) {
       setError(err?.message || "Failed to load mall");
       setProducts([]);
+      setIsFallback(false);
     } finally {
       setLoading(false);
     }
@@ -901,6 +904,28 @@ export default function Mall() {
 
         {/* ✅ 3. Main Grid (Search Results OR Guest General Feed) */}
         {error && <div style={S.err}>{error}</div>}
+
+        {/* AI FALLBACK MESSAGE */}
+        {isFallback && !loading && (
+          <div style={{
+            background: "rgba(139, 92, 246, 0.15)",
+            border: "1px solid rgba(139, 92, 246, 0.3)",
+            borderRadius: 16,
+            padding: "16px",
+            marginBottom: 20,
+            display: "flex",
+            alignItems: "center",
+            gap: 16
+          }}>
+            <span style={{ fontSize: 24 }}>🤖</span>
+            <div>
+              <div style={{ fontWeight: 800, color: "#fff", fontSize: 16, marginBottom: 2 }}>No exact matches found.</div>
+              <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 14 }}>
+                Our AI found these similar items you might like instead!
+              </div>
+            </div>
+          </div>
+        )}
 
         {loading ? (
           <div style={S.note}>Loading products…</div>
