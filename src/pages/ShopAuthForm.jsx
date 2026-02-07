@@ -100,7 +100,7 @@ export function ShopAuthForm({ mode, onModeChange }) {
           // Redirect to shop dashboard with token in URL
           // The shop frontend will read the token from URL and store it
           // Added cache busting timestamp to ensure fresh load
-          const shopUrl = import.meta.env.VITE_SHOP_APP_URL || "https://shop.moondala.com";
+          const shopUrl = import.meta.env.VITE_SHOP_APP_URL || "https://shop.moondala.one";
           const targetUrl = `${shopUrl}/shop/login?token=${encodeURIComponent(response.token)}&t=${Date.now()}`;
           console.log("Redirecting to:", targetUrl);
           
@@ -144,7 +144,7 @@ export function ShopAuthForm({ mode, onModeChange }) {
           // Redirect to shop dashboard with token in URL
           // The shop frontend will read the token from URL and store it
           // Added cache busting timestamp to ensure fresh load
-          const shopUrl = import.meta.env.VITE_SHOP_APP_URL || "https://shop.moondala.com";
+          const shopUrl = import.meta.env.VITE_SHOP_APP_URL || "https://shop.moondala.one";
           const targetUrl = `${shopUrl}/shop/login?token=${encodeURIComponent(response.token)}&t=${Date.now()}`;
           console.log("Redirecting to:", targetUrl);
           
