@@ -113,6 +113,98 @@ VITE_API_BASE=https://moondala-backend.onrender.com
 VITE_API_BASE_URL=https://moondala-backend.onrender.com
 ```
 
+## 🔐 Firebase Phone Authentication (Critical Pattern)
+
+**Security Flow**: Client verifies OTP → Gets Firebase ID token → Backend validates token server-side → Marks user verified
+
+### **Setup Requirements**
+1. **reCAPTCHA Container**: MUST exist in DOM before calling `setupRecaptcha()`
+```jsx
+// In render/return JSX - both login AND signup forms
+<div id="recaptcha-container"></div>
+```
+
+2. **Firebase Config**: [src/firebase.js](src/firebase.js) - Already configured with production credentials
+
+3. **Utility Module**: [src/utils/firebasePhoneAuth.js](src/utils/firebasePhoneAuth.js) - 6 core functions
+
+### **Authentication Flow (3-Step Pattern)**
+```javascript
+import { 
+  setupRecaptcha, 
+  sendVerificationCode, 
+  verifyCode,
+  getFirebaseIdToken,
+  cleanupFirebaseAuth,
+  formatPhoneNumber
+} from "../utils/firebasePhoneAuth";
+
+// STEP 1: Initialize reCAPTCHA (on component mount)
+useEffect(() => {
+  setupRecaptcha('recaptcha-container');  // Uses invisible reCAPTCHA
+  return () => cleanupFirebaseAuth();     // Cleanup on unmount
+}, []);
+
+// STEP 2: Send SMS verification code
+const handleRegister = async () => {
+  const formattedPhone = formatPhoneNumber(phone, countryCode);  // E.164 format: +12025551234
+  const confirmationResult = await sendVerificationCode(formattedPhone);
+  // User receives SMS with 6-digit code
+  setIsVerifying(true);
+};
+
+// STEP 3: Verify code + send to backend
+const handleVerify = async (otpCode) => {
+  // 3a. Verify with Firebase
+  const result = await verifyCode(otpCode);
+  
+  // 3b. Get ID token (proof of verification)
+  const firebaseToken = await getFirebaseIdToken();
+  
+  // 3c. Backend validates token server-side
+  const res = await apiPost("/auth/verify-phone", { 
+    email: userEmail, 
+    firebaseToken 
+  });
+  
+  // Backend extracts phone number from token + marks user.isPhoneVerified = true
+};
+```
+
+### **Backend Verification** (`/api/auth/verify-phone`)
+```javascript
+// Backend receives Firebase token (NOT raw phone number)
+// Uses Firebase Admin SDK to verify token authenticity
+const decodedToken = await verifyFirebaseToken(firebaseToken);
+const verifiedPhone = decodedToken.phone_number;  // Extracted by Firebase
+
+// Update user
+user.phoneNumber = verifiedPhone;
+user.isPhoneVerified = true;
+await user.save();
+```
+
+**Why This Pattern?** 
+- Security: Backend never trusts client-sent phone numbers
+- Firebase Admin SDK validates token signature server-side
+- Phone number extraction from verified token (not user input)
+- Prevents spoofing attacks
+
+### **Common Firebase Issues**
+| Problem | Cause | Fix |
+|---------|---------|-----|
+| "reCAPTCHA container not found" | setupRecaptcha called before DOM ready | Call in useEffect + ensure `<div id="recaptcha-container">` exists |
+| "No confirmation result" | Code sent but confirmationResult lost | Check `window.confirmationResult` persists between sends |
+| Invalid phone format | Missing + or country code | Use `formatPhoneNumber(phone, countryCode)` |
+| SMS not received | Firebase quota exceeded OR invalid number | Check Firebase Console quota + verify E.164 format |
+| "auth/invalid-verification-code" | User entered wrong code | Provide resend option via `resendVerificationCode()` |
+
+### **Diagnostic Scripts**
+```bash
+node backend/checkPhoneNumbers.js   # View users with phone numbers
+node backend/clearPhoneNumbers.js   # Clear phone numbers for testing (allows reuse)
+```
+
 ## 📂 Key Features & Patterns
 
 ### **Product Details Unified** (`src/pages/ProductDetailsUnified.jsx`)
