@@ -854,7 +854,10 @@ export default function Messages() {
 
   function convoLabel(c) {
     const otherType = String(c?.otherType || "user").toLowerCase().trim();
-    if (otherType === "shop") return "Shop";
+    if (otherType === "shop") {
+      // Return shop name if available
+      return c?.otherName || "Shop";
+    }
     const otherId = String(extractId(c?.otherId || "") || "");
     return otherId && friendSet.has(otherId) ? "Friend" : "User";
   }
@@ -894,7 +897,11 @@ export default function Messages() {
     const sid = extractId(m?.senderEntityId || "");
 
     if (st === "admin") return { text: "ADMIN", kind: "admin" };
-    if (st === "shop") return { text: "SHOP", kind: "shop" };
+    if (st === "shop") {
+      // Use senderLabel (shop name) if available, otherwise fallback to "SHOP"
+      const shopName = m?.senderLabel || m?.sender?.shopName || m?.sender?.name || "SHOP";
+      return { text: shopName.toUpperCase(), kind: "shop" };
+    }
     if (st === "user")
       return friendSet.has(String(sid))
         ? { text: "FRIEND", kind: "friend" }
@@ -995,6 +1002,8 @@ export default function Messages() {
             const lastText = c?.lastText || "";
 
             const label = convoLabel(c);
+            const otherType = String(c?.otherType || "user").toLowerCase().trim();
+            const isShop = otherType === "shop";
             const previewImg =
               topic === "product" || topic === "ask-buyer"
                 ? absUrl(c?.productPreview?.imageUrl || "")
@@ -1055,7 +1064,7 @@ export default function Messages() {
                     <div style={{ fontWeight: 900, color: theme.text }}>
                       {otherName}{" "}
                       <span style={{ fontSize: 12, color: theme.muted, fontWeight: 900 }}>
-                        • {label} •{" "}
+                        • {isShop ? "Shop" : label} •{" "}
                         {topic === "product"
                           ? "Product"
                           : topic === "ask-buyer"
