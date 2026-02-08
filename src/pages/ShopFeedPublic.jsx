@@ -558,128 +558,199 @@ export default function ShopFeedPublic() {
   return (
     <div className="sfp-page" style={{ backgroundColor: '#ffffff', minHeight: '100vh' }}>
       <div className="sfp-surface" style={{ backgroundColor: '#ffffff' }}>
-        {/* Profile Card - Matching Mall Theme Design */}
-        <div className="w-full flex flex-col items-center text-center relative mb-8">
+        {/* Profile Card - Matching shop.moondala.one Design */}
+        <div 
+          style={{
+            background: '#ffffff',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+            marginBottom: '24px'
+          }}
+        >
           {/* Cover Image */}
           <div 
-            className="w-full overflow-hidden rounded-b-[2.5rem] mb-[-48px]" 
-            style={{ height: '192px' }}
+            style={{
+              width: '100%',
+              height: '200px',
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
+              position: 'relative'
+            }}
           >
             {shop?.coverImage ? (
               <img 
                 src={assetUrl(shop.coverImage)} 
                 alt="Cover" 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div 
-                className="w-full h-full"
                 style={{
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #f1f5f9 100%)',
-                  opacity: 0.8
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover'
                 }}
               />
-            )}
+            ) : null}
           </div>
 
-          {/* Avatar - Overlapping Cover */}
+          {/* Profile Info */}
           <div 
-            className="relative mb-4 rounded-full border-4 shadow-2xl overflow-hidden flex items-center justify-center" 
             style={{
-              width: '112px',
-              height: '112px',
-              borderColor: '#ffffff',
-              backgroundColor: '#f8fafc'
+              padding: '0 20px 20px',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '16px',
+              position: 'relative'
             }}
           >
-            {shop?.logo || shop?.logoUrl ? (
-              <img 
-                src={assetUrl(shop.logo || shop.logoUrl)} 
-                alt={shop.shopName}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span 
-                className="text-3xl font-bold opacity-80"
-                style={{ color: '#0f172a' }}
+            {/* Avatar - Overlapping Cover */}
+            <div 
+              style={{
+                width: '120px',
+                height: '120px',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                border: '4px solid #ffffff',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                flexShrink: 0,
+                marginTop: '-60px',
+                background: '#ffffff'
+              }}
+            >
+              {shop?.logo || shop?.logoUrl ? (
+                <img 
+                  src={assetUrl(shop.logo || shop.logoUrl)} 
+                  alt={shop.shopName}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                />
+              ) : (
+                <div 
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'linear-gradient(135deg, #60a5fa, #a78bfa)',
+                    color: 'white',
+                    fontSize: '48px',
+                    fontWeight: 700
+                  }}
+                >
+                  {(shop?.shopName || shop?.name || 'S').charAt(0).toUpperCase()}
+                </div>
+              )}
+            </div>
+
+            {/* Profile Details */}
+            <div style={{ flex: 1, paddingTop: '12px' }}>
+              <h1 
+                style={{
+                  fontSize: '28px',
+                  fontWeight: 700,
+                  color: '#0f172a',
+                  margin: '0 0 8px 0'
+                }}
               >
-                {(shop?.shopName || shop?.name || 'S').charAt(0).toUpperCase()}
-              </span>
-            )}
-          </div>
+                {shop?.shopName || shop?.name || 'Shop'}
+              </h1>
+              
+              {shop?.bio && (
+                <p 
+                  style={{
+                    fontSize: '15px',
+                    lineHeight: '1.5',
+                    color: '#64748b',
+                    margin: 0
+                  }}
+                >
+                  {shop.bio}
+                </p>
+              )}
+            </div>
 
-          {/* Shop Name */}
-          <h1 
-            className="text-3xl font-extrabold mb-2 tracking-tight"
-            style={{ color: '#0f172a' }}
-          >
-            {shop?.shopName || shop?.name || 'Shop'}
-          </h1>
-
-          {/* Bio */}
-          {shop?.bio && (
-            <p 
-              className="text-sm opacity-70 max-w-md px-6 leading-relaxed mb-4"
-              style={{ color: '#0f172a' }}
-            >
-              {shop.bio}
-            </p>
-          )}
-
-          {/* Action Buttons */}
-          <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
-            {/* Follow Button */}
-            <button
-              onClick={handleToggleFollow}
-              disabled={followLoading}
-              className="px-6 py-2 rounded-full font-semibold text-sm transition-all hover:brightness-110 active:scale-95 flex items-center gap-2"
+            {/* Action Buttons */}
+            <div 
               style={{
-                backgroundColor: isFollowing ? '#ef4444' : '#10b981',
-                color: '#ffffff',
-                cursor: followLoading ? 'not-allowed' : 'pointer',
-                opacity: followLoading ? 0.6 : 1,
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                border: 'none'
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                marginTop: '12px',
+                flexShrink: 0
               }}
-              type="button"
             >
-              <Heart 
-                size={16} 
-                fill={isFollowing ? "#fff" : "none"}
-                strokeWidth={isFollowing ? 0 : 2}
-              />
-              {followLoading ? '...' : (isFollowing ? 'Following' : 'Follow')}
-            </button>
+              {/* Follow Button */}
+              <button
+                onClick={handleToggleFollow}
+                disabled={followLoading}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '12px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  backgroundColor: isFollowing ? '#ef4444' : '#10b981',
+                  color: '#ffffff',
+                  border: 'none',
+                  cursor: followLoading ? 'not-allowed' : 'pointer',
+                  opacity: followLoading ? 0.6 : 1,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.2s'
+                }}
+                type="button"
+              >
+                <Heart 
+                  size={16} 
+                  fill={isFollowing ? "#fff" : "none"}
+                  strokeWidth={isFollowing ? 0 : 2}
+                />
+                {followLoading ? '...' : (isFollowing ? 'Following' : 'Follow')}
+              </button>
 
-            {/* Shop Mall Button */}
-            <button
-              onClick={goToShopMallPreview}
-              className="px-6 py-2 rounded-full font-semibold text-sm transition-all hover:brightness-110 active:scale-95"
-              style={{
-                backgroundColor: '#3b82f6',
-                color: '#ffffff',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                border: 'none'
-              }}
-              type="button"
-            >
-              🏬 Shop Mall
-            </button>
+              {/* Shop Mall Button */}
+              <button
+                onClick={goToShopMallPreview}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '12px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  backgroundColor: '#3b82f6',
+                  color: '#ffffff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  transition: 'all 0.2s'
+                }}
+                type="button"
+              >
+                🏬 Shop Mall
+              </button>
 
-            {/* Back Button */}
-            <button
-              onClick={() => nav("/feed")}
-              className="px-6 py-2 rounded-full font-semibold text-sm transition-all hover:brightness-110 active:scale-95"
-              style={{
-                backgroundColor: '#e2e8f0',
-                color: '#0f172a',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                border: 'none'
-              }}
-              type="button"
-            >
-              ← Back
-            </button>
+              {/* Back Button */}
+              <button
+                onClick={() => nav("/feed")}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '12px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  backgroundColor: '#f1f5f9',
+                  color: '#0f172a',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  transition: 'all 0.2s'
+                }}
+                type="button"
+              >
+                ← Back
+              </button>
+            </div>
           </div>
         </div>
 
