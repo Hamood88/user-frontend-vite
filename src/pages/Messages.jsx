@@ -869,9 +869,10 @@ export default function Messages() {
     if (messageFilter === "all") return conversations;
 
     const filtered = conversations.filter((c) => {
+      const otherType = String(c?.otherType || "user").toLowerCase().trim();
       const label = convoLabel(c);
       if (messageFilter === "friends") return label === "Friend";
-      if (messageFilter === "shop") return label === "Shop";
+      if (messageFilter === "shop") return otherType === "shop"; // ✅ Fixed to check otherType
       if (messageFilter === "user-asking") return label === "User";
       return true;
     });
@@ -882,7 +883,7 @@ export default function Messages() {
   const categoryCounts = useMemo(
     () => ({
       friends: conversations.filter((c) => convoLabel(c) === "Friend").length,
-      shop: conversations.filter((c) => convoLabel(c) === "Shop").length,
+      shop: conversations.filter((c) => String(c?.otherType || "").toLowerCase() === "shop").length, // ✅ Fixed
       user: conversations.filter((c) => convoLabel(c) === "User").length,
       total: conversations.length,
     }),
@@ -1025,6 +1026,7 @@ export default function Messages() {
                 style={{ ...styles.convBtn(theme, active), cursor: "pointer" }}
               >
                 <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                  {/* Avatar/Logo - clickable for shops */}
                   {previewImg ? (
                     <img
                       src={previewImg}
@@ -1037,7 +1039,28 @@ export default function Messages() {
                         border: `1px solid ${theme.border}`,
                       }}
                     />
-                  ) : c?.otherAvatarUrl ? (
+                  ) : (isShop && (c?.otherLogoUrl || c?.otherAvatarUrl)) ? (
+                    <img
+                      src={absUrl(c.otherLogoUrl || c.otherAvatarUrl)}
+                      alt={otherName}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (c?.otherId) nav(`/shop/${c.otherId}`);
+                      }}
+                      style={{
+                        width: 42,
+                        height: 42,
+                        borderRadius: 12,
+                        objectFit: "cover",
+                        border: `1px solid ${theme.border}`,
+                        cursor: isShop ? "pointer" : "default",
+                      }}
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        if (e.target.nextElementSibling) e.target.nextElementSibling.style.display = "flex";
+                      }}
+                    />
+                  ) : (!isShop && c?.otherAvatarUrl) ? (
                     <img
                       src={absUrl(c.otherAvatarUrl)}
                       alt={otherName}
@@ -1050,19 +1073,47 @@ export default function Messages() {
                       }}
                       onError={(e) => {
                         e.target.style.display = "none";
-                        e.target.nextElementSibling.style.display = "flex";
+                        if (e.target.nextElementSibling) e.target.nextElementSibling.style.display = "flex";
                       }}
                     />
                   ) : null}
-                  {!previewImg && !c?.otherAvatarUrl && (
-                    <div style={styles.avatar(theme)}>
+                  {!previewImg && !(isShop && (c?.otherLogoUrl || c?.otherAvatarUrl)) && !(!isShop && c?.otherAvatarUrl) && (
+                    <div 
+                      style={{
+                        ...styles.avatar(theme),
+                        cursor: isShop ? "pointer" : "default",
+                      }}
+                      onClick={(e) => {
+                        if (isShop && c?.otherId) {
+                          e.stopPropagation();
+                          nav(`/shop/${c.otherId}`);
+                        }
+                      }}
+                    >
                       {(otherName?.[0] || "C").toUpperCase?.() || "C"}
                     </div>
                   )}
 
                   <div style={{ textAlign: "left", flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 900, color: theme.text }}>
-                      {otherName}{" "}
+                      {isShop ? (
+                        <span
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (c?.otherId) nav(`/shop/${c.otherId}`);
+                          }}
+                          style={{
+                            cursor: "pointer",
+                            textDecoration: "none",
+                          }}
+                          onMouseEnter={(e) => e.target.style.textDecoration = "underline"}
+                          onMouseLeave={(e) => e.target.style.textDecoration = "none"}
+                        >
+                          {otherName}
+                        </span>
+                      ) : (
+                        otherName
+                      )}{" "}
                       <span style={{ fontSize: 12, color: theme.muted, fontWeight: 900 }}>
                         • {isShop ? "Shop" : label} •{" "}
                         {topic === "product"
@@ -1212,8 +1263,10 @@ export default function Messages() {
               {messages.map((m, idx) => {
                 const mine = mineMessage(m);
                 const isAdmin = String(m?.senderType || "").toLowerCase() === "admin";
+                const isShopMsg = String(m?.senderType || "").toLowerCase() === "shop";
                 const atts = Array.isArray(m?.attachments) ? m.attachments : [];
                 const badge = messageSenderBadge(m);
+                const shopId = isShopMsg ? extractId(m?.senderEntityId || m?.sender?._id) : null;
 
                 return (
                   <div
@@ -1227,19 +1280,39 @@ export default function Messages() {
                   >
                     {/* Avatar for other person's messages */}
                     {!mine && (
-                      <div style={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: 8,
-                        backgroundColor: theme.panel,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                        overflow: "hidden",
-                        border: `1px solid ${theme.border}`,
-                      }}>
-                        {m?.sender?.avatarUrl ? (
+                      <div 
+                        style={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: 8,
+                          backgroundColor: theme.panel,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                          overflow: "hidden",
+                          border: `1px solid ${theme.border}`,
+                          cursor: isShopMsg ? "pointer" : "default",
+                        }}
+                        onClick={(e) => {
+                          if (isShopMsg && shopId) {
+                            e.stopPropagation();
+                            nav(`/shop/${shopId}`);
+                          }
+                        }}
+                        title={isShopMsg ? "View shop" : ""}
+                      >
+                        {isShopMsg && (m?.sender?.logoUrl || m?.sender?.avatarUrl) ? (
+                          <img
+                            src={absUrl(m.sender.logoUrl || m.sender.avatarUrl)}
+                            alt={m?.sender?.shopName || m?.sender?.name || "Shop"}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
+                          />
+                        ) : m?.sender?.avatarUrl ? (
                           <img
                             src={m.sender.avatarUrl.startsWith('http') ? m.sender.avatarUrl : `${absUrl(m.sender.avatarUrl)}`}
                             alt={m?.sender?.firstName || "User"}
@@ -1251,7 +1324,10 @@ export default function Messages() {
                           />
                         ) : (
                           <span style={{ fontSize: 14, fontWeight: 600, color: theme.text }}>
-                            {(m?.sender?.firstName?.[0] || (isAdmin ? "A" : "U")).toUpperCase()}
+                            {isShopMsg 
+                              ? (m?.sender?.shopName?.[0] || m?.sender?.name?.[0] || "S").toUpperCase()
+                              : (m?.sender?.firstName?.[0] || (isAdmin ? "A" : "U")).toUpperCase()
+                            }
                           </span>
                         )}
                       </div>
@@ -1259,7 +1335,25 @@ export default function Messages() {
 
                     <div style={styles.bubble(theme, mine, isAdmin)}>
                       <div style={{ display: "flex", justifyContent: mine ? "flex-end" : "flex-start" }}>
-                        <span style={styles.senderBadge(theme, badge.kind)}>{badge.text}</span>
+                        {isShopMsg && !mine ? (
+                          <span 
+                            style={{
+                              ...styles.senderBadge(theme, badge.kind),
+                              cursor: "pointer",
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (shopId) nav(`/shop/${shopId}`);
+                            }}
+                            onMouseEnter={(e) => e.target.style.textDecoration = "underline"}
+                            onMouseLeave={(e) => e.target.style.textDecoration = "none"}
+                            title="View shop"
+                          >
+                            {badge.text}
+                          </span>
+                        ) : (
+                          <span style={styles.senderBadge(theme, badge.kind)}>{badge.text}</span>
+                        )}
                       </div>
 
                       {m?.text ? <div style={{ whiteSpace: "pre-wrap", marginTop: 6 }}>{m.text}</div> : null}
