@@ -258,87 +258,207 @@ export default function ShopPublicPage() {
 
   return (
     <div style={{ padding: 16, maxWidth: 1100, margin: "0 auto", color: "#fff" }}>
-      {/* Header */}
+      {/* Profile Card */}
       <div
         style={{
           borderRadius: 16,
           overflow: "hidden",
           border: "1px solid rgba(255,255,255,0.08)",
           background: "rgba(0,0,0,0.25)",
+          marginBottom: 14,
         }}
       >
+        {/* Cover Image */}
         {cover ? (
-          <div style={{ height: 220, background: `url(${cover}) center/cover no-repeat` }} />
+          <div 
+            style={{ 
+              height: 220, 
+              background: `url(${cover}) center/cover no-repeat`,
+              position: "relative",
+            }} 
+          />
         ) : (
-          <div style={{ height: 160, background: "rgba(255,255,255,0.05)" }} />
+          <div 
+            style={{ 
+              height: 160, 
+              background: "linear-gradient(135deg, rgba(147,51,234,0.3), rgba(59,130,246,0.3))",
+              position: "relative",
+            }} 
+          />
         )}
 
-        <div style={{ display: "flex", gap: 12, padding: 14, alignItems: "center" }}>
-          {logo ? (
-            <img
-              src={logo}
-              alt="logo"
-              style={{ width: 56, height: 56, borderRadius: 14, objectFit: "cover" }}
-            />
-          ) : (
-            <div style={{ width: 56, height: 56, borderRadius: 14, background: "rgba(255,255,255,0.08)" }} />
-          )}
+        {/* Profile Info */}
+        <div style={{ padding: 20 }}>
+          <div style={{ display: "flex", gap: 16, alignItems: "flex-start", marginTop: -40 }}>
+            {/* Avatar/Logo */}
+            {logo ? (
+              <img
+                src={logo}
+                alt="logo"
+                style={{ 
+                  width: 100, 
+                  height: 100, 
+                  borderRadius: 20, 
+                  objectFit: "cover",
+                  border: "4px solid rgba(0,0,0,0.3)",
+                  background: "rgba(0,0,0,0.5)",
+                  flexShrink: 0,
+                }}
+              />
+            ) : (
+              <div 
+                style={{ 
+                  width: 100, 
+                  height: 100, 
+                  borderRadius: 20, 
+                  background: "rgba(255,255,255,0.12)",
+                  border: "4px solid rgba(0,0,0,0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 32,
+                  fontWeight: 900,
+                  flexShrink: 0,
+                }}
+              >
+                {(shop?.name || "S").charAt(0).toUpperCase()}
+              </div>
+            )}
 
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 18, fontWeight: 900 }}>{shop?.name || "Shop"}</div>
-            <div style={{ opacity: 0.75, fontSize: 13 }}>
-              {shop?.industry ? `Industry: ${shop.industry}` : ""}{" "}
-              {shop?.category ? `• Category: ${shop.category}` : ""}
+            <div style={{ flex: 1, minWidth: 0, marginTop: 50 }}>
+              <div style={{ fontSize: 24, fontWeight: 900, marginBottom: 8 }}>
+                {shop?.name || "Shop"}
+              </div>
+              
+              {/* Industry & Category */}
+              {(shop?.industry || shop?.category) && (
+                <div style={{ 
+                  opacity: 0.75, 
+                  fontSize: 14,
+                  marginBottom: 12,
+                  display: "flex",
+                  gap: 8,
+                  flexWrap: "wrap",
+                }}>
+                  {shop?.industry && (
+                    <span style={{
+                      padding: "4px 12px",
+                      borderRadius: 8,
+                      background: "rgba(147,51,234,0.2)",
+                      border: "1px solid rgba(147,51,234,0.3)",
+                      fontSize: 12,
+                      fontWeight: 700,
+                    }}>
+                      {shop.industry}
+                    </span>
+                  )}
+                  {shop?.category && (
+                    <span style={{
+                      padding: "4px 12px",
+                      borderRadius: 8,
+                      background: "rgba(59,130,246,0.2)",
+                      border: "1px solid rgba(59,130,246,0.3)",
+                      fontSize: 12,
+                      fontWeight: 700,
+                    }}>
+                      {shop.category}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Bio */}
+              {shop?.bio && (
+                <div style={{ 
+                  fontSize: 14,
+                  lineHeight: 1.6,
+                  opacity: 0.85,
+                  marginBottom: 16,
+                  whiteSpace: "pre-wrap",
+                }}>
+                  {shop.bio}
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {/* Follow Button */}
+                <button
+                  onClick={handleFollowToggle}
+                  disabled={followLoading}
+                  style={{
+                    padding: "10px 20px",
+                    borderRadius: 12,
+                    border: isFollowing ? "1px solid #9333ea" : "none",
+                    background: isFollowing ? "rgba(147,51,234,0.15)" : "rgba(147,51,234,0.9)",
+                    color: "white",
+                    cursor: followLoading ? "wait" : "pointer",
+                    fontWeight: 800,
+                    fontSize: 14,
+                    opacity: followLoading ? 0.6 : 1,
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!followLoading) {
+                      e.target.style.background = isFollowing ? "rgba(147,51,234,0.25)" : "rgba(147,51,234,1)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = isFollowing ? "rgba(147,51,234,0.15)" : "rgba(147,51,234,0.9)";
+                  }}
+                >
+                  {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+                </button>
+                
+                {/* Mall Tab */}
+                <button
+                  onClick={() => goTab("mall")}
+                  style={{
+                    padding: "10px 16px",
+                    borderRadius: 12,
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    background: tab === "mall" ? "rgba(255,255,255,0.15)" : "transparent",
+                    color: "white",
+                    cursor: "pointer",
+                    fontWeight: 800,
+                    fontSize: 14,
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (tab !== "mall") e.target.style.background = "rgba(255,255,255,0.08)";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (tab !== "mall") e.target.style.background = "transparent";
+                  }}
+                >
+                  Mall
+                </button>
+                
+                {/* Feed Tab */}
+                <button
+                  onClick={() => goTab("feed")}
+                  style={{
+                    padding: "10px 16px",
+                    borderRadius: 12,
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    background: tab === "feed" ? "rgba(255,255,255,0.15)" : "transparent",
+                    color: "white",
+                    cursor: "pointer",
+                    fontWeight: 800,
+                    fontSize: 14,
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (tab !== "feed") e.target.style.background = "rgba(255,255,255,0.08)";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (tab !== "feed") e.target.style.background = "transparent";
+                  }}
+                >
+                  Feed
+                </button>
+              </div>
             </div>
-          </div>
-
-          <div style={{ display: "flex", gap: 8 }}>
-            {/* ✅ Follow Button */}
-            <button
-              onClick={handleFollowToggle}
-              disabled={followLoading}
-              style={{
-                padding: "10px 16px",
-                borderRadius: 12,
-                border: isFollowing ? "1px solid #9333ea" : "1px solid rgba(255,255,255,0.12)",
-                background: isFollowing ? "rgba(147,51,234,0.15)" : "rgba(147,51,234,0.8)",
-                color: "white",
-                cursor: followLoading ? "wait" : "pointer",
-                fontWeight: 800,
-                opacity: followLoading ? 0.6 : 1,
-              }}
-            >
-              {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
-            </button>
-            
-            <button
-              onClick={() => goTab("mall")}
-              style={{
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: "1px solid rgba(255,255,255,0.12)",
-                background: tab === "mall" ? "rgba(255,255,255,0.12)" : "transparent",
-                color: "white",
-                cursor: "pointer",
-                fontWeight: 800,
-              }}
-            >
-              Mall
-            </button>
-            <button
-              onClick={() => goTab("feed")}
-              style={{
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: "1px solid rgba(255,255,255,0.12)",
-                background: tab === "feed" ? "rgba(255,255,255,0.12)" : "transparent",
-                color: "white",
-                cursor: "pointer",
-                fontWeight: 800,
-              }}
-            >
-              Feed
-            </button>
           </div>
         </div>
       </div>
