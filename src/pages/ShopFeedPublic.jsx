@@ -558,55 +558,138 @@ export default function ShopFeedPublic() {
   return (
     <div className="sfp-page">
       <div className="sfp-surface">
-        <div className="sfp-top">
-          <button className="sfp-btn sfp-btn-ghost" onClick={() => nav("/feed")} type="button">
-            ← Back
-          </button>
+        {/* Profile Card */}
+        <div style={{
+          borderRadius: 16,
+          overflow: "hidden",
+          border: "1px solid rgba(255,255,255,0.08)",
+          background: "rgba(0,0,0,0.25)",
+          marginBottom: 20,
+        }}>
+          {/* Cover Image */}
+          {shop?.coverImage ? (
+            <div style={{ 
+              height: 200, 
+              background: `url(${assetUrl(shop.coverImage)}) center/cover no-repeat`,
+            }} />
+          ) : (
+            <div style={{ 
+              height: 140, 
+              background: "linear-gradient(135deg, rgba(147,51,234,0.3), rgba(59,130,246,0.3))",
+            }} />
+          )}
 
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-            <button
-              className={`sfp-btn ${isFollowing ? "sfp-btn-following" : "sfp-btn-follow"}`}
-              onClick={handleToggleFollow}
-              disabled={followLoading}
-              type="button"
-              title={isFollowing ? "Unfollow shop" : "Follow shop"}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                background: isFollowing ? "#dc2626" : "#10b981",
-                color: "#fff",
-                border: "none"
-              }}
-            >
-              <Heart 
-                size={16} 
-                fill={isFollowing ? "#fff" : "none"}
-                strokeWidth={isFollowing ? 0 : 2}
-              />
-              {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
-            </button>
+          {/* Profile Info */}
+          <div style={{ padding: 20 }}>
+            <div style={{ display: "flex", gap: 16, alignItems: "flex-start", marginTop: -60 }}>
+              {/* Avatar/Logo */}
+              {shop?.logoUrl || shop?.logo ? (
+                <img
+                  src={assetUrl(shop.logoUrl || shop.logo)}
+                  alt="logo"
+                  style={{ 
+                    width: 90, 
+                    height: 90, 
+                    borderRadius: 18, 
+                    objectFit: "cover",
+                    border: "4px solid rgba(0,0,0,0.4)",
+                    background: "rgba(0,0,0,0.6)",
+                    flexShrink: 0,
+                  }}
+                />
+              ) : (
+                <div style={{ 
+                  width: 90, 
+                  height: 90, 
+                  borderRadius: 18, 
+                  background: "rgba(255,255,255,0.12)",
+                  border: "4px solid rgba(0,0,0,0.4)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 28,
+                  fontWeight: 900,
+                  flexShrink: 0,
+                  color: "#fff",
+                }}>
+                  {(shop?.shopName || shop?.name || "S").charAt(0).toUpperCase()}
+                </div>
+              )}
 
-            <button
-              className="sfp-btn sfp-btn-primary"
-              onClick={goToShopMallPreview}
-              type="button"
-              title="Open this shop's Mall Preview"
-            >
-              🏬 Shop Mall
-            </button>
+              <div style={{ flex: 1, minWidth: 0, marginTop: 40 }}>
+                <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 8, color: "#fff" }}>
+                  {shop?.shopName || shop?.name || "Shop"}
+                </div>
+                
+                {/* Bio */}
+                {shop?.bio && (
+                  <div style={{ 
+                    fontSize: 14,
+                    lineHeight: 1.6,
+                    opacity: 0.85,
+                    marginBottom: 14,
+                    whiteSpace: "pre-wrap",
+                    color: "#fff",
+                  }}>
+                    {shop.bio}
+                  </div>
+                )}
 
-            {SHOW_OPEN_SHOP_APP ? (
-              <button
-                className="sfp-btn sfp-btn-ghost"
-                onClick={openShopAppNewTab}
-                type="button"
-                title="Open shop frontend in a new tab"
-              >
-                ↗ Open Shop App
-              </button>
-            ) : null}
+                {/* Action Buttons */}
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
+                  <button
+                    className={`sfp-btn ${isFollowing ? "sfp-btn-following" : "sfp-btn-follow"}`}
+                    onClick={handleToggleFollow}
+                    disabled={followLoading}
+                    type="button"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      background: isFollowing ? "#dc2626" : "#10b981",
+                      color: "#fff",
+                      border: "none",
+                      padding: "10px 18px",
+                      borderRadius: 10,
+                      fontWeight: 700,
+                    }}
+                  >
+                    <Heart 
+                      size={16} 
+                      fill={isFollowing ? "#fff" : "none"}
+                      strokeWidth={isFollowing ? 0 : 2}
+                    />
+                    {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+                  </button>
 
+                  <button
+                    className="sfp-btn sfp-btn-primary"
+                    onClick={goToShopMallPreview}
+                    type="button"
+                    style={{
+                      padding: "10px 18px",
+                      borderRadius: 10,
+                      fontWeight: 700,
+                    }}
+                  >
+                    🏬 Shop Mall
+                  </button>
+
+                  <button
+                    className="sfp-btn sfp-btn-ghost"
+                    onClick={() => nav("/feed")}
+                    type="button"
+                    style={{
+                      padding: "10px 18px",
+                      borderRadius: 10,
+                      fontWeight: 700,
+                    }}
+                  >
+                    ← Back
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
