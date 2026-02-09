@@ -4,6 +4,8 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
 import './i18n'
+import { UserMallCartProvider } from './context/UserMallCartContext'
+import MallCartDrawer from './components/MallCartDrawer'
 
 // ✅ FORCE CACHE CLEAR LOG
 console.log("🚀 MOONDALA APP v2.1 LOADED - Fixes active");
@@ -20,7 +22,10 @@ if ('serviceWorker' in navigator) {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <UserMallCartProvider>
+        <App />
+        <MallCartDrawer />
+      </UserMallCartProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

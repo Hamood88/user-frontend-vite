@@ -388,7 +388,9 @@ export default function ShopMallPublic() {
                                                             </div>
                                                             <COMPONENT_MAP.ProductGrid 
                                                                 data={{ products: catProducts, title: "" }} 
-                                                                theme={theme} 
+                                                                theme={theme}
+                                                                shopId={shopId}
+                                                                themeId={currentThemeId}
                                                             />
                                                         </div>
                                                     );
@@ -398,7 +400,7 @@ export default function ShopMallPublic() {
                                     </div>
                                 ) : (
                                     // Standard filtered list
-                                    <COMPONENT_MAP.ProductGrid data={{ products: filteredProducts, title: "" }} theme={theme} />
+                                    <COMPONENT_MAP.ProductGrid data={{ products: filteredProducts, title: "" }} theme={theme} shopId={shopId} themeId={currentThemeId} />
                                 )
                             ) : (
                                 <div className="text-center py-24 opacity-50" style={{ color: theme.text }}>
@@ -448,7 +450,9 @@ export default function ShopMallPublic() {
                                     </h2>
                                     <COMPONENT_MAP.ProductGrid 
                                         data={{ products: products, title: "" }} 
-                                        theme={theme} 
+                                        theme={theme}
+                                        shopId={shopId}
+                                        themeId={currentThemeId}
                                     />
                                 </div>
                             ) : (
@@ -489,7 +493,12 @@ export default function ShopMallPublic() {
 
                             return (
                                 <div key={section.id || idx} className="mb-8">
-                                    <Component data={componentData} theme={theme} />
+                                    <Component 
+                                        data={componentData} 
+                                        theme={theme}
+                                        shopId={shopId}
+                                        themeId={currentThemeId}
+                                    />
                                 </div>
                             );
                         })

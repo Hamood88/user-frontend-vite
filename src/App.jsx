@@ -39,6 +39,7 @@ import RecentlyViewedPage from "./pages/RecentlyViewedPage";
 /* ✅ PUBLIC SHOP PAGES */
 import ShopFeedPublic from "./pages/ShopFeedPublic";
 import ShopMallPublic from "./pages/ShopMallPublic";
+import ShopMallProductDetail from "./pages/ShopMallProductDetail";
 
 /* ✅ LEGAL PAGES */
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
@@ -268,6 +269,8 @@ export default function App() {
         <Route path="/shop/:shopId" element={<ShopDefaultToMallPreview />} />
         <Route path="/shop/:shopId/feed" element={<ShopFeedPublic />} />
         <Route path="/shop/:shopId/mall" element={<ShopMallPublic />} />
+        <Route path="/shop-mall/:shopId" element={<ShopMallPublic />} />
+        <Route path="/shop-mall/:shopId/product/:productId" element={<ShopMallProductDetail />} />
 
         {/* ✅ Unified product page (public) */}
         <Route path="/product/:id" element={<ProductDetailsUnified appName="user" />} />

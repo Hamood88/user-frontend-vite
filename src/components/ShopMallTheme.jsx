@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; 
 import { toAbsUrl } from "../api"; // Adjusted path
+import { useUserMallCart } from "../context/UserMallCartContext";
 import { 
     Layout, 
     ShoppingBag, 
@@ -155,13 +156,15 @@ export function ShopLayout({
     navLinks,
     shopId,
     searchQuery = "",
-    onSearch,
-    cartCount = 0
+    onSearch
 }) {
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [localSearch, setLocalSearch] = useState(searchQuery);
     const isSide = theme.navStyle === 'side';
     const navigate = useNavigate();
+    
+    // Get mall cart count
+    const { itemCount, openCart } = useUserMallCart();
 
     // Debounce search
     const handleSearchChange = (e) => {
@@ -196,15 +199,19 @@ export function ShopLayout({
 
     // Shared Cart Button Component
     const CartButton = () => (
-        <Link to="/cart" className="relative p-2 rounded-full hover:bg-black/5 transition-colors" style={{color: theme.text}}>
+        <button 
+            onClick={openCart}
+            className="relative p-2 rounded-full hover:bg-black/5 transition-colors" 
+            style={{color: theme.text}}
+        >
             <ShoppingBag size={20} />
-            {cartCount > 0 && (
+            {itemCount > 0 && (
                 <span className="absolute top-0 right-0 -mt-1 -mr-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
                     style={{backgroundColor: theme.primary, color: theme.onPrimary}}>
-                    {cartCount > 9 ? '9+' : cartCount}
+                    {itemCount > 9 ? '9+' : itemCount}
                 </span>
             )}
-        </Link>
+        </button>
     );
 
     // --- SIDE NAVIGATION LAYOUT ---
@@ -417,7 +424,7 @@ export function HeroBanner({ data, theme }) {
 }
 
 // --- 3. PRODUCT GRID ---
-export function ProductGrid({ data, theme }) {
+export function ProductGrid({ data, theme, shopId, themeId }) {
     const { title = "Featured Products", products = [] } = data;
     const realProducts = Array.isArray(products) ? products.filter(p => p && (p._id || p.id)) : [];
 
@@ -432,8 +439,17 @@ export function ProductGrid({ data, theme }) {
                     const image = rawImage ? toAbsUrl(rawImage) : "";
                     const price = p.localPrice ?? p.price ?? 0;
                     
+                    const productUrl = shopId 
+                        ? `/shop-mall/${encodeURIComponent(shopId)}/product/${encodeURIComponent(id)}?theme=${themeId || theme.id}` 
+                        : `/product/${id}`;
+                    
                     return (
-                        <Link key={id} to={`/product/${id}`} className="rounded-xl overflow-hidden shadow-sm border border-zinc-800 hover:border-purple-500/40 transition block" style={{backgroundColor: theme.cardBg}}>
+                        <Link 
+                            key={id} 
+                            to={productUrl}
+                            className="rounded-xl overflow-hidden shadow-sm border border-zinc-800 hover:border-purple-500/40 transition block" 
+                            style={{backgroundColor: theme.cardBg}}
+                        >
                             <div className="aspect-square w-full bg-zinc-900 relative">
                                 {image ? <img src={image} className="w-full h-full object-cover"/> : <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-600"><ShoppingBag size={32}/></div>}
                             </div>
