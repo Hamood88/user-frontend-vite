@@ -734,7 +734,7 @@ export function Testimonials({ data, theme }) {
 }
 
 // --- 10. IMAGE GALLERY ---
-export function ImageGallery({ data, theme, shopData }) {
+export function ImageGallery({ data, theme, shopData, shopId, themeId }) {
     const { title = "", images = [], layout = "grid" } = data;
     const imageList = Array.isArray(images) ? images : [];
     const navigate = useNavigate();
@@ -746,18 +746,6 @@ export function ImageGallery({ data, theme, shopData }) {
         return currentPath;
     };
     
-    // Get themedparameters to pass
-    const getThemeParams = () => {
-        const params = new URLSearchParams();
-        if (theme && theme.id) {
-            params.append('theme', theme.id);
-        }
-        if (shopData && shopData._id) {
-            params.append('shopId', shopData._id);
-        }
-        return params.toString() ? `?${params.toString()}` : '';
-    };
-    
     return (
         <div className="w-full px-4 mb-6">
             {title && <h3 className="text-xl font-bold mb-6" style={{color: theme.text}}>{title}</h3>}
@@ -766,11 +754,13 @@ export function ImageGallery({ data, theme, shopData }) {
                     const src = typeof img === "string" ? img : img.url || img.src || "";
                     const caption = typeof img === "object" ? img.caption || "" : "";
                     const productId = typeof img === "object" ? img.productId || "" : "";
-                    const productUrl = productId 
-                        ? `/product/${encodeURIComponent(productId)}${getThemeParams()}`
-                        : typeof img === "object" ? img.productUrl || "" : "";
+                    
+                    // ✅ FIX: Use same URL pattern as ProductGrid for consistent shop mall experience
+                    const productUrl = productId && shopId
+                        ? `/shop-mall/${encodeURIComponent(shopId)}/product/${encodeURIComponent(productId)}?theme=${themeId || theme.id}` 
+                        : productId ? `/product/${encodeURIComponent(productId)}` : "";
                         
-                    console.log('🖼️ User Image Gallery item:', { src, caption, productId, productUrl, themeId: theme?.id });
+                    console.log('🖼️ User Image Gallery item:', { src, caption, productId, productUrl, themeId: theme?.id, shopId });
                     
                     const imageContent = (
                         <div 
@@ -806,23 +796,13 @@ export function ImageGallery({ data, theme, shopData }) {
                     );
                     
                     return productUrl ? (
-                        <div
+                        <Link
                             key={i}
+                            to={productUrl}
                             className="block hover:transform hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
-                            onClick={() => {
-                                // ✅ Pass shop mall context for proper back navigation and theme
-                                navigate(productUrl, { 
-                                    state: { 
-                                        backTo: getCurrentBackUrl(),
-                                        from: 'shop-mall-gallery',
-                                        shopMallTheme: theme?.id,
-                                        isFromShopMall: true
-                                    } 
-                                });
-                            }}
                         >
                             {imageContent}
-                        </div>
+                        </Link>
                     ) : (
                         <div key={i}>
                             {imageContent}
