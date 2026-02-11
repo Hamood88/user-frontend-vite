@@ -385,10 +385,6 @@ export default function ShopFeedPublic() {
       const data = await loadPublicShopFeed(safeShopId);
 
       setShop(data?.shop || null);
-      
-      // Debug: log shop's featured product IDs
-      const shopFeaturedIds = data?.shop?.featuredProductIds || [];
-      console.log(`📊 Shop featured IDs count: ${shopFeaturedIds.length}`, shopFeaturedIds);
 
       // Get marquee config from shop data
       const shopMarqueeConfig = data?.shop?.feedConfig?.marqueeConfig || {
@@ -417,18 +413,15 @@ export default function ShopFeedPublic() {
               continue;
             }
             featuredData = await res.json().catch(() => null);
-            console.log(`📦 Featured products from ${path}:`, featuredData?.products?.length || 0, "products");
             if (featuredData?.ok) {
               break;
             }
           } catch (e) {
             lastErr = e;
-            console.log(`❌ Featured fetch failed for ${path}:`, e.message);
           }
         }
 
         if (featuredData?.ok && Array.isArray(featuredData?.products)) {
-          console.log(`✅ Setting ${featuredData.products.length} featured products`);
           setFeatured(
             featuredData.products.map((p) => ({
               ...p,
@@ -437,11 +430,9 @@ export default function ShopFeedPublic() {
             }))
           );
         } else {
-          console.log("⚠️ No featured products response or invalid structure");
           setFeatured([]);
         }
       } catch (e) {
-        console.log("⚠️ Featured products load error:", e.message);
         // ignore product load errors — posts still show
         setFeatured([]);
       }
