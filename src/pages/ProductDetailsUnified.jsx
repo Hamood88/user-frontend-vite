@@ -189,13 +189,28 @@ export default function ProductDetailsUnified() {
     const themeParam = searchParams.get('theme');
     const currentPath = loc.pathname;
     const shopMallMatch = currentPath.match(/\/shop-mall\/([^\/]+)\/product/);
-    const isFromShopMall = !!shopMallMatch || !!loc.state?.from?.includes('shop-mall');
+    const isFromShopMall = !!shopMallMatch || 
+                          !!loc.state?.from?.includes('shop-mall') ||
+                          !!loc.state?.isFromShopMall;
     
-    if (isFromShopMall && themeParam && THEMES[themeParam]) {
+    // Check theme from URL param, navigation state, or match pattern
+    let detectedTheme = null;
+    if (themeParam && THEMES[themeParam]) {
+      detectedTheme = THEMES[themeParam];
+    } else if (loc.state?.shopMallTheme && THEMES[loc.state.shopMallTheme]) {
+      detectedTheme = THEMES[loc.state.shopMallTheme];
+    }
+    
+    if (isFromShopMall && detectedTheme) {
+      console.log('🎨 Product page theme detected:', {
+        themeId: detectedTheme.id,
+        fromShopMall: isFromShopMall,
+        source: themeParam ? 'URL' : 'navigation state'
+      });
       return {
         isShopMall: true,
-        theme: THEMES[themeParam],
-        themeId: themeParam
+        theme: detectedTheme,
+        themeId: detectedTheme.id
       };
     }
     

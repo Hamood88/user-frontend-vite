@@ -734,7 +734,7 @@ export function Testimonials({ data, theme }) {
 }
 
 // --- 10. IMAGE GALLERY ---
-export function ImageGallery({ data, theme }) {
+export function ImageGallery({ data, theme, shopData }) {
     const { title = "", images = [], layout = "grid" } = data;
     const imageList = Array.isArray(images) ? images : [];
     const navigate = useNavigate();
@@ -746,6 +746,18 @@ export function ImageGallery({ data, theme }) {
         return currentPath;
     };
     
+    // Get themedparameters to pass
+    const getThemeParams = () => {
+        const params = new URLSearchParams();
+        if (theme && theme.id) {
+            params.append('theme', theme.id);
+        }
+        if (shopData && shopData._id) {
+            params.append('shopId', shopData._id);
+        }
+        return params.toString() ? `?${params.toString()}` : '';
+    };
+    
     return (
         <div className="w-full px-4 mb-6">
             {title && <h3 className="text-xl font-bold mb-6" style={{color: theme.text}}>{title}</h3>}
@@ -755,10 +767,10 @@ export function ImageGallery({ data, theme }) {
                     const caption = typeof img === "object" ? img.caption || "" : "";
                     const productId = typeof img === "object" ? img.productId || "" : "";
                     const productUrl = productId 
-                        ? `/product/${encodeURIComponent(productId)}`
+                        ? `/product/${encodeURIComponent(productId)}${getThemeParams()}`
                         : typeof img === "object" ? img.productUrl || "" : "";
                         
-                    console.log('🖼️ User Image Gallery item:', { src, caption, productId, productUrl });
+                    console.log('🖼️ User Image Gallery item:', { src, caption, productId, productUrl, themeId: theme?.id });
                     
                     const imageContent = (
                         <div 
@@ -798,11 +810,13 @@ export function ImageGallery({ data, theme }) {
                             key={i}
                             className="block hover:transform hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
                             onClick={() => {
-                                // ✅ Pass shop mall context for proper back navigation
+                                // ✅ Pass shop mall context for proper back navigation and theme
                                 navigate(productUrl, { 
                                     state: { 
                                         backTo: getCurrentBackUrl(),
-                                        from: 'shop-mall-gallery' 
+                                        from: 'shop-mall-gallery',
+                                        shopMallTheme: theme?.id,
+                                        isFromShopMall: true
                                     } 
                                 });
                             }}

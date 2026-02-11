@@ -531,6 +531,7 @@ export default function ShopMallPublic() {
                                         theme={theme}
                                         shopId={shopId}
                                         themeId={themeId}
+                                        shopData={shopInfo}
                                     />
                                 </div>
                             );
