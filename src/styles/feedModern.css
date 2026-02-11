@@ -106,6 +106,14 @@
 }
 .md-iconBtn:hover { background: hsl(var(--secondary)); color: hsl(var(--foreground)); }
 
+/* dropdown menu */
+.md-menu {
+  background: hsl(var(--card) / 0.98);
+  border-color: hsl(var(--border) / 0.8);
+  box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+}
+
 /* actions */
 .md-actionBtn {
   display: inline-flex;

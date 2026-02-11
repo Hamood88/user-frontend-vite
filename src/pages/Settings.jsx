@@ -222,7 +222,7 @@ export default function Settings() {
       localStorage.removeItem("myReferralCode");
       localStorage.removeItem("userReferralCode");
     } catch {}
-    nav("/", { replace: true });
+    nav("/login", { replace: true });
   }
 
   return (

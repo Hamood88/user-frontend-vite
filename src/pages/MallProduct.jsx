@@ -146,9 +146,7 @@ export default function MallProduct() {
 
   const onGoShop = () => {
     if (!shopId) return;
-    // You might have a route like /shop/:shopId or /shop-feed/:shopId
-    // We'll try the most common:
-    nav(`/shop/${shopId}`);
+    nav(`/shop/${shopId}/feed`);
   };
 
   const onBuy = () => {

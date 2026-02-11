@@ -383,7 +383,7 @@ export default function ProductDetailsUnified() {
       alert("Shop id is missing for this product.");
       return;
     }
-    nav(`/shop-feed/${encodeURIComponent(shopId)}`);
+    nav(`/shop/${encodeURIComponent(shopId)}/feed`);
   }
 
   // Toggle buyers panel (click to open/close)

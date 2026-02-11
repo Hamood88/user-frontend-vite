@@ -21,7 +21,7 @@ export default function ProductSideMenu({ shopId, onMessage, onSeeMore }) {
       <div style={{ fontWeight: 800, marginBottom: 10 }}>Shop Menu</div>
 
       <button
-        onClick={() => navigate(`/shop/${shopId}`)}
+        onClick={() => navigate(`/shop/${shopId}/feed`)}
         style={btnStyle}
       >
         🏪 Shop Feed

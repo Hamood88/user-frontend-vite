@@ -398,7 +398,7 @@ export default function ShopMall() {
           </button>
 
           <button
-            onClick={() => nav(`/shop-feed/${shopId}`)}
+            onClick={() => nav(`/shop/${shopId}/feed`)}
             style={{
               background: "transparent",
               border: "1px solid rgba(59,130,246,0.35)",
