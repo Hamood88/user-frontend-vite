@@ -106,18 +106,24 @@ function normalizeProductImage(prod) {
 /* =========================
    ✅ Featured products marquee
    ========================= */
-function ProductsRowMarquee({ products, onOpenUserProduct }) {
+function ProductsRowMarquee({ products, onOpenUserProduct, marqueeConfig }) {
   if (!products?.length) return null;
 
   const max = Math.min(products.length, 14);
   const list = products.slice(0, max);
-  const display = list; // No need to duplicate for manual scroll
+  const display = marqueeConfig?.enabled ? [...list, ...list] : list; // Duplicate for auto-scroll
 
   const [isDragging, setIsDragging] = React.useState(false);
   const [dragStart, setDragStart] = React.useState({ x: 0, scrollLeft: 0 });
   const scrollRef = React.useRef(null);
 
+  // Auto-scroll is enabled by default if no config provided, or if explicitly enabled
+  const autoScrollEnabled = marqueeConfig?.enabled !== false;
+  const speed = marqueeConfig?.speed || 26;
+  const pauseOnHover = marqueeConfig?.pauseOnHover !== false;
+
   const handleMouseDown = (e) => {
+    if (autoScrollEnabled) return; // Don't allow dragging when auto-scroll is enabled
     if (!scrollRef.current) return;
     setIsDragging(true);
     setDragStart({
@@ -127,7 +133,7 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
   };
 
   const handleMouseMove = (e) => {
-    if (!isDragging || !scrollRef.current) return;
+    if (autoScrollEnabled || !isDragging || !scrollRef.current) return;
     e.preventDefault();
     const x = e.pageX;
     const walk = (x - dragStart.x) * 2; // Scroll speed multiplier
@@ -139,6 +145,7 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
   };
 
   const handleTouchStart = (e) => {
+    if (autoScrollEnabled) return; // Don't allow touch dragging when auto-scroll is enabled
     if (!scrollRef.current) return;
     const touch = e.touches[0];
     setIsDragging(true);
@@ -149,7 +156,7 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
   };
 
   const handleTouchMove = (e) => {
-    if (!isDragging || !scrollRef.current) return;
+    if (autoScrollEnabled || !isDragging || !scrollRef.current) return;
     const touch = e.touches[0];
     const walk = (touch.pageX - dragStart.x) * 2;
     scrollRef.current.scrollLeft = dragStart.scrollLeft - walk;
@@ -175,10 +182,10 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
     <div className="sfp-marquee-wrap">
       <style>{`
         .sfp-marquee-viewport{ 
-          overflow-x: auto; 
+          overflow-x: ${autoScrollEnabled ? 'hidden' : 'auto'}; 
           overflow-y: hidden;
           width: 100%; 
-          cursor: grab;
+          cursor: ${autoScrollEnabled ? 'default' : 'grab'};
           scrollbar-width: none; /* Firefox */
           -ms-overflow-style: none; /* IE/Edge */
         }
@@ -192,10 +199,12 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
           display: flex;
           gap: 14px;
           width: max-content;
+          ${autoScrollEnabled ? `animation: sfpMoveLeft ${speed}s linear infinite;` : ''}
           padding-bottom: 10px; /* Ensure content is visible */
           -webkit-user-select: none;
           user-select: none;
         }
+        ${pauseOnHover && autoScrollEnabled ? '.sfp-marquee-viewport:hover .sfp-marquee-track{ animation-play-state: paused; }' : ''}
         .sfp-marquee-card{
           flex-shrink: 0;
           -webkit-touch-callout: none;
@@ -208,6 +217,10 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
           -webkit-user-select: none;
           user-select: none;
         }
+        @keyframes sfpMoveLeft{
+          0%{ transform: translateX(0); }
+          100%{ transform: translateX(-50%); }
+        }
       `}</style>
 
       <div className="sfp-marquee-head">
@@ -217,13 +230,13 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
       <div 
         className={`sfp-marquee-viewport ${isDragging ? 'dragging' : ''}`}
         ref={scrollRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        onMouseDown={!autoScrollEnabled ? handleMouseDown : undefined}
+        onMouseMove={!autoScrollEnabled ? handleMouseMove : undefined}
+        onMouseUp={!autoScrollEnabled ? handleMouseUp : undefined}
+        onMouseLeave={!autoScrollEnabled ? handleMouseUp : undefined}
+        onTouchStart={!autoScrollEnabled ? handleTouchStart : undefined}
+        onTouchMove={!autoScrollEnabled ? handleTouchMove : undefined}
+        onTouchEnd={!autoScrollEnabled ? handleTouchEnd : undefined}
         onContextMenu={handleContextMenu}
       >
         <div className="sfp-marquee-track">
@@ -345,6 +358,7 @@ export default function ShopFeedPublic() {
   const [shop, setShop] = useState(null);
   const [posts, setPosts] = useState([]);
   const [featured, setFeatured] = useState([]);
+  const [marqueeConfig, setMarqueeConfig] = useState({ enabled: true, speed: 26, pauseOnHover: true });
   const [openCommentsFor, setOpenCommentsFor] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [replyTo, setReplyTo] = useState(null);
@@ -372,30 +386,52 @@ export default function ShopFeedPublic() {
 
       setShop(data?.shop || null);
 
-      // Public feed endpoint returns shop.
-      // Fetch public products separately and use them as featured products for the public view.
-      // If shop has featuredProductIds, use those to filter or sort.
+      // Get marquee config from shop data
+      const shopMarqueeConfig = data?.shop?.feedConfig?.marqueeConfig || {
+        enabled: true,
+        speed: 26,
+        pauseOnHover: true,
+      };
+      setMarqueeConfig(shopMarqueeConfig);
+
+      // Fetch featured products from the public endpoint
       try {
-        const prodRes = await fetch(apiUrl(`/public/shops/${safeShopId}/products?limit=100`), {
-          headers: { Accept: "application/json" },
-        });
-        const prodData = await prodRes.json().catch(() => ({}));
-        let prods = Array.isArray(prodData?.products) ? prodData.products : [];
-        
-        // Filter by featured IDs if available
-        const featuredIds = data?.shop?.featuredProductIds || [];
-        if (featuredIds.length > 0) {
-           const featuredSet = new Set(featuredIds.map(x => String(x)));
-           const featuredList = prods.filter(p => featuredSet.has(String(p._id || p.id)));
-           // If we have actual featured matches, use them. Else fallback to all.
-           if (featuredList.length > 0) {
-             prods = featuredList;
-           }
+        const tries = [
+          `/public/shops/${safeShopId}/featured-products`,
+          `/public/shop/${safeShopId}/featured-products`,
+        ];
+        let featuredData = null;
+        let lastErr = null;
+
+        for (const path of tries) {
+          try {
+            const res = await fetch(apiUrl(path), {
+              headers: { Accept: "application/json" },
+            });
+            if (!res.ok) {
+              lastErr = new Error(`${res.status}`);
+              continue;
+            }
+            featuredData = await res.json().catch(() => null);
+            if (featuredData?.ok) {
+              break;
+            }
+          } catch (e) {
+            lastErr = e;
+          }
         }
 
-        setFeatured(
-          prods.map((p) => ({ ...p, _id: p._id || p.id, _image: normalizeProductImage(p) }))
-        );
+        if (featuredData?.ok && Array.isArray(featuredData?.products)) {
+          setFeatured(
+            featuredData.products.map((p) => ({
+              ...p,
+              _id: p._id || p.id,
+              _image: normalizeProductImage(p),
+            }))
+          );
+        } else {
+          setFeatured([]);
+        }
       } catch (e) {
         // ignore product load errors — posts still show
         setFeatured([]);
@@ -1007,7 +1043,11 @@ export default function ShopFeedPublic() {
         {loading ? (
           <div className="sfp-note">Loading…</div>
         ) : featured.length ? (
-          <ProductsRowMarquee products={featured.slice(0, 12)} onOpenUserProduct={openUserProduct} />
+          <ProductsRowMarquee 
+            products={featured.slice(0, 12)} 
+            onOpenUserProduct={openUserProduct} 
+            marqueeConfig={marqueeConfig}
+          />
         ) : (
           <div className="sfp-note">No featured products yet.</div>
         )}
