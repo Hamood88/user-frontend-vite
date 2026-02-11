@@ -647,17 +647,18 @@ export default function ShopFeedPublic() {
   return (
     <div className="sf-wrap">
       <div className="sf-wrap-inner">
-        {/* Profile Card - INLINE STYLED FOR SAFETY */}
-        <div style={{
-          background: "rgba(18, 26, 43, 0.9)",
-          borderRadius: "16px",
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          marginBottom: "20px",
-          overflow: "hidden",
-          position: "relative"
-        }}>
-          {/* ===== COVER IMAGE ===== */}
-          {shop?.coverImage ? (
+        {/* Profile Card - Only show when shop data is loaded */}
+        {shop && (
+          <div style={{
+            background: "rgba(18, 26, 43, 0.9)",
+            borderRadius: "16px",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            marginBottom: "20px",
+            overflow: "hidden",
+            position: "relative"
+          }}>
+            {/* ===== COVER IMAGE ===== */}
+            {shop?.coverImage ? (
             <div style={{ width: "100%", height: 200 }}>
               <img
                 src={toAbsUrl(shop.coverImage)}
@@ -737,6 +738,7 @@ export default function ShopFeedPublic() {
             </button>
           </div>
         </div>
+        )}
 
         {err ? <div className="sfp-err">{err}</div> : null}
 
