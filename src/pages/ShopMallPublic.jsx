@@ -428,7 +428,7 @@ export default function ShopMallPublic() {
             cartCount={cartCount}
         >
             <div className="w-full min-h-screen pb-20 flex flex-col items-center">
-                <div className="w-full max-w-6xl">
+                <div className="w-full max-w-4xl">
                     {visualSections.length === 0 ? (
                         /* ✅ Default mall page when shop hasn't customized yet */
                         <div className="w-full">
@@ -504,7 +504,7 @@ export default function ShopMallPublic() {
                             }
 
                             return (
-                                <div key={section.id || idx} className="mb-8">
+                                <div key={section.id || idx} className="relative group">
                                     <Component 
                                         data={componentData} 
                                         theme={theme}
