@@ -111,7 +111,7 @@ function TopNavItem({ item, theme }) {
                     <div 
                         className="absolute top-full left-0 mt-2 w-56 rounded-xl shadow-xl border overflow-hidden z-50 animate-in fade-in slide-in-from-top-2"
                         style={{ 
-                            backgroundColor: theme.cardBg || theme.bg, 
+                            backgroundColor: theme.card || theme.bg, 
                             borderColor: theme.border 
                         }}
                     >
@@ -243,7 +243,7 @@ export function ShopLayout({
                     ${sidebarPosition} top-0 left-0 h-screen w-64 z-50 transform transition-transform duration-300 border-r overflow-y-auto
                     ${sidebarTransform}
                 `} 
-                style={{ backgroundColor: theme.cardBg, borderColor: theme.border }}>
+                style={{ backgroundColor: theme.card, borderColor: theme.border }}>
                     <div className="p-6 flex flex-col min-h-full">
                         <h2 className={`text-2xl font-bold mb-6 ${isMobile ? 'hidden' : 'hidden md:block'}`} style={{ color: theme.primary }}>{shopName}</h2>
                         <div className={`absolute top-4 right-4 ${isMobile ? 'block' : 'md:hidden'}`}>
@@ -313,7 +313,7 @@ export function ShopLayout({
     return (
         <div className="min-h-screen flex flex-col transition-colors duration-300 font-sans" style={{ backgroundColor: theme.bg }}>
             {/* Top Bar */}
-            <div className="sticky top-0 z-50 border-b backdrop-blur-md bg-opacity-90 transition-colors duration-300" style={{ backgroundColor: theme.cardBg, borderColor: theme.border }}>
+            <div className="sticky top-0 z-50 border-b backdrop-blur-md bg-opacity-90 transition-colors duration-300" style={{ backgroundColor: theme.card, borderColor: theme.border }}>
                 <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-6">
                          <button className={hamClass} onClick={() => setMenuOpen(!isMenuOpen)} style={{ color: theme.text }}><Menu size={20}/></button>
@@ -348,7 +348,7 @@ export function ShopLayout({
                 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}
                 ${isMobile ? 'block' : 'md:hidden'}
             `} 
-            style={{ backgroundColor: theme.cardBg, borderColor: theme.border }}>
+            style={{ backgroundColor: theme.card, borderColor: theme.border }}>
                 <div className="p-6 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-8">
                         <span className="font-bold text-lg" style={{ color: theme.primary }}>Menu</span>
@@ -482,7 +482,7 @@ export function ProductGrid({ data, theme, shopId, themeId }) {
                         : `/product/${productId}`;
                     
                     return (
-                        <Link key={productId || i} to={productUrl} className="group rounded-xl overflow-hidden border transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer block" style={{background: theme.cardBg, borderColor: theme.border, textDecoration: 'none'}}>
+                        <Link key={productId || i} to={productUrl} className="group rounded-xl overflow-hidden border transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer block" style={{background: theme.card, borderColor: theme.border, textDecoration: 'none'}}>
                             <div className="relative aspect-square overflow-hidden bg-zinc-100">
                                 {img ? (
                                     <img src={toAbsUrl(img)} alt={pName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
@@ -506,7 +506,7 @@ export function ProductGrid({ data, theme, shopId, themeId }) {
                     );
                 }) : (
                     Array.from({length: 4}).map((_, i) => (
-                        <div key={`ph-${i}`} className="rounded-xl overflow-hidden border" style={{background: theme.cardBg, borderColor: theme.border}}>
+                        <div key={`ph-${i}`} className="rounded-xl overflow-hidden border" style={{background: theme.card, borderColor: theme.border}}>
                             <div className="aspect-square flex items-center justify-center" style={{background: "#ffffff08"}}>
                                 <ShoppingBag size={24} style={{color: theme.border}}/>
                             </div>
@@ -538,10 +538,10 @@ export function LinkList({ data, theme }) {
                     };
                     const handleMouseLeave = (e) => {
                         e.currentTarget.style.borderColor = theme.border;
-                        e.currentTarget.style.background = theme.cardBg;
+                        e.currentTarget.style.background = theme.card;
                     };
                     return (
-                        <a key={i} href={link.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-5 py-3.5 rounded-xl border text-sm font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-md" style={{background: theme.cardBg, borderColor: theme.border, color: theme.text}} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                        <a key={i} href={link.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-5 py-3.5 rounded-xl border text-sm font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-md" style={{background: theme.card, borderColor: theme.border, color: theme.text}} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                             <span>{link.label || link.title || link.url}</span>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{color: theme.muted}}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                         </a>
@@ -614,7 +614,7 @@ export function Countdown({ data, theme }) {
     const { title = "⏰ Sale Ends In", targetDate } = data;
     return (
         <div className="w-full px-4 mb-6">
-            <div className="w-full p-6 rounded-xl text-center" style={{backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`}}>
+            <div className="w-full p-6 rounded-xl text-center" style={{backgroundColor: theme.card, border: `1px solid ${theme.border}`}}>
                 <h3 className="text-xl font-bold mb-4" style={{color: theme.text}}>{title}</h3>
                 <div className="flex justify-center gap-4">
                     {['Days', 'Hours', 'Mins', 'Secs'].map((label, i) => (
@@ -641,7 +641,7 @@ export function Testimonials({ data, theme }) {
             {title && <h3 className="text-xl font-bold mb-6 text-center" style={{color: theme.text}}>{title}</h3>}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
                 {reviews.length > 0 ? reviews.map((item, i) => (
-                    <div key={i} className="p-5 rounded-xl border" style={{backgroundColor: theme.cardBg, borderColor: theme.border}}>
+                    <div key={i} className="p-5 rounded-xl border" style={{backgroundColor: theme.card, borderColor: theme.border}}>
                         <div className="flex items-center gap-2 mb-3">
                             {item.avatar && <img src={toAbsUrl(item.avatar)} alt="" className="w-10 h-10 rounded-full object-cover"/>}
                             <div>
@@ -776,7 +776,7 @@ export function FeaturedProduct({ data, theme, shopId, themeId }) {
             <h3 className="text-xl font-bold mb-4 flex items-center gap-2" style={{color: theme.text}}>
                 ⭐ {title}
             </h3>
-            <Link to={productUrl} className="block rounded-2xl overflow-hidden shadow-lg border hover:shadow-xl transition-all" style={{borderColor: theme.border, backgroundColor: theme.cardBg}}>
+            <Link to={productUrl} className="block rounded-2xl overflow-hidden shadow-lg border hover:shadow-xl transition-all" style={{borderColor: theme.border, backgroundColor: theme.card}}>
                 <div className="aspect-square w-full bg-zinc-900 relative">
                     {image ? <img src={image} className="w-full h-full object-cover"/> : <div className="absolute inset-0 flex items-center justify-center text-zinc-600"><ShoppingBag size={48}/></div>}
                 </div>
@@ -807,16 +807,205 @@ export const COMPONENT_MAP = {
 };
 
 export const THEMES = {
-    midnight: { id: 'midnight', navStyle: 'side', bg: '#09090b', text: '#fafafa', primary: '#8b5cf6', onPrimary: '#ffffff', cardBg: '#18181b', border: '#27272a', font: 'Inter, sans-serif', muted: '#a1a1aa' },
-    neon: { id: 'neon', navStyle: 'top', bg: '#0a0a0a', text: '#f0f0f0', primary: '#00ff88', onPrimary: '#000000', cardBg: '#141414', border: '#222222', font: 'Inter, sans-serif', muted: '#888888' },
-    royal: { id: 'royal', navStyle: 'side', bg: '#0c0a1a', text: '#f5f0ff', primary: '#d4af37', onPrimary: '#000000', cardBg: '#1a1530', border: '#2d2550', font: 'Georgia, serif', muted: '#9b8ec4' },
-    slate: { id: 'slate', navStyle: 'top', bg: '#0f1419', text: '#e7e9ea', primary: '#1d9bf0', onPrimary: '#ffffff', cardBg: '#1c2530', border: '#2f3940', font: 'Inter, sans-serif', muted: '#8899a6' },
-    ocean: { id: 'ocean', navStyle: 'top', bg: '#0f172a', text: '#f1f5f9', primary: '#0ea5e9', onPrimary: '#ffffff', cardBg: '#1e293b', border: '#334155', font: 'Inter, sans-serif', muted: '#94a3b8' },
-    arctic: { id: 'arctic', navStyle: 'top', bg: '#f0f9ff', text: '#0c4a6e', primary: '#0284c7', onPrimary: '#ffffff', cardBg: '#ffffff', border: '#bae6fd', font: 'Inter, sans-serif', muted: '#64748b' },
-    sunrise: { id: 'sunrise', navStyle: 'top', bg: '#fff7ed', text: '#1c1917', primary: '#f97316', onPrimary: '#ffffff', cardBg: '#ffffff', border: '#fed7aa', font: 'Inter, sans-serif', muted: '#78716c' },
-    coral: { id: 'coral', navStyle: 'side', bg: '#fff1f2', text: '#1f1215', primary: '#f43f5e', onPrimary: '#ffffff', cardBg: '#ffffff', border: '#fecdd3', font: 'Inter, sans-serif', muted: '#a8a29e' },
-    forest: { id: 'forest', navStyle: 'side', bg: '#052e16', text: '#f0fdf4', primary: '#22c55e', onPrimary: '#000000', cardBg: '#14532d', border: '#166534', font: 'Inter, sans-serif', muted: '#86efac' },
-    earth: { id: 'earth', navStyle: 'side', bg: '#1c1a17', text: '#fafaf9', primary: '#d97706', onPrimary: '#ffffff', cardBg: '#292524', border: '#44403c', font: 'Georgia, serif', muted: '#a8a29e' },
-    lavender: { id: 'lavender', navStyle: 'top', bg: '#faf5ff', text: '#2e1065', primary: '#a855f7', onPrimary: '#ffffff', cardBg: '#ffffff', border: '#e9d5ff', font: 'Inter, sans-serif', muted: '#7c3aed' },
-    candy: { id: 'candy', navStyle: 'top', bg: '#fdf2f8', text: '#4a044e', primary: '#ec4899', onPrimary: '#ffffff', cardBg: '#ffffff', border: '#fbcfe8', font: 'Inter, sans-serif', muted: '#a21caf' }
+  /* ── Dark ─────────────────────────────── */
+  midnight: {
+    id: "midnight",
+    label: "Midnight",
+    group: "Dark",
+    bg: "#09090b",
+    card: "#18181b",
+    text: "#fafafa",
+    muted: "#a1a1aa",
+    primary: "#8b5cf6",
+    primaryHover: "#7c3aed",
+    border: "#27272a",
+    accent: "#c084fc",
+    font: "'Inter', sans-serif",
+    navStyle: "side",
+    gradient: "from-violet-600/20 to-purple-900/20",
+  },
+  neon: {
+    id: "neon",
+    label: "Neon",
+    group: "Dark",
+    bg: "#0a0a0a",
+    card: "#141414",
+    text: "#f0f0f0",
+    muted: "#888888",
+    primary: "#00ff88",
+    primaryHover: "#00dd77",
+    border: "#222222",
+    accent: "#00ffcc",
+    font: "'Inter', sans-serif",
+    navStyle: "top",
+    gradient: "from-emerald-500/20 to-teal-900/20",
+  },
+  royal: {
+    id: "royal",
+    label: "Royal",
+    group: "Dark",
+    bg: "#0c0a1a",
+    card: "#1a1530",
+    text: "#f5f0ff",
+    muted: "#9b8ec4",
+    primary: "#d4af37",
+    primaryHover: "#c9a02e",
+    border: "#2d2550",
+    accent: "#ffd700",
+    font: "'Georgia', serif",
+    navStyle: "side",
+    gradient: "from-amber-500/20 to-purple-900/20",
+  },
+  slate: {
+    id: "slate",
+    label: "Slate",
+    group: "Dark",
+    bg: "#0f1419",
+    card: "#1c2530",
+    text: "#e7e9ea",
+    muted: "#8899a6",
+    primary: "#1d9bf0",
+    primaryHover: "#1a8cd8",
+    border: "#2f3940",
+    accent: "#79c0ff",
+    font: "'Inter', sans-serif",
+    navStyle: "top",
+    gradient: "from-sky-500/20 to-slate-900/20",
+  },
+
+  /* ── Ocean / Cool ────────────────────── */
+  ocean: {
+    id: "ocean",
+    label: "Ocean",
+    group: "Cool",
+    bg: "#0f172a",
+    card: "#1e293b",
+    text: "#f1f5f9",
+    muted: "#94a3b8",
+    primary: "#0ea5e9",
+    primaryHover: "#0284c7",
+    border: "#334155",
+    accent: "#38bdf8",
+    font: "'Inter', sans-serif",
+    navStyle: "top",
+    gradient: "from-sky-500/20 to-blue-900/20",
+  },
+  arctic: {
+    id: "arctic",
+    label: "Arctic",
+    group: "Cool",
+    bg: "#f0f9ff",
+    card: "#ffffff",
+    text: "#0c4a6e",
+    muted: "#64748b",
+    primary: "#0284c7",
+    primaryHover: "#0369a1",
+    border: "#bae6fd",
+    accent: "#0ea5e9",
+    font: "'Inter', sans-serif",
+    navStyle: "top",
+    gradient: "from-sky-100 to-blue-50",
+  },
+
+  /* ── Warm ─────────────────────────────── */
+  sunrise: {
+    id: "sunrise",
+    label: "Sunrise",
+    group: "Warm",
+    bg: "#fff7ed",
+    card: "#ffffff",
+    text: "#1c1917",
+    muted: "#78716c",
+    primary: "#f97316",
+    primaryHover: "#ea580c",
+    border: "#fed7aa",
+    accent: "#fb923c",
+    font: "'Inter', sans-serif",
+    navStyle: "top",
+    gradient: "from-orange-100 to-amber-50",
+  },
+  coral: {
+    id: "coral",
+    label: "Coral",
+    group: "Warm",
+    bg: "#fff1f2",
+    card: "#ffffff",
+    text: "#1f1215",
+    muted: "#a8a29e",
+    primary: "#f43f5e",
+    primaryHover: "#e11d48",
+    border: "#fecdd3",
+    accent: "#fb7185",
+    font: "'Inter', sans-serif",
+    navStyle: "side",
+    gradient: "from-rose-100 to-pink-50",
+  },
+
+  /* ── Nature ──────────────────────────── */
+  forest: {
+    id: "forest",
+    label: "Forest",
+    group: "Nature",
+    bg: "#052e16",
+    card: "#14532d",
+    text: "#f0fdf4",
+    muted: "#86efac",
+    primary: "#22c55e",
+    primaryHover: "#16a34a",
+    border: "#166534",
+    accent: "#4ade80",
+    font: "'Inter', sans-serif",
+    navStyle: "side",
+    gradient: "from-green-600/20 to-emerald-900/20",
+  },
+  earth: {
+    id: "earth",
+    label: "Earth",
+    group: "Nature",
+    bg: "#1c1a17",
+    card: "#292524",
+    text: "#fafaf9",
+    muted: "#a8a29e",
+    primary: "#d97706",
+    primaryHover: "#b45309",
+    border: "#44403c",
+    accent: "#fbbf24",
+    font: "'Georgia', serif",
+    navStyle: "side",
+    gradient: "from-amber-600/20 to-stone-900/20",
+  },
+
+  /* ── Pastel / Light ──────────────────── */
+  lavender: {
+    id: "lavender",
+    label: "Lavender",
+    group: "Pastel",
+    bg: "#faf5ff",
+    card: "#ffffff",
+    text: "#2e1065",
+    muted: "#7c3aed",
+    primary: "#a855f7",
+    primaryHover: "#9333ea",
+    border: "#e9d5ff",
+    accent: "#c084fc",
+    font: "'Inter', sans-serif",
+    navStyle: "top",
+    gradient: "from-purple-100 to-violet-50",
+  },
+  candy: {
+    id: "candy",
+    label: "Candy",
+    group: "Pastel",
+    bg: "#fdf2f8",
+    card: "#ffffff",
+    text: "#4a044e",
+    muted: "#a21caf",
+    primary: "#ec4899",
+    primaryHover: "#db2777",
+    border: "#fbcfe8",
+    accent: "#f472b6",
+    font: "'Inter', sans-serif",
+    navStyle: "top",
+    gradient: "from-pink-100 to-fuchsia-50",
+  },
 };
