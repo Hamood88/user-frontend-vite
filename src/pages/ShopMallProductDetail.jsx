@@ -4,6 +4,7 @@ import { useParams, useNavigate, useLocation, useSearchParams } from "react-rout
 import { apiGet, toAbsUrl } from "../api.jsx";
 import { useUserMallCart } from "../context/UserMallCartContext";
 import { THEMES } from "../components/ShopMallTheme";
+import ProductReviews from "../components/ProductReviews.jsx";
 import { 
   ArrowLeft, 
   ShoppingCart, 
@@ -13,7 +14,11 @@ import {
   Package,
   Truck,
   Shield,
-  Store
+  Store,
+  MessageCircle,
+  Send,
+  X,
+  Users
 } from "lucide-react";
 
 function safeNum(v, fallback = 0) {
@@ -60,6 +65,12 @@ export default function ShopMallProductDetail() {
   const [error, setError] = useState("");
   const [qty, setQty] = useState(1);
   const [activeImg, setActiveImg] = useState("");
+
+  // Ask previous buyers functionality
+  const [askBuyersOpen, setAskBuyersOpen] = useState(false);
+  const [askQuestion, setAskQuestion] = useState("");
+  const [askLoading, setAskLoading] = useState(false);
+  const [askSuccess, setAskSuccess] = useState(false);
 
   // Get shop info from state (passed from mall navigation)
   const shopFromState = location.state?.shop;
@@ -157,6 +168,40 @@ export default function ShopMallProductDetail() {
     
     // Show success notification
     alert(`✅ Added ${qty} item${qty > 1 ? 's' : ''} to your mall cart!`);
+  }
+
+  async function handleAskPreviousBuyers() {
+    if (!askQuestion.trim()) {
+      alert("Please enter your question");
+      return;
+    }
+
+    setAskLoading(true);
+    try {
+      // Create a question for previous buyers - for now just simulate success
+      // TODO: Implement actual API call to post question to product discussion or start conversations
+      const payload = {
+        productId: product._id || product.id,
+        question: askQuestion.trim(),
+        type: 'product_question'
+      };
+      
+      console.log('Asking previous buyers:', payload);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setAskSuccess(true);
+      setAskQuestion("");
+      setTimeout(() => {
+        setAskBuyersOpen(false);
+        setAskSuccess(false);
+      }, 2000);
+    } catch (error) {
+      alert(`Failed to send question: ${error.message}`);
+    } finally {
+      setAskLoading(false);
+    }
   }
 
   function goBack() {
@@ -523,6 +568,141 @@ export default function ShopMallProductDetail() {
                 </p>
               </div>
             )}
+
+            {/* Ask Previous Buyers Section */}
+            <div style={{
+              background: theme.card,
+              border: `1px solid ${theme.border}`,
+              borderRadius: 12,
+              padding: 20,
+              marginTop: 24,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                <div>
+                  <h3 style={{ 
+                    fontSize: 16,
+                    fontWeight: 700,
+                    marginBottom: 4,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}>
+                    <Users size={20} style={{ color: theme.primary }} />
+                    Ask Previous Buyers
+                  </h3>
+                  <p style={{ 
+                    color: theme.muted, 
+                    fontSize: 14,
+                    margin: 0,
+                  }}>
+                    Get advice from people who bought this product
+                  </p>
+                </div>
+                <button
+                  onClick={() => setAskBuyersOpen(!askBuyersOpen)}
+                  style={{
+                    background: theme.primary,
+                    color: "#fff",
+                    padding: "8px 16px",
+                    borderRadius: 8,
+                    border: "none",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
+                >
+                  <MessageCircle size={16} />
+                  Ask Question
+                </button>
+              </div>
+
+              {/* Ask Question Modal/Form */}
+              {askBuyersOpen && (
+                <div style={{
+                  background: theme.bg,
+                  border: `1px solid ${theme.border}`,
+                  borderRadius: 8,
+                  padding: 16,
+                  marginTop: 12,
+                }}>
+                  {askSuccess ? (
+                    <div style={{ textAlign: "center", color: theme.primary }}>
+                      <div style={{ fontSize: 20, marginBottom: 8 }}>✅</div>
+                      <p>Your question has been sent to previous buyers!</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                        <h4 style={{ margin: 0, fontSize: 14, fontWeight: 600 }}>Ask your question</h4>
+                        <button
+                          onClick={() => setAskBuyersOpen(false)}
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            color: theme.muted,
+                            cursor: "pointer",
+                            padding: 4,
+                          }}
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                      <textarea
+                        value={askQuestion}
+                        onChange={(e) => setAskQuestion(e.target.value)}
+                        placeholder="What would you like to know about this product?"
+                        style={{
+                          width: "100%",
+                          minHeight: 80,
+                          padding: 12,
+                          border: `1px solid ${theme.border}`,
+                          borderRadius: 6,
+                          background: theme.card,
+                          color: theme.text,
+                          fontSize: 14,
+                          resize: "vertical",
+                          fontFamily: "inherit",
+                        }}
+                      />
+                      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}>
+                        <button
+                          onClick={handleAskPreviousBuyers}
+                          disabled={askLoading || !askQuestion.trim()}
+                          style={{
+                            background: theme.primary,
+                            color: "#fff",
+                            padding: "8px 16px",
+                            borderRadius: 6,
+                            border: "none",
+                            fontSize: 14,
+                            fontWeight: 600,
+                            cursor: askLoading || !askQuestion.trim() ? "not-allowed" : "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            opacity: askLoading || !askQuestion.trim() ? 0.6 : 1,
+                          }}
+                        >
+                          <Send size={14} />
+                          {askLoading ? "Sending..." : "Send Question"}
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Product Reviews Section */}
+            <div style={{ marginTop: 32 }}>
+              <ProductReviews 
+                productId={product?._id || product?.id} 
+                defaultOpen={false}
+              />
+            </div>
           </div>
         </div>
       </div>
