@@ -659,19 +659,19 @@ export default function ShopFeedPublic() {
           }}>
             {/* ===== COVER IMAGE ===== */}
             {shop?.coverImage ? (
-            <div style={{ width: "100%", height: 200 }}>
-              <img
-                src={toAbsUrl(shop.coverImage)}
-                alt="Cover"
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-              />
-            </div>
-          ) : (
-            <div style={{ width: "100%", height: 200, background: "linear-gradient(135deg, #1e293b, #0f172a)" }} />
-          )}
+              <div style={{ width: "100%", height: 200 }}>
+                <img
+                  src={toAbsUrl(shop.coverImage)}
+                  alt="Cover"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                />
+              </div>
+            ) : (
+              <div style={{ width: "100%", height: 200, background: "linear-gradient(135deg, #1e293b, #0f172a)" }} />
+            )}
 
-          {/* ===== AVATAR + INFO ROW ===== */}
-          <div style={{ display: "flex", alignItems: "flex-start", gap: 16, padding: "0 20px" }}>
+            {/* ===== AVATAR + INFO ROW ===== */}
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 16, padding: "0 20px" }}>
             {/* Avatar */}
             <div style={{
               width: 120, height: 120, borderRadius: "50%", overflow: "hidden",
