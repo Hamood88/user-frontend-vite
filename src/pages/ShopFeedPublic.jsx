@@ -113,6 +113,16 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
   const list = products.slice(0, max);
   const display = [...list, ...list];
 
+  const [isPaused, setIsPaused] = React.useState(false);
+
+  const handleTouchStart = () => {
+    setIsPaused(true);
+  };
+
+  const handleTouchEnd = () => {
+    setIsPaused(false);
+  };
+
   return (
     <div className="sfp-marquee-wrap">
       <style>{`
@@ -124,6 +134,7 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
           animation: sfpMoveLeft 26s linear infinite;
         }
         .sfp-marquee-viewport:hover .sfp-marquee-track{ animation-play-state: paused; }
+        .sfp-marquee-track.paused{ animation-play-state: paused; }
         @keyframes sfpMoveLeft{
           0%{ transform: translateX(0); }
           100%{ transform: translateX(-50%); }
@@ -134,8 +145,13 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
         <div className="sfp-marquee-title">Featured Products</div>
       </div>
 
-      <div className="sfp-marquee-viewport">
-        <div className="sfp-marquee-track">
+      <div 
+        className="sfp-marquee-viewport"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
+      >
+        <div className={`sfp-marquee-track ${isPaused ? 'paused' : ''}`}>
           {display.map((pr, idx) => {
             const pid = getRealProductId(pr);
             const img = pr?._image || normalizeProductImage(pr);
