@@ -489,12 +489,110 @@ export function RichText({ data, theme }) {
     );
 }
 
+// --- 6. ANNOUNCEMENT BAR ---
+export function AnnouncementBar({ data, theme }) {
+    const { title = "Special Announcement", subtitle = "", buttonText, buttonLink } = data;
+    return (
+        <div className="w-full px-4 mb-6">
+            <div className="w-full p-4 rounded-xl text-center" style={{backgroundColor: theme.primary, color: theme.onPrimary}}>
+                <div className="font-bold text-lg mb-1">📢 {title}</div>
+                {subtitle && <div className="text-sm opacity-90 mb-2">{subtitle}</div>}
+                {buttonText && (
+                    <a href={buttonLink || '#'} className="inline-block px-6 py-2 mt-2 rounded-full font-semibold text-sm transition-all hover:brightness-110 active:scale-95" style={{backgroundColor: theme.onPrimary, color: theme.primary}}>
+                        {buttonText}
+                    </a>
+                )}
+            </div>
+        </div>
+    );
+}
+
+// --- 7. SALE BANNER ---
+export function SaleBanner({ data, theme }) {
+    const { title = "🔥 Big Sale!", subtitle = "Limited time offer", buttonText = "Shop Now", buttonLink } = data;
+    return (
+        <div className="w-full px-4 mb-6">
+            <div className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden shadow-lg group" style={{background: `linear-gradient(135deg, ${theme.primary}20 0%, ${theme.primary}40 100%)`}}>
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-2" style={{color: theme.text}}>{title}</h2>
+                    {subtitle && <p className="text-lg mb-4 opacity-80" style={{color: theme.text}}>{subtitle}</p>}
+                    {buttonText && (
+                        <a href={buttonLink || '#'} className="px-8 py-3 rounded-full font-semibold transition-all hover:brightness-110 active:scale-95" style={{backgroundColor: theme.primary, color: theme.onPrimary}}>
+                            {buttonText}
+                        </a>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// --- 8. COUNTDOWN ---
+export function Countdown({ data, theme }) {
+    const { title = "⏰ Sale Ends In", targetDate } = data;
+    return (
+        <div className="w-full px-4 mb-6">
+            <div className="w-full p-6 rounded-xl text-center" style={{backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`}}>
+                <h3 className="text-xl font-bold mb-4" style={{color: theme.text}}>{title}</h3>
+                <div className="flex justify-center gap-4">
+                    {['Days', 'Hours', 'Mins', 'Secs'].map((label, i) => (
+                        <div key={i} className="flex flex-col items-center">
+                            <div className="w-16 h-16 flex items-center justify-center rounded-lg text-2xl font-bold" style={{backgroundColor: theme.primary, color: theme.onPrimary}}>
+                                {Math.floor(Math.random() * 60)}
+                            </div>
+                            <div className="text-xs mt-2 opacity-70" style={{color: theme.text}}>{label}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// --- 9. FEATURED PRODUCT ---
+export function FeaturedProduct({ data, theme, shopId, themeId }) {
+    const { title = "Featured Item", products = [] } = data;
+    const product = products[0];
+    
+    if (!product) return null;
+    
+    const id = String(product._id || product.id || "").trim();
+    const rawImage = product.image || product.imageUrl || (Array.isArray(product.images) && product.images[0]);
+    const image = rawImage ? toAbsUrl(rawImage) : "";
+    const price = product.localPrice ?? product.price ?? 0;
+    
+    const productUrl = shopId 
+        ? `/shop-mall/${encodeURIComponent(shopId)}/product/${encodeURIComponent(id)}?theme=${themeId || theme.id}` 
+        : `/product/${id}`;
+    
+    return (
+        <div className="w-full px-4 mb-6">
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2" style={{color: theme.text}}>
+                ⭐ {title}
+            </h3>
+            <Link to={productUrl} className="block rounded-2xl overflow-hidden shadow-lg border hover:shadow-xl transition-all" style={{borderColor: theme.border, backgroundColor: theme.cardBg}}>
+                <div className="aspect-square w-full bg-zinc-900 relative">
+                    {image ? <img src={image} className="w-full h-full object-cover"/> : <div className="absolute inset-0 flex items-center justify-center text-zinc-600"><ShoppingBag size={48}/></div>}
+                </div>
+                <div className="p-6">
+                    <h4 className="text-2xl font-bold mb-2" style={{color: theme.text}}>{product.title || product.name}</h4>
+                    <div className="text-3xl font-bold" style={{color: theme.primary}}>${Number(price).toLocaleString()}</div>
+                </div>
+            </Link>
+        </div>
+    );
+}
+
 export const COMPONENT_MAP = {
     'ProfileHeader': ProfileHeader, 'profileheader': ProfileHeader,
     'HeroBanner': HeroBanner, 'herobanner': HeroBanner,
     'ProductGrid': ProductGrid, 'productgrid': ProductGrid,
     'LinkList': LinkList, 'linklist': LinkList,
     'RichText': RichText, 'richtext': RichText,
+    'AnnouncementBar': AnnouncementBar, 'announcementbar': AnnouncementBar,
+    'SaleBanner': SaleBanner, 'salebanner': SaleBanner,
+    'Countdown': Countdown, 'countdown': Countdown,
+    'FeaturedProduct': FeaturedProduct, 'featuredproduct': FeaturedProduct,
     'NavigationMenu': () => null, 'navigationmenu': () => null
 };
 
