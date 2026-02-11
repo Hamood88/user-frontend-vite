@@ -573,19 +573,47 @@ export function RichText({ data, theme }) {
 
 // --- 6. ANNOUNCEMENT BAR ---
 export function AnnouncementBar({ data, theme }) {
-    const { title = "Special Announcement", subtitle = "", buttonText, buttonLink } = data;
-    return (
+    const text = data.text || data.content || data.announcement || data.title || "📢 Special Announcement";
+    const link = data.link || data.url || data.buttonLink || "";
+    const barStyle = data.barStyle || data.style || "primary";
+    
+    // Debug announcement data
+    console.log('📢 User Announcement data:', { text, link, barStyle, rawData: data });
+    
+    const barStyles = {
+        primary: { bg: theme.primary, color: "#ffffff" },
+        warning: { bg: "#f59e0b", color: "#1c1917" },
+        info: { bg: "#3b82f6", color: "#ffffff" },
+        subtle: { bg: theme.card, color: theme.text },
+    };
+    
+    const s = barStyles[barStyle] || barStyles.primary;
+    
+    const content = (
         <div className="w-full px-4 mb-6">
-            <div className="w-full p-4 rounded-xl text-center" style={{backgroundColor: theme.primary, color: theme.onPrimary}}>
-                <div className="font-bold text-lg mb-1">📢 {title}</div>
-                {subtitle && <div className="text-sm opacity-90 mb-2">{subtitle}</div>}
-                {buttonText && (
-                    <a href={buttonLink || '#'} className="inline-block px-6 py-2 mt-2 rounded-full font-semibold text-sm transition-all hover:brightness-110 active:scale-95" style={{backgroundColor: theme.onPrimary, color: theme.primary}}>
-                        {buttonText}
-                    </a>
+            <div 
+                className="w-full p-4 rounded-xl text-center font-bold text-lg transition-all hover:brightness-110"
+                style={{ backgroundColor: s.bg, color: s.color }}
+            >
+                {text}
+                {link && (
+                    <span className="ml-2">→</span>
                 )}
             </div>
         </div>
+    );
+    
+    return link ? (
+        <a 
+            href={link} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="block hover:opacity-90 transition-opacity"
+        >
+            {content}
+        </a>
+    ) : (
+        content
     );
 }
 
@@ -611,21 +639,59 @@ export function SaleBanner({ data, theme }) {
 
 // --- 8. COUNTDOWN ---
 export function Countdown({ data, theme }) {
-    const { title = "⏰ Sale Ends In", targetDate } = data;
+    const title = data.title || "⏰ Sale Ends In";
+    const endDate = data.endDate || data.deadline || data.end_date || data.targetDate || "";
+    const [timeLeft, setTimeLeft] = React.useState({ d: 0, h: 0, m: 0, s: 0 });
+    
+    // Debug countdown data
+    console.log('⏰ User Countdown data:', { title, endDate, rawData: data });
+    
+    React.useEffect(() => {
+        if (!endDate) return;
+        const target = new Date(endDate).getTime();
+        const tick = () => {
+            const diff = Math.max(0, target - Date.now());
+            setTimeLeft({
+                d: Math.floor(diff / 86400000),
+                h: Math.floor((diff % 86400000) / 3600000), 
+                m: Math.floor((diff % 3600000) / 60000),
+                s: Math.floor((diff % 60000) / 1000),
+            });
+        };
+        tick();
+        const id = setInterval(tick, 1000);
+        return () => clearInterval(id);
+    }, [endDate]);
+    
+    const units = [
+        { label: "Days", val: timeLeft.d },
+        { label: "Hours", val: timeLeft.h },
+        { label: "Mins", val: timeLeft.m },
+        { label: "Secs", val: timeLeft.s },
+    ];
+    
     return (
         <div className="w-full px-4 mb-6">
             <div className="w-full p-6 rounded-xl text-center" style={{backgroundColor: theme.card, border: `1px solid ${theme.border}`}}>
                 <h3 className="text-xl font-bold mb-4" style={{color: theme.text}}>{title}</h3>
                 <div className="flex justify-center gap-4">
-                    {['Days', 'Hours', 'Mins', 'Secs'].map((label, i) => (
-                        <div key={i} className="flex flex-col items-center">
-                            <div className="w-16 h-16 flex items-center justify-center rounded-lg text-2xl font-bold" style={{backgroundColor: theme.primary, color: theme.onPrimary}}>
-                                {Math.floor(Math.random() * 60)}
+                    {units.map(({ label, val }) => (
+                        <div key={label} className="flex flex-col items-center">
+                            <div 
+                                className="w-16 h-16 flex items-center justify-center rounded-lg text-2xl font-bold" 
+                                style={{backgroundColor: theme.primary, color: theme.onPrimary}}
+                            >
+                                {endDate ? String(val).padStart(2, "0") : "--"}
                             </div>
                             <div className="text-xs mt-2 opacity-70" style={{color: theme.text}}>{label}</div>
                         </div>
                     ))}
                 </div>
+                {!endDate && (
+                    <p className="text-xs text-center mt-4" style={{ color: theme.text, opacity: 0.5 }}>
+                        Set an end date to activate the countdown
+                    </p>
+                )}
             </div>
         </div>
     );
@@ -671,6 +737,7 @@ export function Testimonials({ data, theme }) {
 export function ImageGallery({ data, theme }) {
     const { title = "", images = [], layout = "grid" } = data;
     const imageList = Array.isArray(images) ? images : [];
+    const navigate = useNavigate();
     
     return (
         <div className="w-full px-4 mb-6">
@@ -679,16 +746,59 @@ export function ImageGallery({ data, theme }) {
                 {imageList.length > 0 ? imageList.map((img, i) => {
                     const src = typeof img === "string" ? img : img.url || img.src || "";
                     const caption = typeof img === "object" ? img.caption || "" : "";
-                    return (
-                        <div key={i} className={`rounded-xl overflow-hidden border group ${layout === "masonry" ? "break-inside-avoid mb-3" : ""}`} style={{borderColor: theme.border}}>
+                    const productId = typeof img === "object" ? img.productId || "" : "";
+                    const productUrl = productId 
+                        ? `/product/${encodeURIComponent(productId)}`
+                        : typeof img === "object" ? img.productUrl || "" : "";
+                        
+                    console.log('🖼️ User Image Gallery item:', { src, caption, productId, productUrl });
+                    
+                    const imageContent = (
+                        <div 
+                            className={`rounded-xl overflow-hidden border group ${
+                                layout === "masonry" ? "break-inside-avoid mb-3" : ""
+                            } ${productUrl ? "cursor-pointer hover:shadow-lg" : ""}`} 
+                            style={{borderColor: theme.border}}
+                        >
                             <div className="relative overflow-hidden">
-                                <img src={toAbsUrl(src)} alt={caption || `Image ${i+1}`} className={`w-full object-cover group-hover:scale-105 transition-transform duration-500 ${layout === "masonry" ? "" : "aspect-square"}`}/>
+                                <img 
+                                    src={toAbsUrl(src)} 
+                                    alt={caption || `Image ${i+1}`} 
+                                    className={`w-full object-cover group-hover:scale-105 transition-all duration-500 ${
+                                        layout === "masonry" ? "" : "aspect-square"
+                                    }`}
+                                />
+                                {productUrl && (
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                        <div className="bg-white/90 px-3 py-1.5 rounded-full shadow-lg">
+                                            <span className="text-xs font-medium text-gray-800">
+                                                View Product
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
                                 {caption && (
                                     <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-3">
                                         <p className="text-xs text-white font-medium">{caption}</p>
                                     </div>
                                 )}
                             </div>
+                        </div>
+                    );
+                    
+                    return productUrl ? (
+                        <div
+                            key={i}
+                            className="block hover:transform hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
+                            onClick={() => {
+                                navigate(productUrl);
+                            }}
+                        >
+                            {imageContent}
+                        </div>
+                    ) : (
+                        <div key={i}>
+                            {imageContent}
                         </div>
                     );
                 }) : (
