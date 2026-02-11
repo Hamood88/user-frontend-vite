@@ -501,6 +501,7 @@ export const COMPONENT_MAP = {
 export const THEMES = {
     midnight: { id: 'midnight', navStyle: 'side', bg: '#09090b', text: '#f4f4f5', primary: '#a78bfa', onPrimary: '#ffffff', cardBg: '#18181b', border: '#27272a', font: 'Inter, sans-serif' },
     ocean: { id: 'ocean', navStyle: 'top', bg: '#0f172a', text: '#f1f5f9', primary: '#38bdf8', onPrimary: '#000000', cardBg: '#1e293b', border: '#334155', font: 'Inter, sans-serif' },
+    coral: { id: 'coral', navStyle: 'top', bg: '#fff1f2', text: '#4c0519', primary: '#fb7185', onPrimary: '#ffffff', cardBg: '#ffffff', border: '#fecdd3', font: 'Inter, sans-serif' },
     sunrise: { id: 'sunrise', navStyle: 'top', bg: '#fff7ed', text: '#431407', primary: '#f97316', onPrimary: '#ffffff', cardBg: '#ffffff', border: '#fed7aa', font: 'Serif' },
     forest: { id: 'forest', navStyle: 'side', bg: '#052e16', text: '#ecfdf5', primary: '#4ade80', onPrimary: '#000000', cardBg: '#064e3b', border: '#065f46', font: 'Monospace' }
 };

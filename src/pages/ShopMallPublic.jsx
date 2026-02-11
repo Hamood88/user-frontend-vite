@@ -469,6 +469,18 @@ export default function ShopMallPublic() {
                             
                             // ✅ Hydrate ProductGrid with fallback logic (Matches ShopMallPreview behavior)
                             let componentData = props;
+                            
+                            // ✅ CRITICAL FIX: Hydrate ProfileHeader with actual shop data
+                            if (section.type === 'ProfileHeader') {
+                                componentData = {
+                                    ...props,
+                                    shopName: props.shopName || shopInfo?.shopName || shopInfo?.name || finalShopName,
+                                    bio: props.bio || shopInfo?.bio || shopInfo?.description || "Welcome to our store",
+                                    avatarUrl: props.avatarUrl || shopInfo?.logoUrl || shopInfo?.logo || shopInfo?.avatar,
+                                    coverUrl: props.coverUrl || shopInfo?.coverImage || shopInfo?.cover
+                                };
+                            }
+                            
                             if (section.type === 'ProductGrid') {
                                 const rawIds = Array.isArray(props.productIds) ? props.productIds : [];
                                 const ids = rawIds.map(id => String(id || "").trim()).filter(Boolean);
