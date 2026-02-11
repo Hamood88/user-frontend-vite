@@ -391,33 +391,64 @@ import { ArrowLeft } from "lucide-react";
 
 // --- 1. PROFILE HEADER ---
 export function ProfileHeader({ data, theme }) {
-    const { shopName="My Shop", bio="Welcome", avatarUrl, coverUrl } = data;
+    const coverUrl = data.coverUrl || data.coverImage || data.cover || "";
+    const avatarUrl = data.avatarUrl || data.avatar || data.logo || "";
+    const name = data.shopName || data.name || "My Shop";
+    const bio = data.bio || data.description || "";
+    
     return (
-        <div className="w-full flex flex-col items-center text-center relative mb-8">
-            <div className="w-full h-48 overflow-hidden rounded-b-[2.5rem] mb-[-48px]">
-                {coverUrl ? <img src={toAbsUrl(coverUrl)} alt="Cover" className="w-full h-full object-cover"/> : <div className="w-full h-full" style={{background: `linear-gradient(135deg, ${theme.primary} 0%, ${theme.bg} 100%)`, opacity:0.8}}/>}
+        <div className="relative w-full">
+            {/* cover */}
+            <div className="w-full h-48 sm:h-56 bg-cover bg-center relative" style={{
+                backgroundImage: coverUrl ? `url(${toAbsUrl(coverUrl)})` : undefined,
+                backgroundColor: coverUrl ? undefined : theme.primary + "20"
+            }}>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/>
             </div>
-            <div className="relative mb-4 rounded-full border-4 shadow-2xl overflow-hidden w-28 h-28 flex items-center justify-center" style={{borderColor: theme.bg, backgroundColor: theme.cardBg}}>
-                {avatarUrl ? <img src={toAbsUrl(avatarUrl)} className="w-full h-full object-cover"/> : <span className="text-3xl font-bold opacity-80" style={{color:theme.text}}>{shopName.slice(0,1)}</span>}
+            
+            {/* avatar + info */}
+            <div className="relative px-6 pb-6 -mt-16 flex items-end gap-4">
+                {avatarUrl ? (
+                    <img src={toAbsUrl(avatarUrl)} alt={name} className="w-24 h-24 rounded-2xl object-cover border-4 shadow-xl" style={{borderColor: theme.bg}}/>
+                ) : (
+                    <div className="w-24 h-24 rounded-2xl border-4 flex items-center justify-center text-3xl font-bold shadow-xl" style={{borderColor: theme.bg, background: theme.primary, color: "#fff"}}>
+                        {name.charAt(0).toUpperCase()}
+                    </div>
+                )}
+                <div className="pb-1">
+                    <h1 className="text-xl font-bold" style={{color: theme.text}}>{name}</h1>
+                    {bio && <p className="text-sm mt-1 max-w-md" style={{color: theme.muted}}>{bio}</p>}
+                </div>
             </div>
-            <h1 className="text-3xl font-extrabold mb-2 tracking-tight" style={{color: theme.text}}>{shopName}</h1>
-            <p className="text-sm opacity-70 max-w-md px-6 leading-relaxed" style={{color: theme.text}}>{bio}</p>
         </div>
     );
 }
 
 // --- 2. HERO BANNER ---
 export function HeroBanner({ data, theme }) {
-    const { title, subtitle, imageUrl, buttonText, buttonLink } = data;
+    const imageUrl = data.imageUrl || data.image || data.backgroundImage || "";
+    const title = data.title || data.heading || "";
+    const subtitle = data.subtitle || data.subheading || "";
+    const btnText = data.buttonText || "";
+    const btnLink = data.buttonLink || "#";
+    
     return (
-        <div className="w-full px-4 mb-6">
-            <div className="relative w-full aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden shadow-lg group">
-                {imageUrl ? <img src={toAbsUrl(imageUrl)} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/> : <div className="w-full h-full bg-zinc-800 flex items-center justify-center text-zinc-600"><Layout size={48}/></div>}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 text-left">
-                    {title && <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">{title}</h2>}
-                    {subtitle && <p className="text-white/90 text-sm md:text-base mb-4 max-w-lg">{subtitle}</p>}
-                    {buttonText && <a href={buttonLink||'#'} className="w-max px-6 py-2 rounded-full font-semibold text-sm transition-all hover:brightness-110 active:scale-95 inline-block" style={{backgroundColor: theme.primary, color:theme.onPrimary}}>{buttonText}</a>}
-                </div>
+        <div className="relative w-full overflow-hidden" style={{minHeight: 280}}>
+            {imageUrl ? (
+                <img src={toAbsUrl(imageUrl)} alt={title} className="absolute inset-0 w-full h-full object-cover"/>
+            ) : (
+                <div className="absolute inset-0" style={{background: `linear-gradient(135deg, ${theme.primary}30, ${theme.accent || theme.primary}15)`}}/>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"/>
+            <div className="relative z-10 flex flex-col justify-center px-8 py-16 min-h-[280px]">
+                {title && <h2 className="text-3xl sm:text-4xl font-bold text-white max-w-lg leading-tight">{title}</h2>}
+                {subtitle && <p className="text-base text-white/80 mt-3 max-w-md">{subtitle}</p>}
+                {btnText && (
+                    <a href={btnLink} className="inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg" style={{background: theme.primary, color: "#fff"}}>
+                        {btnText}
+                        <span>→</span>
+                    </a>
+                )}
             </div>
         </div>
     );
@@ -425,41 +456,67 @@ export function HeroBanner({ data, theme }) {
 
 // --- 3. PRODUCT GRID ---
 export function ProductGrid({ data, theme, shopId, themeId }) {
-    const { title = "Featured Products", products = [] } = data;
-    const realProducts = Array.isArray(products) ? products.filter(p => p && (p._id || p.id)) : [];
-
+    const title = data.title || "";
+    const products = Array.isArray(data.products) ? data.products : [];
+    
     return (
-        <div className="w-full px-4 mb-6">
-            {title && <h3 className="text-xl font-bold mb-4 flex items-center gap-2" style={{color: theme.text}}><ShoppingBag size={20}/>{title}</h3>}
-            {realProducts.length === 0 && <div className="mb-4 text-xs text-zinc-500 bg-black/10 border border-dashed border-zinc-700 rounded-lg px-4 py-2">No products to display.</div>}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {realProducts.map((p) => {
-                    const id = String(p._id||p.id||"").trim();
-                    const rawImage = p.image || p.imageUrl || (Array.isArray(p.images) && p.images[0]);
-                    const image = rawImage ? toAbsUrl(rawImage) : "";
-                    const price = p.localPrice ?? p.price ?? 0;
+        <div className="px-4 sm:px-6 py-8">
+            {title && (
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-lg font-bold" style={{color: theme.text}}>{title}</h2>
+                    {products.length > 4 && <span className="text-xs font-medium" style={{color: theme.primary}}>View All →</span>}
+                </div>
+            )}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                {products.length > 0 ? products.map((product, i) => {
+                    const img = product.image || product.imageUrl || product.images?.[0] || "";
+                    const pName = product.title || product.name || "Product";
+                    const price = product.price ?? product.salePrice ?? "";
+                    const originalPrice = product.originalPrice || product.compareAtPrice || "";
+                    const onSale = originalPrice && Number(originalPrice) > Number(price);
+                    const discount = onSale ? Math.round((1 - Number(price) / Number(originalPrice)) * 100) : 0;
+                    const productId = product._id || product.id;
                     
                     const productUrl = shopId 
-                        ? `/shop-mall/${encodeURIComponent(shopId)}/product/${encodeURIComponent(id)}?theme=${themeId || theme.id}` 
-                        : `/product/${id}`;
+                        ? `/shop-mall/${encodeURIComponent(shopId)}/product/${encodeURIComponent(productId)}?theme=${themeId || theme.id}` 
+                        : `/product/${productId}`;
                     
                     return (
-                        <Link 
-                            key={id} 
-                            to={productUrl}
-                            className="rounded-xl overflow-hidden shadow-sm border border-zinc-800 hover:border-purple-500/40 transition block" 
-                            style={{backgroundColor: theme.cardBg}}
-                        >
-                            <div className="aspect-square w-full bg-zinc-900 relative">
-                                {image ? <img src={image} className="w-full h-full object-cover"/> : <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-600"><ShoppingBag size={32}/></div>}
+                        <Link key={productId || i} to={productUrl} className="group rounded-xl overflow-hidden border transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer block" style={{background: theme.cardBg, borderColor: theme.border, textDecoration: 'none'}}>
+                            <div className="relative aspect-square overflow-hidden bg-zinc-100">
+                                {img ? (
+                                    <img src={toAbsUrl(img)} alt={pName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center" style={{background: theme.primary + "10"}}>
+                                        <ShoppingBag size={28} style={{color: theme.muted}}/>
+                                    </div>
+                                )}
+                                {onSale && (
+                                    <span className="absolute top-2 left-2 px-2 py-0.5 rounded-lg text-[10px] font-bold text-white" style={{background: "#ef4444"}}>-{discount}%</span>
+                                )}
                             </div>
-                            <div className="p-3 space-y-2">
-                                <div className="text-sm font-semibold text-white line-clamp-2">{p.title||p.name}</div>
-                                <div className="text-[11px] text-zinc-400">${Number(price).toLocaleString()}</div>
+                            <div className="p-3">
+                                <h3 className="text-sm font-medium truncate" style={{color: theme.text}}>{pName}</h3>
+                                <div className="flex items-center gap-2 mt-1.5">
+                                    {price !== "" && <span className="text-sm font-bold" style={{color: onSale ? "#ef4444" : theme.primary}}>${Number(price).toFixed(2)}</span>}
+                                    {onSale && <span className="text-xs line-through" style={{color: theme.muted}}>${Number(originalPrice).toFixed(2)}</span>}
+                                </div>
                             </div>
                         </Link>
-                    )
-                })}
+                    );
+                }) : (
+                    Array.from({length: 4}).map((_, i) => (
+                        <div key={`ph-${i}`} className="rounded-xl overflow-hidden border" style={{background: theme.cardBg, borderColor: theme.border}}>
+                            <div className="aspect-square flex items-center justify-center" style={{background: "#ffffff08"}}>
+                                <ShoppingBag size={24} style={{color: theme.border}}/>
+                            </div>
+                            <div className="p-3 space-y-2">
+                                <div className="h-3 rounded-full w-3/4" style={{background: theme.border}}/>
+                                <div className="h-3 rounded-full w-1/3" style={{background: theme.border}}/>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );
@@ -467,24 +524,49 @@ export function ProductGrid({ data, theme, shopId, themeId }) {
 
 // --- 4. LINK LIST ---
 export function LinkList({ data, theme }) {
-    const { links = [] } = data;
+    const title = data.title || "";
+    const links = Array.isArray(data.links) ? data.links : [];
+    
     return (
-        <div className="w-full px-4 mb-6 flex flex-col gap-3">
-            {links.map((link, i) => (
-                <a key={i} href={link.url} className="w-full p-4 rounded-xl flex items-center justify-between transition-transform active:scale-[0.99] hover:brightness-110" style={{backgroundColor: theme.cardBg, color: theme.text, border: `1px solid ${theme.border}`}}>
-                    <div className="flex items-center gap-3 font-medium"><LinkIcon size={20}/>{link.label}</div>
-                </a>
-            ))}
+        <div className="px-6 py-8 max-w-md mx-auto">
+            {title && <h2 className="text-lg font-bold text-center mb-5" style={{color: theme.text}}>{title}</h2>}
+            <div className="space-y-3">
+                {links.map((link, i) => {
+                    const handleMouseEnter = (e) => {
+                        e.currentTarget.style.borderColor = theme.primary;
+                        e.currentTarget.style.background = theme.primary + "10";
+                    };
+                    const handleMouseLeave = (e) => {
+                        e.currentTarget.style.borderColor = theme.border;
+                        e.currentTarget.style.background = theme.cardBg;
+                    };
+                    return (
+                        <a key={i} href={link.url || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-5 py-3.5 rounded-xl border text-sm font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-md" style={{background: theme.cardBg, borderColor: theme.border, color: theme.text}} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                            <span>{link.label || link.title || link.url}</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{color: theme.muted}}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </a>
+                    );
+                })}
+                {links.length === 0 && (
+                    <div className="text-center py-8 text-sm rounded-xl border-2 border-dashed" style={{color: theme.muted, borderColor: theme.border}}>No links added yet</div>
+                )}
+            </div>
         </div>
     );
 }
 
 // --- 5. RICH TEXT ---
 export function RichText({ data, theme }) {
-    const { content, align="left" } = data;
+    const content = data.content || data.text || data.body || "";
+    const align = data.textAlign || data.align || "left";
+    
     return (
-        <div className="w-full px-4 mb-6" style={{textAlign: align}}>
-             <div className="prose prose-invert max-w-none" style={{color: theme.text}}>{content}</div>
+        <div className="px-6 py-8 prose prose-sm max-w-none" style={{color: theme.text, textAlign: align}}>
+            {content.includes("<") ? (
+                <div dangerouslySetInnerHTML={{__html: content}}/>
+            ) : (
+                <p style={{color: theme.text, whiteSpace: "pre-wrap"}}>{content}</p>
+            )}
         </div>
     );
 }
