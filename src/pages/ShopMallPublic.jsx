@@ -22,40 +22,34 @@ const normalize = (str) => {
 function resolveProps(section) {
     if (!section) return {};
     
-    // 1. Editor Structure (Priority) - use saved props exactly as they are
-    if (section.props && typeof section.props === 'object') {
-        return section.props;
-    }
-
-    // 2. Backend Structure (Flat + Content) - merge all fields
-    // ProfileHeader needs: shopName, bio, avatarUrl, coverUrl
-    // HeroBanner needs: title, subtitle, imageUrl, buttonText, buttonLink
-    // ProductGrid needs: title, productIds
-    // LinkList needs: links
-    // RichText needs: content, align
-    // NavigationMenu needs: links (or auto-generated)
+    // ✅ CRITICAL: All backends can have props at different levels
+    // Merge everything: root fields + content fields + explicit props object
+    const merged = {
+        ...section,  // Root level (main fields)
+        ...(section.content || {}),  // Content object fields
+        ...(section.props || {}),  // Props object fields
+    };
     
-    const base = { ...section }; // Get all root fields
-    const content = section.content || {};
-    
-    // Merge content fields into base (content takes priority)
+    // ✅ Ensure critical fields are explicitly resolved (content takes priority)
     return {
-        ...base,
-        ...content,
-        // Ensure specific fields are properly mapped
-        shopName: content.shopName || section.shopName || base.shopName,
-        bio: content.bio || section.bio || base.bio,
-        avatarUrl: content.avatarUrl || section.avatarUrl || base.avatarUrl,
-        coverUrl: content.coverUrl || section.coverUrl || base.coverUrl,
-        title: content.title || section.title || base.title,
-        subtitle: content.subtitle || section.subtitle || base.subtitle,
-        imageUrl: content.imageUrl || section.imageUrl || base.imageUrl,
-        buttonText: content.buttonText || section.buttonText || base.buttonText,
-        buttonLink: content.buttonLink || section.buttonLink || base.buttonLink,
-        productIds: content.productIds || section.productIds || base.productIds,
-        links: content.links || section.links || base.links,
-        content: content.content || section.content?.value || content.value || section.value,
-        align: content.align || section.align || base.align,
+        ...merged,
+        // Re-map with priority chain: content > root > merged default
+        id: section.id || merged.id,
+        type: section.type || merged.type,
+        title: merged.title || section.title || '',
+        subtitle: merged.subtitle || section.subtitle || '',
+        shopName: (section.content?.shopName || merged.shopName || section.shopName || ''),
+        bio: (section.content?.bio || merged.bio || section.bio || ''),
+        avatarUrl: (section.content?.avatarUrl || merged.avatarUrl || section.avatarUrl || ''),
+        coverUrl: (section.content?.coverUrl || merged.coverUrl || section.coverUrl || ''),
+        imageUrl: (section.content?.imageUrl || merged.imageUrl || section.imageUrl || ''),
+        buttonText: (section.content?.buttonText || merged.buttonText || section.buttonText || ''),
+        buttonLink: (section.content?.buttonLink || merged.buttonLink || section.buttonLink || ''),
+        text: (section.content?.text || merged.text || section.text || ''),
+        productIds: (section.content?.productIds || merged.productIds || section.productIds || []),
+        links: (section.content?.links || merged.links || section.links || []),
+        content: (section.content?.content || merged.content || section.content?.value || merged.value || ''),
+        align: (section.content?.align || merged.align || section.align || 'left'),
     };
 }
 
@@ -143,6 +137,18 @@ export default function ShopMallPublic() {
                 const pageBg = mallPage.pageBg || res.pageBg || '';
                 
                 console.log("[ShopMallPublic] Extracted theme:", { themeId, pageBg });
+                console.log("[ShopMallPublic] ✅ Sections loaded:", sections.length, "sections");
+                sections.forEach((s, i) => {
+                    console.log(`  [Section ${i}]`, {
+                        id: s.id,
+                        type: s.type,
+                        hasContent: !!s.content,
+                        contentKeys: s.content ? Object.keys(s.content).slice(0, 5) : [],
+                        rootKeys: Object.keys(s).filter(k => !['id', 'type', 'content', 'props'].includes(k)).slice(0, 5),
+                        imageUrl: s.imageUrl || s.content?.imageUrl || '(none)',
+                        title: s.title || s.content?.title || '(none)'
+                    });
+                });
                 
                 setData({ ...mallPage, sections, themeId, pageBg });
                 setShopInfo(res.shop || {});
@@ -464,8 +470,23 @@ export default function ShopMallPublic() {
                     ) : (
                         visualSections.map((section, idx) => {
                             const Component = COMPONENT_MAP[section.type];
-                            if (!Component) return null;
+                            if (!Component) {
+                                console.warn(`[ShopMallPublic] ⚠️ Missing component for section type: "${section.type}" (id: ${section.id})`);
+                                return null;
+                            }
+                            
                             const props = resolveProps(section);
+                            
+                            // ✅ Log detailed section data being passed to component
+                            if (section.type === 'HeroBanner') {
+                                console.log(`[ShopMallPublic] 🖼️ Rendering HeroBanner #${idx}:`, {
+                                    id: section.id,
+                                    imageUrl: props.imageUrl,
+                                    title: props.title,
+                                    subtitle: props.subtitle,
+                                    buttonText: props.buttonText,
+                                });
+                            }
                             
                             // ✅ Hydrate ProductGrid with fallback logic (Matches ShopMallPreview behavior)
                             let componentData = props;
