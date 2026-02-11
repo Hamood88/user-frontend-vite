@@ -701,6 +701,7 @@ export default function ShopMallProductDetail() {
               <ProductReviews 
                 productId={product?._id || product?.id} 
                 defaultOpen={false}
+                theme={theme}
               />
             </div>
           </div>
