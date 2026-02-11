@@ -111,70 +111,102 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
 
   const max = Math.min(products.length, 14);
   const list = products.slice(0, max);
-  const display = [...list, ...list];
+  const display = list; // No need to duplicate for manual scroll
 
-  const [isPaused, setIsPaused] = React.useState(false);
-  const [longPressTimer, setLongPressTimer] = React.useState(null);
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [dragStart, setDragStart] = React.useState({ x: 0, scrollLeft: 0 });
+  const scrollRef = React.useRef(null);
 
-  const handleProductTouchStart = (e, pid) => {
-    // Prevent context menu
-    e.preventDefault();
-    
-    // Start long press timer
-    const timer = setTimeout(() => {
-      setIsPaused(true);
-    }, 500); // 500ms = long press
-    
-    setLongPressTimer(timer);
+  const handleMouseDown = (e) => {
+    if (!scrollRef.current) return;
+    setIsDragging(true);
+    setDragStart({
+      x: e.pageX,
+      scrollLeft: scrollRef.current.scrollLeft
+    });
   };
 
-  const handleProductTouchEnd = (e, pid) => {
+  const handleMouseMove = (e) => {
+    if (!isDragging || !scrollRef.current) return;
     e.preventDefault();
-    
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
-    }
-    
-    // Resume animation if it was paused
-    setIsPaused(false);
+    const x = e.pageX;
+    const walk = (x - dragStart.x) * 2; // Scroll speed multiplier
+    scrollRef.current.scrollLeft = dragStart.scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchStart = (e) => {
+    if (!scrollRef.current) return;
+    const touch = e.touches[0];
+    setIsDragging(true);
+    setDragStart({
+      x: touch.pageX,
+      scrollLeft: scrollRef.current.scrollLeft
+    });
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging || !scrollRef.current) return;
+    const touch = e.touches[0];
+    const walk = (touch.pageX - dragStart.x) * 2;
+    scrollRef.current.scrollLeft = dragStart.scrollLeft - walk;
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
   };
 
   const handleProductClick = (e, pid) => {
-    if (!isPaused) {
-      // Only open product if it wasn't a long press
+    // Only open product if we're not dragging
+    if (!isDragging) {
       onOpenUserProduct(pid);
     }
+  };
+
+  // Prevent context menu on long press
+  const handleContextMenu = (e) => {
+    e.preventDefault();
   };
 
   return (
     <div className="sfp-marquee-wrap">
       <style>{`
-        .sfp-marquee-viewport{ overflow:hidden; width:100%; }
+        .sfp-marquee-viewport{ 
+          overflow-x: auto; 
+          overflow-y: hidden;
+          width: 100%; 
+          cursor: grab;
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE/Edge */
+        }
+        .sfp-marquee-viewport::-webkit-scrollbar {
+          display: none; /* Chrome/Safari */
+        }
+        .sfp-marquee-viewport.dragging {
+          cursor: grabbing;
+        }
         .sfp-marquee-track{
-          display:flex;
-          gap:14px;
-          width:max-content;
-          animation: sfpMoveLeft 26s linear infinite;
+          display: flex;
+          gap: 14px;
+          width: max-content;
+          padding-bottom: 10px; /* Ensure content is visible */
           -webkit-user-select: none;
           user-select: none;
         }
-        .sfp-marquee-viewport:hover .sfp-marquee-track{ animation-play-state: paused; }
-        .sfp-marquee-track.paused{ animation-play-state: paused; }
         .sfp-marquee-card{
+          flex-shrink: 0;
           -webkit-touch-callout: none;
           -webkit-user-select: none;
           user-select: none;
+          cursor: pointer;
         }
         .sfp-marquee-img{
           -webkit-touch-callout: none;
           -webkit-user-select: none;
           user-select: none;
-          pointer-events: none;
-        }
-        @keyframes sfpMoveLeft{
-          0%{ transform: translateX(0); }
-          100%{ transform: translateX(-50%); }
         }
       `}</style>
 
@@ -182,8 +214,19 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
         <div className="sfp-marquee-title">Featured Products</div>
       </div>
 
-      <div className="sfp-marquee-viewport">
-        <div className={`sfp-marquee-track ${isPaused ? 'paused' : ''}`}>
+      <div 
+        className={`sfp-marquee-viewport ${isDragging ? 'dragging' : ''}`}
+        ref={scrollRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onContextMenu={handleContextMenu}
+      >
+        <div className="sfp-marquee-track">
           {display.map((pr, idx) => {
             const pid = getRealProductId(pr);
             const img = pr?._image || normalizeProductImage(pr);
@@ -197,10 +240,7 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
                 tabIndex={0}
                 onClick={(e) => handleProductClick(e, pid)}
                 onKeyDown={(e) => e.key === "Enter" && onOpenUserProduct(pid)}
-                onTouchStart={(e) => handleProductTouchStart(e, pid)}
-                onTouchEnd={(e) => handleProductTouchEnd(e, pid)}
-                onTouchCancel={(e) => handleProductTouchEnd(e, pid)}
-                onContextMenu={(e) => e.preventDefault()}
+                onContextMenu={handleContextMenu}
               >
                 <div className="sfp-marquee-imgwrap">
                   {img ? (
@@ -233,8 +273,7 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
                       e.stopPropagation();
                       onOpenUserProduct(pid);
                     }}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    onTouchEnd={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
                   >
                     Open
                   </button>
