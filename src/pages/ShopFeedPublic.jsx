@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_BASE, likeShopPost, addShopPostComment, likeShopPostComment, followShop, unfollowShop, checkShopFollowStatus } from "../api.jsx";
+import { API_BASE, likeShopPost, addShopPostComment, likeShopPostComment, followShop, unfollowShop, checkShopFollowStatus, toAbsUrl } from "../api.jsx";
 import { Heart } from "lucide-react";
 import "../styles/shopFeedPublic.css";
 
@@ -27,10 +27,7 @@ function apiUrl(path) {
 function assetUrl(pathOrUrl) {
   const s = String(pathOrUrl || "").trim();
   if (!s) return "";
-  if (s.startsWith("http://") || s.startsWith("https://")) return s;
-  // uploads served from BASE (not /api)
-  if (s.startsWith("/")) return BASE + s;
-  return BASE + "/" + s;
+  return toAbsUrl(s);
 }
 
 /* =========================
@@ -80,27 +77,27 @@ function normalizeProductImage(prod) {
 
   if (prod.image) {
     const s = String(prod.image || "").trim();
-    if (s) return assetUrl(s);
+    if (s) return toAbsUrl(s);
   }
 
   if (Array.isArray(prod.images) && prod.images.length > 0) {
     const first = String(prod.images[0] || "").trim();
-    if (first) return assetUrl(first);
+    if (first) return toAbsUrl(first);
   }
 
   if (Array.isArray(prod.media?.images) && prod.media.images.length > 0) {
     const first = String(prod.media.images[0] || "").trim();
-    if (first) return assetUrl(first);
+    if (first) return toAbsUrl(first);
   }
 
   if (prod.media?.image) {
     const first = String(prod.media.image || "").trim();
-    if (first) return assetUrl(first);
+    if (first) return toAbsUrl(first);
   }
 
   if (prod.filename) {
     const first = String(prod.filename || "").trim();
-    if (first) return assetUrl(`/uploads/shop-products/${first}`);
+    if (first) return toAbsUrl(`/uploads/shop-products/${first}`);
   }
 
   return "";
@@ -211,13 +208,6 @@ async function loadPublicShopFeed(shopId) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok || data?.ok === false) {
     throw new Error(data?.message || data?.error || `Failed to load shop feed (${res.status})`);
-  }
-
-  // Debug logging
-  console.log('[ShopFeed] API Response:', data);
-  if (data?.posts?.length > 0) {
-    console.log('[ShopFeed] First post author:', data.posts[0].author);
-    console.log('[ShopFeed] First post comments:', data.posts[0].comments?.slice(0, 2));
   }
 
   return data;
@@ -361,61 +351,110 @@ export default function ShopFeedPublic() {
 
   function CommentNode({ node, depth = 0, onReply, onLike }) {
     if (!node) return null;
-    const commenter = node?.author || node?.user || {};
-    const name = commenter?.displayName || commenter?.name || commenter?.username || "User";
-    const avatarUrl = commenter?.avatarUrl || "";
+    const commenter = node?.author || node?.user || node?.createdBy || {};
+    const name =
+      commenter?.displayName ||
+      commenter?.name ||
+      commenter?.username ||
+      commenter?.fullName ||
+      commenter?.email ||
+      "User";
+    const avatarUrl =
+      commenter?.avatarUrl ||
+      commenter?.avatar ||
+      commenter?.image ||
+      commenter?.imageUrl ||
+      commenter?.profileImage ||
+      commenter?.photo ||
+      "";
     const likesCount = Array.isArray(node?.likes) ? node.likes.length : 0;
     
-    // Debug log to see what we're getting
-    if (depth === 0) console.log('[CommentNode] author data:', commenter, 'avatarUrl:', avatarUrl);
+    // Determine if author is a shop or user and get their ID
+    const authorType = commenter?.authorType || "user";
+    const authorShopId = commenter?.shopId || null;
+    const authorUserId = commenter?.userId || null;
+    
+    // Handle click on author (navigate to their feed)
+    const handleAuthorClick = () => {
+      if (authorType === "shop" && authorShopId) {
+        nav(`/shop/${encodeURIComponent(authorShopId)}/feed`);
+      } else if (authorType === "user" && authorUserId) {
+        // Navigate to user feed/profile if available
+        nav(`/user/${encodeURIComponent(authorUserId)}/feed`);
+      }
+    };
+
+    const isClickable = (authorType === "shop" && authorShopId) || (authorType === "user" && authorUserId);
     
     return (
-      <div style={{ marginLeft: depth * 12, marginTop: 8, paddingBottom: 8, borderBottom: depth === 0 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-          {avatarUrl ? (
-            <img 
-              src={assetUrl(avatarUrl)} 
-              alt={name}
-              style={{ 
-                width: 32, 
-                height: 32, 
-                borderRadius: "50%", 
-                objectFit: "cover",
-                border: "2px solid rgba(255,255,255,0.1)"
-              }}
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
-            />
-          ) : (
-            <div style={{ 
-              width: 32, 
-              height: 32, 
-              borderRadius: "50%", 
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 14,
-              fontWeight: 700,
-              color: "#fff"
-            }}>
-              {name.charAt(0).toUpperCase()}
-            </div>
-          )}
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{name}</div>
+      <div className="sf-comment" style={{ marginLeft: depth * 12, marginTop: 8 }}>
+        <div className="sf-comment-top" style={{ alignItems: "center" }}>
+          <div 
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: 8,
+              cursor: isClickable ? "pointer" : "default"
+            }}
+            onClick={isClickable ? handleAuthorClick : undefined}
+          >
+            {avatarUrl ? (
+              <img
+                src={assetUrl(avatarUrl)}
+                alt={name}
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  border: "2px solid rgba(255,255,255,0.1)"
+                }}
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: "50%",
+                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: "#fff"
+                }}
+              >
+                {name.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <div className="sf-comment-name">{name}</div>
+          </div>
         </div>
-        <div style={{ fontSize: 13, marginTop: 4, marginLeft: 40, color: "rgba(255,255,255,0.8)" }}>{node.text}</div>
-        <div style={{ marginTop: 6, marginLeft: 40, display: "flex", gap: 8 }}>
-          <button className="sfp-miniBtn" type="button" onClick={() => onLike(node._id || node.id)}>
+        <div className="sf-comment-text" style={{ marginLeft: 40 }}>
+          {node.text}
+        </div>
+        <div className="sf-replybar" style={{ marginLeft: 40 }}>
+          <button className="sf-btn-mini" type="button" onClick={() => onLike(node._id || node.id)}>
             👍 {likesCount > 0 ? `(${likesCount})` : "Like"}
           </button>
-          <button className="sfp-miniBtn" type="button" onClick={() => onReply(node._id || node.id)}>
+          <button className="sf-btn-mini" type="button" onClick={() => onReply(node._id || node.id)}>
             💬 Reply
           </button>
         </div>
         {Array.isArray(node.children) && node.children.length > 0
-          ? node.children.map((c) => <CommentNode key={String(c._id || c.id || Math.random())} node={c} depth={depth + 1} onReply={onReply} onLike={onLike} />)
+          ? node.children.map((c) => (
+              <CommentNode
+                key={String(c._id || c.id || Math.random())}
+                node={c}
+                depth={depth + 1}
+                onReply={onReply}
+                onLike={onLike}
+              />
+            ))
           : null}
       </div>
     );
@@ -423,16 +462,24 @@ export default function ShopFeedPublic() {
 
   async function handleLike(postId) {
     if (!postId || !safeShopId) return;
+    
+    // Check if user is logged in
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      alert("Please log in to like posts");
+      nav('/login');
+      return;
+    }
+    
     try {
       const result = await likeShopPost(safeShopId, postId);
-      // Update local state without reloading
+      // Update local state using server-confirmed count
       setPosts(posts.map(p => {
         if ((p._id || p.id) === postId) {
           return {
             ...p,
-            likes: result.liked 
-              ? [...(p.likes || []), 'current-user'] 
-              : (p.likes || []).filter((_, i) => i < (p.likes || []).length - 1)
+            likedByMe: result.liked,
+            likes: Array(result.likesCount || 0).fill('x')
           };
         }
         return p;
@@ -446,6 +493,15 @@ export default function ShopFeedPublic() {
     if (!postId || !safeShopId) return;
     const text = String(commentText || "").trim();
     if (!text) return;
+    
+    // Check if user is logged in
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      alert("Please log in to comment");
+      nav('/login');
+      return;
+    }
+    
     try {
       const result = await addShopPostComment(safeShopId, postId, { text, parentComment: replyTo || null });
       // Update local state without reloading
@@ -467,9 +523,18 @@ export default function ShopFeedPublic() {
 
   async function handleLikeComment(postId, commentId) {
     if (!postId || !commentId || !safeShopId) return;
+    
+    // Check if user is logged in
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      alert("Please log in to like comments");
+      nav('/login');
+      return;
+    }
+    
     try {
       const result = await likeShopPostComment(safeShopId, postId, commentId);
-      // Update local state without reloading
+      // Update local state using server-confirmed count
       setPosts(posts.map(p => {
         if ((p._id || p.id) === postId) {
           return {
@@ -479,9 +544,7 @@ export default function ShopFeedPublic() {
               if (cid === String(commentId)) {
                 return {
                   ...c,
-                  likes: result.liked 
-                    ? [...(c.likes || []), 'current-user']
-                    : (c.likes || []).filter((_, i) => i < (c.likes || []).length - 1)
+                  likes: Array(result.likesCount || 0).fill('x')
                 };
               }
               return c;
@@ -498,25 +561,42 @@ export default function ShopFeedPublic() {
   useEffect(() => {
     load();
     
-    // Load follow status
+    // Load follow status (only if user is logged in)
     async function loadFollowStatus() {
       if (!safeShopId) return;
+      
+      // Check if user is logged in before calling authenticated endpoint
+      const token = localStorage.getItem('userToken');
+      if (!token) {
+        setIsFollowing(false);
+        return;
+      }
+      
       try {
         const { following } = await checkShopFollowStatus(safeShopId);
         setIsFollowing(following);
       } catch (err) {
         console.error("Failed to check follow status:", err);
+        setIsFollowing(false);
       }
     }
     loadFollowStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [safeShopId]);
 
-  const title = useMemo(() => shop?.shopName || shop?.name || "Shop Feed", [shop]);
+  const shopName = shop?.shopName || shop?.name || "Shop";
+  const logoSrc = toAbsUrl(shop?.logoUrl || shop?.logo || shop?.avatar || "");
+  const bioText = shop?.bio || shop?.description || "";
 
   function goToShopMallPreview() {
-    if (!safeShopId) return;
-    nav(`/shop/${encodeURIComponent(safeShopId)}/mall`);
+    console.log("[ShopFeed] goToShopMallPreview clicked - safeShopId:", safeShopId);
+    if (!safeShopId) {
+      console.error("[ShopFeed] Cannot navigate - safeShopId is empty!");
+      return;
+    }
+    const targetUrl = `/shop/${encodeURIComponent(safeShopId)}/mall`;
+    console.log("[ShopFeed] Navigating to:", targetUrl);
+    nav(targetUrl);
   }
 
   function openUserProduct(productId) {
@@ -533,6 +613,15 @@ export default function ShopFeedPublic() {
 
   async function handleToggleFollow() {
     if (!safeShopId) return;
+    
+    // Check if user is logged in
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      alert("Please log in to follow shops");
+      nav('/login');
+      return;
+    }
+    
     console.log("🔵 Toggle follow - current state:", isFollowing, "shopId:", safeShopId);
     setFollowLoading(true);
     try {
@@ -556,205 +645,98 @@ export default function ShopFeedPublic() {
   }
 
   return (
-    <div className="sfp-page" style={{ backgroundColor: '#ffffff', minHeight: '100vh' }}>
-      <div className="sfp-surface" style={{ backgroundColor: '#ffffff' }}>
-        {/* Profile Card - Matching shop.moondala.one Design */}
-        <div 
-          style={{
-            background: '#ffffff',
-            borderRadius: '20px',
-            overflow: 'hidden',
-            border: '1px solid #e2e8f0',
-            boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
-            marginBottom: '24px'
-          }}
-        >
-          {/* Cover Image */}
-          <div 
-            style={{
-              width: '100%',
-              height: '200px',
-              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
-              position: 'relative'
-            }}
-          >
-            {shop?.coverImage ? (
-              <img 
-                src={assetUrl(shop.coverImage)} 
-                alt="Cover" 
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover'
-                }}
+    <div className="sf-wrap">
+      <div className="sf-wrap-inner">
+        {/* Profile Card - INLINE STYLED FOR SAFETY */}
+        <div style={{
+          background: "rgba(18, 26, 43, 0.9)",
+          borderRadius: "16px",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          marginBottom: "20px",
+          overflow: "hidden",
+          position: "relative"
+        }}>
+          {/* ===== COVER IMAGE ===== */}
+          {shop?.coverImage ? (
+            <div style={{ width: "100%", height: 200 }}>
+              <img
+                src={toAbsUrl(shop.coverImage)}
+                alt="Cover"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
               />
-            ) : null}
-          </div>
+            </div>
+          ) : (
+            <div style={{ width: "100%", height: 200, background: "linear-gradient(135deg, #1e293b, #0f172a)" }} />
+          )}
 
-          {/* Profile Info */}
-          <div 
-            style={{
-              padding: '0 20px 20px',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '16px',
-              position: 'relative'
-            }}
-          >
-            {/* Avatar - Overlapping Cover */}
-            <div 
-              style={{
-                width: '120px',
-                height: '120px',
-                borderRadius: '50%',
-                overflow: 'hidden',
-                border: '4px solid #ffffff',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                flexShrink: 0,
-                marginTop: '-60px',
-                background: '#ffffff'
-              }}
-            >
-              {shop?.logo || shop?.logoUrl ? (
-                <img 
-                  src={assetUrl(shop.logo || shop.logoUrl)} 
-                  alt={shop.shopName}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
-                  }}
-                />
+          {/* ===== AVATAR + INFO ROW ===== */}
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 16, padding: "0 20px" }}>
+            {/* Avatar */}
+            <div style={{
+              width: 120, height: 120, borderRadius: "50%", overflow: "hidden",
+              border: "4px solid #121a2b", marginTop: -60, flexShrink: 0,
+              background: "#121a2b", boxShadow: "0 4px 6px rgba(0,0,0,0.3)",
+              zIndex: 10, position: "relative"
+            }}>
+              {logoSrc ? (
+                <img src={logoSrc} alt={shopName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               ) : (
-                <div 
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: 'linear-gradient(135deg, #60a5fa, #a78bfa)',
-                    color: 'white',
-                    fontSize: '48px',
-                    fontWeight: 700
-                  }}
-                >
-                  {(shop?.shopName || shop?.name || 'S').charAt(0).toUpperCase()}
+                <div style={{
+                  width: "100%", height: "100%", display: "flex", alignItems: "center",
+                  justifyContent: "center", background: "#3b82f6",
+                  color: "white", fontSize: 40, fontWeight: "bold"
+                }}>
+                  {shopName.charAt(0).toUpperCase()}
                 </div>
               )}
             </div>
 
-            {/* Profile Details */}
-            <div style={{ flex: 1, paddingTop: '12px' }}>
-              <h1 
-                style={{
-                  fontSize: '28px',
-                  fontWeight: 700,
-                  color: '#0f172a',
-                  margin: '0 0 8px 0'
-                }}
-              >
-                {shop?.shopName || shop?.name || 'Shop'}
+            {/* Name + Bio + Country */}
+            <div style={{ flex: 1, minWidth: 0, paddingTop: 10, position: "relative", zIndex: 5 }}>
+              <h1 style={{ fontSize: 26, fontWeight: 800, color: "#ffffff", margin: "0 0 4px 0" }}>
+                {shopName}
               </h1>
               
-              {shop?.bio && (
-                <p 
-                  style={{
-                    fontSize: '15px',
-                    lineHeight: '1.5',
-                    color: '#64748b',
-                    margin: 0
-                  }}
-                >
+              {/* Force render bio if it exists */}
+              {shop?.bio ? (
+                <div style={{ fontSize: 15, lineHeight: 1.5, color: "#cbd5e1", margin: "0 0 8px 0", whiteSpace: "pre-wrap" }}>
                   {shop.bio}
-                </p>
+                </div>
+              ) : null}
+              
+              {shop?.description && !shop?.bio ? (
+                <div style={{ fontSize: 15, lineHeight: 1.5, color: "#94a3b8", margin: "0 0 8px 0" }}>
+                  {shop.description}
+                </div>
+              ) : null}
+
+              {shop?.country && (
+                <div style={{ fontSize: 13, color: "#64748b", display: "flex", alignItems: "center", gap: 4 }}>
+                  <span>📍</span> {shop.country}
+                </div>
               )}
             </div>
+          </div>
 
-            {/* Action Buttons */}
-            <div 
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                marginTop: '12px',
-                flexShrink: 0
-              }}
+          {/* ===== ACTION BUTTONS ===== */}
+          <div className="sf-profile-actions">
+            <button
+              className="sf-btn sf-btn-primary"
+              type="button"
+              onClick={handleToggleFollow}
+              disabled={followLoading}
             >
-              {/* Follow Button */}
-              <button
-                onClick={handleToggleFollow}
-                disabled={followLoading}
-                style={{
-                  padding: '10px 20px',
-                  borderRadius: '12px',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  backgroundColor: isFollowing ? '#ef4444' : '#10b981',
-                  color: '#ffffff',
-                  border: 'none',
-                  cursor: followLoading ? 'not-allowed' : 'pointer',
-                  opacity: followLoading ? 0.6 : 1,
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'all 0.2s'
-                }}
-                type="button"
-              >
-                <Heart 
-                  size={16} 
-                  fill={isFollowing ? "#fff" : "none"}
-                  strokeWidth={isFollowing ? 0 : 2}
-                />
-                {followLoading ? '...' : (isFollowing ? 'Following' : 'Follow')}
-              </button>
-
-              {/* Shop Mall Button */}
-              <button
-                onClick={goToShopMallPreview}
-                style={{
-                  padding: '10px 20px',
-                  borderRadius: '12px',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  backgroundColor: '#3b82f6',
-                  color: '#ffffff',
-                  border: 'none',
-                  cursor: 'pointer',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  transition: 'all 0.2s'
-                }}
-                type="button"
-              >
-                🏬 Shop Mall
-              </button>
-
-              {/* Back Button */}
-              <button
-                onClick={() => nav("/feed")}
-                style={{
-                  padding: '10px 20px',
-                  borderRadius: '12px',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  backgroundColor: '#f1f5f9',
-                  color: '#0f172a',
-                  border: 'none',
-                  cursor: 'pointer',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  transition: 'all 0.2s'
-                }}
-                type="button"
-              >
-                ← Back
-              </button>
-            </div>
+              <Heart size={16} fill={isFollowing ? "currentColor" : "none"} strokeWidth={isFollowing ? 0 : 2} />
+              {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+            </button>
+            <button className="sf-btn sf-btn-primary" type="button" onClick={goToShopMallPreview}>
+              🏬 Shop Mall
+            </button>
+            <button className="sf-btn sf-btn-secondary" type="button" onClick={() => nav("/feed")}>
+              ← Back
+            </button>
           </div>
         </div>
-
-        <div className="sfp-h1">{title}</div>
 
         {err ? <div className="sfp-err">{err}</div> : null}
 
@@ -771,36 +753,55 @@ export default function ShopFeedPublic() {
         ) : posts.length === 0 ? (
           <div className="sfp-note">No posts yet.</div>
         ) : (
-          <div className="sfp-list">
+          <div className="sf-list">
             {posts.map((p) => {
               const postId = p._id || p.id;
-              const media =
-                assetUrl(p?.mediaUrl) ||
-                assetUrl(p?.imageUrl) ||
-                assetUrl(p?.videoUrl) ||
-                (Array.isArray(p?.media) && p.media[0]?.url ? assetUrl(p.media[0].url) : "");
-
-              const isVid = isVideoUrl(media);
+              
+              // ✅ Better media detection - check multiple sources and backend isVideo flag
+              let media = "";
+              let isVid = false;
+              
+              // Check mediaUrl first (backend now normalizes this)
+              if (p?.mediaUrl) {
+                media = assetUrl(p.mediaUrl);
+                isVid = p?.isVideo || isVideoUrl(media);
+              }
+              // Check videoUrl specifically
+              else if (p?.videoUrl) {
+                media = assetUrl(p.videoUrl);
+                isVid = true;
+              }
+              // Check imageUrl
+              else if (p?.imageUrl) {
+                media = assetUrl(p.imageUrl);
+                isVid = isVideoUrl(media);
+              }
+              // Check media array
+              else if (Array.isArray(p?.media) && p.media[0]?.url) {
+                media = assetUrl(p.media[0].url);
+                isVid = p.media[0]?.isVideo || p.media[0]?.type === "video" || isVideoUrl(media);
+              }
 
               const likeCount = Array.isArray(p?.likes) ? p.likes.length : 0;
+              const likedByMe = p?.likedByMe || false;
               const commentsFlat = Array.isArray(p?.comments) ? p.comments : [];
               const commentCount = commentsFlat.length;
 
               const commentTree = buildCommentTree(commentsFlat);
               
-              const shopLogo = shop?.logoUrl || shop?.logo || "";
+              const shopLogo = logoSrc || "";
               const shopName = shop?.shopName || shop?.name || "Shop";
               
               // Debug log to see shop data
               if (posts.indexOf(p) === 0) console.log('[ShopFeed] shop data:', shop, 'shopLogo:', shopLogo);
 
               return (
-                <div key={postId} className="sfp-card">
-                  <div className="sfp-head">
+                <div key={postId} className="sf-card sf-post">
+                  <div className="sf-post-head">
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                       {shopLogo ? (
                         <img 
-                          src={assetUrl(shopLogo)} 
+                          src={shopLogo} 
                           alt={shopName}
                           style={{ 
                             width: 40, 
@@ -830,31 +831,31 @@ export default function ShopFeedPublic() {
                         </div>
                       )}
                       <div>
-                        <div className="sfp-name">{shopName}</div>
-                        <div className="sfp-meta">{timeAgo(p.createdAt)}</div>
+                        <div className="sf-name">{shopName}</div>
+                        <div className="sf-meta">{timeAgo(p.createdAt)}</div>
                       </div>
                     </div>
                   </div>
 
-                  {p.text ? <div className="sfp-text">{p.text}</div> : null}
+                  {p.text ? <div className="sf-post-text">{p.text}</div> : null}
 
                   {media ? (
-                    <div className="sfp-mediaWrap">
+                    <div className="sf-media">
                       {isVid ? (
-                        <video className="sfp-media" controls src={media} />
+                        <video className="sf-video" controls src={media} />
                       ) : (
-                        <img className="sfp-media" src={media} alt="" />
+                        <img className="sf-img" src={media} alt="" />
                       )}
                     </div>
                   ) : null}
 
-                  <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-                    <button className="sfp-miniBtn" type="button" onClick={() => handleLike(postId)}>
-                      👍 Like ({likeCount})
+                  <div className="sf-post-actions">
+                    <button className="sf-pill" type="button" onClick={() => handleLike(postId)}>
+                      {likedByMe ? "❤️ Liked" : "👍 Like"} <span className="sf-pill-num">{likeCount}</span>
                     </button>
 
                     <button
-                      className="sfp-miniBtn"
+                      className="sf-pill sf-pill-muted"
                       type="button"
                       onClick={() => {
                         setOpenCommentsFor((cur) => (cur === postId ? null : postId));
@@ -862,23 +863,23 @@ export default function ShopFeedPublic() {
                         setCommentText("");
                       }}
                     >
-                      💬 Comments ({commentCount})
+                      💬 Comments <span className="sf-pill-num">{commentCount}</span>
                     </button>
                   </div>
 
                   {openCommentsFor === postId && (
-                    <div style={{ marginTop: 12, borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 12 }}>
-                      <div style={{ fontWeight: 700 }}>Comments</div>
+                    <div className="sf-comments-panel">
+                      <div style={{ fontWeight: 700, marginBottom: 6 }}>Comments</div>
 
                       {commentTree.length === 0 ? (
-                        <div style={{ marginTop: 8, color: "rgba(255,255,255,0.5)" }}>No comments yet.</div>
+                        <div className="sf-empty-comments">No comments yet.</div>
                       ) : (
-                        <div style={{ marginTop: 8 }}>
+                        <div className="sf-comments">
                           {commentTree.map((c) => (
-                            <CommentNode 
-                              key={String(c._id || c.id || Math.random())} 
-                              node={c} 
-                              onReply={(id) => setReplyTo(id)} 
+                            <CommentNode
+                              key={String(c._id || c.id || Math.random())}
+                              node={c}
+                              onReply={(id) => setReplyTo(id)}
                               onLike={(commentId) => handleLikeComment(postId, commentId)}
                             />
                           ))}
@@ -897,11 +898,11 @@ export default function ShopFeedPublic() {
                           onChange={(e) => setCommentText(e.target.value)}
                           placeholder={replyTo ? "Write a reply..." : "Write a comment..."}
                           rows={2}
-                          style={{ width: "100%", padding: 8, borderRadius: 6 }}
+                          className="sf-input"
                         />
 
                         <div style={{ marginTop: 8, textAlign: "right" }}>
-                          <button className="sfp-miniBtn" type="button" onClick={() => handleAddComment(postId)}>
+                          <button className="sf-btn sf-btn-secondary" type="button" onClick={() => handleAddComment(postId)}>
                             {replyTo ? "Add Reply" : "Add Comment"}
                           </button>
                         </div>

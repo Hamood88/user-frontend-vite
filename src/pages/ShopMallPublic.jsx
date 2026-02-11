@@ -390,7 +390,7 @@ export default function ShopMallPublic() {
                                                                 data={{ products: catProducts, title: "" }} 
                                                                 theme={theme}
                                                                 shopId={shopId}
-                                                                themeId={currentThemeId}
+                                                                themeId={themeId}
                                                             />
                                                         </div>
                                                     );
@@ -400,7 +400,7 @@ export default function ShopMallPublic() {
                                     </div>
                                 ) : (
                                     // Standard filtered list
-                                    <COMPONENT_MAP.ProductGrid data={{ products: filteredProducts, title: "" }} theme={theme} shopId={shopId} themeId={currentThemeId} />
+                                    <COMPONENT_MAP.ProductGrid data={{ products: filteredProducts, title: "" }} theme={theme} shopId={shopId} themeId={themeId} />
                                 )
                             ) : (
                                 <div className="text-center py-24 opacity-50" style={{ color: theme.text }}>
@@ -452,7 +452,7 @@ export default function ShopMallPublic() {
                                         data={{ products: products, title: "" }} 
                                         theme={theme}
                                         shopId={shopId}
-                                        themeId={currentThemeId}
+                                        themeId={themeId}
                                     />
                                 </div>
                             ) : (
@@ -497,7 +497,7 @@ export default function ShopMallPublic() {
                                         data={componentData} 
                                         theme={theme}
                                         shopId={shopId}
-                                        themeId={currentThemeId}
+                                        themeId={themeId}
                                     />
                                 </div>
                             );

@@ -190,7 +190,7 @@ export default function AppLayout() {
 
   function logout() {
     clearUserSession();
-    nav("/", { replace: true });
+    nav("/login", { replace: true });
   }
 
   return (

@@ -226,6 +226,7 @@ export default function Feed() {
 
   // share dropdown
   const [shareDropdownOpen, setShareDropdownOpen] = useState("");
+  const [postMenuOpen, setPostMenuOpen] = useState("");
 
   const [sendingFriendRequest, setSendingFriendRequest] = useState(false);
   const [friendRequestSent, setFriendRequestSent] = useState(false);
@@ -402,22 +403,30 @@ export default function Feed() {
     loadTrending();
   }, []);
 
-  // Close share dropdown when clicking outside
+  // Close menus/comments when clicking outside
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (shareDropdownOpen) {
-        setShareDropdownOpen("");
+    function handleClickOutside(e) {
+      // Don't close if clicking inside comment box, share dropdown, or post menu
+      if (e.target.closest('.md-commentBox') || 
+          e.target.closest('.md-actionBtn') ||
+          e.target.closest('[data-share-dropdown]') || 
+          e.target.closest('[data-post-menu]')) {
+        return;
       }
+      
+      if (shareDropdownOpen) setShareDropdownOpen("");
+      if (postMenuOpen) setPostMenuOpen("");
+      if (openPostId) setOpenPostId("");
     }
 
-    if (shareDropdownOpen) {
+    if (shareDropdownOpen || postMenuOpen || openPostId) {
       document.addEventListener('click', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [shareDropdownOpen]);
+  }, [shareDropdownOpen, postMenuOpen, openPostId]);
 
   async function onCreatePost() {
     const text = s(newPostText);
@@ -1266,27 +1275,62 @@ export default function Feed() {
                       </div>
                     </div>
 
-                    {/* Edit/Delete buttons for own posts */}
-                    {pickId(post.user) === pickId(me) && (
-                      <div className="flex gap-2">
-                        <button 
-                          type="button" 
-                          className="md-iconBtn" 
-                          onClick={() => startEditingPost(post)}
-                          title="Edit"
+                    <div className="relative">
+                      <button
+                        type="button"
+                        className="md-iconBtn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPostMenuOpen((cur) => (cur === post._id ? "" : post._id));
+                        }}
+                        title="More"
+                      >
+                        <MoreHorizontal className="w-4 h-4" />
+                      </button>
+
+                      {postMenuOpen === post._id && (
+                        <div
+                          className="md-menu absolute right-0 mt-2 z-50 rounded-xl border border-border shadow-xl p-2 min-w-[160px]"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          <Edit3 className="w-4 h-4" />
-                        </button>
-                        <button 
-                          type="button" 
-                          className="md-iconBtn text-red-400 hover:text-red-300" 
-                          onClick={() => handleDeletePost(post._id)}
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    )}
+                          <button
+                            type="button"
+                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted text-sm"
+                            onClick={(e) => {
+                              toggleShareDropdown(e, post);
+                              setPostMenuOpen("");
+                            }}
+                          >
+                            <Share className="w-4 h-4" /> Share
+                          </button>
+
+                          {pickId(post.user) === pickId(me) && (
+                            <>
+                              <button
+                                type="button"
+                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted text-sm"
+                                onClick={() => {
+                                  startEditingPost(post);
+                                  setPostMenuOpen("");
+                                }}
+                              >
+                                <Edit3 className="w-4 h-4" /> Edit
+                              </button>
+                              <button
+                                type="button"
+                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/10 text-sm text-red-400"
+                                onClick={() => {
+                                  handleDeletePost(post._id);
+                                  setPostMenuOpen("");
+                                }}
+                              >
+                                <Trash2 className="w-4 h-4" /> Delete
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Post text - editable if editing */}
@@ -1386,23 +1430,12 @@ export default function Feed() {
                       <span className="text-sm font-semibold">{post.commentsCount}</span>
                     </button>
 
-                    <div className="relative ml-auto">
-                      <button
-                        type="button"
-                        className="md-actionBtn hover-green group"
-                        onClick={(e) => toggleShareDropdown(e, post)}
-                        title="Share"
-                      >
-                        <span className="md-actionIconWrap group-hover:bg-green-400/10">
-                          <Share className="w-5 h-5" />
-                        </span>
-                      </button>
-                    </div>
+                    <div className="relative ml-auto" />
                   </div>
 
                   {/* Comments Drawer (simple) */}
                   {openPostId === post._id && (
-                    <div className="mt-4 md-commentBox">
+                    <div className="mt-4 md-commentBox" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-between mb-2">
                         <div className="text-foreground font-bold">Add a comment</div>
                         <button

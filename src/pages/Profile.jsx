@@ -90,7 +90,7 @@ export default function Profile() {
 
   function onLogout() {
     logoutUser();
-    nav("/", { replace: true });
+    nav("/login", { replace: true });
   }
 
   async function saveDisplayName() {
