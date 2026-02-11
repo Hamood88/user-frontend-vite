@@ -405,30 +405,23 @@ export default function ShopFeedPublic() {
 
         for (const path of tries) {
           try {
-            const fullUrl = apiUrl(path);
-            console.log(`🔍 Fetching featured products from: ${fullUrl}`);
-            const res = await fetch(fullUrl, {
+            const res = await fetch(apiUrl(path), {
               headers: { Accept: "application/json" },
             });
-            console.log(`📡 Response status: ${res.status} for ${path}`);
             if (!res.ok) {
               lastErr = new Error(`${res.status}`);
               continue;
             }
             featuredData = await res.json().catch(() => null);
-            console.log(`📦 Featured products response:`, featuredData);
             if (featuredData?.ok) {
-              console.log(`✅ Got featured data with ${featuredData?.products?.length || 0} products`);
               break;
             }
           } catch (e) {
             lastErr = e;
-            console.log(`❌ Fetch error for ${path}:`, e.message);
           }
         }
 
         if (featuredData?.ok && Array.isArray(featuredData?.products)) {
-          console.log(`✅ Setting ${featuredData.products.length} featured products`);
           setFeatured(
             featuredData.products.map((p) => ({
               ...p,
@@ -437,11 +430,9 @@ export default function ShopFeedPublic() {
             }))
           );
         } else {
-          console.log(`⚠️ No valid featured data. ok=${featuredData?.ok}, products is array=${Array.isArray(featuredData?.products)}`);
           setFeatured([]);
         }
       } catch (e) {
-        console.log("⚠️ Featured products load error:", e.message);
         // ignore product load errors — posts still show
         setFeatured([]);
       }
