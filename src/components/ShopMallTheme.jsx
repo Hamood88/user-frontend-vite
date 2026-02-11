@@ -757,34 +757,53 @@ export function Divider({ data, theme }) {
 
 // --- 13. FEATURED PRODUCT ---
 export function FeaturedProduct({ data, theme, shopId, themeId }) {
-    const { title = "Featured Item", products = [] } = data;
+    const products = Array.isArray(data.products) ? data.products : [];
     const product = products[0];
     
     if (!product) return null;
     
-    const id = String(product._id || product.id || "").trim();
-    const rawImage = product.image || product.imageUrl || (Array.isArray(product.images) && product.images[0]);
-    const image = rawImage ? toAbsUrl(rawImage) : "";
-    const price = product.localPrice ?? product.price ?? 0;
-    
-    const productUrl = shopId 
-        ? `/shop-mall/${encodeURIComponent(shopId)}/product/${encodeURIComponent(id)}?theme=${themeId || theme.id}` 
-        : `/product/${id}`;
+    const img = product.image || product.imageUrl || (Array.isArray(product.images) && product.images[0]) || "";
+    const name = product.title || product.name || data.title || "Featured Product";
+    const desc = product.description || data.subtitle || "";
+    const price = product.price ?? data.price ?? "";
+    const originalPrice = product.originalPrice || product.compareAtPrice || data.originalPrice || "";
+    const onSale = originalPrice && Number(originalPrice) > Number(price);
+    const btnText = data.buttonText || "Shop Now";
+    const btnLink = data.buttonLink || "#";
+    const badge = data.badge || (onSale ? "SALE" : "");
     
     return (
-        <div className="w-full px-4 mb-6">
-            <h3 className="text-xl font-bold mb-4 flex items-center gap-2" style={{color: theme.text}}>
-                ⭐ {title}
-            </h3>
-            <Link to={productUrl} className="block rounded-2xl overflow-hidden shadow-lg border hover:shadow-xl transition-all" style={{borderColor: theme.border, backgroundColor: theme.card}}>
-                <div className="aspect-square w-full bg-zinc-900 relative">
-                    {image ? <img src={image} className="w-full h-full object-cover"/> : <div className="absolute inset-0 flex items-center justify-center text-zinc-600"><ShoppingBag size={48}/></div>}
+        <div className="flex flex-col sm:flex-row items-stretch overflow-hidden border rounded-2xl mx-4 sm:mx-6 my-4" style={{background: theme.card, borderColor: theme.border}}>
+            {/* image */}
+            <div className="relative sm:w-1/2 aspect-square sm:aspect-auto overflow-hidden">
+                {img ? (
+                    <img src={toAbsUrl(img)} alt={name} className="w-full h-full object-cover"/>
+                ) : (
+                    <div className="w-full h-full min-h-[200px] flex items-center justify-center" style={{background: theme.primary + "15"}}>
+                        <ShoppingBag size={48} style={{color: theme.muted}}/>
+                    </div>
+                )}
+                {badge && (
+                    <span className="absolute top-3 left-3 px-3 py-1 rounded-lg text-xs font-bold text-white" style={{background: onSale ? "#ef4444" : theme.primary}}>
+                        {badge}
+                    </span>
+                )}
+            </div>
+            {/* info */}
+            <div className="sm:w-1/2 flex flex-col justify-center p-6 sm:p-8">
+                <h2 className="text-xl sm:text-2xl font-bold" style={{color: theme.text}}>{name}</h2>
+                {desc && <p className="text-sm mt-2 line-clamp-3" style={{color: theme.muted}}>{desc}</p>}
+                <div className="flex items-center gap-3 mt-4">
+                    {price !== "" && <span className="text-2xl sm:text-3xl font-bold" style={{color: onSale ? "#ef4444" : theme.primary}}>${Number(price).toFixed(2)}</span>}
+                    {onSale && <span className="text-lg line-through" style={{color: theme.muted}}>${Number(originalPrice).toFixed(2)}</span>}
                 </div>
-                <div className="p-6">
-                    <h4 className="text-2xl font-bold mb-2" style={{color: theme.text}}>{product.title || product.name}</h4>
-                    <div className="text-3xl font-bold" style={{color: theme.primary}}>${Number(price).toLocaleString()}</div>
-                </div>
-            </Link>
+                {btnText && (
+                    <a href={btnLink} className="inline-flex items-center justify-center gap-2 mt-6 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg w-full sm:w-auto" style={{background: theme.primary, color: "#fff"}}>
+                        {btnText}
+                        <span>→</span>
+                    </a>
+                )}
+            </div>
         </div>
     );
 }
