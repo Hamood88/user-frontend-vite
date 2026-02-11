@@ -695,7 +695,12 @@ export default function ShopFeedPublic() {
   function openUserProduct(productId) {
     const pid = String(productId || "").trim();
     if (!pid) return;
-    nav(`/product/${encodeURIComponent(pid)}`);
+    
+    // Pass current shop feed location as backTo state so user returns here instead of /mall
+    const currentShopFeedPath = `/shop/${encodeURIComponent(safeShopId)}/feed`;
+    nav(`/product/${encodeURIComponent(pid)}`, {
+      state: { backTo: currentShopFeedPath }
+    });
   }
 
   function openShopAppNewTab() {
