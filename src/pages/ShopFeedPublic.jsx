@@ -422,6 +422,12 @@ export default function ShopFeedPublic() {
         }
 
         if (featuredData?.ok && Array.isArray(featuredData?.products)) {
+          // ✅ Use marqueeConfig from endpoint, fallback to shop data
+          const endpointConfig = featuredData?.marqueeConfig;
+          if (endpointConfig) {
+            setMarqueeConfig(endpointConfig);
+          }
+          
           setFeatured(
             featuredData.products.map((p) => ({
               ...p,
