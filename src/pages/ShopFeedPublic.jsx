@@ -114,13 +114,37 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
   const display = [...list, ...list];
 
   const [isPaused, setIsPaused] = React.useState(false);
+  const [longPressTimer, setLongPressTimer] = React.useState(null);
 
-  const handleTouchStart = () => {
-    setIsPaused(true);
+  const handleProductTouchStart = (e, pid) => {
+    // Prevent context menu
+    e.preventDefault();
+    
+    // Start long press timer
+    const timer = setTimeout(() => {
+      setIsPaused(true);
+    }, 500); // 500ms = long press
+    
+    setLongPressTimer(timer);
   };
 
-  const handleTouchEnd = () => {
+  const handleProductTouchEnd = (e, pid) => {
+    e.preventDefault();
+    
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+    
+    // Resume animation if it was paused
     setIsPaused(false);
+  };
+
+  const handleProductClick = (e, pid) => {
+    if (!isPaused) {
+      // Only open product if it wasn't a long press
+      onOpenUserProduct(pid);
+    }
   };
 
   return (
@@ -132,9 +156,22 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
           gap:14px;
           width:max-content;
           animation: sfpMoveLeft 26s linear infinite;
+          -webkit-user-select: none;
+          user-select: none;
         }
         .sfp-marquee-viewport:hover .sfp-marquee-track{ animation-play-state: paused; }
         .sfp-marquee-track.paused{ animation-play-state: paused; }
+        .sfp-marquee-card{
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+        .sfp-marquee-img{
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          user-select: none;
+          pointer-events: none;
+        }
         @keyframes sfpMoveLeft{
           0%{ transform: translateX(0); }
           100%{ transform: translateX(-50%); }
@@ -145,12 +182,7 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
         <div className="sfp-marquee-title">Featured Products</div>
       </div>
 
-      <div 
-        className="sfp-marquee-viewport"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchEnd}
-      >
+      <div className="sfp-marquee-viewport">
         <div className={`sfp-marquee-track ${isPaused ? 'paused' : ''}`}>
           {display.map((pr, idx) => {
             const pid = getRealProductId(pr);
@@ -163,8 +195,12 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
                 className="sfp-marquee-card"
                 role="button"
                 tabIndex={0}
-                onClick={() => onOpenUserProduct(pid)}
+                onClick={(e) => handleProductClick(e, pid)}
                 onKeyDown={(e) => e.key === "Enter" && onOpenUserProduct(pid)}
+                onTouchStart={(e) => handleProductTouchStart(e, pid)}
+                onTouchEnd={(e) => handleProductTouchEnd(e, pid)}
+                onTouchCancel={(e) => handleProductTouchEnd(e, pid)}
+                onContextMenu={(e) => e.preventDefault()}
               >
                 <div className="sfp-marquee-imgwrap">
                   {img ? (
@@ -197,6 +233,8 @@ function ProductsRowMarquee({ products, onOpenUserProduct }) {
                       e.stopPropagation();
                       onOpenUserProduct(pid);
                     }}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onTouchEnd={(e) => e.stopPropagation()}
                   >
                     Open
                   </button>
