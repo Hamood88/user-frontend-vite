@@ -650,91 +650,255 @@ export default function ShopFeedPublic() {
         {/* Profile Card - Only show when shop data is loaded */}
         {shop && (
           <div style={{
-            background: "rgba(18, 26, 43, 0.9)",
-            borderRadius: "16px",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-            marginBottom: "20px",
+            background: "linear-gradient(to bottom, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.98))",
+            borderRadius: "20px",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            marginBottom: "24px",
             overflow: "hidden",
-            position: "relative"
+            position: "relative",
+            boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)"
           }}>
             {/* ===== COVER IMAGE ===== */}
             {shop?.coverImage ? (
-              <div style={{ width: "100%", height: 200 }}>
+              <div style={{ 
+                width: "100%", 
+                height: 220,
+                position: "relative",
+                overflow: "hidden"
+              }}>
                 <img
                   src={toAbsUrl(shop.coverImage)}
                   alt="Cover"
-                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                  style={{ 
+                    width: "100%", 
+                    height: "100%", 
+                    objectFit: "cover", 
+                    display: "block"
+                  }}
                 />
+                <div style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: "50%",
+                  background: "linear-gradient(to top, rgba(15, 23, 42, 0.8), transparent)"
+                }} />
               </div>
             ) : (
-              <div style={{ width: "100%", height: 200, background: "linear-gradient(135deg, #1e293b, #0f172a)" }} />
+              <div style={{ 
+                width: "100%", 
+                height: 220, 
+                background: "linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #1e293b 100%)",
+                position: "relative"
+              }}>
+                <div style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  fontSize: 80,
+                  opacity: 0.1
+                }}>🏬</div>
+              </div>
             )}
 
-            {/* ===== AVATAR + INFO ROW ===== */}
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 16, padding: "0 20px" }}>
-            {/* Avatar */}
-            <div style={{
-              width: 120, height: 120, borderRadius: "50%", overflow: "hidden",
-              border: "4px solid #121a2b", marginTop: -60, flexShrink: 0,
-              background: "#121a2b", boxShadow: "0 4px 6px rgba(0,0,0,0.3)",
-              zIndex: 10, position: "relative"
-            }}>
-              {logoSrc ? (
-                <img src={logoSrc} alt={shopName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              ) : (
+            {/* ===== AVATAR + INFO SECTION ===== */}
+            <div style={{ padding: "0 28px 28px 28px" }}>
+              <div style={{ display: "flex", alignItems: "flex-end", gap: 20, marginTop: -50 }}>
+                {/* Avatar */}
                 <div style={{
-                  width: "100%", height: "100%", display: "flex", alignItems: "center",
-                  justifyContent: "center", background: "#3b82f6",
-                  color: "white", fontSize: 40, fontWeight: "bold"
+                  width: 130, 
+                  height: 130, 
+                  borderRadius: "50%", 
+                  overflow: "hidden",
+                  border: "5px solid rgba(15, 23, 42, 1)",
+                  flexShrink: 0,
+                  background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+                  boxShadow: "0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1)",
+                  position: "relative",
+                  zIndex: 10
                 }}>
-                  {shopName.charAt(0).toUpperCase()}
+                  {logoSrc ? (
+                    <img src={logoSrc} alt={shopName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <div style={{
+                      width: "100%", 
+                      height: "100%", 
+                      display: "flex", 
+                      alignItems: "center",
+                      justifyContent: "center", 
+                      background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+                      color: "white", 
+                      fontSize: 48, 
+                      fontWeight: 700,
+                      letterSpacing: 1
+                    }}>
+                      {shopName.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+
+                {/* Name + Stats (if needed) */}
+                <div style={{ flex: 1, paddingBottom: 8 }}>
+                  <h1 style={{ 
+                    fontSize: 32, 
+                    fontWeight: 700, 
+                    color: "#ffffff", 
+                    margin: 0,
+                    letterSpacing: "-0.02em",
+                    textShadow: "0 2px 8px rgba(0, 0, 0, 0.3)"
+                  }}>
+                    {shopName}
+                  </h1>
+                </div>
+              </div>
+              
+              {/* Bio Section */}
+              {(shop?.bio || shop?.description) && (
+                <div style={{ 
+                  marginTop: 20,
+                  paddingTop: 20,
+                  borderTop: "1px solid rgba(255, 255, 255, 0.06)"
+                }}>
+                  <p style={{ 
+                    fontSize: 15.5, 
+                    lineHeight: 1.7, 
+                    color: "#e2e8f0", 
+                    margin: 0,
+                    whiteSpace: "pre-wrap",
+                    fontWeight: 400
+                  }}>
+                    {shop.bio || shop.description}
+                  </p>
                 </div>
               )}
-            </div>
 
-            {/* Name + Bio + Country */}
-            <div style={{ flex: 1, minWidth: 0, paddingTop: 10, position: "relative", zIndex: 5 }}>
-              <h1 style={{ fontSize: 26, fontWeight: 800, color: "#ffffff", margin: "0 0 4px 0" }}>
-                {shopName}
-              </h1>
-              
-              {/* Force render bio if it exists */}
-              {shop?.bio ? (
-                <div style={{ fontSize: 15, lineHeight: 1.5, color: "#cbd5e1", margin: "0 0 8px 0", whiteSpace: "pre-wrap" }}>
-                  {shop.bio}
-                </div>
-              ) : null}
-              
-              {shop?.description && !shop?.bio ? (
-                <div style={{ fontSize: 15, lineHeight: 1.5, color: "#94a3b8", margin: "0 0 8px 0" }}>
-                  {shop.description}
-                </div>
-              ) : null}
-
+              {/* Country */}
               {shop?.country && (
-                <div style={{ fontSize: 13, color: "#64748b", display: "flex", alignItems: "center", gap: 4 }}>
-                  <span>📍</span> {shop.country}
+                <div style={{ 
+                  marginTop: 16,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "6px 12px",
+                  background: "rgba(255, 255, 255, 0.04)",
+                  borderRadius: 8,
+                  border: "1px solid rgba(255, 255, 255, 0.06)"
+                }}>
+                  <span style={{ fontSize: 14 }}>📍</span>
+                  <span style={{ 
+                    fontSize: 13.5, 
+                    color: "#94a3b8",
+                    fontWeight: 500,
+                    letterSpacing: "0.01em"
+                  }}>
+                    {shop.country}
+                  </span>
                 </div>
               )}
             </div>
-          </div>
 
           {/* ===== ACTION BUTTONS ===== */}
-          <div className="sf-profile-actions">
+          <div style={{ 
+            padding: "0 28px 28px 28px",
+            display: "flex",
+            gap: 12,
+            flexWrap: "wrap"
+          }}>
             <button
-              className="sf-btn sf-btn-primary"
               type="button"
               onClick={handleToggleFollow}
               disabled={followLoading}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "12px 24px",
+                background: isFollowing ? "rgba(59, 130, 246, 0.1)" : "linear-gradient(135deg, #3b82f6, #2563eb)",
+                border: isFollowing ? "1.5px solid rgba(59, 130, 246, 0.4)" : "none",
+                borderRadius: 10,
+                color: isFollowing ? "#60a5fa" : "#ffffff",
+                fontSize: 14.5,
+                fontWeight: 600,
+                cursor: followLoading ? "wait" : "pointer",
+                transition: "all 0.2s ease",
+                boxShadow: isFollowing ? "none" : "0 4px 12px rgba(59, 130, 246, 0.3)",
+                opacity: followLoading ? 0.7 : 1
+              }}
+              onMouseEnter={(e) => {
+                if (!followLoading && !isFollowing) {
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                  e.currentTarget.style.boxShadow = "0 6px 16px rgba(59, 130, 246, 0.4)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = isFollowing ? "none" : "0 4px 12px rgba(59, 130, 246, 0.3)";
+              }}
             >
               <Heart size={16} fill={isFollowing ? "currentColor" : "none"} strokeWidth={isFollowing ? 0 : 2} />
-              {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+              {followLoading ? "..." : isFollowing ? "Following" : "Follow Shop"}
             </button>
-            <button className="sf-btn sf-btn-primary" type="button" onClick={goToShopMallPreview}>
-              🏬 Shop Mall
+            
+            <button 
+              type="button" 
+              onClick={goToShopMallPreview}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "12px 24px",
+                background: "rgba(139, 92, 246, 0.1)",
+                border: "1.5px solid rgba(139, 92, 246, 0.3)",
+                borderRadius: 10,
+                color: "#a78bfa",
+                fontSize: 14.5,
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.2s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(139, 92, 246, 0.15)";
+                e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.5)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(139, 92, 246, 0.1)";
+                e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.3)";
+              }}
+            >
+              <span>🏬</span> Shop Mall
             </button>
-            <button className="sf-btn sf-btn-secondary" type="button" onClick={() => nav("/feed")}>
-              ← Back
+            
+            <button 
+              type="button" 
+              onClick={() => nav("/feed")}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "12px 24px",
+                background: "rgba(255, 255, 255, 0.03)",
+                border: "1.5px solid rgba(255, 255, 255, 0.1)",
+                borderRadius: 10,
+                color: "#94a3b8",
+                fontSize: 14.5,
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.2s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)";
+                e.currentTarget.style.color = "#cbd5e1";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                e.currentTarget.style.color = "#94a3b8";
+              }}
+            >
+              ← Back to Feed
             </button>
           </div>
         </div>
