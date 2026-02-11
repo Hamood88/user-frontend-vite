@@ -144,7 +144,43 @@ export default function ProductDetailsUnified() {
     cleanId(params.pid) ||
     idFromPath(loc.pathname);
 
-  const backTo = String(loc.state?.backTo || "/mall").trim() || "/mall";
+  // ✅ Smart back navigation - detect shop mall context
+  const getBackDestination = () => {
+    // Priority 1: Explicit backTo from navigation state
+    if (loc.state?.backTo) {
+      return String(loc.state.backTo).trim();
+    }
+    
+    // Priority 2: Check if we're in a shop mall context by URL pattern
+    const currentPath = loc.pathname;
+    const shopMallMatch = currentPath.match(/\/shop-mall\/([^\/]+)\/product/);
+    if (shopMallMatch) {
+      const shopId = shopMallMatch[1];
+      const searchParams = new URLSearchParams(loc.search);
+      const theme = searchParams.get('theme');
+      const backUrl = `/shop-mall/${shopId}${theme ? `?theme=${theme}` : ''}`;
+      return backUrl;
+    }
+    
+    // Priority 3: Check referrer if available
+    if (typeof document !== 'undefined' && document.referrer) {
+      const referrerUrl = new URL(document.referrer);
+      const referrerPath = referrerUrl.pathname;
+      if (referrerPath.includes('/shop-mall/')) {
+        return referrerPath + referrerUrl.search;
+      }
+    }
+    
+    // Priority 4: Browser history fallback
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      return -1; // Go back one page in history
+    }
+    
+    // Default fallback
+    return "/mall";
+  };
+  
+  const backTo = getBackDestination();
 
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -504,7 +540,7 @@ export default function ProductDetailsUnified() {
   if (err) {
     return (
       <div className="pdu-wrap">
-        <button className="pdu-back" onClick={() => nav(backTo)} type="button">
+        <button className="pdu-back" onClick={() => backTo === -1 ? nav(-1) : nav(backTo)} type="button">
           ← Back
         </button>
         <div style={{ marginTop: 12 }} className="pdu-card">
@@ -518,7 +554,7 @@ export default function ProductDetailsUnified() {
     <div className="pdu-wrap">
       <div className="pdu-topbar">
         <div className="pdu-breadcrumb">
-          <button className="pdu-back" onClick={() => nav(backTo)} type="button">
+          <button className="pdu-back" onClick={() => backTo === -1 ? nav(-1) : nav(backTo)} type="button">
             ← Back
           </button>
         </div>

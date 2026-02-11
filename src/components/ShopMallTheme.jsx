@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; 
+import { Link, useNavigate, useLocation } from "react-router-dom"; 
 import { toAbsUrl } from "../api"; // Adjusted path
 import { useUserMallCart } from "../context/UserMallCartContext";
 import { 
@@ -738,6 +738,13 @@ export function ImageGallery({ data, theme }) {
     const { title = "", images = [], layout = "grid" } = data;
     const imageList = Array.isArray(images) ? images : [];
     const navigate = useNavigate();
+    const location = useLocation();
+    
+    // Get current shop mall context for proper back navigation
+    const getCurrentBackUrl = () => {
+        const currentPath = location.pathname + location.search;
+        return currentPath;
+    };
     
     return (
         <div className="w-full px-4 mb-6">
@@ -791,7 +798,13 @@ export function ImageGallery({ data, theme }) {
                             key={i}
                             className="block hover:transform hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
                             onClick={() => {
-                                navigate(productUrl);
+                                // ✅ Pass shop mall context for proper back navigation
+                                navigate(productUrl, { 
+                                    state: { 
+                                        backTo: getCurrentBackUrl(),
+                                        from: 'shop-mall-gallery' 
+                                    } 
+                                });
                             }}
                         >
                             {imageContent}
