@@ -15,6 +15,7 @@ import SaveProductButton from "../components/SaveProductButton.jsx";
 import SimilarProducts from "../components/SimilarProducts.jsx";
 import RecentlyViewed from "../components/RecentlyViewed.jsx";
 import StockAlertButton from "../components/StockAlertButton.jsx";
+import { THEMES } from "../components/ShopMallTheme.jsx";
 import "../styles/productDetailsUnified.css";
 import "../styles/Engagement.css";
 
@@ -181,6 +182,25 @@ export default function ProductDetailsUnified() {
   };
   
   const backTo = getBackDestination();
+
+  // ✅ Detect shop mall theme context
+  const shopMallContext = useMemo(() => {
+    const searchParams = new URLSearchParams(loc.search);
+    const themeParam = searchParams.get('theme');
+    const currentPath = loc.pathname;
+    const shopMallMatch = currentPath.match(/\/shop-mall\/([^\/]+)\/product/);
+    const isFromShopMall = !!shopMallMatch || !!loc.state?.from?.includes('shop-mall');
+    
+    if (isFromShopMall && themeParam && THEMES[themeParam]) {
+      return {
+        isShopMall: true,
+        theme: THEMES[themeParam],
+        themeId: themeParam
+      };
+    }
+    
+    return { isShopMall: false, theme: null, themeId: null };
+  }, [loc.pathname, loc.search, loc.state]);
 
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -551,10 +571,33 @@ export default function ProductDetailsUnified() {
   }
 
   return (
-    <div className="pdu-wrap">
-      <div className="pdu-topbar">
+    <div 
+      className="pdu-wrap"
+      style={shopMallContext.isShopMall ? {
+        background: shopMallContext.theme.bg,
+        color: shopMallContext.theme.text,
+        minHeight: '100vh'
+      } : {}}
+    >
+      <div 
+        className="pdu-topbar"
+        style={shopMallContext.isShopMall ? {
+          background: shopMallContext.theme.card,
+          borderBottom: `1px solid ${shopMallContext.theme.border}`,
+          color: shopMallContext.theme.text
+        } : {}}
+      >
         <div className="pdu-breadcrumb">
-          <button className="pdu-back" onClick={() => backTo === -1 ? nav(-1) : nav(backTo)} type="button">
+          <button 
+            className="pdu-back" 
+            onClick={() => backTo === -1 ? nav(-1) : nav(backTo)} 
+            type="button"
+            style={shopMallContext.isShopMall ? {
+              background: shopMallContext.theme.primary,
+              color: shopMallContext.theme.onPrimary,
+              border: 'none'
+            } : {}}
+          >
             ← Back
           </button>
         </div>
@@ -565,21 +608,55 @@ export default function ProductDetailsUnified() {
             onClick={goToCart} 
             title="View shopping cart"
             type="button"
+            style={shopMallContext.isShopMall ? {
+              background: shopMallContext.theme.accent,
+              color: shopMallContext.theme.onAccent,
+              border: 'none'
+            } : {}}
           >
             🛒 {cartCount}
           </button>
 
-          <button className="pdu-pill" onClick={goToShop} disabled={!shopId} type="button">
+          <button 
+            className="pdu-pill" 
+            onClick={goToShop} 
+            disabled={!shopId} 
+            type="button"
+            style={shopMallContext.isShopMall ? {
+              background: shopMallContext.theme.accent,
+              color: shopMallContext.theme.onAccent,
+              border: 'none',
+              opacity: !shopId ? 0.5 : 1
+            } : {}}
+          >
             Shop page
           </button>
 
-          <button className="pdu-pill" onClick={messageShop} disabled={!shopId} type="button">
+          <button 
+            className="pdu-pill" 
+            onClick={messageShop} 
+            disabled={!shopId} 
+            type="button"
+            style={shopMallContext.isShopMall ? {
+              background: shopMallContext.theme.accent,
+              color: shopMallContext.theme.onAccent,
+              border: 'none',
+              opacity: !shopId ? 0.5 : 1
+            } : {}}
+          >
             Message shop
           </button>
         </div>
       </div>
 
-      <div className="pdu-card">
+      <div 
+        className="pdu-card"
+        style={shopMallContext.isShopMall ? {
+          background: shopMallContext.theme.card,
+          border: `1px solid ${shopMallContext.theme.border}`,
+          color: shopMallContext.theme.text
+        } : {}}
+      >
         <div className="pdu-left">
           <div className="pdu-imgbox">
             {activeImg ? <img src={activeImg} alt={title} /> : <div>No image</div>}
@@ -598,6 +675,13 @@ export default function ProductDetailsUnified() {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") setActiveImg(src);
                   }}
+                  style={shopMallContext.isShopMall ? {
+                    border: src === activeImg 
+                      ? `2px solid ${shopMallContext.theme.primary}` 
+                      : `1px solid ${shopMallContext.theme.border}`,
+                    borderRadius: '8px',
+                    overflow: 'hidden'
+                  } : {}}
                 >
                   <img src={src} alt="thumb" />
                 </div>
@@ -608,7 +692,16 @@ export default function ProductDetailsUnified() {
 
         <div className="pdu-right">
           <div className="pdu-title-row" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
-            <h1 className="pdu-title" style={{ flex: 1 }}>{title}</h1>
+            <h1 
+              className="pdu-title" 
+              style={shopMallContext.isShopMall ? { 
+                flex: 1, 
+                color: shopMallContext.theme.text,
+                fontFamily: shopMallContext.theme.font
+              } : { flex: 1 }}
+            >
+              {title}
+            </h1>
             <SaveProductButton productId={pid || id} size="lg" />
           </div>
 
@@ -620,39 +713,114 @@ export default function ProductDetailsUnified() {
               role="button"
               tabIndex={0}
               onKeyDown={(e) => e.key === "Enter" && goToShop()}
+              style={shopMallContext.isShopMall ? {
+                color: shopMallContext.theme.primary,
+                borderColor: shopMallContext.theme.border
+              } : {}}
             >
               {product?.shopName || product?.shop?.shopName}
             </div>
           )}
 
           <div className="pdu-meta">
-            <div style={{ fontWeight: 900, opacity: 0.85 }}>Category</div>
-            <div style={{ fontWeight: 1000 }}>{category}</div>
+            <div 
+              style={shopMallContext.isShopMall ? { 
+                fontWeight: 900, 
+                opacity: 0.85,
+                color: shopMallContext.theme.muted
+              } : { fontWeight: 900, opacity: 0.85 }}
+            >
+              Category
+            </div>
+            <div 
+              style={shopMallContext.isShopMall ? { 
+                fontWeight: 1000,
+                color: shopMallContext.theme.text
+              } : { fontWeight: 1000 }}
+            >
+              {category}
+            </div>
           </div>
 
           <div className="pdu-row">
-            <div className="pdu-price">
+            <div 
+              className="pdu-price"
+              style={shopMallContext.isShopMall ? {
+                color: shopMallContext.theme.primary,
+                fontFamily: shopMallContext.theme.font
+              } : {}}
+            >
               {currency} {money(price)}
             </div>
-            <div style={{ fontWeight: 1000, opacity: 0.9 }}>
+            <div 
+              style={shopMallContext.isShopMall ? { 
+                fontWeight: 1000, 
+                opacity: 0.9,
+                color: shopMallContext.theme.text
+              } : { fontWeight: 1000, opacity: 0.9 }}
+            >
               Total: {currency} {money(total)}
             </div>
           </div>
 
           <div className="pdu-row" style={{ marginTop: 12 }}>
-            <div style={{ fontWeight: 900, opacity: 0.9 }}>Quantity</div>
+            <div 
+              style={shopMallContext.isShopMall ? { 
+                fontWeight: 900, 
+                opacity: 0.9,
+                color: shopMallContext.theme.muted
+              } : { fontWeight: 900, opacity: 0.9 }}
+            >
+              Quantity
+            </div>
             <div className="pdu-qty">
-              <button className="pdu-qtybtn" onClick={dec} type="button">
+              <button 
+                className="pdu-qtybtn" 
+                onClick={dec} 
+                type="button"
+                style={shopMallContext.isShopMall ? {
+                  background: shopMallContext.theme.accent,
+                  color: shopMallContext.theme.onAccent,
+                  border: `1px solid ${shopMallContext.theme.border}`
+                } : {}}
+              >
                 −
               </button>
-              <div className="pdu-qtybox">{qtySafe}</div>
-              <button className="pdu-qtybtn" onClick={inc} type="button">
+              <div 
+                className="pdu-qtybox"
+                style={shopMallContext.isShopMall ? {
+                  background: shopMallContext.theme.bg,
+                  color: shopMallContext.theme.text,
+                  border: `1px solid ${shopMallContext.theme.border}`
+                } : {}}
+              >
+                {qtySafe}
+              </div>
+              <button 
+                className="pdu-qtybtn" 
+                onClick={inc} 
+                type="button"
+                style={shopMallContext.isShopMall ? {
+                  background: shopMallContext.theme.accent,
+                  color: shopMallContext.theme.onAccent,
+                  border: `1px solid ${shopMallContext.theme.border}`
+                } : {}}
+              >
                 +
               </button>
             </div>
           </div>
 
-          <div className="pdu-desc">
+          <div 
+            className="pdu-desc"
+            style={shopMallContext.isShopMall ? {
+              color: shopMallContext.theme.text,
+              background: shopMallContext.theme.bg,
+              border: `1px solid ${shopMallContext.theme.border}`,
+              borderRadius: '8px',
+              padding: '12px'
+            } : {}}
+          >
             {product?.description?.trim() ? product.description : "No description."}
           </div>
 
@@ -669,10 +837,30 @@ export default function ProductDetailsUnified() {
           {/* ✅ Buy/Cart buttons only show when in stock */}
           {product?.inStock !== false && (
             <div className="pdu-btns">
-              <button className="pdu-btn primary" onClick={buyNow} type="button">
+              <button 
+                className="pdu-btn primary" 
+                onClick={buyNow} 
+                type="button"
+                style={shopMallContext.isShopMall ? {
+                  background: shopMallContext.theme.primary,
+                  color: shopMallContext.theme.onPrimary,
+                  border: 'none',
+                  fontFamily: shopMallContext.theme.font
+                } : {}}
+              >
                 Buy Now
               </button>
-              <button className="pdu-btn" onClick={addToCart} type="button">
+              <button 
+                className="pdu-btn" 
+                onClick={addToCart} 
+                type="button"
+                style={shopMallContext.isShopMall ? {
+                  background: shopMallContext.theme.accent,
+                  color: shopMallContext.theme.onAccent,
+                  border: `1px solid ${shopMallContext.theme.border}`,
+                  fontFamily: shopMallContext.theme.font
+                } : {}}
+              >
                 Add to Cart
               </button>
             </div>
@@ -685,14 +873,26 @@ export default function ProductDetailsUnified() {
               type="button"
               onClick={toggleBuyers}
               disabled={buyersLoading || !pid}
-              style={buyersOpen ? { background: 'rgba(59,130,246,0.25)' } : {}}
+              style={shopMallContext.isShopMall ? {
+                background: buyersOpen ? shopMallContext.theme.accent + '40' : shopMallContext.theme.accent,
+                color: shopMallContext.theme.onAccent,
+                border: `1px solid ${shopMallContext.theme.border}`,
+                fontFamily: shopMallContext.theme.font
+              } : buyersOpen ? { background: 'rgba(59,130,246,0.25)' } : {}}
             >
               {buyersLoading ? "Loading buyers..." : buyersOpen ? "Close buyers ▲" : "Ask previous buyers ▼"}
             </button>
 
             {buyersOpen && (
               <div
-                style={{
+                style={shopMallContext.isShopMall ? {
+                  marginTop: 10,
+                  padding: 12,
+                  borderRadius: 12,
+                  border: `1px solid ${shopMallContext.theme.border}`,
+                  background: shopMallContext.theme.card,
+                  color: shopMallContext.theme.text
+                } : {
                   marginTop: 10,
                   padding: 12,
                   borderRadius: 12,
