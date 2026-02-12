@@ -1,33 +1,9 @@
-// user-frontend-vite/src/pages/Cart.jsx
-import React, { useEffect, useState, useCallback } from "react";
+// user-frontend-vite-temp/src/pages/Cart.jsx
+import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUserMallCart } from "../context/UserMallCartContext";
+import { toAbsUrl } from "../api.jsx";
 import "../styles/cart.css";
-
-function getUserCartKey() {
-  try {
-    const user = JSON.parse(localStorage.getItem("userObj") || localStorage.getItem("user") || "{}");
-    const userId = user?._id || user?.id || "guest";
-    return `cart_items_${userId}`;
-  } catch {
-    return "cart_items_guest";
-  }
-}
-
-function readCart() {
-  try {
-    const key = getUserCartKey();
-    return JSON.parse(localStorage.getItem(key) || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function writeCart(items) {
-  try {
-    const key = getUserCartKey();
-    localStorage.setItem(key, JSON.stringify(items || []));
-  } catch {}
-}
 
 function money(n) {
   const x = Number(n);
@@ -40,72 +16,43 @@ function safeNum(v, fallback = 0) {
   return Number.isFinite(n) ? n : fallback;
 }
 
-function makeAbsolute(url) {
-  if (!url) return "";
-  const s = String(url).trim();
-  if (!s) return "";
-  if (s.startsWith("http://") || s.startsWith("https://")) return s;
-  const API_BASE = "https://moondala-backend.onrender.com";
-  if (s.startsWith("/")) return `${API_BASE}${s}`;
-  if (s.startsWith("uploads/")) return `${API_BASE}/${s}`;
-  return `${API_BASE}/${s}`;
-}
-
 export default function Cart() {
   const nav = useNavigate();
-  const [items, setItems] = useState([]);
-  const [changed, setChanged] = useState(false);
+  const {
+    items,
+    count: itemCount,
+    total,
+    updateQuantity,
+    removeFromCart,
+    clearCart: clearCartCtx,
+  } = useUserMallCart();
 
-  // Load cart on mount
-  useEffect(() => {
-    const cart = readCart();
-    setItems(cart);
-    setChanged(false);
-  }, []);
-
-  // Save to localStorage whenever items change
-  useEffect(() => {
-    if (changed) {
-      writeCart(items);
-      setChanged(false);
+  // Group items by shopId for multi-shop display
+  const shopGroups = useMemo(() => {
+    const map = {};
+    for (const item of items) {
+      const sid = item.shopId || "unknown";
+      if (!map[sid]) {
+        map[sid] = {
+          shopId: sid,
+          shopName: item.shopName || "Shop",
+          items: [],
+          subtotal: 0,
+        };
+      }
+      const qty = Math.max(1, safeNum(item.qty, 1));
+      const price = safeNum(item.price, 0);
+      map[sid].items.push(item);
+      map[sid].subtotal += price * qty;
     }
-  }, [items, changed]);
+    return Object.values(map);
+  }, [items]);
 
-  const updateQty = useCallback((productId, newQty) => {
-    const safe = Math.max(1, Math.min(99, Math.floor(safeNum(newQty, 1))));
-    setItems((prev) =>
-      prev.map((item) =>
-        String(item.productId) === String(productId)
-          ? { ...item, qty: safe }
-          : item
-      )
-    );
-    setChanged(true);
-  }, []);
-
-  const removeItem = useCallback((productId) => {
-    setItems((prev) =>
-      prev.filter((item) => String(item.productId) !== String(productId))
-    );
-    setChanged(true);
-  }, []);
-
-  const clearCart = useCallback(() => {
+  function clearCart() {
     if (confirm("Clear all items from cart?")) {
-      setItems([]);
-      setChanged(true);
+      clearCartCtx();
     }
-  }, []);
-
-  const total = items.reduce(
-    (acc, item) => acc + safeNum(item.price, 0) * Math.max(1, safeNum(item.qty, 1)),
-    0
-  );
-
-  const itemCount = items.reduce(
-    (acc, item) => acc + Math.max(1, safeNum(item.qty, 1)),
-    0
-  );
+  }
 
   if (items.length === 0) {
     return (
@@ -145,63 +92,86 @@ export default function Cart() {
 
       <div className="cart-container">
         <div className="cart-items">
-          {items.map((item, idx) => {
-            const itemTotal = safeNum(item.price, 0) * Math.max(1, safeNum(item.qty, 1));
-            const itemQty = Math.max(1, safeNum(item.qty, 1));
-
-            return (
-              <div key={item.productId || idx} className="cart-item">
-                <div className="cart-item-image">
-                  {item.image ? (
-                    <img src={makeAbsolute(item.image)} alt={item.title} />
-                  ) : (
-                    <div className="cart-item-no-image">No image</div>
-                  )}
-                </div>
-
-                <div className="cart-item-details">
-                  <div className="cart-item-title">{item.title}</div>
-                  <div className="cart-item-price">
-                    {item.currency || "USD"} {money(item.price)}
-                  </div>
-                </div>
-
-                <div className="cart-item-qty">
-                  <button
-                    className="cart-qty-btn"
-                    onClick={() => updateQty(item.productId, itemQty - 1)}
-                    type="button"
-                  >
-                    −
-                  </button>
-                  <div className="cart-qty-box">{itemQty}</div>
-                  <button
-                    className="cart-qty-btn"
-                    onClick={() => updateQty(item.productId, itemQty + 1)}
-                    type="button"
-                  >
-                    +
-                  </button>
-                </div>
-
-                <div className="cart-item-total">
-                  <div className="cart-item-total-label">Total</div>
-                  <div className="cart-item-total-price">
-                    {item.currency || "USD"} {money(itemTotal)}
-                  </div>
-                </div>
-
-                <button
-                  className="cart-item-remove"
-                  onClick={() => removeItem(item.productId)}
-                  title="Remove from cart"
-                  type="button"
-                >
-                  ✕
-                </button>
+          {shopGroups.map((group) => (
+            <div key={group.shopId} className="cart-shop-group">
+              {/* Shop name header */}
+              <div className="cart-shop-header">
+                <span className="cart-shop-icon">🏪</span>
+                <span className="cart-shop-name">{group.shopName}</span>
+                <span className="cart-shop-count">
+                  {group.items.length} item{group.items.length !== 1 ? "s" : ""}
+                </span>
               </div>
-            );
-          })}
+
+              {group.items.map((item, idx) => {
+                const itemTotal =
+                  safeNum(item.price, 0) * Math.max(1, safeNum(item.qty, 1));
+                const itemQty = Math.max(1, safeNum(item.qty, 1));
+                const pid = item.productId || item._id;
+
+                return (
+                  <div key={pid || idx} className="cart-item">
+                    <div className="cart-item-image">
+                      {item.image ? (
+                        <img src={toAbsUrl(item.image)} alt={item.title} />
+                      ) : (
+                        <div className="cart-item-no-image">No image</div>
+                      )}
+                    </div>
+
+                    <div className="cart-item-details">
+                      <div className="cart-item-title">{item.title}</div>
+                      <div className="cart-item-price">
+                        {item.currency || "USD"} {money(item.price)}
+                      </div>
+                    </div>
+
+                    <div className="cart-item-qty">
+                      <button
+                        className="cart-qty-btn"
+                        onClick={() => updateQuantity(pid, itemQty - 1)}
+                        type="button"
+                      >
+                        −
+                      </button>
+                      <div className="cart-qty-box">{itemQty}</div>
+                      <button
+                        className="cart-qty-btn"
+                        onClick={() => updateQuantity(pid, itemQty + 1)}
+                        type="button"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <div className="cart-item-total">
+                      <div className="cart-item-total-label">Total</div>
+                      <div className="cart-item-total-price">
+                        {item.currency || "USD"} {money(itemTotal)}
+                      </div>
+                    </div>
+
+                    <button
+                      className="cart-item-remove"
+                      onClick={() => removeFromCart(pid)}
+                      title="Remove from cart"
+                      type="button"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                );
+              })}
+
+              {/* Shop subtotal */}
+              <div className="cart-shop-subtotal">
+                <span>Subtotal</span>
+                <span>
+                  {group.items[0]?.currency || "USD"} {money(group.subtotal)}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="cart-summary">

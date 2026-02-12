@@ -9,8 +9,8 @@ export default function MallCartDrawer() {
   const navigate = useNavigate();
   const {
     items,
+    count,
     total,
-    itemCount,
     isOpen,
     closeCart,
     updateQuantity,
@@ -21,8 +21,7 @@ export default function MallCartDrawer() {
 
   function handleCheckout() {
     closeCart();
-    // TODO: Navigate to mall checkout page
-    alert("Mall checkout coming soon!");
+    navigate("/cart");
   }
 
   function handleContinueShopping() {
@@ -74,10 +73,10 @@ export default function MallCartDrawer() {
             <ShoppingCart size={24} style={{ color: "#6366f1" }} />
             <div>
               <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>
-                Mall Cart
+                Shopping Cart
               </h2>
               <p style={{ fontSize: 13, color: "#6b7280", margin: 0 }}>
-                {itemCount} item{itemCount !== 1 ? "s" : ""}
+                {count} item{count !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
@@ -112,10 +111,10 @@ export default function MallCartDrawer() {
             >
               <ShoppingCart size={48} style={{ margin: "0 auto 16px", opacity: 0.3 }} />
               <p style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}>
-                Your mall cart is empty
+                Your cart is empty
               </p>
               <p style={{ fontSize: 14, marginBottom: 24 }}>
-                Browse shop malls to add products
+                Browse shops to add products
               </p>
               <button
                 onClick={handleContinueShopping}
@@ -139,7 +138,7 @@ export default function MallCartDrawer() {
                 const img = item.image || item.imageUrl || item.thumbnail || item.photo || "/placeholder.png";
                 const title = item.title || item.name || "Product";
                 const price = Number(item.localPrice ?? item.price ?? 0);
-                const qty = Number(item.quantity || 1);
+                const qty = Number(item.qty || item.quantity || 1);
                 const currency = String(item.currency || "USD").toUpperCase();
                 const shopName = item.shopName || "Shop";
 

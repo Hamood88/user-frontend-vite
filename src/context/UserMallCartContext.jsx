@@ -1,5 +1,6 @@
 // user-frontend-vite-temp/src/context/UserMallCartContext.jsx
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+// ✅ UNIFIED CART — used by mall pages, product details, Cart page, and AppLayout sidebar
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 
 const UserMallCartContext = createContext();
 
@@ -9,51 +10,134 @@ export function useUserMallCart() {
   return ctx;
 }
 
-function getUserMallCartKey() {
+/** Resolve the localStorage key for the unified cart */
+function getCartKey() {
   try {
-    // Use userToken-based cart to keep it separate from main moondala cart
-    const userToken = localStorage.getItem("userToken") || localStorage.getItem("token");
-    if (!userToken) return "userMallCart_guest";
-    
-    // Decode user ID from token (simple base64 decode of payload)
-    const parts = userToken.split(".");
-    if (parts.length >= 2) {
-      const payload = JSON.parse(atob(parts[1]));
-      const userId = payload.userId || payload.id || payload.sub || "guest";
-      return `userMallCart_${userId}`;
+    // Try userObj first (set on login in many places)
+    const userObj = localStorage.getItem("userObj") || localStorage.getItem("user");
+    if (userObj) {
+      const u = JSON.parse(userObj);
+      const uid = u?._id || u?.id;
+      if (uid) return `cart_items_${uid}`;
     }
-    return "userMallCart_guest";
+    // Fallback: decode userId from JWT token
+    const token = localStorage.getItem("userToken") || localStorage.getItem("token");
+    if (token) {
+      const parts = token.split(".");
+      if (parts.length >= 2) {
+        const payload = JSON.parse(atob(parts[1]));
+        const uid = payload.userId || payload.id || payload.sub;
+        if (uid) return `cart_items_${uid}`;
+      }
+    }
+    return "cart_items_guest";
   } catch {
-    return "userMallCart_guest";
+    return "cart_items_guest";
   }
 }
 
-function readUserMallCart() {
+function readCart() {
   try {
-    const key = getUserMallCartKey();
-    return JSON.parse(localStorage.getItem(key) || "[]");
+    const key = getCartKey();
+    const raw = localStorage.getItem(key);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
   } catch {
     return [];
   }
 }
 
-function writeUserMallCart(items) {
+function writeCart(items) {
   try {
-    const key = getUserMallCartKey();
+    const key = getCartKey();
     localStorage.setItem(key, JSON.stringify(items || []));
   } catch (err) {
-    console.error("Failed to save user mall cart:", err);
+    console.error("Failed to save cart:", err);
   }
 }
 
+/** Migrate old mall cart data into the unified cart (runs once) */
+function migrateOldMallCart() {
+  try {
+    // Find any userMallCart_* keys
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith("userMallCart_")) {
+        const old = JSON.parse(localStorage.getItem(k) || "[]");
+        if (Array.isArray(old) && old.length > 0) {
+          const current = readCart();
+          let merged = [...current];
+          for (const item of old) {
+            const pid = String(item.productId || item._id || "");
+            if (!pid) continue;
+            const exists = merged.find(
+              (x) => String(x.productId || x._id) === pid
+            );
+            if (!exists) {
+              merged.push({
+                productId: pid,
+                _id: pid,
+                title: item.title || item.name || "Product",
+                price: Number(item.price) || 0,
+                currency: item.currency || "USD",
+                image: item.image || item.imageUrl || "",
+                shopId: item.shopId || "",
+                shopName: item.shopName || "Shop",
+                qty: Math.max(1, Number(item.qty) || 1),
+              });
+            }
+          }
+          writeCart(merged);
+        }
+        localStorage.removeItem(k); // clean up old key
+      }
+    }
+  } catch {}
+}
+
 export function UserMallCartProvider({ children }) {
-  const [items, setItems] = useState(() => readUserMallCart());
+  const didMigrate = useRef(false);
+  const selfUpdate = useRef(false); // guard against infinite loop
+
+  // One-time migration of old mall cart
+  if (!didMigrate.current) {
+    didMigrate.current = true;
+    migrateOldMallCart();
+  }
+
+  const [items, setItems] = useState(() => readCart());
   const [isOpen, setIsOpen] = useState(false);
 
-  // Persist cart to localStorage whenever it changes
+  // Persist cart to localStorage whenever it changes + dispatch event for AppLayout
   useEffect(() => {
-    writeUserMallCart(items);
+    writeCart(items);
+    // Fire event so AppLayout (and any other listener) can update count
+    selfUpdate.current = true;
+    window.dispatchEvent(new Event("cartUpdated"));
+    selfUpdate.current = false;
   }, [items]);
+
+  // Listen for external cart changes (other tabs, or ProductDetailsUnified direct writes)
+  useEffect(() => {
+    const sync = () => {
+      const fresh = readCart();
+      setItems(fresh);
+    };
+    window.addEventListener("storage", sync);
+    // Also listen for cartUpdated from legacy addToCart in ProductDetailsUnified
+    const onCartUpdated = () => {
+      // Skip events we dispatched ourselves
+      if (selfUpdate.current) return;
+      const fresh = readCart();
+      setItems(fresh);
+    };
+    window.addEventListener("cartUpdated", onCartUpdated);
+    return () => {
+      window.removeEventListener("storage", sync);
+      window.removeEventListener("cartUpdated", onCartUpdated);
+    };
+  }, []);
 
   // Calculate total count
   const count = items.reduce((sum, item) => sum + Math.max(1, Number(item.qty) || 1), 0);
@@ -67,24 +151,23 @@ export function UserMallCartProvider({ children }) {
 
   const addToCart = useCallback((product, quantity = 1) => {
     setItems((prev) => {
-      const existing = prev.find((item) => 
-        String(item.productId || item._id) === String(product._id || product.id)
+      const pid = String(product._id || product.id || "");
+      const existing = prev.find(
+        (item) => String(item.productId || item._id) === pid
       );
 
       if (existing) {
-        // Update quantity
         return prev.map((item) => {
-          if (String(item.productId || item._id) === String(product._id || product.id)) {
+          if (String(item.productId || item._id) === pid) {
             const newQty = Math.max(1, (item.qty || 1) + quantity);
             return { ...item, qty: newQty };
           }
           return item;
         });
       } else {
-        // Add new item
         const newItem = {
-          productId: product._id || product.id,
-          _id: product._id || product.id,
+          productId: pid,
+          _id: pid,
           title: product.title || product.name || "Product",
           price: product.price || product.localPrice || 0,
           currency: product.currency || "USD",
@@ -109,7 +192,6 @@ export function UserMallCartProvider({ children }) {
       removeFromCart(productId);
       return;
     }
-
     setItems((prev) =>
       prev.map((item) => {
         if (String(item.productId || item._id) === String(productId)) {

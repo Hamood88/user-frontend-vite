@@ -166,7 +166,7 @@ export default function ShopMallProductDetail() {
     }, qty);
     
     // Show success notification
-    alert(`✅ Added ${qty} item${qty > 1 ? 's' : ''} to your mall cart!`);
+    alert(`✅ Added ${qty} item${qty > 1 ? 's' : ''} to your cart!`);
   }
 
   // Toggle buyers panel
