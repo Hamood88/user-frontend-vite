@@ -470,6 +470,24 @@ export default function MyOrders() {
     });
   }, [orders, returnsMap, filter]);
 
+  // ✅ Group by shop
+  const shopGroups = useMemo(() => {
+    const map = {};
+    for (const o of filteredOrders) {
+      const sid = pickShopId(o) || "unknown";
+      if (!map[sid]) {
+        map[sid] = {
+          shopId: sid,
+          shopName: o.shopName || "Shop",
+          shopLogo: o.shopLogoUrl || o.shopLogo || "",
+          orders: [],
+        };
+      }
+      map[sid].orders.push(o);
+    }
+    return Object.values(map);
+  }, [filteredOrders]);
+
   return (
     <div style={S.page}>
       <div style={S.header}>
@@ -552,32 +570,61 @@ export default function MyOrders() {
             : "No orders match this filter."}
         </div>
       ) : (
-        <div style={{ display: "grid", gap: 14 }}>
-          {filteredOrders.map((o) => {
-            const oid = String(o._id || "");
-            const r = returnsMap[oid] || null;
+        <div style={{ display: "grid", gap: 18 }}>
+          {shopGroups.map((group) => (
+            <div key={group.shopId} style={S.shopGroup}>
+              {/* ── Shop header ── */}
+              <div
+                style={S.shopHeader}
+                onClick={() => navigate(`/shop/${group.shopId}/feed`)}
+                title={`Visit ${group.shopName}`}
+              >
+                <div style={S.shopHeaderLeft}>
+                  {group.shopLogo ? (
+                    <img
+                      src={toAbsUrl(group.shopLogo)}
+                      alt={group.shopName}
+                      style={S.shopAvatar}
+                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                    />
+                  ) : (
+                    <div style={S.shopAvatarFallback}>
+                      {(group.shopName || "S").charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <span style={S.shopNameText}>{group.shopName}</span>
+                  <span style={S.shopOrderCount}>
+                    {group.orders.length} order{group.orders.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
+              </div>
 
-            const status = statusLower(o);
-            const returnStatus = r ? String(r.status || "requested") : "";
-            const hasReturn = !!r;
-            const isCompleted = isTransactionComplete(o);
-            const canRequestReturn =
-              isCompleted && !hasReturn && status !== "cancelled" && status !== "canceled";
+              {/* ── Orders inside this shop ── */}
+              {group.orders.map((o) => {
+                const oid = String(o._id || "");
+                const r = returnsMap[oid] || null;
 
-            const showConsentBlock = isTransactionComplete(o);
-            const allowQuestions = !!o.allowQuestions;
-            const anonymousQuestions =
-              typeof o.anonymousQuestions === "boolean" ? o.anonymousQuestions : true;
-            const savingConsent = !!consentSaving[oid];
+                const status = statusLower(o);
+                const returnStatus = r ? String(r.status || "requested") : "";
+                const hasReturn = !!r;
+                const isCompleted = isTransactionComplete(o);
+                const canRequestReturn =
+                  isCompleted && !hasReturn && status !== "cancelled" && status !== "canceled";
 
-            const currency = (o.currency || "USD").toUpperCase();
-            const total = Number(o.total || 0);
+                const showConsentBlock = isTransactionComplete(o);
+                const allowQuestions = !!o.allowQuestions;
+                const anonymousQuestions =
+                  typeof o.anonymousQuestions === "boolean" ? o.anonymousQuestions : true;
+                const savingConsent = !!consentSaving[oid];
 
-            const productImg = toAbsUrl(pickProductImage(o));
-            return (
-              <div key={o._id} style={S.card}>
-                {/* Top */}
-                <div style={S.rowTop}>
+                const currency = (o.currency || "USD").toUpperCase();
+                const total = Number(o.total || 0);
+
+                const productImg = toAbsUrl(pickProductImage(o));
+                return (
+                  <div key={o._id} style={S.card}>
+                    {/* Top row: order id + status */}
+                    <div style={S.rowTop}>
                   <div>
                     <div style={S.orderId}>
                       Order #{String(o._id).slice(-6).toUpperCase()}
@@ -624,51 +671,18 @@ export default function MyOrders() {
 
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div 
-                      style={{ ...S.product, cursor: "pointer" }}
-                      onClick={() => {
-                        const pid = pickProductId(o);
-                        const sid = pickShopId(o);
-                        if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders", shopId: sid } });
-                      }}
-                    >
-                      {o.productTitle || "Product"}
-                    </div>
-                    <div style={S.meta}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        {o.shopLogoUrl ? (
-                          <img 
-                            src={toAbsUrl(o.shopLogoUrl)} 
-                            alt={o.shopName || "Shop"}
-                            style={{ 
-                              width: 20, 
-                              height: 20, 
-                              borderRadius: "50%", 
-                              objectFit: "cover",
-                              border: "1px solid rgba(255,255,255,0.1)"
-                            }}
-                            onError={(e) => {
-                              e.currentTarget.style.display = "none";
-                            }}
-                          />
-                        ) : (
-                          <div style={{ 
-                            width: 20, 
-                            height: 20, 
-                            borderRadius: "50%", 
-                            background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: 10,
-                            fontWeight: 700,
-                            color: "#fff"
-                          }}>
-                            {(o.shopName || "S").charAt(0).toUpperCase()}
-                          </div>
-                        )}
-                        <span>Sold by {o.shopName || "Shop"} · Qty: {o.quantity || 1}</span>
-                      </div>
-                    </div>
+                          style={{ ...S.product, cursor: "pointer" }}
+                          onClick={() => {
+                            const pid = pickProductId(o);
+                            const sid = pickShopId(o);
+                            if (pid) navigate(`/product/${pid}`, { state: { backTo: "/orders", shopId: sid } });
+                          }}
+                        >
+                          {o.productTitle || "Product"}
+                        </div>
+                        <div style={S.meta}>
+                          Qty: {o.quantity || 1} · {prettyMoney(Number(o.price || 0), currency)} each
+                        </div>
 
                     {/* Returns line */}
                     <div style={S.returnLine}>
@@ -762,6 +776,8 @@ export default function MyOrders() {
               </div>
             );
           })}
+          </div>
+          ))}
         </div>
       )}
 
@@ -979,6 +995,58 @@ function returnStyle(status) {
 
 const S = {
   page: { padding: 18, color: "hsl(var(--foreground))" },
+
+  /* ── Shop group styles ── */
+  shopGroup: {
+    borderRadius: 16,
+    border: "1px solid hsl(var(--border))",
+    overflow: "hidden",
+    background: "hsl(var(--card))",
+  },
+  shopHeader: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "12px 16px",
+    background: "linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(236,72,153,0.10) 100%)",
+    cursor: "pointer",
+    borderBottom: "1px solid hsl(var(--border))",
+    transition: "background 0.15s",
+  },
+  shopHeaderLeft: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+  },
+  shopAvatar: {
+    width: 34,
+    height: 34,
+    borderRadius: "50%",
+    objectFit: "cover",
+    border: "2px solid rgba(139,92,246,0.35)",
+  },
+  shopAvatarFallback: {
+    width: 34,
+    height: 34,
+    borderRadius: "50%",
+    background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 14,
+    fontWeight: 800,
+    color: "#fff",
+  },
+  shopNameText: {
+    fontWeight: 800,
+    fontSize: 15,
+  },
+  shopOrderCount: {
+    fontSize: 12,
+    opacity: 0.6,
+    fontWeight: 600,
+  },
+
   header: {
     display: "flex",
     alignItems: "center",
@@ -1037,12 +1105,10 @@ const S = {
   },
 
   card: {
-    borderRadius: 18,
+    borderRadius: 0,
     padding: 16,
     background: "hsl(var(--card))",
-    border: "1px solid hsl(var(--border) / 0.5)",
-    boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
-    marginBottom: 14,
+    borderBottom: "1px solid hsl(var(--border) / 0.35)",
   },
 
   rowTop: { display: "flex", justifyContent: "space-between", gap: 12 },
