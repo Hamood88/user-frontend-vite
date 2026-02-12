@@ -1,8 +1,8 @@
 // user-frontend-vite-temp/src/pages/Cart.jsx
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserMallCart } from "../context/UserMallCartContext";
-import { toAbsUrl } from "../api.jsx";
+import { toAbsUrl, apiGet } from "../api.jsx";
 import "../styles/cart.css";
 
 function money(n) {
@@ -25,7 +25,49 @@ export default function Cart() {
     updateQuantity,
     removeFromCart,
     clearCart: clearCartCtx,
+    enrichItems,
   } = useUserMallCart();
+  const enrichedRef = useRef(new Set());
+
+  // Enrich items that are missing shopName or shopImage by fetching product data
+  useEffect(() => {
+    if (!items.length) return;
+    const toEnrich = items.filter((it) => {
+      const pid = it.productId || it._id;
+      if (!pid || enrichedRef.current.has(pid)) return false;
+      return !it.shopName || it.shopName === "Shop" || !it.shopImage;
+    });
+    if (!toEnrich.length) return;
+
+    let cancelled = false;
+
+    async function fetchShopInfo() {
+      const updates = {};
+      await Promise.all(
+        toEnrich.map(async (it) => {
+          const pid = it.productId || it._id;
+          enrichedRef.current.add(pid); // mark so we don't retry
+          try {
+            const res = await apiGet(`/products/${pid}`, { auth: false });
+            const p = res?.product || res?.data?.product || res;
+            const shop = p?.shop || {};
+            if (shop.shopName || shop.name || shop.logoUrl || shop.logo) {
+              updates[pid] = {
+                shopName: shop.shopName || shop.name || it.shopName,
+                shopImage: shop.logoUrl || shop.logo || shop.avatar || it.shopImage || "",
+              };
+            }
+          } catch {}
+        })
+      );
+      if (!cancelled && Object.keys(updates).length > 0 && enrichItems) {
+        enrichItems(updates);
+      }
+    }
+
+    fetchShopInfo();
+    return () => { cancelled = true; };
+  }, [items, enrichItems]);
 
   // Group items by shopId for multi-shop display
   const shopGroups = useMemo(() => {

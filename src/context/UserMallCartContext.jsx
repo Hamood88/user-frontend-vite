@@ -215,6 +215,18 @@ export function UserMallCartProvider({ children }) {
     setIsOpen(false);
   }, []);
 
+  /** Batch-update items with enriched shop data: { [productId]: { shopName, shopImage } } */
+  const enrichItems = useCallback((updates) => {
+    setItems((prev) =>
+      prev.map((item) => {
+        const pid = String(item.productId || item._id);
+        const u = updates[pid];
+        if (!u) return item;
+        return { ...item, ...u };
+      })
+    );
+  }, []);
+
   const value = {
     items,
     count,
@@ -223,6 +235,7 @@ export function UserMallCartProvider({ children }) {
     updateQuantity,
     removeFromCart,
     clearCart,
+    enrichItems,
     isOpen,
     openCart,
     closeCart,
