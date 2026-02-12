@@ -480,7 +480,7 @@ export default function ProductDetailsUnified() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [buyersOpen]);
 
-  // ✅ FIXED: load buyers WITHOUT getAskBuyers import
+  // ✅ Load buyers using correct API endpoint
   async function loadBuyers() {
     if (!requireLogin("askBuyers")) return;
     if (!pid) return;
@@ -490,38 +490,9 @@ export default function ProductDetailsUnified() {
     setBuyers([]);
     setBuyersOpen(false);
 
-    const tries = [
-      `/api/orders/ask-buyers/${encodeURIComponent(pid)}`,
-      `/api/orders/${encodeURIComponent(pid)}/ask-buyers`,
-      `/api/products/${encodeURIComponent(pid)}/ask-buyers`,
-      `/api/ask-buyers/${encodeURIComponent(pid)}`,
-    ];
-
-    let lastErr = null;
-
     try {
-      let res = null;
-      for (const p of tries) {
-        try {
-          res = await request(p, { auth: true });
-          break;
-        } catch (e) {
-          lastErr = e;
-          if (e?.status === 404) continue;
-          throw e;
-        }
-      }
-
-      if (!res) throw new Error(lastErr?.message || "Ask buyers endpoint not found");
-
-      const list = Array.isArray(res?.buyers)
-        ? res.buyers
-        : Array.isArray(res?.data?.buyers)
-        ? res.data.buyers
-        : Array.isArray(res)
-        ? res
-        : [];
-
+      const res = await request(`/api/products/${encodeURIComponent(pid)}/previous-buyers`, { auth: true });
+      const list = res?.buyers || [];
       setBuyers(list);
       setBuyersOpen(true);
     } catch (e) {
@@ -925,10 +896,19 @@ export default function ProductDetailsUnified() {
                     const userId = String(b.userId || "").trim();
                     const anon = !!b.anonymous;
 
-                    const displayName = String(b.displayName || "").trim()
-                      ? b.displayName
-                      : anon
+                    // Build display name from backend response
+                    const firstName = String(b.firstName || "").trim();
+                    const lastName = String(b.lastName || "").trim();
+                    const username = String(b.username || "").trim();
+                    
+                    const displayName = anon 
                       ? "Anonymous buyer"
+                      : firstName && lastName 
+                      ? `${firstName} ${lastName}`
+                      : firstName 
+                      ? firstName
+                      : username
+                      ? username
                       : "Buyer";
 
                     const avatar = anon ? "" : String(b.avatar || "").trim();
