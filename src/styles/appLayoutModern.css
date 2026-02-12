@@ -325,6 +325,8 @@
 .md-main {
   flex: 1;
   min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
   width: 100%;
   padding-top: 64px;
 }
@@ -385,6 +387,8 @@
   padding: 16px 14px 56px;
   margin: 0 auto;
   width: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 64px);
 }
 @media (min-width: 1024px) {
   .md-content {
@@ -397,5 +401,8 @@
   }
 }
 @media (min-width: 768px) {
-  .md-content { padding: 18px 22px 56px; }
+  .md-content { 
+    padding: 18px 22px 56px;
+    max-height: calc(100vh - 72px);
+  }
 }
