@@ -78,15 +78,13 @@ export default function Search() {
   const [searchParams] = useSearchParams();
 
   const [q, setQ] = useState(searchParams.get("q") || "");
-  const [type, setType] = useState("all"); // all | users | shops
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [shops, setShops] = useState([]);
   const [err, setErr] = useState("");
 
-  async function runSearch(searchText, searchType) {
+  async function runSearch(searchText) {
     const qq = String(searchText || "").trim();
-    const tt = String(searchType || "all").trim();
 
     setErr("");
 
@@ -114,21 +112,16 @@ export default function Search() {
 
   // ✅ debounce
   useEffect(() => {
-    const t = setTimeout(() => runSearch(q, type), 350);
+    const t = setTimeout(() => runSearch(q), 350);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [q, type]);
+  }, [q]);
 
   const results = useMemo(() => {
     const u = users.map((x) => ({ ...x, __type: "user" }));
     const s = shops.map((x) => ({ ...x, __type: "shop" }));
-
-    if (type === "users") return u;
-    if (type === "shops") return s;
-
-    // "all"
     return [...u, ...s];
-  }, [users, shops, type]);
+  }, [users, shops]);
 
   function openResult(r) {
     const realType = r?.__type || pickType(r);
@@ -165,16 +158,6 @@ export default function Search() {
             onChange={(e) => setQ(e.target.value)}
             placeholder="(search users and shops)"
           />
-
-          <select
-            className="search-select"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-          >
-            <option value="all">All</option>
-            <option value="users">Users</option>
-            <option value="shops">Shops</option>
-          </select>
         </div>
 
         {loading ? (
