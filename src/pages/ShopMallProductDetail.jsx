@@ -1,7 +1,7 @@
 // user-frontend-vite-temp/src/pages/ShopMallProductDetail.jsx
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useParams, useNavigate, useLocation, useSearchParams } from "react-router-dom";
-import { apiGet, toAbsUrl } from "../api.jsx";
+import { apiGet, toAbsUrl, request, startAskBuyerConversation } from "../api.jsx";
 import { useUserMallCart } from "../context/UserMallCartContext";
 import { THEMES } from "../components/ShopMallTheme";
 import ProductReviews from "../components/ProductReviews.jsx";
@@ -16,8 +16,6 @@ import {
   Shield,
   Store,
   MessageCircle,
-  Send,
-  X,
   Users
 } from "lucide-react";
 
@@ -67,10 +65,11 @@ export default function ShopMallProductDetail() {
   const [activeImg, setActiveImg] = useState("");
 
   // Ask previous buyers functionality
-  const [askBuyersOpen, setAskBuyersOpen] = useState(false);
-  const [askQuestion, setAskQuestion] = useState("");
-  const [askLoading, setAskLoading] = useState(false);
-  const [askSuccess, setAskSuccess] = useState(false);
+  const [buyersOpen, setBuyersOpen] = useState(false);
+  const [buyersLoading, setBuyersLoading] = useState(false);
+  const [buyersErr, setBuyersErr] = useState("");
+  const [buyers, setBuyers] = useState([]);
+  const buyersRef = useRef(null);
 
   // Get shop info from state (passed from mall navigation)
   const shopFromState = location.state?.shop;
@@ -170,37 +169,78 @@ export default function ShopMallProductDetail() {
     alert(`✅ Added ${qty} item${qty > 1 ? 's' : ''} to your mall cart!`);
   }
 
-  async function handleAskPreviousBuyers() {
-    if (!askQuestion.trim()) {
-      alert("Please enter your question");
+  // Toggle buyers panel
+  function toggleBuyers() {
+    if (buyersOpen) {
+      setBuyersOpen(false);
+    } else {
+      loadBuyers();
+    }
+  }
+
+  // Close buyers when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (buyersRef.current && !buyersRef.current.contains(e.target)) {
+        setBuyersOpen(false);
+      }
+    }
+    if (buyersOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [buyersOpen]);
+
+  // Load previous buyers from API
+  async function loadBuyers() {
+    const pid = product?._id || product?.id;
+    if (!pid) return;
+
+    setBuyersLoading(true);
+    setBuyersErr("");
+    setBuyers([]);
+    setBuyersOpen(false);
+
+    try {
+      const res = await request(`/api/products/${encodeURIComponent(pid)}/previous-buyers`, { auth: true });
+      const list = res?.buyers || [];
+      setBuyers(list);
+      setBuyersOpen(true);
+    } catch (e) {
+      setBuyersErr(e?.message || "Failed to load previous buyers");
+      setBuyersOpen(true);
+    } finally {
+      setBuyersLoading(false);
+    }
+  }
+
+  // Message a specific buyer
+  async function messageBuyer(buyer) {
+    const userId = String(buyer?.userId || buyer?._id || "").trim();
+    const anon = !!buyer?.anonymous;
+    const pid = product?._id || product?.id;
+
+    if (!userId || !pid) return;
+
+    if (anon) {
+      alert("This buyer is anonymous and cannot be messaged.");
       return;
     }
 
-    setAskLoading(true);
     try {
-      // Create a question for previous buyers - for now just simulate success
-      // TODO: Implement actual API call to post question to product discussion or start conversations
-      const payload = {
-        productId: product._id || product.id,
-        question: askQuestion.trim(),
-        type: 'product_question'
-      };
-      
-      console.log('Asking previous buyers:', payload);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setAskSuccess(true);
-      setAskQuestion("");
-      setTimeout(() => {
-        setAskBuyersOpen(false);
-        setAskSuccess(false);
-      }, 2000);
-    } catch (error) {
-      alert(`Failed to send question: ${error.message}`);
-    } finally {
-      setAskLoading(false);
+      const res = await startAskBuyerConversation({
+        toUserId: userId,
+        productId: pid,
+      });
+
+      const cid = String(
+        res?.conversationId || res?._id || res?.conversation?._id || ""
+      ).trim();
+
+      if (!cid) throw new Error("Conversation not created");
+      navigate(`/messages/${encodeURIComponent(cid)}`);
+    } catch (err) {
+      alert(err?.message || "Failed to start conversation");
     }
   }
 
@@ -570,14 +610,14 @@ export default function ShopMallProductDetail() {
             )}
 
             {/* Ask Previous Buyers Section */}
-            <div style={{
+            <div ref={buyersRef} style={{
               background: theme.card,
               border: `1px solid ${theme.border}`,
               borderRadius: 12,
               padding: 20,
               marginTop: 24,
             }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: buyersOpen ? 16 : 0 }}>
                 <div>
                   <h3 style={{ 
                     fontSize: 16,
@@ -599,98 +639,132 @@ export default function ShopMallProductDetail() {
                   </p>
                 </div>
                 <button
-                  onClick={() => setAskBuyersOpen(!askBuyersOpen)}
+                  onClick={toggleBuyers}
+                  disabled={buyersLoading}
                   style={{
-                    background: theme.primary,
+                    background: buyersOpen ? theme.primary + "40" : theme.primary,
                     color: "#fff",
                     padding: "8px 16px",
                     borderRadius: 8,
                     border: "none",
                     fontSize: 14,
                     fontWeight: 600,
-                    cursor: "pointer",
+                    cursor: buyersLoading ? "not-allowed" : "pointer",
                     display: "flex",
                     alignItems: "center",
                     gap: 8,
                   }}
                 >
                   <MessageCircle size={16} />
-                  Ask Question
+                  {buyersLoading ? "Loading..." : buyersOpen ? "Close ▲" : "View Buyers ▼"}
                 </button>
               </div>
 
-              {/* Ask Question Modal/Form */}
-              {askBuyersOpen && (
+              {/* Buyers List */}
+              {buyersOpen && (
                 <div style={{
                   background: theme.bg,
                   border: `1px solid ${theme.border}`,
                   borderRadius: 8,
                   padding: 16,
-                  marginTop: 12,
                 }}>
-                  {askSuccess ? (
-                    <div style={{ textAlign: "center", color: theme.primary }}>
-                      <div style={{ fontSize: 20, marginBottom: 8 }}>✅</div>
-                      <p>Your question has been sent to previous buyers!</p>
+                  {buyersErr ? (
+                    <div style={{ color: "#ff8080", fontWeight: 700 }}>{buyersErr}</div>
+                  ) : buyers.length === 0 ? (
+                    <div style={{ opacity: 0.85, color: theme.muted }}>
+                      No buyers opted-in yet. (After completed orders + consent, they will appear here.)
                     </div>
                   ) : (
-                    <>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                        <h4 style={{ margin: 0, fontSize: 14, fontWeight: 600 }}>Ask your question</h4>
-                        <button
-                          onClick={() => setAskBuyersOpen(false)}
+                    buyers.map((b, idx) => {
+                      const userId = String(b.userId || "").trim();
+                      const anon = !!b.anonymous;
+
+                      const firstName = String(b.firstName || "").trim();
+                      const lastName = String(b.lastName || "").trim();
+                      const username = String(b.username || "").trim();
+
+                      const displayName = anon
+                        ? "Anonymous buyer"
+                        : firstName && lastName
+                        ? `${firstName} ${lastName}`
+                        : firstName
+                        ? firstName
+                        : username
+                        ? username
+                        : "Buyer";
+
+                      const avatar = anon ? "" : String(b.avatar || "").trim();
+
+                      return (
+                        <div
+                          key={userId || `buyer-${idx}`}
                           style={{
-                            background: "transparent",
-                            border: "none",
-                            color: theme.muted,
-                            cursor: "pointer",
-                            padding: 4,
-                          }}
-                        >
-                          <X size={16} />
-                        </button>
-                      </div>
-                      <textarea
-                        value={askQuestion}
-                        onChange={(e) => setAskQuestion(e.target.value)}
-                        placeholder="What would you like to know about this product?"
-                        style={{
-                          width: "100%",
-                          minHeight: 80,
-                          padding: 12,
-                          border: `1px solid ${theme.border}`,
-                          borderRadius: 6,
-                          background: theme.card,
-                          color: theme.text,
-                          fontSize: 14,
-                          resize: "vertical",
-                          fontFamily: "inherit",
-                        }}
-                      />
-                      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}>
-                        <button
-                          onClick={handleAskPreviousBuyers}
-                          disabled={askLoading || !askQuestion.trim()}
-                          style={{
-                            background: theme.primary,
-                            color: "#fff",
-                            padding: "8px 16px",
-                            borderRadius: 6,
-                            border: "none",
-                            fontSize: 14,
-                            fontWeight: 600,
-                            cursor: askLoading || !askQuestion.trim() ? "not-allowed" : "pointer",
                             display: "flex",
                             alignItems: "center",
-                            gap: 8,
-                            opacity: askLoading || !askQuestion.trim() ? 0.6 : 1,
+                            justifyContent: "space-between",
+                            gap: 12,
+                            padding: "10px 0",
+                            borderBottom: idx < buyers.length - 1 ? `1px solid ${theme.border}` : "none",
                           }}
                         >
-                          <Send size={14} />
-                          {askLoading ? "Sending..." : "Send Question"}
-                        </button>
-                      </div>
-                    </>
+                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            {avatar ? (
+                              <img
+                                src={toAbsUrl(avatar)}
+                                alt=""
+                                style={{
+                                  width: 36,
+                                  height: 36,
+                                  borderRadius: "50%",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            ) : (
+                              <div
+                                style={{
+                                  width: 36,
+                                  height: 36,
+                                  borderRadius: "50%",
+                                  background: theme.border,
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  color: theme.muted,
+                                  fontSize: 14,
+                                  fontWeight: 700,
+                                }}
+                              >
+                                {anon ? "?" : displayName.charAt(0).toUpperCase()}
+                              </div>
+                            )}
+                            <div style={{ fontWeight: 700, color: theme.text }}>{displayName}</div>
+                          </div>
+
+                          <button
+                            onClick={() => messageBuyer(b)}
+                            disabled={!userId || anon}
+                            style={{
+                              background: anon ? theme.border : theme.primary,
+                              color: anon ? theme.muted : "#fff",
+                              padding: "6px 14px",
+                              borderRadius: 6,
+                              border: "none",
+                              fontSize: 13,
+                              fontWeight: 600,
+                              cursor: !userId || anon ? "not-allowed" : "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
+                              opacity: !userId || anon ? 0.5 : 1,
+                            }}
+                            title={anon ? "Anonymous buyer cannot be messaged" : "Message buyer"}
+                          >
+                            <MessageCircle size={14} />
+                            Message
+                          </button>
+                        </div>
+                      );
+                    })
                   )}
                 </div>
               )}
