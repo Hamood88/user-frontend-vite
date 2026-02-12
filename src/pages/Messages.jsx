@@ -854,6 +854,9 @@ export default function Messages() {
 
   function convoLabel(c) {
     const otherType = String(c?.otherType || "user").toLowerCase().trim();
+    const topic = String(c?.topic || "general").toLowerCase().trim();
+    // Ask-buyer conversations always get "Ask Buyer" label
+    if (topic === "ask-buyer") return "Ask Buyer";
     if (otherType === "shop") {
       // Return shop name if available
       return c?.otherName || "Shop";
@@ -870,10 +873,14 @@ export default function Messages() {
 
     const filtered = conversations.filter((c) => {
       const otherType = String(c?.otherType || "user").toLowerCase().trim();
+      const topic = String(c?.topic || "general").toLowerCase().trim();
       const label = convoLabel(c);
-      if (messageFilter === "friends") return label === "Friend";
-      if (messageFilter === "shop") return otherType === "shop"; // ✅ Fixed to check otherType
-      if (messageFilter === "user-asking") return label === "User";
+      // User Asking = only ask-buyer topic conversations
+      if (messageFilter === "user-asking") return topic === "ask-buyer";
+      // Friends = friend DMs, but exclude ask-buyer conversations
+      if (messageFilter === "friends") return label === "Friend" && topic !== "ask-buyer";
+      // Shop = shop conversations
+      if (messageFilter === "shop") return otherType === "shop";
       return true;
     });
 
@@ -882,9 +889,9 @@ export default function Messages() {
 
   const categoryCounts = useMemo(
     () => ({
-      friends: conversations.filter((c) => convoLabel(c) === "Friend").length,
-      shop: conversations.filter((c) => String(c?.otherType || "").toLowerCase() === "shop").length, // ✅ Fixed
-      user: conversations.filter((c) => convoLabel(c) === "User").length,
+      friends: conversations.filter((c) => convoLabel(c) === "Friend" && String(c?.topic || "general").toLowerCase() !== "ask-buyer").length,
+      shop: conversations.filter((c) => String(c?.otherType || "").toLowerCase() === "shop").length,
+      user: conversations.filter((c) => String(c?.topic || "general").toLowerCase() === "ask-buyer").length,
       total: conversations.length,
     }),
     [conversations, friendSet]
