@@ -168,7 +168,7 @@ export default function Profile() {
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={uploading || loading}
-className="h-20 w-20 overflow-hidden rounded-2xl border bg-secondary"
+className="h-32 w-32 overflow-hidden rounded-2xl border bg-secondary"
             >
               {avatarSrc ? (
                 <img src={avatarSrc} alt="avatar" className="h-full w-full object-cover" />
