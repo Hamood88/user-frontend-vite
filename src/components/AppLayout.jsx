@@ -200,7 +200,7 @@ export default function AppLayout() {
         <div className="md-sideHeader">
           {!sidebarCollapsed && (
             <div className="md-brand">
-              <img src="/moondala-logo.png" alt="Moondala" className="h-8 w-auto object-contain" />
+              <img src="/moondala-logo.png" alt="Moondala" className="h-16 w-auto object-contain" />
             </div>
           )}
           <button
@@ -243,7 +243,7 @@ export default function AppLayout() {
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
         <div className="md-mBrand">
-          <img src="/moondala-logo.png" alt="Moondala" className="h-8 w-auto object-contain" />
+          <img src="/moondala-logo.png" alt="Moondala" className="h-16 w-auto object-contain" />
         </div>
         <div className="md-iconBtn" style={{ opacity: 0, pointerEvents: 'none' }}>
           {/* Spacer for center alignment */}
