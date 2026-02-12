@@ -174,6 +174,7 @@ export function UserMallCartProvider({ children }) {
           image: product.image || product.imageUrl || product.thumbnail || "",
           shopId: product.shopId || product.shop?._id || product.shop?.id || "",
           shopName: product.shopName || product.shop?.shopName || product.shop?.name || "Shop",
+          shopImage: product.shopImage || product.shop?.logoUrl || product.shop?.logo || product.shop?.avatar || "",
           qty: Math.max(1, quantity),
         };
         return [...prev, newItem];

@@ -435,27 +435,61 @@
 .cart-shop-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 18px;
+  justify-content: space-between;
+  padding: 12px 18px;
   background: hsl(var(--muted));
   border-bottom: 1px solid hsl(var(--border));
-  font-weight: 600;
 }
 
-.cart-shop-icon {
-  font-size: 20px;
+.cart-shop-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.cart-shop-left:hover {
+  opacity: 0.75;
+}
+
+.cart-shop-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid hsl(var(--border));
+}
+
+.cart-shop-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: hsl(var(--accent));
+  font-size: 18px;
 }
 
 .cart-shop-name {
   font-size: 16px;
+  font-weight: 600;
   color: hsl(var(--foreground));
-  flex: 1;
 }
 
-.cart-shop-count {
+.cart-shop-continue {
   font-size: 13px;
-  color: hsl(var(--muted-foreground));
-  font-weight: 400;
+  font-weight: 500;
+  color: hsl(var(--primary));
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.cart-shop-continue:hover {
+  opacity: 0.75;
+  text-decoration: underline;
 }
 
 .cart-shop-group .cart-item {

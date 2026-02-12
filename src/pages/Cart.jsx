@@ -36,6 +36,7 @@ export default function Cart() {
         map[sid] = {
           shopId: sid,
           shopName: item.shopName || "Shop",
+          shopImage: item.shopImage || "",
           items: [],
           subtotal: 0,
         };
@@ -96,11 +97,28 @@ export default function Cart() {
             <div key={group.shopId} className="cart-shop-group">
               {/* Shop name header */}
               <div className="cart-shop-header">
-                <span className="cart-shop-icon">🏪</span>
-                <span className="cart-shop-name">{group.shopName}</span>
-                <span className="cart-shop-count">
-                  {group.items.length} item{group.items.length !== 1 ? "s" : ""}
-                </span>
+                <div
+                  className="cart-shop-left"
+                  onClick={() => nav(`/shop-mall/${group.shopId}`)}
+                  title={`Visit ${group.shopName}`}
+                >
+                  {group.shopImage ? (
+                    <img
+                      src={toAbsUrl(group.shopImage)}
+                      alt={group.shopName}
+                      className="cart-shop-avatar"
+                    />
+                  ) : (
+                    <span className="cart-shop-avatar-placeholder">🏪</span>
+                  )}
+                  <span className="cart-shop-name">{group.shopName}</span>
+                </div>
+                <div
+                  className="cart-shop-continue"
+                  onClick={() => nav(`/shop-mall/${group.shopId}`)}
+                >
+                  Continue Shopping →
+                </div>
               </div>
 
               {group.items.map((item, idx) => {

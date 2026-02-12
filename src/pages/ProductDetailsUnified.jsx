@@ -385,6 +385,8 @@ export default function ProductDetailsUnified() {
       image: images[0] || "",
       qty: qtySafe,
       shopId: shopId,
+      shopName: product?.shopName || product?.shop?.shopName || product?.shop?.name || "Shop",
+      shopImage: product?.shop?.logoUrl || product?.shop?.logo || product?.shop?.avatar || "",
     };
 
     if (idx >= 0) {

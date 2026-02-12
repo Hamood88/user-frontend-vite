@@ -148,6 +148,7 @@ export default function ShopMallProductDetail() {
   // Get shop info (from product or from state)
   const productShopId = product?.shopId || product?.shop?._id || product?.shop?.id || shopId || shopFromState?._id;
   const shopName = product?.shopName || product?.shop?.shopName || product?.shop?.name || shopFromState?.shopName || shopFromState?.name || "Shop";
+  const shopImage = product?.shop?.logoUrl || product?.shop?.logo || product?.shop?.avatar || shopFromState?.logoUrl || shopFromState?.logo || shopFromState?.avatar || "";
 
   function dec() {
     setQty((q) => Math.max(1, Number(q) - 1));
@@ -162,7 +163,8 @@ export default function ShopMallProductDetail() {
     
     addToCart({
       ...product,
-      shopName: shopName, // Ensure shop name is included
+      shopName: shopName,
+      shopImage: shopImage,
     }, qty);
     
     // Show success notification
