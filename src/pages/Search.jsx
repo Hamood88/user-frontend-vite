@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Search as SearchIcon, Users, Store, Loader2, Sparkles } from "lucide-react";
+import { Search as SearchIcon, Users, Store, Loader2 } from "lucide-react";
 import "../styles/Search.css";
 import { API_BASE, getToken, apiGet } from "../api.jsx";
 
@@ -233,22 +233,6 @@ export default function Search() {
         {!loading && q.trim() && results.length === 0 ? (
           <div className="search-status">No results found. Try different keywords!</div>
         ) : null}
-
-        {/* Search Tips */}
-        {!q.trim() && !loading && (
-          <div className="search-tips">
-            <div className="search-tips-title">
-              <Sparkles className="w-4 h-4" />
-              AI Search Tips
-            </div>
-            <ul>
-              <li>Try natural language: "comfortable shoes for running"</li>
-              <li>Describe what you need: "gift for someone who loves cooking"</li>
-              <li>Search by style: "minimalist home decor"</li>
-              <li>Find similar items: "blue summer dress"</li>
-            </ul>
-          </div>
-        )}
       </div>
     </div>
   );
