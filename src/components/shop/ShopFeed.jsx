@@ -36,8 +36,8 @@ function pickMediaType(post) {
 }
 
 export default function ShopFeed() {
-  // ✅ shop token first (new), fallback to old key
-  const shopToken = localStorage.getItem("shopToken") || localStorage.getItem("token") || "";
+  // ✅ user token only (keep legacy token fallback)
+  const shopToken = localStorage.getItem("userToken") || localStorage.getItem("token") || "";
   const role = localStorage.getItem("role") || "";
 
   // ✅ shop object (optional but good)

@@ -1066,9 +1066,12 @@ const LandingPage = () => {
   // MAIN CONTENT (Direct Landing)
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col animate-in fade-in duration-700 relative overflow-hidden">
+      <div className="pointer-events-none absolute -top-24 -left-24 h-64 w-64 rounded-full bg-purple-500/20 blur-3xl animate-pulse" />
+      <div className="pointer-events-none absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-pink-500/20 blur-3xl animate-pulse [animation-delay:400ms]" />
+      <div className="pointer-events-none absolute top-1/3 -right-16 h-44 w-44 rounded-full bg-blue-500/10 blur-3xl animate-pulse [animation-delay:800ms]" />
       
       {/* Sticky Header with Language Selector */}
-      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50 safe-top relative overflow-hidden">
+      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50 safe-top relative overflow-hidden transition-all duration-500">
         <img
           src="/moondala-logo.png"
           alt=""
@@ -1116,7 +1119,7 @@ const LandingPage = () => {
 
             <button
                onClick={handleRegister}
-               className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:shadow-lg hover:shadow-purple-500/25 active:scale-95 transition-all"
+              className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:shadow-lg hover:shadow-purple-500/25 hover:scale-[1.03] active:scale-95 transition-all"
             >
                {t.cta}
             </button>
@@ -1147,6 +1150,9 @@ const LandingPage = () => {
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/60 border border-border text-xs font-semibold tracking-widest uppercase text-muted-foreground">
                 Moondala
               </div>
+              <div className="inline-flex items-center rounded-full border border-purple-300/30 bg-purple-500/10 px-3 py-1 text-xs sm:text-sm text-purple-200 backdrop-blur-sm animate-pulse">
+                ✨ New social shopping experience
+              </div>
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-foreground leading-tight tracking-tight">
                 {t.welcome}
               </h1>
@@ -1160,7 +1166,7 @@ const LandingPage = () => {
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
                 <button
                   onClick={handleRegister}
-                  className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-3 rounded-full text-sm font-bold hover:shadow-lg hover:shadow-purple-500/25 active:scale-95 transition-all"
+                  className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-3 rounded-full text-sm font-bold hover:shadow-lg hover:shadow-purple-500/25 hover:scale-[1.03] active:scale-95 transition-all"
                 >
                   {t.cta}
                 </button>
@@ -1182,7 +1188,7 @@ const LandingPage = () => {
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                      </div>
-                     <span className="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/50 text-yellow-300 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.3)] backdrop-blur-md animate-pulse">
+                    <span className="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/50 text-yellow-300 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.3)] backdrop-blur-md animate-pulse">
                         {t.earnMonthlyBadge}
                      </span>
                   </div>

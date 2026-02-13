@@ -6,6 +6,9 @@ import './index.css'
 import './i18n'
 import { UserMallCartProvider } from './context/UserMallCartContext'
 import MallCartDrawer from './components/MallCartDrawer'
+import { initSentry } from './sentry'
+
+initSentry()
 
 // ✅ FORCE CACHE CLEAR LOG
 console.log("🚀 MOONDALA APP v2.1 LOADED - Fixes active");
