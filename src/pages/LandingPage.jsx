@@ -1063,60 +1063,46 @@ const LandingPage = () => {
   // Merge selected language with English to ensure all keys exist (fallback)
   const t = { ...CONTENT['en'], ...(CONTENT[currentLangCode] || {}) };
 
-  // MAIN CONTENT (Direct Landing)
+  // MAIN CONTENT (Modern Landing)
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col animate-in fade-in duration-700 relative overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       
-      {/* Sticky Header with Language Selector */}
-      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50 safe-top relative overflow-hidden">
-        <img
-          src="/moondala-logo.png"
-          alt=""
-          aria-hidden="true"
-          className="absolute left-1/2 top-1/2 w-40 md:w-52 opacity-[0.08] pointer-events-none select-none"
-          style={{ transform: `translate(-50%, -50%) translateY(${scrollY * 0.04}px)` }}
-        />
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
-          <div className="flex items-center gap-3">
-            <span className="font-bold tracking-tight text-2xl">Moondala</span>
+      {/* Minimal Header */}
+      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <img src="/moondala-logo.png" alt="Moondala" className="w-8 h-8 object-contain" />
+            <span className="font-bold tracking-tight text-lg sm:text-xl">Moondala</span>
           </div>
           
-          <div className="flex items-center gap-4">
-            <a
-              href="#how-it-works"
-              className="hidden md:inline-flex text-sm font-semibold text-foreground/80 hover:text-foreground transition-colors"
-            >
-              {t.howItWorksNewTitle || t.howItWorks}
-            </a>
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* Theme Toggle */}
             <button
               onClick={() => handleThemeChange(theme === 'dark' ? 'light' : 'dark')}
-              className="p-2 rounded-lg border border-border/50 hover:bg-secondary/20 transition-colors"
+              className="p-2 rounded-lg hover:bg-secondary/30 transition-colors"
               aria-label="Toggle theme"
             >
               {theme === 'light' ? (
-                <Moon className="w-5 h-5 text-foreground/80" />
+                <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-foreground/70" />
               ) : (
-                <Sun className="w-5 h-5 text-foreground/80" />
+                <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-foreground/70" />
               )}
             </button>
+            
             {/* Language Dropdown */}
-            <div className="relative group hidden sm:block">
-              <select
-                value={selectedLang}
-                onChange={(e) => setSelectedLang(e.target.value)}
-                className="bg-transparent text-sm font-medium text-muted-foreground border border-border/50 rounded-lg px-2 py-1 focus:ring-1 focus:ring-purple-500 cursor-pointer hover:bg-secondary/20 transition-colors appearance-none pr-8"
-              >
-                {SUPPORTED_LANGUAGES.map(lang => (
-                  <option key={lang.code} value={lang.code}>{lang.name}</option>
-                ))}
-              </select>
-               <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none text-[10px]">▼</span>
-            </div>
+            <select
+              value={selectedLang}
+              onChange={(e) => setSelectedLang(e.target.value)}
+              className="text-xs sm:text-sm font-medium text-muted-foreground bg-transparent border border-border/40 rounded-lg px-2 py-1.5 hover:border-border transition-colors cursor-pointer"
+            >
+              {SUPPORTED_LANGUAGES.map(lang => (
+                <option key={lang.code} value={lang.code}>{lang.name}</option>
+              ))}
+            </select>
 
             <button
                onClick={handleRegister}
-               className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:shadow-lg hover:shadow-purple-500/25 active:scale-95 transition-all"
+               className="bg-foreground text-background px-4 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-semibold hover:opacity-90 transition-opacity"
             >
                {t.cta}
             </button>
@@ -1124,359 +1110,228 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <main className="flex-1 w-full flex flex-col items-center">
+      <main className="flex-1">
         
-        {/* HERO SECTION */}
-        <section className="w-full relative overflow-hidden py-16 md:py-24 px-6">
-          {/* Background Glows */}
-          <div className="absolute -top-24 left-1/3 w-[32rem] h-[32rem] bg-purple-500/15 rounded-full blur-3xl -z-10"></div>
-          <div className="absolute -bottom-24 right-1/3 w-[32rem] h-[32rem] bg-indigo-500/15 rounded-full blur-3xl -z-10"></div>
-          {/* Hero Background Logo (near headline) */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden -z-10">
-             <img
-               src="/moondala-logo.png"
-               alt=""
-               aria-hidden="true"
-               className="w-[40rem] sm:w-[50rem] md:w-[60rem] opacity-[0.03] dark:opacity-[0.05] select-none mt-8 md:mt-12"
-               style={{ transform: `translateY(${scrollY * 0.05}px)` }}
-             />
-          </div>
-          <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative">
+        {/* HERO SECTION - Clean & Bold */}
+        <section className="w-full px-4 sm:px-6 py-16 sm:py-24 md:py-32">
+          <div className="max-w-6xl mx-auto text-center space-y-8">
             
-            <div className="space-y-6 text-center lg:text-left z-10">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/60 border border-border text-xs font-semibold tracking-widest uppercase text-muted-foreground">
-                Moondala
-              </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-foreground leading-tight tracking-tight">
-                {t.welcome}
+            {/* Main Headline */}
+            <div className="space-y-4">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-foreground leading-[1.1] tracking-tight max-w-4xl mx-auto">
+                {t.welcome.replace(' 🌙', '')}
               </h1>
-              <p className="text-lg sm:text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 font-bold leading-snug">
+              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed">
                 {t.subtitle}
               </p>
-              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-normal">
-                {t.introText}
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
-                <button
-                  onClick={handleRegister}
-                  className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-3 rounded-full text-sm font-bold hover:shadow-lg hover:shadow-purple-500/25 active:scale-95 transition-all"
-                >
-                  {t.cta}
-                </button>
-              </div>
             </div>
 
-            <div className="relative flex flex-col items-center justify-center lg:items-end z-10 w-full perspective-1000">
-               {/* Glow effect behind the card */}
-               <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/20 to-indigo-600/20 blur-3xl rounded-full transform scale-90 -z-10 translate-y-4"></div>
-               
-               <div className="bg-card/80 backdrop-blur-2xl border border-white/10 dark:border-white/5 p-8 md:p-10 rounded-[2rem] shadow-2xl w-full max-w-md transform transition-all hover:translate-y-[-4px] hover:shadow-purple-500/30 overflow-hidden relative">
-                  
-                  {/* Shimmer effect overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent opacity-50 z-0 pointer-events-none"></div>
-
-                  <div className="relative z-10 flex items-start justify-between mb-8">
-                     <div className="p-3 bg-gradient-to-br from-purple-500/10 to-indigo-500/10 rounded-2xl border border-white/5 backdrop-blur-sm">
-                        <svg className="w-7 h-7 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                     </div>
-                     <span className="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/50 text-yellow-300 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.3)] backdrop-blur-md animate-pulse">
-                        {t.earnMonthlyBadge}
-                     </span>
-                  </div>
-                  
-                  <div className="relative z-10 space-y-2 mb-8">
-                     <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest pl-1">
-                        {t.shareYour}
-                     </h3>
-                     <h2 className="text-4xl font-black text-foreground leading-none pb-1 tracking-tight">
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-200">{t.referralCode}</span>
-                     </h2>
-                  </div>
-
-                  <div className="relative z-10 space-y-6">
-                     <div className="flex items-center gap-5 group">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-secondary/50 border border-border flex items-center justify-center font-bold text-sm text-foreground group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-500 transition-all duration-300 shadow-sm">1</div>
-                        <p className="font-medium text-muted-foreground text-sm md:text-base leading-snug group-hover:text-foreground transition-colors">
-                           {t.step1}
-                        </p>
-                     </div>
-                     <div className="flex items-center gap-5 group">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-secondary/50 border border-border flex items-center justify-center font-bold text-sm text-foreground group-hover:bg-pink-600 group-hover:text-white group-hover:border-pink-500 transition-all duration-300 shadow-sm">2</div>
-                        <p className="font-medium text-muted-foreground text-sm md:text-base leading-snug group-hover:text-foreground transition-colors">
-                           {t.step2_pre} <span className="text-foreground font-bold underline decoration-purple-500 decoration-2 underline-offset-2">{t.step2_bold}</span>
-                        </p>
-                     </div>
-                  </div>
-               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* BENEFITS */}
-        {/* FEATURE: HOW MOONDALA WORKS */}
-        <section id="how-it-works" className="w-full bg-secondary/10 py-20 px-6">
-          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-             <div className="relative group">
-                <div className="absolute -inset-2 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-2xl blur-lg group-hover:blur-xl transition-all"></div>
-                <img 
-                  src="/images/moondala-network-levels.png" 
-                  alt="Network Levels" 
-                  className="relative w-full h-auto object-contain rounded-xl shadow-2xl border border-border/50 bg-card cursor-pointer"
-                  onClick={() => setLightboxImg('/images/moondala-network-levels.png')}
-                />
-             </div>
-             <div>
-                <span className="inline-block px-4 py-1.5 mb-6 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 font-bold text-xs uppercase tracking-widest">
-                  Revolutionary Model
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-6 tracking-tight">
-                   {t.howItWorksNewTitle || t.howItWorks}
-                </h2>
-                <div className="prose dark:prose-invert">
-                  <p className="text-base sm:text-lg text-muted-foreground whitespace-pre-line leading-relaxed font-normal">
-                    {t.howItWorksNewDesc || "Big platforms profit from every order — you get nothing. Moondala changes that.\n\nInstead of keeping the transaction fees, Moondala shares them with users through the referral tree.\n\nLife is hard and expensive, so Moondala helps you turn your network into extra income."}
-                  </p>
-                </div>
-             </div>
-          </div>
-        </section>
-
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-border/60 to-transparent"></div>
-
-        {/* FEATURE: REFERRAL TREE */}
-        <section className="w-full py-20 px-6 bg-background/80">
-          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <div className="order-2 md:order-1 space-y-8">
-              <span className="inline-block px-4 py-1.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 rounded-full text-xs font-bold uppercase tracking-widest">
-                {t.howItWorks}
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight">
-                {t.networkTitle}
-              </h2>
-              <p className="text-base sm:text-lg text-muted-foreground font-normal">
-                {t.networkDesc}
-              </p>
-              
-              <div className="grid gap-4 pt-4">
-                <div className="flex items-center gap-5 bg-card p-5 rounded-2xl shadow-sm border border-border hover:border-purple-500/30 transition-colors">
-                  <div className="w-12 h-12 rounded-full bg-purple-600/10 flex items-center justify-center text-purple-600 text-xl font-bold">1</div>
-                  <div>
-                    <h3 className="font-bold text-base sm:text-lg text-foreground">{t.level1}</h3>
-                    <p className="text-sm text-muted-foreground">Direct Invite Earnings</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-5 bg-card p-5 rounded-2xl shadow-sm border border-border hover:border-indigo-500/30 transition-colors">
-                  <div className="w-12 h-12 rounded-full bg-indigo-600/10 flex items-center justify-center text-indigo-600 text-xl font-bold">5</div>
-                  <div>
-                    <h3 className="font-bold text-base sm:text-lg text-foreground">{t.level2_5}</h3>
-                    <p className="text-sm text-muted-foreground">Extended Network Earnings</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="order-1 md:order-2 flex md:justify-end">
-              <div className="bg-gradient-to-br from-card to-secondary/30 p-4 rounded-3xl shadow-2xl border border-border/40 w-full max-w-xl ml-auto">
-                <img 
-                  src="/images/referral-tree.png" 
-                  alt="Referral Tree Structure" 
-                  className="w-full rounded-2xl cursor-pointer"
-                  onClick={() => setLightboxImg('/images/referral-tree.png')}
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-border/60 to-transparent"></div>
-
-        {/* FEATURE: TRACK COMMISSIONS (DASHBOARD) */}
-        <section className="w-full py-24 px-6 bg-background relative overflow-hidden">
-           {/* Background decorative elements */}
-           <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[30rem] h-[30rem] bg-indigo-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-
-           <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-              <div className="order-2 lg:order-1 relative">
-                 {/* Dashboard UI Mockup */}
-                 <div className="bg-card border border-border/50 rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-xl mx-auto lg:ml-0 transform transition-transform hover:scale-[1.01] duration-500 relative z-10">
-                    <div className="flex justify-between items-center mb-8 border-b border-border/50 pb-4">
-                       <div>
-                          <h3 className="text-xl sm:text-2xl font-black text-foreground">{t.welcomeBack}</h3>
-                          <p className="text-sm text-muted-foreground">{t.trackCommissions}</p>
-                       </div>
-                       <div className="bg-secondary/50 px-3 py-1.5 rounded-lg border border-border flex items-center gap-2 text-xs font-mono text-muted-foreground hidden sm:flex">
-                          <span>{t.shareLink}</span>
-                          <span className="font-bold text-foreground">NTB8N478XD</span>
-                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
-                       </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                       {/* Card 1: Total Earnings */}
-                       <div className="bg-[#E9D5FF] dark:bg-purple-900/30 p-4 rounded-xl hover:shadow-md transition-shadow">
-                          <div className="w-10 h-10 bg-white dark:bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-700 dark:text-purple-300 shadow-sm mb-3">
-                             <span className="font-bold text-lg">$</span>
-                          </div>
-                          <div className="text-xs font-bold text-purple-700 dark:text-purple-300 uppercase tracking-wide mb-1">{t.totalEarnings}</div>
-                          <div className="text-2xl sm:text-3xl font-black text-purple-950 dark:text-white">$20.84</div>
-                       </div>
-
-                       {/* Card 2: Available */}
-                       <div className="bg-[#bbf7d0] dark:bg-green-900/30 p-4 rounded-xl hover:shadow-md transition-shadow">
-                          <div className="w-10 h-10 bg-white dark:bg-green-500/20 rounded-lg flex items-center justify-center text-green-700 dark:text-green-300 shadow-sm mb-3">
-                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
-                          </div>
-                          <div className="text-xs font-bold text-green-700 dark:text-green-300 uppercase tracking-wide mb-1">{t.available}</div>
-                          <div className="text-2xl sm:text-3xl font-black text-green-950 dark:text-white mb-1">$0.00</div>
-                          <div className="text-[10px] font-medium text-green-800/80 dark:text-green-200/70">{t.readyWithdraw}</div>
-                       </div>
-
-                       {/* Card 3: Pending */}
-                       <div className="bg-[#fef08a] dark:bg-yellow-900/30 p-4 rounded-xl hover:shadow-md transition-shadow">
-                          <div className="w-10 h-10 bg-white dark:bg-yellow-500/20 rounded-lg flex items-center justify-center text-yellow-700 dark:text-yellow-300 shadow-sm mb-3">
-                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
-                          </div>
-                          <div className="text-xs font-bold text-yellow-700 dark:text-yellow-300 uppercase tracking-wide mb-1">{t.pending}</div>
-                          <div className="text-2xl sm:text-3xl font-black text-yellow-950 dark:text-white mb-1">$0.00</div>
-                          <div className="text-[10px] font-medium text-yellow-800/80 dark:text-yellow-200/70">{t.clearsPeriod}</div>
-                       </div>
-
-                       {/* Card 4: Network Size */}
-                       <div className="bg-[#a5f3fc] dark:bg-cyan-900/30 p-4 rounded-xl hover:shadow-md transition-shadow">
-                          <div className="w-10 h-10 bg-white dark:bg-cyan-500/20 rounded-lg flex items-center justify-center text-cyan-700 dark:text-cyan-300 shadow-sm mb-3">
-                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                          </div>
-                          <div className="text-xs font-bold text-cyan-700 dark:text-cyan-300 uppercase tracking-wide mb-1">{t.networkSize}</div>
-                          <div className="text-2xl sm:text-3xl font-black text-cyan-950 dark:text-white mb-1">13</div>
-                          <div className="text-[10px] font-medium text-cyan-800/80 dark:text-cyan-200/70">{t.activeMembers}</div>
-                       </div>
-                    </div>
-                 </div>
-                 
-                 {/* Decorative blob behind mock */}
-                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-gradient-to-tr from-purple-500/20 to-pink-500/20 blur-3xl rounded-full -z-10"></div>
-              </div>
-
-              <div className="order-1 lg:order-2 space-y-8 text-center lg:text-left">
-                  <div>
-                     <span className="inline-block px-4 py-1.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
-                        {t.smartDashboard}
-                     </span>
-                     <h2 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight leading-tight">
-                        {t.transparencyTitle ? t.transparencyTitle.split('\n')[0] : "Complete Transparency."}<br/>
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">{t.transparencyTitle ? t.transparencyTitle.split('\n')[1] : "Zero Hidden Fees."}</span>
-                     </h2>
-                  </div>
-                  
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                     {t.transparencyDesc}
-                  </p>
-
-                  <ul className="space-y-4 inline-block text-left">
-                     {[
-                        t.transparencyList1,
-                        t.transparencyList2,
-                        t.transparencyList3
-                     ].filter(Boolean).map((item, i) => (
-                        <li key={i} className="flex items-center gap-4">
-                           <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/10 text-blue-600 flex items-center justify-center text-xs">
-                              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                 <polyline points="20 6 9 17 4 12"></polyline>
-                              </svg>
-                           </div>
-                           <span className="text-foreground/90 font-medium">{item}</span>
-                        </li>
-                     ))}
-                  </ul>
-
-                  <div className="pt-2">
-                     <p className="text-sm font-medium text-muted-foreground border-l-4 border-blue-500/30 pl-4">
-                        {t.transparencyNote}
-                     </p>
-                  </div>
-              </div>
-           </div>
-        </section>
-
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-border/60 to-transparent"></div>
-
-        {/* FEED & SHOP SECTION */}
-          <section className="w-full bg-secondary/10 py-24 px-6 overflow-hidden relative">
-          <div className="max-w-7xl mx-auto">
-            
-            <div className="text-center mb-16 space-y-4">
-               <span className="inline-block px-4 py-1.5 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-300 rounded-full text-xs font-bold uppercase tracking-widest">
-                  {t.shopSubtitle}
-               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight">
-                  {t.shopTitle}
-               </h2>
-              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto font-normal">
-                  {t.shopIntro}
-               </p>
-            </div>
-
-            <div className="flex flex-col items-center gap-10 mb-16">
-              <div className="relative mx-auto max-w-2xl w-full">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-purple-500/30 to-indigo-500/30 rounded-full blur-3xl -z-10"></div>
-                  <img 
-                      src="/images/shop-preview.png.png" 
-                      alt="App UI" 
-                      className="w-full h-auto rounded-[2.5rem] shadow-2xl border-4 border-background"
-                      onClick={() => setLightboxImg('/images/shop-preview.png.png')}
-                    />
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-4 w-full max-w-3xl">
-                {[
-                  { title: t.pillar1Title, desc: t.pillar1Desc, icon: "🛒", color: "bg-blue-500" },
-                  { title: t.pillar2Title, desc: t.pillar2Desc, icon: "📱", color: "bg-purple-500" },
-                  { title: t.pillar3Title, desc: t.pillar3Desc, icon: "🤝", color: "bg-indigo-500" },
-                  { title: t.pillar4Title, desc: t.pillar4Desc, icon: "💰", color: "bg-green-500" }
-                ].map((pillar, idx) => (
-                  <div key={idx} className="bg-card hover:bg-card/80 p-4 rounded-xl border border-border hover:shadow-lg transition-all group flex gap-4 items-start">
-                     <div className={`flex-shrink-0 w-10 h-10 ${pillar.color}/10 rounded-lg flex items-center justify-center text-lg group-hover:scale-105 transition-transform`}>{pillar.icon}</div>
-                     <div>
-                        <h3 className="text-sm sm:text-base font-bold text-foreground mb-1">{pillar.title.replace(/[^\w\s]/gi, '').trim()}</h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{pillar.desc}</p>
-                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="text-center">
+            {/* CTA */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-4">
               <button
                 onClick={handleRegister}
-                className="bg-foreground text-background px-10 py-3.5 rounded-full text-base sm:text-lg font-bold hover:opacity-90 transition-all shadow-xl active:scale-95 ring-2 ring-foreground/10"
+                className="bg-foreground text-background px-8 py-4 rounded-xl text-base font-bold hover:opacity-90 transition-all shadow-lg hover:shadow-xl active:scale-[0.98] w-full sm:w-auto"
               >
-                {t.cta}
+                {t.cta} →
               </button>
+              <a
+                href="#how-it-works"
+                className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
+              >
+                {t.howItWorks} ↓
+              </a>
             </div>
+
+            {/* Introductory Text */}
+            <p className="text-sm sm:text-base text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed pt-4">
+              {t.introText}
+            </p>
+          </div>
+        </section>
+
+        {/* HOW IT WORKS - 3 Simple Steps */}
+        <section id="how-it-works" className="w-full bg-secondary/30 px-4 sm:px-6 py-16 sm:py-24">
+          <div className="max-w-6xl mx-auto">
+            
+            <div className="text-center mb-16 space-y-3">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight">
+                {t.howItWorksNewTitle || t.howItWorks}
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                {t.howItWorksNewDesc?.split('\n\n')[0] || "Big platforms profit from every order — you get nothing. Moondala changes that."}
+              </p>
+            </div>
+
+            {/* 3-Step Process */}
+            <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
+              <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                  <span className="text-2xl font-black text-purple-600">1</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-foreground">{t.shareYour} {t.referralCode}</h3>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  {t.step1}
+                </p>
+              </div>
+
+              <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center">
+                  <span className="text-2xl font-black text-indigo-600">2</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-foreground">{t.networkTitle}</h3>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  {t.networkDesc}
+                </p>
+              </div>
+
+              <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center">
+                  <span className="text-2xl font-black text-pink-600">3</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-foreground">{t.step2_pre} {t.step2_bold}</h3>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  {t.transparencyDesc}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* KEY BENEFITS Grid */}
+        <section className="w-full px-4 sm:px-6 py-16 sm:py-24">
+          <div className="max-w-6xl mx-auto">
+            
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight mb-4">
+                {t.shopTitle}
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                {t.shopIntro}
+              </p>
+            </div>
+
+            {/* Features Grid */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              {[
+                { title: t.pillar1Title, desc: t.pillar1Desc, icon: "🛒" },
+                { title: t.pillar2Title, desc: t.pillar2Desc, icon: "📱" },
+                { title: t.pillar3Title, desc: t.pillar3Desc, icon: "🤝" },
+                { title: t.pillar4Title, desc: t.pillar4Desc, icon: "💰" }
+              ].map((pillar, idx) => (
+                <div key={idx} className="bg-card border border-border rounded-xl p-6 hover:border-foreground/20 transition-all group">
+                  <div className="text-3xl mb-4">{pillar.icon}</div>
+                  <h3 className="text-base sm:text-lg font-bold text-foreground mb-2">
+                    {pillar.title.replace(/[^\w\s]/gi, '').trim()}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {pillar.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* PROOF SECTION - Dashboard Preview */}
+        <section className="w-full bg-secondary/30 px-4 sm:px-6 py-16 sm:py-24">
+          <div className="max-w-6xl mx-auto">
+            
+            <div className="text-center mb-12">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight mb-4">
+                {t.transparencyTitle?.split('\n')[0] || "Complete Transparency"}
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                {t.transparencyDesc}
+              </p>
+            </div>
+
+            {/* Dashboard Mockup */}
+            <div className="bg-card border border-border rounded-2xl shadow-xl p-4 sm:p-8 max-w-3xl mx-auto">
+              <div className="flex justify-between items-center mb-6 pb-4 border-b border-border/50">
+                <div>
+                  <h3 className="text-lg sm:text-xl font-bold text-foreground">{t.welcomeBack}</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground">{t.trackCommissions}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                {/* Total Earnings */}
+                <div className="bg-purple-100 dark:bg-purple-900/20 p-4 rounded-xl">
+                  <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase mb-1">{t.totalEarnings}</div>
+                  <div className="text-2xl sm:text-3xl font-black text-purple-900 dark:text-purple-100">$20.84</div>
+                </div>
+
+                {/* Available */}
+                <div className="bg-green-100 dark:bg-green-900/20 p-4 rounded-xl">
+                  <div className="text-xs font-semibold text-green-600 dark:text-green-400 uppercase mb-1">{t.available}</div>
+                  <div className="text-2xl sm:text-3xl font-black text-green-900 dark:text-green-100">$0.00</div>
+                </div>
+
+                {/* Pending */}
+                <div className="bg-yellow-100 dark:bg-yellow-900/20 p-4 rounded-xl">
+                  <div className="text-xs font-semibold text-yellow-600 dark:text-yellow-400 uppercase mb-1">{t.pending}</div>
+                  <div className="text-2xl sm:text-3xl font-black text-yellow-900 dark:text-yellow-100">$0.00</div>
+                </div>
+
+                {/* Network Size */}
+                <div className="bg-blue-100 dark:bg-blue-900/20 p-4 rounded-xl">
+                  <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase mb-1">{t.networkSize}</div>
+                  <div className="text-2xl sm:text-3xl font-black text-blue-900 dark:text-blue-100">13</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Benefits List */}
+            <div className="mt-12 max-w-2xl mx-auto space-y-3">
+              {[
+                t.transparencyList1,
+                t.transparencyList2,
+                t.transparencyList3
+              ].filter(Boolean).map((item, i) => (
+                <div key={i} className="flex items-center gap-3 text-sm sm:text-base text-muted-foreground">
+                  <svg className="w-5 h-5 text-foreground flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FINAL CTA */}
+        <section className="w-full px-4 sm:px-6 py-16 sm:py-24">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight">
+              {t.benefit3}
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              {t.introText}
+            </p>
+            <button
+              onClick={handleRegister}
+              className="bg-foreground text-background px-10 sm:px-12 py-4 sm:py-5 rounded-xl text-base sm:text-lg font-bold hover:opacity-90 transition-all shadow-xl active:scale-[0.98]"
+            >
+              {t.cta} →
+            </button>
           </div>
         </section>
 
       </main>
 
-      {/* FOOTER */}
-      <footer className="bg-background border-t border-border py-12 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex items-center gap-2 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
-              <span className="font-bold text-sm">Moondala Corp.</span>
-            </div>
-            
-            <div className="flex flex-wrap justify-center gap-8 text-xs font-bold uppercase tracking-widest text-muted-foreground/60">
-                <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-                <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-                <a href="#" className="hover:text-foreground transition-colors">Contact</a>
-            </div>
-
-            <p className="text-xs text-muted-foreground/50">
-                © {new Date().getFullYear()} All Rights Reserved.
-            </p>
+      {/* FOOTER - Minimal */}
+      <footer className="border-t border-border/40 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <img src="/moondala-logo.png" alt="Moondala" className="w-5 h-5 opacity-60" />
+            <span className="font-medium">© {new Date().getFullYear()} Moondala</span>
+          </div>
+          
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
+            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
+            <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+          </div>
         </div>
       </footer>
 
