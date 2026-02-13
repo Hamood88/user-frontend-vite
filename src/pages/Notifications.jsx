@@ -84,12 +84,17 @@ function buildMessage(n) {
   if (t === "friend_accepted") return `${a} accepted your friend request`;
 
   if (t === "like_post") return `${a} liked your post`;
+  if (t === "like_comment") return `${a} liked your comment`;
   if (t === "comment_post") return `${a} commented on your post`;
   if (t === "reply_comment") return `${a} replied to your comment`;
 
   if (t === "message_user") return `${a} sent you a message`;
   if (t === "message_shop") return `${a} sent a message to your shop`;
   if (t === "message_unified") return `${a} asked about a product`;
+
+  if (t === "bill_payment") return `Your invoice is ready`;
+  if (t === "order_status_updated") return `Your order status was updated`;
+  if (t === "return_status_updated") return `Your return request was updated`;
 
   return `${a} did something`;
 }
@@ -118,13 +123,29 @@ export default function Notifications() {
 
   const incomingCount = useMemo(() => incoming.length, [incoming]);
 
+  const token = {
+    bg: "hsl(var(--background))",
+    text: "hsl(var(--foreground))",
+    card: "hsl(var(--card))",
+    cardText: "hsl(var(--card-foreground))",
+    border: "hsl(var(--border))",
+    muted: "hsl(var(--muted-foreground))",
+    primary: "hsl(var(--primary))",
+    primaryText: "hsl(var(--primary-foreground))",
+    secondary: "hsl(var(--secondary))",
+    secondaryText: "hsl(var(--secondary-foreground))",
+    accent: "hsl(var(--accent))",
+    accentText: "hsl(var(--accent-foreground))",
+    danger: "hsl(var(--destructive))",
+  };
+
   const cardStyle = {
-    background: "#ffffff",
-    color: "#0f172a",
-    border: "1px solid #e5e7eb",
+    background: token.card,
+    color: token.cardText,
+    border: `1px solid ${token.border}`,
     borderRadius: 14,
     padding: 14,
-    boxShadow: "0 12px 30px rgba(0,0,0,0.12)",
+    boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
   };
 
   async function loadNotifications() {
@@ -166,26 +187,51 @@ export default function Notifications() {
 
   function buildTargetUrl(n) {
     const t = getType(n);
+    const source = String(n?.meta?.source || "").trim().toLowerCase();
+    const sourceShopId = pickId(n?.meta?.shopId);
+    const postId = pickId(n?.postId || n?.meta?.postId);
+    const commentId = pickId(n?.commentId || n?.meta?.commentId);
+
+    if (source === "shop_feed" && sourceShopId) {
+      if (postId && commentId) {
+        return `/shop/${encodeURIComponent(sourceShopId)}/feed?postId=${encodeURIComponent(postId)}&commentId=${encodeURIComponent(commentId)}`;
+      }
+      if (postId) {
+        return `/shop/${encodeURIComponent(sourceShopId)}/feed?postId=${encodeURIComponent(postId)}`;
+      }
+      return `/shop/${encodeURIComponent(sourceShopId)}/feed`;
+    }
 
     // ✅ post/comment notifications -> go to feed with postId/commentId
-    const postId = pickId(n?.postId);
-    const commentId = pickId(n?.commentId);
-
     if (postId) {
       return commentId
-        ? `/feed?postId=${encodeURIComponent(postId)}&commentId=${encodeURIComponent(commentId)}`
-        : `/feed?postId=${encodeURIComponent(postId)}`;
+        ? `/feed/post/${encodeURIComponent(postId)}?commentId=${encodeURIComponent(commentId)}`
+        : `/feed/post/${encodeURIComponent(postId)}`;
     }
 
     // ✅ messages -> open Messages.jsx using conversationId query param
     if (isMessageType(t)) {
       const convoId = getConversationIdFromNotification(n);
+      const messageId = pickId(n?.meta?.messageId || n?.messageId);
+      if (convoId && messageId) {
+        return `/messages?conversationId=${encodeURIComponent(convoId)}&messageId=${encodeURIComponent(messageId)}`;
+      }
       if (convoId) return `/messages?conversationId=${encodeURIComponent(convoId)}`;
       return "/messages";
     }
 
     // ✅ friend requests
-    if (t === "friend_request") return "/notifications";
+    if (t === "friend_request") return "/friends";
+
+    // ✅ orders & returns
+    if (
+      t === "bill_payment" ||
+      t === "order_status_updated" ||
+      t === "order_cancelled" ||
+      t === "return_status_updated"
+    ) {
+      return "/orders";
+    }
 
     // ✅ system messages (Admin DMs)
     if (t === 'system' || t === 'system_message' || t.includes('system')) {
@@ -217,13 +263,6 @@ export default function Notifications() {
         return nav(target);
       }
       
-      // ✅ Handle Friend Requests (stay on page)
-      
-      // ✅ Handle Friend Requests (stay on page)
-      if (t === 'friend_request') {
-        return; 
-      }
-
       return nav(buildTargetUrl(n));
     } catch (e) {
       setErr(e?.message || "Failed");
@@ -267,7 +306,7 @@ export default function Notifications() {
           marginBottom: 10,
         }}
       >
-        <h2 style={{ marginTop: 0, color: "#ffffff" }}>Notifications</h2>
+        <h2 style={{ marginTop: 0, color: token.text }}>Notifications</h2>
 
         <button
           type="button"
@@ -275,9 +314,9 @@ export default function Notifications() {
           style={{
             padding: "10px 14px",
             borderRadius: 10,
-            border: "1px solid #e5e7eb",
-            background: "#111",
-            color: "#fff",
+            border: `1px solid ${token.border}`,
+            background: token.primary,
+            color: token.primaryText,
             cursor: "pointer",
             fontWeight: 900,
           }}
@@ -287,7 +326,7 @@ export default function Notifications() {
       </div>
 
       {err && (
-        <div style={{ marginBottom: 12, color: "crimson", fontWeight: 900 }}>
+        <div style={{ marginBottom: 12, color: token.danger, fontWeight: 900 }}>
           {err}
         </div>
       )}
@@ -302,9 +341,9 @@ export default function Notifications() {
             gap: 12,
           }}
         >
-          <h3 style={{ margin: "0 0 8px 0", color: "#ffffff" }}>
+          <h3 style={{ margin: "0 0 8px 0", color: token.text }}>
             Friend Requests{" "}
-            <span style={{ color: "#cbd5e1", fontSize: 13 }}>
+            <span style={{ color: token.muted, fontSize: 13 }}>
               (Incoming: <b>{incomingCount}</b>)
             </span>
           </h3>
@@ -315,9 +354,9 @@ export default function Notifications() {
             style={{
               padding: "8px 12px",
               borderRadius: 10,
-              border: "1px solid #e5e7eb",
-              background: "#0b1220",
-              color: "#fff",
+              border: `1px solid ${token.border}`,
+              background: token.secondary,
+              color: token.secondaryText,
               cursor: "pointer",
               fontWeight: 800,
             }}
@@ -327,9 +366,9 @@ export default function Notifications() {
         </div>
 
         {frLoading ? (
-          <div style={{ color: "#ffffff" }}>Loading friend requests...</div>
+          <div style={{ color: token.text }}>Loading friend requests...</div>
         ) : incoming.length === 0 ? (
-          <div style={{ color: "#cbd5e1" }}>No incoming friend requests.</div>
+          <div style={{ color: token.muted }}>No incoming friend requests.</div>
         ) : (
           <div style={{ display: "grid", gap: 10 }}>
             {incoming.map((r) => {
@@ -339,15 +378,15 @@ export default function Notifications() {
               const msg = String(r?.message || "").trim();
 
               return (
-                <div key={id} style={{ ...cardStyle, background: "#ffffff" }}>
+                <div key={id} style={cardStyle}>
                   <div style={{ fontWeight: 900, fontSize: 16 }}>👤 {name}</div>
 
                   {msg ? (
-                    <div style={{ marginTop: 6, color: "#334155" }}>
+                    <div style={{ marginTop: 6, color: token.cardText }}>
                       <b>Message:</b> {msg}
                     </div>
                   ) : (
-                    <div style={{ marginTop: 6, color: "#64748b" }}>
+                    <div style={{ marginTop: 6, color: token.muted }}>
                       No message attached.
                     </div>
                   )}
@@ -360,8 +399,9 @@ export default function Notifications() {
                       style={{
                         padding: "10px 14px",
                         borderRadius: 10,
-                        border: "1px solid #0a7",
-                        background: "#e9fff6",
+                        border: `1px solid ${token.border}`,
+                        background: token.accent,
+                        color: token.accentText,
                         cursor: "pointer",
                         fontWeight: 900,
                       }}
@@ -376,8 +416,9 @@ export default function Notifications() {
                       style={{
                         padding: "10px 14px",
                         borderRadius: 10,
-                        border: "1px solid #c33",
-                        background: "#fff0f0",
+                        border: `1px solid ${token.border}`,
+                        background: "rgba(239,68,68,0.12)",
+                        color: token.cardText,
                         cursor: "pointer",
                         fontWeight: 900,
                       }}
@@ -393,7 +434,7 @@ export default function Notifications() {
 
         {!frLoading && outgoing.length > 0 && (
           <div style={{ marginTop: 14 }}>
-            <div style={{ color: "#cbd5e1", fontSize: 13, marginBottom: 8 }}>
+            <div style={{ color: token.muted, fontSize: 13, marginBottom: 8 }}>
               Sent requests: <b>{outgoing.length}</b>
             </div>
             <div style={{ display: "grid", gap: 10 }}>
@@ -407,16 +448,16 @@ export default function Notifications() {
                     key={id}
                     style={{
                       ...cardStyle,
-                      background: "#f8fafc",
-                      border: "1px solid #e2e8f0",
+                      background: token.card,
+                      border: `1px solid ${token.border}`,
                     }}
                   >
                     <div style={{ fontWeight: 900 }}>
                       📤 Sent to: {name}{" "}
-                      <span style={{ fontWeight: 700, color: "#64748b" }}>(Pending)</span>
+                      <span style={{ fontWeight: 700, color: token.muted }}>(Pending)</span>
                     </div>
                     {msg && (
-                      <div style={{ marginTop: 6, color: "#334155" }}>
+                      <div style={{ marginTop: 6, color: token.cardText }}>
                         <b>Your message:</b> {msg}
                       </div>
                     )}
@@ -429,14 +470,14 @@ export default function Notifications() {
       </div>
 
       {/* Notifications */}
-      <div style={{ marginBottom: 10, fontSize: 13, color: "#cbd5e1" }}>
+      <div style={{ marginBottom: 10, fontSize: 13, color: token.muted }}>
         Unread: <b>{unread}</b>
       </div>
 
       {loading ? (
-        <p style={{ color: "#ffffff" }}>Loading...</p>
+        <p style={{ color: token.text }}>Loading...</p>
       ) : items.length === 0 ? (
-        <p style={{ color: "#ffffff" }}>No notifications yet.</p>
+        <p style={{ color: token.text }}>No notifications yet.</p>
       ) : (
         <div style={{ display: "grid", gap: 10 }}>
           {items.map((n) => {
@@ -455,21 +496,21 @@ export default function Notifications() {
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                  <div style={{ fontWeight: 900, color: "#0f172a" }}>
+                  <div style={{ fontWeight: 900, color: token.cardText }}>
                     {!n.read ? "🔔 " : "✅ "}
                     {buildMessage(n)}
                   </div>
-                  <div style={{ fontSize: 12, color: "#64748b" }}>{timeAgo(n.createdAt)}</div>
+                  <div style={{ fontSize: 12, color: token.muted }}>{timeAgo(n.createdAt)}</div>
                 </div>
 
                 {isPosty ? (
-                  <div style={{ marginTop: 6, fontSize: 12, color: "#64748b" }}>
+                  <div style={{ marginTop: 6, fontSize: 12, color: token.muted }}>
                     Tap to open the post
                   </div>
                 ) : null}
 
                 {isMsg ? (
-                  <div style={{ marginTop: 6, fontSize: 12, color: "#64748b" }}>
+                  <div style={{ marginTop: 6, fontSize: 12, color: token.muted }}>
                     Tap to open messages
                   </div>
                 ) : null}

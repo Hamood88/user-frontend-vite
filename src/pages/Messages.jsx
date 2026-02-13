@@ -238,6 +238,7 @@ export default function Messages() {
   // ✅ FIX: force ID extraction (prevents [object Object])
   const conversationId =
     extractId(params.conversationId || "") || extractId(query.get("conversationId") || "");
+  const focusMessageId = extractId(query.get("messageId") || "");
 
   // ✅ support older route:
   //   /messages/user/:userId   (auto-start a user chat)
@@ -304,6 +305,7 @@ export default function Messages() {
   const [chatErr, setChatErr] = useState("");
   const [messages, setMessages] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
+  const [highlightedMessageId, setHighlightedMessageId] = useState("");
 
   // composer
   const [text, setText] = useState("");
@@ -547,6 +549,25 @@ export default function Messages() {
     );
     return () => clearTimeout(t);
   }, [messages, conversationId]);
+
+  useEffect(() => {
+    if (!conversationId || !focusMessageId || !messages.length) return;
+
+    const exists = messages.some((m) => String(m?._id || "") === String(focusMessageId));
+    if (!exists) return;
+
+    setHighlightedMessageId(String(focusMessageId));
+    const t = setTimeout(() => {
+      const el = document.getElementById(`msg-${focusMessageId}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 120);
+
+    const clearT = setTimeout(() => setHighlightedMessageId(""), 2500);
+    return () => {
+      clearTimeout(t);
+      clearTimeout(clearT);
+    };
+  }, [conversationId, focusMessageId, messages]);
 
   /* =========================
     Deep link handler:
@@ -1278,11 +1299,18 @@ export default function Messages() {
                 return (
                   <div
                     key={String(m?._id || `msg-${idx}`)}
+                    id={m?._id ? `msg-${String(m._id)}` : undefined}
                     style={{
                       ...styles.bubbleRow,
                       justifyContent: mine ? "flex-end" : "flex-start",
                       alignItems: "flex-end",
                       gap: 8,
+                      background:
+                        highlightedMessageId && String(m?._id || "") === String(highlightedMessageId)
+                          ? "rgba(59,130,246,0.14)"
+                          : "transparent",
+                      borderRadius: 12,
+                      padding: highlightedMessageId && String(m?._id || "") === String(highlightedMessageId) ? "4px" : 0,
                     }}
                   >
                     {/* Avatar for other person's messages */}

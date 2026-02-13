@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useParams, Link as RouterLink, useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useParams, Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Heart,
@@ -197,6 +197,10 @@ async function createPostFlexible({ text, file } = {}) {
 export default function Feed() {
   const { userId, postId } = useParams(); // Get params
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const queryPostId = s(queryParams.get("postId"));
+  const effectivePostId = s(postId || queryPostId);
   const [me, setMe] = useState(() => getUserSession()); // Keep session fresh
   const [profileUser, setProfileUser] = useState(null); // User profile when viewing another user
   const [posts, setPosts] = useState([]);
@@ -276,8 +280,8 @@ export default function Feed() {
       let data;
       
       // ✅ 1. Single Post View
-      if (postId) {
-        const res = await getPost(postId);
+      if (effectivePostId) {
+        const res = await getPost(effectivePostId);
         data = res.post ? [res.post] : [];
       }
       // ✅ 2. User Profile Feed
@@ -315,6 +319,10 @@ export default function Feed() {
       const list = Array.isArray(data?.posts) ? data.posts : Array.isArray(data) ? data : [];
       const normalized = list.map(normalizePost);
       setPosts(normalized);
+
+      if (effectivePostId) {
+        setOpenPostId(effectivePostId);
+      }
     } catch (e) {
       // ✅ Only log in development mode to avoid confusing users
       if (process.env.NODE_ENV === 'development') {
@@ -325,14 +333,14 @@ export default function Feed() {
       const areFriends = profileUser?.isFriend || profileUser?.areFriends || profileUser?.friendship?.status === 'accepted';
       
       if (e?.status === 403 && !areFriends) {
-        setErr(postId ? "This post is private." : "This user's feed is private.");
-        if (!postId) setIsPrivateFeed(true);
+        setErr(effectivePostId ? "This post is private." : "This user's feed is private.");
+        if (!effectivePostId) setIsPrivateFeed(true);
       } else if ((e?.message?.includes("private") || e?.data?.message?.includes("private")) && !areFriends) {
         // Backend returns message like "This user's feed is private (friends only)."
-        setErr(e?.data?.message || e?.message || (postId ? "This post is private." : "This user's feed is private."));
-        if (!postId) setIsPrivateFeed(true);
+        setErr(e?.data?.message || e?.message || (effectivePostId ? "This post is private." : "This user's feed is private."));
+        if (!effectivePostId) setIsPrivateFeed(true);
       } else if (e?.status === 404) {
-        setErr(postId ? "Post not found." : "User not found.");
+        setErr(effectivePostId ? "Post not found." : "User not found.");
       } else if (areFriends) {
         // If they're friends but still got an error, show a different message
         setErr("Unable to load feed. Please try again.");
@@ -369,7 +377,7 @@ export default function Feed() {
 
   useEffect(() => {
     loadFeed();
-  }, [userId, postId]);
+  }, [userId, postId, location.search]);
 
   // Load top inviters on mount
   useEffect(() => {
@@ -511,9 +519,12 @@ export default function Feed() {
     );
 
     try {
-      await likePost(id);
-      // optional: reload to get exact counts
-      // await loadFeed();
+      const res = await likePost(id);
+      if (res?.post) {
+        setPosts((prev) =>
+          prev.map((p) => (p._id === id ? normalizePost(res.post) : p))
+        );
+      }
     } catch (e) {
       // revert if failed
       setPosts((prev) =>
@@ -1515,7 +1526,7 @@ export default function Feed() {
                                             className={`text-xs flex items-center gap-1 ${
                                               (comment.likes || []).some((id) => String(id) === String(pickId(me)))
                                                 ? "text-pink-400"
-                                                : "text-muted-foregroundreground hover:text-pink-400"
+                                                : "text-muted-foreground hover:text-pink-400"
                                             }`}
                                             onClick={() => handleLikeComment(post._id, comment._id)}
                                           >

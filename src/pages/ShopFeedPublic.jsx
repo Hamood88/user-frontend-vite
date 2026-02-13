@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { API_BASE, likeShopPost, addShopPostComment, likeShopPostComment, followShop, unfollowShop, checkShopFollowStatus, toAbsUrl } from "../api.jsx";
 import { Heart } from "lucide-react";
 import "../styles/shopFeedPublic.css";
@@ -346,6 +346,7 @@ function getShopAppUrl(shopId) {
 
 export default function ShopFeedPublic() {
   const nav = useNavigate();
+  const location = useLocation();
   const { shopId } = useParams();
 
   const safeShopId = useMemo(() => {
@@ -364,6 +365,11 @@ export default function ShopFeedPublic() {
   const [replyTo, setReplyTo] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
+  const [focusCommentId, setFocusCommentId] = useState("");
+
+  const query = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const targetPostId = String(query.get("postId") || "").trim();
+  const targetCommentId = String(query.get("commentId") || "").trim();
 
   async function load() {
     if (!safeShopId) return;
@@ -503,6 +509,8 @@ export default function ShopFeedPublic() {
       commenter?.photo ||
       "";
     const likesCount = Array.isArray(node?.likes) ? node.likes.length : 0;
+    const nodeId = String(node?._id || node?.id || "").trim();
+    const focused = !!focusCommentId && nodeId === String(focusCommentId);
     
     // Determine if author is a shop or user and get their ID
     const authorType = commenter?.authorType || "user";
@@ -522,7 +530,16 @@ export default function ShopFeedPublic() {
     const isClickable = (authorType === "shop" && authorShopId) || (authorType === "user" && authorUserId);
     
     return (
-      <div className="sf-comment" style={{ marginLeft: depth * 12, marginTop: 8 }}>
+      <div
+        id={nodeId ? `sf-comment-${nodeId}` : undefined}
+        className="sf-comment"
+        style={{
+          marginLeft: depth * 12,
+          marginTop: 8,
+          border: focused ? "1px solid rgba(59,130,246,0.6)" : undefined,
+          boxShadow: focused ? "0 0 0 2px rgba(59,130,246,0.25)" : undefined,
+        }}
+      >
         <div className="sf-comment-top" style={{ alignItems: "center" }}>
           <div 
             style={{ 
@@ -718,6 +735,25 @@ export default function ShopFeedPublic() {
     loadFollowStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [safeShopId]);
+
+  useEffect(() => {
+    if (!targetPostId || posts.length === 0) return;
+
+    const matchedPost = posts.find((p) => String(p?._id || p?.id) === String(targetPostId));
+    if (!matchedPost) return;
+
+    setOpenCommentsFor(String(targetPostId));
+
+    if (targetCommentId) {
+      setFocusCommentId(String(targetCommentId));
+      setTimeout(() => {
+        const el = document.getElementById(`sf-comment-${targetCommentId}`);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 120);
+    } else {
+      setFocusCommentId("");
+    }
+  }, [targetPostId, targetCommentId, posts]);
 
   const shopName = shop?.shopName || shop?.name || "Shop";
   const logoSrc = toAbsUrl(shop?.logoUrl || shop?.logo || shop?.avatar || "");

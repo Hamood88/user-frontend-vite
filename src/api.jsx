@@ -620,8 +620,9 @@ export function deletePost(postId) {
    ✅ NOTIFICATIONS
    ================================ */
 export async function getMyNotifications(limit = 50, skip = 0) {
+  const t = Date.now();
   const data = await apiGet(
-    `/api/notifications?limit=${encodeURIComponent(limit)}&skip=${encodeURIComponent(skip)}`
+    `/api/notifications?limit=${encodeURIComponent(limit)}&skip=${encodeURIComponent(skip)}&_t=${encodeURIComponent(t)}`
   );
 
   const list = Array.isArray(data?.notifications)

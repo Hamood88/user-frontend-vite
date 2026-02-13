@@ -130,6 +130,17 @@ export default function AppLayout() {
     };
   }, []);
 
+  useEffect(() => {
+    const onFocus = async () => {
+      try {
+        const res = await getMyNotifications(1, 0);
+        setUnreadCount(Number(res?.unreadCount || 0));
+      } catch {}
+    };
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  }, []);
+
   // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event) {
@@ -285,7 +296,8 @@ export default function AppLayout() {
             </button>
             {showNotifs && (
               <NotificationDropdown 
-                onClose={() => setShowNotifs(false)} 
+                onClose={() => setShowNotifs(false)}
+                onUnreadChange={(next) => setUnreadCount(Number(next || 0))}
               />
             )}
           </div>

@@ -55,16 +55,20 @@ function buildMessage(n) {
   if (t === "friend_request") return `${a} sent you a friend request`;
   if (t === "friend_accepted") return `${a} accepted your friend request`;
   if (t === "like_post") return `${a} liked your post`;
+  if (t === "like_comment") return `${a} liked your comment`;
   if (t === "comment_post") return `${a} commented on your post`;
   if (t === "reply_comment") return `${a} replied to your comment`;
   if (t === "message_user") return `${a} sent you a message`;
   if (t === "message_shop") return `${a} sent a message to your shop`;
   if (t === "message_unified") return `${a} asked about a product`;
+  if (t === "bill_payment") return `Your invoice is ready`;
+  if (t === "order_status_updated") return `Your order status was updated`;
+  if (t === "return_status_updated") return `Your return request was updated`;
 
   return `${a} did something`;
 }
 
-export default function NotificationDropdown({ onClose }) {
+export default function NotificationDropdown({ onClose, onUnreadChange }) {
   const nav = useNavigate();
   const [loading, setLoading] = useState(true);
   const [list, setList] = useState([]);
@@ -81,6 +85,7 @@ export default function NotificationDropdown({ onClose }) {
       const res = await getMyNotifications(20, 0); // specific limit for dropdown
       setList(res.notifications || []);
       setUnreadCount(res.unreadCount || 0);
+      if (typeof onUnreadChange === "function") onUnreadChange(Number(res.unreadCount || 0));
     } catch (e) {
       console.error(e);
     } finally {
@@ -96,7 +101,11 @@ export default function NotificationDropdown({ onClose }) {
       setList((prev) =>
         prev.map((x) => (x._id === n._id ? { ...x, read: true } : x))
       );
-      setUnreadCount((c) => Math.max(0, c - 1));
+      setUnreadCount((c) => {
+        const next = Math.max(0, c - 1);
+        if (typeof onUnreadChange === "function") onUnreadChange(next);
+        return next;
+      });
     } catch (e) {
       console.error(e);
     }
@@ -107,6 +116,7 @@ export default function NotificationDropdown({ onClose }) {
       await markAllNotificationsRead();
       setList((prev) => prev.map((x) => ({ ...x, read: true })));
       setUnreadCount(0);
+      if (typeof onUnreadChange === "function") onUnreadChange(0);
     } catch (e) {
       console.error(e);
     }
@@ -147,6 +157,7 @@ export default function NotificationDropdown({ onClose }) {
       setList([]);
       setSelected(new Set());
       setUnreadCount(0);
+      if (typeof onUnreadChange === "function") onUnreadChange(0);
     } catch (e) {
       console.error(e);
     }
@@ -166,6 +177,20 @@ export default function NotificationDropdown({ onClose }) {
     onClose();
     
     const t = String(n?.type || "").trim().toLowerCase();
+    const source = String(n?.meta?.source || "").trim().toLowerCase();
+    const sourceShopId = String(n?.meta?.shopId || "").trim();
+    const postId = n?.postId?._id || n?.postId || n?.meta?.postId;
+    const commentId = n?.commentId?._id || n?.commentId || n?.meta?.commentId;
+
+    if (source === "shop_feed" && sourceShopId) {
+      if (postId && commentId) {
+        return nav(`/shop/${encodeURIComponent(sourceShopId)}/feed?postId=${encodeURIComponent(postId)}&commentId=${encodeURIComponent(commentId)}`);
+      }
+      if (postId) {
+        return nav(`/shop/${encodeURIComponent(sourceShopId)}/feed?postId=${encodeURIComponent(postId)}`);
+      }
+      return nav(`/shop/${encodeURIComponent(sourceShopId)}/feed`);
+    }
     
     // System messages (Admin DMs) -> Messages
     if (t === 'system' || t === 'system_message' || t.includes('system')) {
@@ -177,20 +202,30 @@ export default function NotificationDropdown({ onClose }) {
     const isMessage = t === "message_user" || t === "message_shop" || t === "message_unified";
     if (isMessage) {
       const convoId = n?.meta?.conversationId || n?.meta?.threadId || n?.conversationId;
-      if (convoId) return nav(`/messages?conversationId=${convoId}`);
+      const messageId = n?.meta?.messageId || n?.messageId;
+      if (convoId && messageId) return nav(`/messages?conversationId=${encodeURIComponent(convoId)}&messageId=${encodeURIComponent(messageId)}`);
+      if (convoId) return nav(`/messages?conversationId=${encodeURIComponent(convoId)}`);
       return nav("/messages");
     }
     
     // Friend requests -> Friends page
     if (t === "friend_request") return nav("/friends");
+
+    // Orders/returns
+    if (
+      t === "bill_payment" ||
+      t === "order_status_updated" ||
+      t === "order_cancelled" ||
+      t === "return_status_updated"
+    ) {
+      return nav("/orders");
+    }
     
     // Post/Comment notifications -> Feed
-    const postId = n?.postId?._id || n?.postId || n?.meta?.postId;
-    const commentId = n?.commentId?._id || n?.commentId || n?.meta?.commentId;
     if (postId) {
       return commentId 
-        ? nav(`/feed?postId=${postId}&commentId=${commentId}`)
-        : nav(`/feed?postId=${postId}`);
+        ? nav(`/feed/post/${postId}?commentId=${commentId}`)
+        : nav(`/feed/post/${postId}`);
     }
     
     // Default fallback
