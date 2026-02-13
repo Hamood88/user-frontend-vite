@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Moon, Sun } from 'lucide-react';
 
 const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English' },
@@ -1006,6 +1007,34 @@ const LandingPage = () => {
   const [selectedLang, setSelectedLang] = useState(i18n.language || 'en');
   const [lightboxImg, setLightboxImg] = useState(null);
   const [scrollY, setScrollY] = useState(0);
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem("theme") || "dark";
+    } catch {
+      return "dark";
+    }
+  });
+
+  // Theme handler
+  function handleThemeChange(newTheme) {
+    setTheme(newTheme);
+    try {
+      localStorage.setItem("theme", newTheme);
+      const html = document.documentElement;
+      html.setAttribute("data-theme", newTheme);
+      html.style.colorScheme = newTheme;
+      if (newTheme === 'dark') {
+        html.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
+      }
+    } catch {}
+  }
+
+  // Apply theme on mount
+  useEffect(() => {
+    handleThemeChange(theme);
+  }, []);
 
   // Persist language choice and handle direction
   useEffect(() => {
@@ -1059,6 +1088,18 @@ const LandingPage = () => {
             >
               {t.howItWorksNewTitle || t.howItWorks}
             </a>
+            {/* Theme Toggle */}
+            <button
+              onClick={() => handleThemeChange(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-lg border border-border/50 hover:bg-secondary/20 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? (
+                <Moon className="w-5 h-5 text-foreground/80" />
+              ) : (
+                <Sun className="w-5 h-5 text-foreground/80" />
+              )}
+            </button>
             {/* Language Dropdown */}
             <div className="relative group hidden sm:block">
               <select

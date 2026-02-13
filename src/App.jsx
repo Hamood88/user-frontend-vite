@@ -219,6 +219,11 @@ export default function App() {
       const html = document.documentElement;
       html.setAttribute("data-theme", savedTheme);
       html.style.colorScheme = savedTheme;
+      if (savedTheme === 'dark') {
+        html.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
+      }
     } catch {}
   }, []);
   
